@@ -10,9 +10,9 @@ import { ScrollView } from "react-native";
 const index = () => {
   return (
     <ScrollView>
-      <VStack className="flex-1   bg-white">
-        <VStack className="w-full items-center justify-center p-6">
-          <Pressable className="w-60 shadow shadow-lg bg-primary-500 h-60 flex items-center justify-center rounded-full">
+      <VStack className="flex-1  py-4 bg-white">
+        <VStack className="w-full items-center  justify-center p-6">
+          <Pressable className="w-60 shadow shadow-xl bg-primary-500 h-60 flex items-center justify-center rounded-full">
             <Feather name="smile" size={24} color="white" />
             <Text className="text-white mt-2 text-lg">امروز چه حسی داری؟</Text>
           </Pressable>

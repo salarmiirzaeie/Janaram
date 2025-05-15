@@ -2,11 +2,9 @@ import { Tabs } from "expo-router";
 import React from "react";
 
 import { HapticTab } from "@/components/HapticTab";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { HStack } from "@/components/ui/hstack";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { AntDesign, EvilIcons, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -19,37 +17,16 @@ export default function TabLayout() {
         tabBarLabelStyle: {
           fontFamily: "vazirBold",
         },
-        headerShown: true,
+        headerShown: false,
       }}
-      initialRouteName="index"
     >
       <Tabs.Screen
-        name="index"
+        name="(home)"
         options={{
           title: "خانه",
           tabBarIcon: ({ color }) => (
             <AntDesign size={24} name="home" color={color} />
           ),
-          headerTitleAlign: "center",
-          headerTitle: "جان آرام",
-          headerLeft(props) {
-            return (
-              <HStack space="lg" className="items-center pl-6">
-                <Avatar size="sm">
-                  <AvatarImage
-                    source={{
-                      uri: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-                    }}
-                  />
-                </Avatar>
-                <EvilIcons size={32} name="bell" color={Colors.light.tint} />
-              </HStack>
-            );
-          },
-          headerTitleStyle: {
-            fontFamily: "vazirBold",
-          },
-          // headerShadowVisible: false,
         }}
       />
       <Tabs.Screen
@@ -61,7 +38,15 @@ export default function TabLayout() {
           ),
         }}
       />
-
+      <Tabs.Screen
+        name="tryouts"
+        options={{
+          title: "تست",
+          tabBarIcon: ({ color }) => (
+            <AntDesign size={24} name="appstore-o" color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="reports"
         options={{
@@ -71,12 +56,13 @@ export default function TabLayout() {
           ),
         }}
       />
+
       <Tabs.Screen
-        name="profile"
+        name="setting"
         options={{
-          title: "پروفایل",
+          title: "تنظیمات",
           tabBarIcon: ({ color }) => (
-            <AntDesign size={24} name="user" color={color} />
+            <AntDesign size={24} name="setting" color={color} />
           ),
         }}
       />

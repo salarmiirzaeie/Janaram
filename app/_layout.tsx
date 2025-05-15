@@ -1,5 +1,6 @@
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import "@/global.css";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import {
   DarkTheme,
   DefaultTheme,
@@ -8,9 +9,13 @@ import {
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { LogBox } from "react-native";
 import "react-native-reanimated";
 
-import { useColorScheme } from "@/hooks/useColorScheme";
+// Trigger a layout animation
+LogBox.ignoreLogs([
+  "setLayoutAnimationEnabledExperimental is currently a no-op in the New Architecture",
+]);
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
