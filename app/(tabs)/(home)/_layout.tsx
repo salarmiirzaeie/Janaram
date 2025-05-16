@@ -22,6 +22,7 @@ const _layout = () => {
               </Pressable>
             );
           },
+          statusBarStyle: "dark",
         }}
       />
     </Stack>

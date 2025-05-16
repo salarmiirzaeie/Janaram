@@ -1,9 +1,17 @@
 import { Tabs } from "expo-router";
 import React from "react";
 
-import { AntDesign, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
+import { useAppSelector } from "@/hooks/useAppSelector";
+import { setSleepMode } from "@/redux/sleep-mode/sleep-slice";
+import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
 
 export default function TabLayout() {
+  const { isSleepMode } = useAppSelector((state) => state.sleepMode);
+  const dispatch = useDispatch();
+  const sleepModeHandler = (val: boolean) => {
+    dispatch(setSleepMode(val));
+  };
   return (
     <Tabs
       screenOptions={{
@@ -11,6 +19,9 @@ export default function TabLayout() {
           fontFamily: "vazirBold",
         },
         headerShown: false,
+        tabBarStyle: {
+          backgroundColor: isSleepMode ? "#1D1C1C" : "#ffff",
+        },
       }}
     >
       <Tabs.Screen
@@ -32,12 +43,20 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="tests"
+        name="sleep"
         options={{
-          title: "تست",
+          title: "خواب خوب",
           tabBarIcon: ({ color }) => (
-            <SimpleLineIcons size={24} name="trophy" color={color} />
+            <Feather size={24} name="moon" color={color} />
           ),
+        }}
+        listeners={{
+          focus: () => {
+            sleepModeHandler(true);
+          },
+          blur: () => {
+            sleepModeHandler(false);
+          },
         }}
       />
       <Tabs.Screen

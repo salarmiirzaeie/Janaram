@@ -8,9 +8,12 @@ const _layout = () => {
         name="index"
         options={{
           headerShown: true,
-          title: " تست",
+          title: " 🌙 خواب خوب",
           headerTitleAlign: "center",
-          headerTitleStyle: { fontFamily: "vazirBold" },
+          headerTitleStyle: { fontFamily: "vazirBold", color: "#fff" },
+          headerStyle: { backgroundColor: "rgba(29, 28, 28, 0.95)" },
+          headerShadowVisible: false,
+          statusBarStyle: "light",
         }}
       />
     </Stack>

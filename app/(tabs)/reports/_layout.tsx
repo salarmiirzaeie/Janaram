@@ -11,6 +11,7 @@ const _layout = () => {
           title: "مود من",
           headerTitleAlign: "center",
           headerTitleStyle: { fontFamily: "vazirBold" },
+          statusBarStyle: "dark",
         }}
       />
 

@@ -19,7 +19,7 @@ const CourseCard: React.FC<IVStackProps> = (props) => {
           props.index % 2 ? "bg-purple-300" : "bg-blue-300"
         }`}
       >
-        <Text className="color-white text-2xl z-40 text-right font-normal">
+        <Text className="color-white text-2xl z-40 text-right font-medium">
           اسکن بدن و برنامه ریزی
         </Text>
         <HStack className="items-center justify-between">

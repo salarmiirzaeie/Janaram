@@ -10,7 +10,7 @@ import { ScrollView } from "react-native";
 const index = () => {
   return (
     <ScrollView>
-      <VStack className="flex-1  py-4 bg-background-50">
+      <VStack className="flex-1  py-4 bg-white">
         <VStack className="w-full items-center  justify-center p-5">
           <MoodCard />
         </VStack>
@@ -28,7 +28,7 @@ const index = () => {
             showsHorizontalScrollIndicator={false}
             horizontal
           >
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => (
+            {[1, 2, 3, 4, 5].map((item, index) => (
               <CourseCard index={index} key={item} />
             ))}
           </ScrollView>
@@ -37,7 +37,7 @@ const index = () => {
           <HStack className="items-center justify-between">
             <Text className="text-typography-400 text-sm">مشاهده همه</Text>
             <Text className="text-typography-700 text-lg font-semiBold">
-              تست های جدید
+              مدیتیشن های جدید
             </Text>
           </HStack>
 

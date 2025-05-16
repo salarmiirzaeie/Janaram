@@ -11,6 +11,7 @@ const _layout = () => {
           title: "تنظیمات",
           headerTitleAlign: "center",
           headerTitleStyle: { fontFamily: "vazirBold" },
+          statusBarStyle: "dark",
         }}
       />
     </Stack>

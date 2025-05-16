@@ -29,7 +29,7 @@ const MoodCard = () => {
       {!mood ? (
         <Pressable
           onPress={() => setMoodSheet(true)}
-          className="w-60 h-60  py-4 rounded-full bg-blue-300 items-center justify-center"
+          className="w-60 h-60   py-4 rounded-full bg-blue-300 items-center justify-center"
         >
           <Feather name="smile" size={36} color="white" />
           <Text className="text-white mt-4 text-lg font-bold">
