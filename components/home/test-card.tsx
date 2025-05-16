@@ -1,12 +1,19 @@
 import React from "react";
+import { HStack } from "../ui/hstack";
 import { Text } from "../ui/text";
 import { VStack } from "../ui/vstack";
-
-const TestCard = () => {
+interface IVStackProps extends React.ComponentProps<typeof VStack> {
+  index: number;
+}
+const TestCard: React.FC<IVStackProps> = (props) => {
   return (
-    <VStack className="bg-red-500 w-full h-24 rounded-xl">
-      <Text className="text-white">TestCard</Text>
-    </VStack>
+    <HStack
+      className={`  p-5 justify-center rounded-3xl items-center w-full h-20 ${
+        props.index % 2 ? "bg-red-300" : "bg-orange-300"
+      } `}
+    >
+      <Text className="text-white font-semiBold text-xl">تست استرس </Text>
+    </HStack>
   );
 };
 

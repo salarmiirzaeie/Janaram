@@ -1,19 +1,41 @@
+import { Entypo } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
-import { Image, Text } from "react-native";
+import { Badge, BadgeText } from "../ui/badge";
+import { HStack } from "../ui/hstack";
+import { Pressable } from "../ui/pressable";
+import { Text } from "../ui/text";
 import { VStack } from "../ui/vstack";
-
-const CourseCard = () => {
+interface IVStackProps extends React.ComponentProps<typeof VStack> {
+  index: number;
+}
+const CourseCard: React.FC<IVStackProps> = (props) => {
   return (
-    <VStack className="rounded-2xl h-64 w-52 mx-2 bg-gray-100">
-      <Image
-        source={require("@/assets/images/med.png")}
-        className="h-4/6 w-full rounded-t-2xl"
-        alt="image"
-      />
-      <VStack className="p-4">
-        <Text>مدیتیشن روزانه</Text>
+    <Pressable
+      onPress={() => router.push({ pathname: "/player", params: { id: "1" } })}
+    >
+      <VStack
+        className={`rounded-3xl h-52 w-48 justify-between p-5  mx-2 ${
+          props.index % 2 ? "bg-purple-300" : "bg-blue-300"
+        }`}
+      >
+        <Text className="color-white text-2xl z-40 text-right font-normal">
+          اسکن بدن و برنامه ریزی
+        </Text>
+        <HStack className="items-center justify-between">
+          <Badge className="rounded-full">
+            <BadgeText>3دقیقه</BadgeText>
+          </Badge>
+          <Pressable
+            className={`rounded-full h-14 w-14 justify-center items-center ${
+              props.index % 2 ? "bg-purple-500" : "bg-blue-500"
+            } `}
+          >
+            <Entypo name="controller-play" size={24} color="white" />
+          </Pressable>
+        </HStack>
       </VStack>
-    </VStack>
+    </Pressable>
   );
 };
 

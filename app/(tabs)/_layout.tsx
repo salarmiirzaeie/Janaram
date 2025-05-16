@@ -1,19 +1,12 @@
 import { Tabs } from "expo-router";
 import React from "react";
 
-import { HapticTab } from "@/components/HapticTab";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        tabBarButton: HapticTab,
         tabBarLabelStyle: {
           fontFamily: "vazirBold",
         },
@@ -39,7 +32,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="tryouts"
+        name="tests"
         options={{
           title: "تست",
           tabBarIcon: ({ color }) => (
@@ -50,7 +43,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="reports"
         options={{
-          title: "گزارش",
+          title: "مود من",
           tabBarIcon: ({ color }) => (
             <AntDesign size={24} name="linechart" color={color} />
           ),

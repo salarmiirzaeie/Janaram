@@ -1,11 +1,6 @@
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { AudioPlayerProvider } from "@/context/AudioPlayerContext";
 import "@/global.css";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -18,11 +13,10 @@ LogBox.ignoreLogs([
 ]);
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     vazir: require("@/assets/fonts/vazir-medium.ttf"),
     vazirBold: require("@/assets/fonts/vazir-bold.ttf"),
-    iransSans: require("@/assets/fonts/Iranian-sans.ttf"),
+    iranSans: require("@/assets/fonts/Iranian-sans.ttf"),
   });
 
   if (!loaded) {
@@ -32,13 +26,13 @@ export default function RootLayout() {
 
   return (
     <GluestackUIProvider mode="light">
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <AudioPlayerProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
+          <Stack.Screen name="player" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
-      </ThemeProvider>
+      </AudioPlayerProvider>
     </GluestackUIProvider>
   );
 }

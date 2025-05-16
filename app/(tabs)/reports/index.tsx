@@ -1,10 +1,9 @@
+import MoodLogger from "@/components/reports/moodLogger";
 import { HStack } from "@/components/ui/hstack";
-import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { router } from "expo-router";
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView } from "react-native";
 import { LineChart, PieChart } from "react-native-gifted-charts";
 
 const Test = () => {
@@ -62,29 +61,25 @@ const Test = () => {
   };
 
   return (
-    <ScrollView className="flex-1 bg-white">
+    <ScrollView className="flex-1 bg-background-50">
       <VStack className="flex-1 p-4 space-y-6">
         {/* Pie Chart Section */}
-        <VStack>
-          <Text className="text-right font-bold text-lg mb-2">
-            درصد احساسات این هفته
-          </Text>
-          <VStack className="items-center mb-4">
+        <VStack className="bg-white rounded-3xl mb-4 p-4">
+          <Text className="text-right font-semiBold text-xl">مود این هفته</Text>
+
+          <HStack className="items-center justify-between ">
             <PieChart
               data={pieData}
-              donut
-              textColor="white"
-              showText
               radius={100}
               textSize={14}
               focusOnPress
-              showValuesAsLabels
+              innerRadius={70}
               centerLabelComponent={() => (
                 <Text className="text-sm font-bold text-white">این هفته</Text>
               )}
             />
             {/* PieChart Legend */}
-            <VStack className="w-full px-4 space-y-1 mt-2">
+            <VStack>
               {pieData.map((item, index) => (
                 <Text key={index} className="text-right text-sm">
                   <Text style={{ color: item.color }}>● </Text>
@@ -92,16 +87,18 @@ const Test = () => {
                 </Text>
               ))}
             </VStack>
-          </VStack>
+          </HStack>
         </VStack>
 
         {/* Line Chart Section */}
-        <VStack>
-          <Text className="text-right font-bold text-lg mb-2">
-            روند تغییر احساسات
+        <VStack className="bg-white rounded-3xl mb-4 p-4">
+          <Text className="text-right font-semiBold text-xl mb-2">
+            روند مود هفته
           </Text>
-          <VStack className="items-center  mb-4">
+          <VStack className="items-center justify-center  my-4">
             <LineChart
+              width={270}
+              height={180}
               data={lineData}
               thickness={2}
               color="#60A5FA"
@@ -112,6 +109,7 @@ const Test = () => {
               startOpacity={0.3}
               endOpacity={0.1}
               curved
+              spacing={40}
               xAxisLabelTextStyle={{ fontSize: 12 }}
               yAxisTextStyle={{ fontSize: 12 }}
               yAxisColor="lightgray"
@@ -124,7 +122,8 @@ const Test = () => {
         </VStack>
 
         {/* Notes Section */}
-        <VStack>
+        <MoodLogger />
+        {/* <VStack>
           <HStack className="items-center mt-4 justify-between">
             <Pressable onPress={() => router.navigate("/(tabs)/reports/notes")}>
               <Text className="text-sm text-gray-600">مشاهده همه</Text>
@@ -149,7 +148,7 @@ const Test = () => {
               </View>
             ))}
           </VStack>
-        </VStack>
+        </VStack> */}
       </VStack>
     </ScrollView>
   );
