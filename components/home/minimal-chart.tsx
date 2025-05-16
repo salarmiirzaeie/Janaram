@@ -41,7 +41,7 @@ const MinimalChart = () => {
         maxValue={550}
         xAxisThickness={0}
         yAxisThickness={0}
-        hideDataPoints={true}
+        hideDataPoints={false}
         showVerticalLines={false}
         spacing={40}
         hideYAxisText={true}

@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import React from "react";
 
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   return (
@@ -36,7 +36,7 @@ export default function TabLayout() {
         options={{
           title: "تست",
           tabBarIcon: ({ color }) => (
-            <AntDesign size={24} name="appstore-o" color={color} />
+            <SimpleLineIcons size={24} name="trophy" color={color} />
           ),
         }}
       />

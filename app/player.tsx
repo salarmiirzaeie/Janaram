@@ -53,10 +53,6 @@ export default function PlayerScreen() {
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
-        <Ionicons name="chevron-back" size={28} color="#555" />
-      </Pressable>
-
       <Image source={track.image} style={styles.cover} />
 
       <Text style={styles.title}>{track.title}</Text>
@@ -100,7 +96,7 @@ export default function PlayerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f7f5f2", // زمینه‌ی روشن و آرام
+    backgroundColor: "#ffff", // زمینه‌ی روشن و آرام
     alignItems: "center",
     paddingTop: 60,
     justifyContent: "center",

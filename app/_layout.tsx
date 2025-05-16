@@ -29,7 +29,25 @@ export default function RootLayout() {
       <AudioPlayerProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="player" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="player"
+            options={{
+              headerShown: true,
+              headerTitleAlign: "center",
+              headerTitleStyle: { fontFamily: "vazirBold" },
+              headerTitle: "",
+              headerShadowVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="notifications"
+            options={{
+              headerShown: true,
+              headerTitleAlign: "center",
+              headerTitleStyle: { fontFamily: "vazirBold" },
+              headerTitle: "نوتیفیکیشن",
+            }}
+          />
         </Stack>
         <StatusBar style="auto" />
       </AudioPlayerProvider>

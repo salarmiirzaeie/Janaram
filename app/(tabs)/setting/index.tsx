@@ -11,7 +11,7 @@ export default function SettingsScreen() {
     <ScrollView className="bg-white flex-1 p-4">
       {/* اعلان‌ها */}
       <VStack className="mb-6">
-        <Text className="text-gray-500 mb-2 text-right font-medium">
+        <Text className="text-primary-500 mb-2 text-right font-medium">
           اعلان‌ها
         </Text>
         <SettingSwitch
@@ -26,7 +26,7 @@ export default function SettingsScreen() {
       <Divider />
       {/* ظاهر و رابط کاربری */}
       <VStack className="my-6">
-        <Text className="text-gray-500 mb-2 text-right font-medium">
+        <Text className="text-primary-500 mb-2 text-right font-medium">
           رابط کاربری
         </Text>
         <SettingSwitch
@@ -38,12 +38,10 @@ export default function SettingsScreen() {
       <Divider />
       {/* عمومی */}
       <VStack className="my-6">
-        <Text className="text-gray-500 mb-2 text-right font-medium">عمومی</Text>
-        <SettingItem
-          icon={<AntDesign name="star" size={24} color="black" />}
-          label="هدف‌گذاری روزانه"
-          onPress={() => {}}
-        />
+        <Text className="text-primary-500 mb-2 text-right font-medium">
+          عمومی
+        </Text>
+
         <SettingItem
           icon={<AntDesign name="infocirlceo" size={24} color="black" />}
           label="درباره اپلیکیشن"
