@@ -11,7 +11,7 @@ const Explore = () => {
   return (
     <VStack className="flex-1 bg-background-50 py-8">
       <ScrollView className="flex-1  bg-background-50">
-        <Input size="xl" className="m-4 bg-white rounded-lg ">
+        <Input size="xl" className="m-4 bg-white  rounded-lg ">
           <InputSlot className="px-4 items-center">
             <InputIcon
               as={(props) => (

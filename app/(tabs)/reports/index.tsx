@@ -65,7 +65,9 @@ const Test = () => {
       <VStack className="flex-1 p-4 space-y-6">
         {/* Pie Chart Section */}
         <VStack className="bg-white rounded-3xl mb-4 p-4">
-          <Text className="text-right font-semiBold text-xl">مود این هفته</Text>
+          <Text className="text-right font-semiBold text-xl">
+            مود هفت روز گذشته
+          </Text>
 
           <HStack className="items-center justify-between ">
             <PieChart
@@ -93,7 +95,7 @@ const Test = () => {
         {/* Line Chart Section */}
         <VStack className="bg-white rounded-3xl mb-4 p-4">
           <Text className="text-right font-semiBold text-xl mb-2">
-            روند مود هفته
+            روند مود هفت روز گذشته
           </Text>
           <VStack className="items-center justify-center  my-4">
             <LineChart

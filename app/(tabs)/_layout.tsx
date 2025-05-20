@@ -5,13 +5,19 @@ import { useAppSelector } from "@/hooks/useAppSelector";
 import { setSleepMode } from "@/redux/sleep-mode/sleep-slice";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
+import Start from "../start";
 
 export default function TabLayout() {
   const { isSleepMode } = useAppSelector((state) => state.sleepMode);
+  const { isInitialized } = useAppSelector((state) => state.initialize);
   const dispatch = useDispatch();
   const sleepModeHandler = (val: boolean) => {
     dispatch(setSleepMode(val));
   };
+
+  if (!isInitialized) {
+    return <Start />;
+  }
   return (
     <Tabs
       screenOptions={{
