@@ -1,6 +1,12 @@
+import { useAppSelector } from "@/hooks/useAppSelector";
+import { setMood } from "@/redux/mood/mood-slice";
+import { getEmojiFromMood, getLabelFromMood, moods } from "@/utils/mood";
 import { Feather } from "@expo/vector-icons";
+import { format } from "date-fns";
+import { format as formatJalali } from "date-fns-jalali";
 import React, { useState } from "react";
 import { FlatList, Text } from "react-native";
+import { useDispatch } from "react-redux";
 import {
   Actionsheet,
   ActionsheetBackdrop,
@@ -13,17 +19,24 @@ import { Pressable } from "../ui/pressable";
 import { Textarea, TextareaInput } from "../ui/textarea";
 import { VStack } from "../ui/vstack";
 import MinimalChart from "./minimal-chart";
-const moods = [
-  { emoji: "😄", label: "خوشحال", value: 1 },
-  { emoji: "😐", label: "معمولی", value: 2 },
-  { emoji: "😞", label: "ناراحت", value: 3 },
-  { emoji: "😡", label: "عصبانی", value: 4 },
-  { emoji: "😴", label: "خسته", value: 5 },
-  { emoji: "😟", label: "مظطرب", value: 6 },
-];
+
 const MoodCard = () => {
-  const [mood, setMood] = useState(0);
+  const [moodState, setMoodState] = useState(0);
   const [moodSheet, setMoodSheet] = useState(false);
+  const [note, setNote] = useState("");
+  const dispatch = useDispatch();
+  const today = format(new Date(), "yyyy-MM-dd");
+  const moodData = useAppSelector((state) =>
+    state.mood.find((m) => m.date === today)
+  );
+  const mood = moodData?.mood ?? 0;
+  const handleSave = () => {
+    const today = new Date();
+    const formatted = format(today, "yyyy-MM-dd");
+    dispatch(setMood({ date: formatted, mood: moodState, note }));
+    setMoodSheet(false);
+  };
+
   return (
     <>
       {!mood ? (
@@ -41,13 +54,13 @@ const MoodCard = () => {
           <HStack className="items-center">
             <Pressable onPress={() => setMoodSheet(true)}>
               <VStack space="sm" className="items-center">
-                <Text className="text-4xl">😄</Text>
+                <Text className="text-4xl">{getEmojiFromMood(mood)}</Text>
                 <VStack>
-                  <Text className="text-base font-bold text-gray-700">
-                    شاد و پرانرژی
+                  <Text className="text-center  font-semiBold text-gray-700">
+                    {getLabelFromMood(mood)}
                   </Text>
-                  <Text className="text-xs text-green-600">
-                    +10٪ بهتر از دیروز
+                  <Text className="text-xs font-medium text-green-600">
+                    +۱۰٪ بهتر از دیروز
                   </Text>
                 </VStack>
               </VStack>
@@ -56,7 +69,7 @@ const MoodCard = () => {
             <VStack>
               <MinimalChart />
               <Text className="text-xs text-gray-400 mb-3 -mt-14 text-center font-semiBold">
-                نوسان مود در هفته
+                نوسان مود هفت روز گذشته
               </Text>
               <Text className="text-sm text-gray-600 text-center italic">
                 «به خودت افتخار کن، امروز با لبخند شروع شد.»
@@ -80,7 +93,7 @@ const MoodCard = () => {
               مود امروزتو با یه ایموجی نشون بده
             </Text>
             <Badge className="rounded-full" size="lg">
-              <BadgeText>۱۴۰۱/۱۲/۱۴</BadgeText>
+              <BadgeText>{formatJalali(new Date(), "yyyy/MM/dd")}</BadgeText>
             </Badge>
             <FlatList
               data={moods}
@@ -89,14 +102,16 @@ const MoodCard = () => {
               className="w-full mt-8  flex-grow-0"
               renderItem={({ item }) => (
                 <Pressable
-                  onPress={() => setMood(item.value)}
+                  onPress={() => setMoodState(item.value)}
                   className={`h-28 flex-1 shadow shadow-md m-2 border ${
-                    item.value === mood
+                    item.value === mood || item.value === moodState
                       ? "border-background-300"
                       : "border-transparent"
                   } 
                   ${
-                    item.value === mood ? "bg-white" : "bg-background-100"
+                    item.value === mood || item.value === moodState
+                      ? "bg-white"
+                      : "bg-background-100"
                   } border-background-100 rounded-3xl items-center justify-center`}
                 >
                   <Text
@@ -124,10 +139,14 @@ const MoodCard = () => {
                 isDisabled={false}
                 className="w-full bg-background-100 rounded-3xl border-0 p-4"
               >
-                <TextareaInput placeholder="یادداشت امروزتو بنویس" />
+                <TextareaInput
+                  value={note}
+                  onChangeText={(text) => setNote(text)}
+                  placeholder="یادداشت امروزتو بنویس"
+                />
               </Textarea>
             </VStack>
-            <Button onPress={() => setMoodSheet(false)} className="w-full">
+            <Button onPress={handleSave} className="w-full">
               <ButtonText>ذخیره</ButtonText>
             </Button>
           </VStack>

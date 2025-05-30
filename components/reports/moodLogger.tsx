@@ -1,42 +1,31 @@
+import { useAppSelector } from "@/hooks/useAppSelector";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { MoodLog, MoodLogItem } from "./MoodLogItem";
-
-const logs: MoodLog[] = [
-  {
-    time: "۹:۰۶ شب",
-    temperature: "۱۷° سانتی‌گراد",
-    weather: "ابری",
-    mood: "احساسی",
-    note: "شام با مارشال پایان خوبی برای روزم بود.",
-  },
-  {
-    time: "۵:۱۵ عصر",
-    temperature: "۲۶° سانتی‌گراد",
-    weather: "آفتابی و ابری",
-    mood: "معمولی",
-  },
-  {
-    time: "۲:۱۶ ظهر",
-    temperature: "۲۹° سانتی‌گراد",
-    weather: "ابری",
-    mood: "افتضاح",
-    note: "رئیسم گفت برای جمعه فهرست دستاورد‌هام رو بنویسم و واقعاً هیچ‌چی ندارم!",
-  },
-];
+import { Text } from "../ui/text";
+import { MoodLogItem } from "./MoodLogItem";
 
 export default function MoodLogger() {
+  const logs = useAppSelector((state) => state.mood);
+
+  const sortedLogs = logs
+    ?.filter((log) => log.mood !== null)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
   return (
     <View style={styles.screen}>
       <ScrollView style={styles.scroll}>
-        {logs.map((log, index) => (
-          <MoodLogItem
-            key={index}
-            log={log}
-            isFirst={index === 0}
-            isLast={index === logs.length - 1}
-          />
-        ))}
+        {sortedLogs && sortedLogs.length > 0 ? (
+          sortedLogs.map((log, index) => (
+            <MoodLogItem
+              key={index}
+              log={log}
+              isFirst={index === 0}
+              isLast={index === sortedLogs.length - 1}
+            />
+          ))
+        ) : (
+          <Text>هنوز مودی ثبت نشده</Text>
+        )}
       </ScrollView>
     </View>
   );

@@ -1,7 +1,8 @@
 import { Tabs } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useAppSelector } from "@/hooks/useAppSelector";
+import { syncLast7Days } from "@/redux/mood/mood-slice";
 import { setSleepMode } from "@/redux/sleep-mode/sleep-slice";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
@@ -14,6 +15,9 @@ export default function TabLayout() {
   const sleepModeHandler = (val: boolean) => {
     dispatch(setSleepMode(val));
   };
+  useEffect(() => {
+    dispatch(syncLast7Days());
+  }, []);
 
   if (!isInitialized) {
     return <Start />;
