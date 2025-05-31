@@ -14,8 +14,6 @@ const _layout = () => {
           statusBarStyle: "dark",
         }}
       />
-
-      <Stack.Screen name="notes" options={{ headerShown: false }} />
     </Stack>
   );
 };

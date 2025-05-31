@@ -7,11 +7,7 @@ import { format as formatJalali } from "date-fns-jalali";
 import React, { useState } from "react";
 import { FlatList, Text } from "react-native";
 import { useDispatch } from "react-redux";
-import {
-  Actionsheet,
-  ActionsheetBackdrop,
-  ActionsheetContent,
-} from "../ui/actionsheet";
+import { Actionsheet, ActionsheetBackdrop, ActionsheetContent } from "../ui/actionsheet";
 import { Badge, BadgeText } from "../ui/badge";
 import { Button, ButtonText } from "../ui/button";
 import { HStack } from "../ui/hstack";
@@ -26,9 +22,7 @@ const MoodCard = () => {
   const [note, setNote] = useState("");
   const dispatch = useDispatch();
   const today = format(new Date(), "yyyy-MM-dd");
-  const moodData = useAppSelector((state) =>
-    state.mood.find((m) => m.date === today)
-  );
+  const moodData = useAppSelector((state) => state.mood.find((m) => m.date === today));
   const mood = moodData?.mood ?? 0;
   const handleSave = () => {
     const today = new Date();
@@ -45,9 +39,7 @@ const MoodCard = () => {
           className="w-60 h-60   py-4 rounded-full bg-blue-300 items-center justify-center"
         >
           <Feather name="smile" size={36} color="white" />
-          <Text className="text-white mt-4 text-lg font-semiBold">
-            امروز چه حسی داری؟
-          </Text>
+          <Text className="text-white mt-4 text-lg font-semiBold">امروز چه حسی داری؟</Text>
         </Pressable>
       ) : (
         <Pressable className="w-full h-70 rounded-3xl px-5 py-4 bg-blue-100">
@@ -56,19 +48,15 @@ const MoodCard = () => {
               <VStack space="sm" className="items-center">
                 <Text className="text-4xl">{getEmojiFromMood(mood)}</Text>
                 <VStack>
-                  <Text className="text-center  font-semiBold text-gray-700">
-                    {getLabelFromMood(mood)}
-                  </Text>
-                  <Text className="text-xs font-medium text-green-600">
-                    +۱۰٪ بهتر از دیروز
-                  </Text>
+                  <Text className="text-center  font-semiBold text-gray-700">{getLabelFromMood(mood)}</Text>
+                  <Text className="text-xs font-medium text-green-600">+۱۰٪ بهتر از دیروز</Text>
                 </VStack>
               </VStack>
             </Pressable>
 
-            <VStack>
+            <VStack className="flex-1">
               <MinimalChart />
-              <Text className="text-xs text-gray-400 mb-3 -mt-14 text-center font-semiBold">
+              <Text className="text-xs text-gray-400 mb-1 -mt-8 text-center font-semiBold">
                 نوسان مود هفت روز گذشته
               </Text>
               <Text className="text-sm text-gray-600 text-center italic">
@@ -78,20 +66,11 @@ const MoodCard = () => {
           </HStack>
         </Pressable>
       )}
-      <Actionsheet
-        isOpen={moodSheet}
-        closeOnOverlayClick={true}
-        onClose={() => setMoodSheet(false)}
-      >
+      <Actionsheet isOpen={moodSheet} closeOnOverlayClick={true} onClose={() => setMoodSheet(false)}>
         <ActionsheetBackdrop />
         <ActionsheetContent className={"py-16 "}>
-          <VStack
-            space="lg"
-            className="h-5/6 w-full  flex-grow justify-between items-center"
-          >
-            <Text className="text-2xl font-semiBold">
-              مود امروزتو با یه ایموجی نشون بده
-            </Text>
+          <VStack space="lg" className="h-5/6 w-full  flex-grow justify-between items-center">
+            <Text className="text-2xl font-semiBold">مود امروزتو با یه ایموجی نشون بده</Text>
             <Badge className="rounded-full" size="lg">
               <BadgeText>{formatJalali(new Date(), "yyyy/MM/dd")}</BadgeText>
             </Badge>
@@ -104,32 +83,20 @@ const MoodCard = () => {
                 <Pressable
                   onPress={() => setMoodState(item.value)}
                   className={`h-28 flex-1 shadow shadow-md m-2 border ${
-                    item.value === mood || item.value === moodState
-                      ? "border-background-300"
-                      : "border-transparent"
+                    item.value === mood || item.value === moodState ? "border-background-300" : "border-transparent"
                   } 
                   ${
-                    item.value === mood || item.value === moodState
-                      ? "bg-white"
-                      : "bg-background-100"
+                    item.value === mood || item.value === moodState ? "bg-white" : "bg-background-100"
                   } border-background-100 rounded-3xl items-center justify-center`}
                 >
-                  <Text
-                    style={{ fontSize: 60, fontWeight: "bold", lineHeight: 80 }}
-                  >
-                    {item.emoji}
-                  </Text>
+                  <Text style={{ fontSize: 60, fontWeight: "bold", lineHeight: 80 }}>{item.emoji}</Text>
                 </Pressable>
               )}
             />
             <VStack space="md" className="w-full">
               <HStack className="items-center justify-end">
-                <Text className="text-black text-right text-sm font-medium">
-                  {"(اختیاری)"}
-                </Text>
-                <Text className="text-black text-right text-lg font-semibold">
-                  {"یادداشت "}
-                </Text>
+                <Text className="text-black text-right text-sm font-medium">{"(اختیاری)"}</Text>
+                <Text className="text-black text-right text-lg font-semibold">{"یادداشت "}</Text>
               </HStack>
 
               <Textarea

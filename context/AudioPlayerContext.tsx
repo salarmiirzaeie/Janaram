@@ -3,11 +3,11 @@ import { Audio, AVPlaybackStatus } from "expo-av";
 import { useSegments } from "expo-router";
 import { createContext, useContext, useRef, useState } from "react";
 
-type Track = {
+export type Track = {
   id: string;
   title: string;
   artist: string;
-  file: any;
+  image: string;
 };
 
 type AudioPlayerContextType = {
@@ -26,16 +26,11 @@ const AudioPlayerContext = createContext<AudioPlayerContextType | null>(null);
 
 export const useAudioPlayer = () => {
   const ctx = useContext(AudioPlayerContext);
-  if (!ctx)
-    throw new Error("useAudioPlayer must be inside AudioPlayerProvider");
+  if (!ctx) throw new Error("useAudioPlayer must be inside AudioPlayerProvider");
   return ctx;
 };
 
-export const AudioPlayerProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const AudioPlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [track, setTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0);
@@ -47,14 +42,19 @@ export const AudioPlayerProvider = ({
 
   const loadTrack = async (newTrack: Track) => {
     if (track?.id === newTrack.id) return;
-
+    console.log(newTrack);
     if (soundRef.current) {
       await soundRef.current.unloadAsync();
       soundRef.current.setOnPlaybackStatusUpdate(null);
       soundRef.current = null;
     }
 
-    const { sound } = await Audio.Sound.createAsync(newTrack.file, {
+    // اگر string باشد (آدرس فایل)، همان را استفاده کن
+    let source = {
+      uri: `https://raw.githubusercontent.com/salarmiirzaeie/audio-files/main/${newTrack.id.toString()}.mp3`,
+    };
+    console.log(source);
+    const { sound } = await Audio.Sound.createAsync(source, {
       shouldPlay: true,
     });
 

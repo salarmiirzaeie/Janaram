@@ -12,16 +12,23 @@ interface IVStackProps extends React.ComponentProps<typeof VStack> {
 const CourseCard: React.FC<IVStackProps> = (props) => {
   return (
     <Pressable
-      onPress={() => router.push({ pathname: "/player", params: { id: "1" } })}
+      onPress={() =>
+        router.push({
+          pathname: "/player",
+          params: {
+            id: 1,
+            title: "title",
+            artist: "artist",
+          },
+        })
+      }
     >
       <VStack
         className={`rounded-3xl h-52 w-48 justify-between p-5  mx-2 ${
           props.index % 2 ? "bg-purple-300" : "bg-blue-300"
         }`}
       >
-        <Text className="color-white text-2xl z-40 text-right font-medium">
-          اسکن بدن و برنامه ریزی
-        </Text>
+        <Text className="color-white text-2xl z-40 text-right font-medium">اسکن بدن و برنامه ریزی</Text>
         <HStack className="items-center justify-between">
           <Badge className="rounded-full">
             <BadgeText>3دقیقه</BadgeText>

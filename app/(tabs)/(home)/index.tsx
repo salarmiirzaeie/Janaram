@@ -36,9 +36,7 @@ const index = () => {
         <VStack space="md" className="mt-6 px-5">
           <HStack className="items-center justify-between">
             <Text className="text-typography-400 text-sm">مشاهده همه</Text>
-            <Text className="text-typography-700 text-lg font-semiBold">
-              مدیتیشن های جدید
-            </Text>
+            <Text className="text-typography-700 text-lg font-semiBold">مدیتیشن های جدید</Text>
           </HStack>
 
           {[1, 2, 3, 4].map((item) => (

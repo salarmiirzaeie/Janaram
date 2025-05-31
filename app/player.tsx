@@ -1,38 +1,25 @@
-import {
-  Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
-} from "@/components/ui/slider";
-import { useAudioPlayer } from "@/context/AudioPlayerContext"; // <-- your context
+import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@/components/ui/slider";
+import { Track, useAudioPlayer } from "@/context/AudioPlayerContext"; // <-- your context
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
-const tracks = {
-  "1": {
-    id: "1",
-    title: "Track 1",
-    artist: "Artist A",
-    file: require("@/assets/audio/1.mp3"),
-    image: require("@/assets/images/med.png"),
-  },
-};
-
 export default function PlayerScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const navigation = useNavigation();
-  const track = tracks[id as keyof typeof tracks];
-  const {
-    track: currentTrack,
-    isPlaying,
-    position,
-    duration,
-    loadTrack,
-    togglePlay,
-    seek,
-  } = useAudioPlayer();
+  const { id, title, artist, fileUri } = useLocalSearchParams<{
+    id: string;
+    title: string;
+    artist: string;
+    fileUri: string;
+  }>();
+
+  const track: Track = {
+    id,
+    title: title || "Unknown Title",
+    artist: artist || "Unknown Artist",
+    image: require("@/assets/images/med.png"), // در صورت نیاز
+  };
+  const { track: currentTrack, isPlaying, position, duration, loadTrack, togglePlay, seek } = useAudioPlayer();
 
   // Load the selected track when this screen is opened
   useEffect(() => {
@@ -53,19 +40,11 @@ export default function PlayerScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={track.image} style={styles.cover} />
-
+      <Image source={track.image ? track.image : require("@/assets/images/med.png")} style={styles.cover} />
       <Text style={styles.title}>{track.title}</Text>
       <Text style={styles.artist}>{track.artist}</Text>
 
-      <Slider
-        size="md"
-        value={position}
-        minValue={0}
-        maxValue={duration}
-        onChange={seek}
-        className="w-11/12"
-      >
+      <Slider size="md" value={position} minValue={0} maxValue={duration} onChange={seek} className="w-11/12">
         <SliderTrack>
           <SliderFilledTrack />
         </SliderTrack>

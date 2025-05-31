@@ -2,25 +2,42 @@ import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { AudioPlayerProvider } from "@/context/AudioPlayerContext";
 import "@/global.css";
 import { persistor, store } from "@/redux/store";
+import { registerMoodReminderTask } from "@/utils/tasks";
 import { useFonts } from "expo-font";
+import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
+import { useEffect } from "react";
 import { LogBox } from "react-native";
 import "react-native-reanimated";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
 // Trigger a layout animation
-LogBox.ignoreLogs([
-  "setLayoutAnimationEnabledExperimental is currently a no-op in the New Architecture",
-]);
-
+LogBox.ignoreLogs(["setLayoutAnimationEnabledExperimental is currently a no-op in the New Architecture"]);
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 export default function RootLayout() {
   const [loaded] = useFonts({
     vazir: require("@/assets/fonts/vazir-medium.ttf"),
     vazirBold: require("@/assets/fonts/vazir-bold.ttf"),
     iranSans: require("@/assets/fonts/Iranian-sans.ttf"),
   });
-
+  useEffect(() => {
+    async function setup() {
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status === "granted") {
+        await registerMoodReminderTask();
+      }
+    }
+    setup();
+  }, []);
   if (!loaded) {
     // Async font loading only occurs in development.
     return null;
