@@ -2,60 +2,64 @@ import { IMood } from "@/redux/mood/mood-slice";
 import { format as formatJalali } from "date-fns-jalali";
 import { faIR } from "date-fns-jalali/locale";
 
-const dayLabels = [
-  "شنبه",
-  "یک‌شنبه",
-  "دوشنبه",
-  "سه‌شنبه",
-  "چهارشنبه",
-  "پنج‌شنبه",
-  "جمعه",
-];
+const dayLabels = ["شنبه", "یک‌شنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه"];
 
 const getDayIndex = (date: Date): number => {
   const dayName = formatJalali(date, "iiii", { locale: faIR }); // مثلا "شنبه"
   return dayLabels.indexOf(dayName);
 };
 
-export const prepareLineData = (moods: IMood[]) => {
+export const prepareBarData = (moodEntries: IMood[]) => {
   const moodMap: Record<number, number[]> = {};
 
-  moods.forEach((m) => {
-    if (m.mood !== null) {
-      const fixedDate = new Date(m.date + "T12:00:00+03:30");
-      const dayIndex = getDayIndex(fixedDate);
+  moodEntries.forEach((entry) => {
+    if (entry.mood !== null) {
+      const fixedDate = new Date(entry.date + "T12:00:00+03:30");
+      const dayIndex = getDayIndex(fixedDate); // مثلاً شنبه = 0
       if (!moodMap[dayIndex]) moodMap[dayIndex] = [];
-      moodMap[dayIndex].push(m.mood);
+      moodMap[dayIndex].push(entry.mood);
     }
   });
 
-  const lineData = dayLabels.map((label, index) => {
-    const moods = moodMap[index];
-    const avgMood = moods
-      ? moods.reduce((a, b) => a + b, 0) / moods.length
-      : null;
+  const barData = dayLabels.map((label, index) => {
+    const dailyMoods = moodMap[index];
+    if (!dailyMoods || dailyMoods.length === 0) return null;
+
+    const avgMood = dailyMoods.reduce((a, b) => a + b, 0) / dailyMoods.length;
+
+    // پیدا کردن نزدیک‌ترین مود برای رنگ
+    const closestMood = moods.reduce((prev, curr) =>
+      Math.abs(curr.value - avgMood) < Math.abs(prev.value - avgMood) ? curr : prev
+    );
+
     return {
-      label,
-      value: avgMood ?? null,
+      label, // مثل "شنبه"
+      value: avgMood, // میانگین مود
+      frontColor: closestMood.color, // رنگ از آرایه moods
+      emoji: closestMood.emoji, // می‌تونی اگر بخوای، ایموجی هم نشون بدی
     };
   });
 
-  return lineData.filter((d) => d.value !== null);
+  return barData.filter(Boolean);
 };
 
 export const moods = [
-  { emoji: "😄", label: "خوشحال", value: 1, color: "#A5D6A7" },
-  { emoji: "😐", label: "معمولی", value: 2, color: "#FFCC80" },
-  { emoji: "😞", label: "ناراحت", value: 3, color: "#14104a" },
-  { emoji: "😡", label: "عصبانی", value: 4, color: "#EF9A9A" },
-  { emoji: "😴", label: "خسته", value: 5, color: "#90CAF9" },
-  { emoji: "😟", label: "مظطرب", value: 6, color: "#b17fc7" },
+  { emoji: "🥰", label: "ذوق زده", value: 9, color: "#F48FB1" }, // صورتی ملایم، انرژی عاشقانه و مثبت
+  { emoji: "😊", label: "خوشحال", value: 8, color: "#FFD54F" }, // زرد گرم، انرژی مثبت
+  { emoji: "🙂", label: "معمولی", value: 7, color: "#90A4AE" }, // خاکستری آبی، حالت خنثی
+  { emoji: "😌", label: "ریلکس", value: 6, color: "#80CBC4" }, // فیروزه‌ای ملایم، حس آرامش
+  { emoji: "😴", label: "خسته", value: 5, color: "#B39DDB" }, // یاسی، مرتبط با خستگی و سکون
+  { emoji: "😞", label: "ناراحت", value: 4, color: "#7986CB" }, // آبی ملایم مایل به بنفش، غمگین اما نه شدید
+  { emoji: "😡", label: "عصبانی", value: 3, color: "#E57373" }, // قرمز روشن، حس خشم بدون خشونت شدید
+  { emoji: "😭", label: "گریه", value: 2, color: "#64B5F6" }, // آبی روشن، حالت گریه و غم
+  { emoji: "😰", label: "مضطرب", value: 1, color: "#BA68C8" }, // بنفش روشن، استرس و فشار روحی
 ];
+
 export const getEmojiFromMood = (mood: number) => {
-  return moods[mood - 1].emoji;
+  return moods[9 - mood].emoji;
 };
 export const getLabelFromMood = (mood: number) => {
-  return moods[mood - 1].label;
+  return moods[9 - mood].label;
 };
 export function preparePieData(moodEntries: IMood[]) {
   // شمارش تعداد هر مود

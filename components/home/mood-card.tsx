@@ -2,7 +2,7 @@ import { useAppSelector } from "@/hooks/useAppSelector";
 import { setMood } from "@/redux/mood/mood-slice";
 import { getEmojiFromMood, getLabelFromMood, moods } from "@/utils/mood";
 import { Feather } from "@expo/vector-icons";
-import { format } from "date-fns";
+import { format, subDays } from "date-fns";
 import { format as formatJalali } from "date-fns-jalali";
 import React, { useState } from "react";
 import { FlatList, Text } from "react-native";
@@ -22,8 +22,12 @@ const MoodCard = () => {
   const [note, setNote] = useState("");
   const dispatch = useDispatch();
   const today = format(new Date(), "yyyy-MM-dd");
+  const yesterday = format(subDays(new Date(), 1), "yyyy-MM-dd");
   const moodData = useAppSelector((state) => state.mood.find((m) => m.date === today));
+  const moodDataForYesterday = useAppSelector((state) => state.mood.find((m) => m.date === yesterday));
+  const yesterdayMood = moodDataForYesterday?.mood ?? 0;
   const mood = moodData?.mood ?? 0;
+
   const handleSave = () => {
     const today = new Date();
     const formatted = format(today, "yyyy-MM-dd");
@@ -49,7 +53,11 @@ const MoodCard = () => {
                 <Text className="text-4xl">{getEmojiFromMood(mood)}</Text>
                 <VStack>
                   <Text className="text-center  font-semiBold text-gray-700">{getLabelFromMood(mood)}</Text>
-                  <Text className="text-xs font-medium text-green-600">+۱۰٪ بهتر از دیروز</Text>
+                  {yesterdayMood < mood ? (
+                    <Text className="text-xs font-medium text-green-600">بهتر از دیروز +</Text>
+                  ) : (
+                    <Text className="text-xs font-medium text-red-600">بدتر از دیروز -</Text>
+                  )}
                 </VStack>
               </VStack>
             </Pressable>
@@ -66,7 +74,14 @@ const MoodCard = () => {
           </HStack>
         </Pressable>
       )}
-      <Actionsheet isOpen={moodSheet} closeOnOverlayClick={true} onClose={() => setMoodSheet(false)}>
+      <Actionsheet
+        isOpen={moodSheet}
+        closeOnOverlayClick={true}
+        onClose={() => {
+          setMoodSheet(false);
+          setMoodState(0);
+        }}
+      >
         <ActionsheetBackdrop />
         <ActionsheetContent className={"py-16 "}>
           <VStack space="lg" className="h-5/6 w-full  flex-grow justify-between items-center">
@@ -82,14 +97,23 @@ const MoodCard = () => {
               renderItem={({ item }) => (
                 <Pressable
                   onPress={() => setMoodState(item.value)}
-                  className={`h-28 flex-1 shadow shadow-md m-2 border ${
-                    item.value === mood || item.value === moodState ? "border-background-300" : "border-transparent"
+                  className={`h-28 flex-1  shadow-md m-2 border ${
+                    item.value === moodState ? "border-background-300" : "border-transparent"
                   } 
                   ${
-                    item.value === mood || item.value === moodState ? "bg-white" : "bg-background-100"
+                    moodState
+                      ? item.value === moodState
+                        ? "bg-white"
+                        : "bg-background-100"
+                      : mood === item.value
+                      ? "bg-white"
+                      : "bg-background-100"
                   } border-background-100 rounded-3xl items-center justify-center`}
                 >
-                  <Text style={{ fontSize: 60, fontWeight: "bold", lineHeight: 80 }}>{item.emoji}</Text>
+                  <Text style={{ fontSize: 50, fontWeight: "bold", lineHeight: 80 }}>{item.emoji}</Text>
+                  <Text style={{ fontSize: 14, fontWeight: "bold", lineHeight: 20, marginBottom: 10 }}>
+                    {item.label}
+                  </Text>
                 </Pressable>
               )}
             />
