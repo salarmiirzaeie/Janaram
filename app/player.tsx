@@ -6,18 +6,19 @@ import { useEffect } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function PlayerScreen() {
-  const { id, title, artist, fileUri } = useLocalSearchParams<{
+  const { id, title, artist, fileUri, image } = useLocalSearchParams<{
     id: string;
     title: string;
     artist: string;
     fileUri: string;
+    image: string;
   }>();
 
   const track: Track = {
     id,
     title: title || "Unknown Title",
     artist: artist || "Unknown Artist",
-    image: require("@/assets/images/med.png"), // در صورت نیاز
+    image: image, // در صورت نیاز
   };
   const { track: currentTrack, isPlaying, position, duration, loadTrack, togglePlay, seek } = useAudioPlayer();
 
@@ -40,7 +41,7 @@ export default function PlayerScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={track.image ? track.image : require("@/assets/images/med.png")} style={styles.cover} />
+      <Image source={{ uri: track.image }} style={styles.cover} />
       <Text style={styles.title}>{track.title}</Text>
       <Text style={styles.artist}>{track.artist}</Text>
 
@@ -96,15 +97,20 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#2e2e2e",
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "600",
     marginBottom: 4,
-    fontFamily: "System", // یا custom فونت مثل "IRANSans"
+    fontFamily: "vazirBold", // یا custom فونت مثل "IRANSans"
+    marginHorizontal: 20,
+    textAlign: "center",
   },
   artist: {
     color: "#888",
     fontSize: 16,
     marginBottom: 40,
+    textAlign: "center",
+    marginHorizontal: 20,
+    fontFamily: "vazir",
   },
   timeRow: {
     width: "90%",

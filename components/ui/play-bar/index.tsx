@@ -5,23 +5,13 @@ import { Image, Pressable, Text, View } from "react-native";
 import { HStack } from "../hstack";
 
 export default function NowPlayingBar() {
-  const {
-    track,
-    isPlaying,
-    position,
-    duration,
-    loadTrack,
-    togglePlay,
-    seek,
-    stop,
-  } = useAudioPlayer();
+  const { track, isPlaying, position, duration, loadTrack, togglePlay, seek, stop } = useAudioPlayer();
   const router = useRouter();
 
   if (!track) return null;
-
+  console.log(track);
   return (
-    <Pressable
-      onPress={() => router.push({ pathname: "/player", params: { id: "1" } })}
+    <View
       style={{
         position: "absolute",
         bottom: 75,
@@ -34,29 +24,30 @@ export default function NowPlayingBar() {
         zIndex: 100,
       }}
     >
-      <Image
-        source={require("@/assets/images/med.png")}
-        style={{ width: 48, height: 48, borderRadius: 8 }}
-      />
-      <View style={{ flex: 1, marginLeft: 10 }}>
-        <Text numberOfLines={1} style={{ color: "", fontSize: 14 }}>
+      <Image source={{ uri: track.image }} style={{ width: 48, height: 48, borderRadius: 8 }} />
+      <Pressable
+        onPress={() =>
+          router.push({
+            pathname: "/player",
+            params: { id: track.id, title: track.title, artist: track.artist, image: track.image },
+          })
+        }
+        style={{ flex: 1, marginLeft: 10 }}
+      >
+        <Text numberOfLines={1} style={{ color: "", fontSize: 12, fontFamily: "vazirBold" }}>
           {track.title}
         </Text>
-        <Text numberOfLines={1} style={{ color: "#000", fontSize: 12 }}>
+        <Text numberOfLines={1} style={{ color: "#000", fontSize: 10, fontFamily: "vazir" }}>
           {track.artist}
         </Text>
-      </View>
+      </Pressable>
       <HStack space="md" className="items-center">
         <Pressable
           onPress={(e) => {
             togglePlay();
           }}
         >
-          <Ionicons
-            name={isPlaying ? "pause" : "play"}
-            size={28}
-            color="#000"
-          />
+          <Ionicons name={isPlaying ? "pause" : "play"} size={28} color="#000" />
         </Pressable>
         <Pressable
           onPress={(e) => {
@@ -66,6 +57,6 @@ export default function NowPlayingBar() {
           <Ionicons name="close" size={28} color="#000" />
         </Pressable>
       </HStack>
-    </Pressable>
+    </View>
   );
 }

@@ -16,6 +16,19 @@ const _layout = () => {
           statusBarStyle: "light",
         }}
       />
+      <Stack.Screen
+        name="all-musics"
+        options={{
+          headerShown: true,
+          title: " 🌙 خواب خوب",
+          headerTitleAlign: "center",
+          headerTitleStyle: { fontFamily: "vazirBold", color: "#fff" },
+          headerStyle: { backgroundColor: "rgba(29, 28, 28, 0.95)" },
+          headerShadowVisible: false,
+          statusBarStyle: "light",
+          headerTintColor: "#fff",
+        }}
+      />
     </Stack>
   );
 };

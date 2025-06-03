@@ -1,0 +1,101 @@
+[
+  {
+    "id": 1,
+    "title": "مدیتیشن برای رفتن به یک خواب عمیق و لذت بخش",
+    "type": "sleep",
+    "artist": "Hosein Aura",
+    "kind": "meditation",
+    "duration": "15:40",
+    "image": "https://media.istockphoto.com/id/1028900652/photo/man-meditating-yoga-at-sunset-mountains-travel-lifestyle-relaxation-emotional-concept.jpg?s=612x612&w=0&k=20&c=96TlYdSI8POnOrcqH10GlPgOeWFjEIoY-7G_yMV4Eco="
+  },
+  {
+    "id": 2,
+    "title": "مدیتیشن زندگی رویایی",
+    "type": "calm",
+    "artist": "Hosein Aura",
+    "kind": "meditation",
+    "duration": "10:57",
+    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+  },
+  {
+    "id": 3,
+    "title": "رهایی از ایگو - اینجا بدون تو!",
+    "type": "calm",
+    "artist": "Hosein Aura",
+    "kind": "meditation",
+    "duration": "25:06",
+    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+  },
+  {
+    "id": 4,
+    "title": "آتش درون",
+    "type": "calm",
+    "artist": "Hosein Aura",
+    "kind": "meditation",
+    "duration": "15:51",
+    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+  },
+  {
+    "id": 5,
+    "title": "مدیتیشن صبحگاهی برای جذب خواستها",
+    "type": "calm",
+    "artist": "Dr. Rezai",
+    "kind": "meditation",
+    "duration": "11:06",
+    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+  },
+  {
+    "id": 6,
+    "title": "قوی ترین مدیتیشن صبحگاهی| نیایش صبحگاهی",
+    "type": "calm",
+    "artist": "Dr. Rezai",
+    "kind": "meditation",
+    "duration": "15:00",
+    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+  },
+  {
+    "id": 7,
+    "title": "مدیتیشن برای بدست آوردن انگیزه / انگیزه ی واقعی و درونی",
+    "type": "anxiety",
+    "artist": "نیلوفر شیخی",
+    "kind": "meditation",
+    "duration": "13:03",
+    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+  },
+  {
+    "id": 8,
+    "title": " فعال کردن نیروی درونی برای رسیدن به اهداف و موفقیت در زندگی",
+    "type": "anxiety",
+    "artist": "نیلوفر شیخی",
+    "kind": "meditation",
+    "duration": "13:29",
+    "image": "https://s3.amazonaws.com/fathom_media/photos/cave-photograph.jpg.1200x800_q85_crop.jpg"
+  },
+  {
+    "id": 9,
+    "title": "جذب رابطه‌ی عاشقانه",
+    "type": "love",
+    "artist": "سپیده غیاثی",
+    "kind": "meditation",
+    "duration": "7:18",
+    "image": "https://www.nyimc.org/wp-content/uploads/2023/11/woman-horizon.jpg"
+  },
+  {
+    "id": 10,
+    "title": "کاری کن شخص دلخواهت دیوانه وار عاشقت بشه : مدیتیشن با تکنیک نویل گادارد",
+    "type": "love",
+    "artist": "Mitroyal",
+    "kind": "meditation",
+    "duration": "10:39",
+    "image": "https://lwos.life/wp-content/uploads/2022/06/meditation-and-writing.jpg"
+  },
+  {
+    "id": 11,
+    "title": " مدیتیشن برای رهایی از اضطراب و فشارروحی روانی",
+    "type": "anxiety",
+    "artist": "",
+    "kind": "meditation",
+    "duration": "17:11",
+    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+  }
+]

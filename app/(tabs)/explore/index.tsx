@@ -9,15 +9,11 @@ import { ScrollView } from "react-native";
 
 const Explore = () => {
   return (
-    <VStack className="flex-1 bg-background-50 py-8">
+    <VStack className="flex-1 bg-background-50 pt-8">
       <ScrollView className="flex-1  bg-background-50">
         <Input size="xl" className="m-4 bg-white  rounded-lg ">
           <InputSlot className="px-4 items-center">
-            <InputIcon
-              as={(props) => (
-                <Feather name="search" {...props} size={18} color="black" />
-              )}
-            />
+            <InputIcon as={(props) => <Feather name="search" {...props} size={18} color="black" />} />
           </InputSlot>
           <InputField placeholder="جستجو" />
         </Input>

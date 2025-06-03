@@ -83,7 +83,7 @@ const MoodCard = () => {
         }}
       >
         <ActionsheetBackdrop />
-        <ActionsheetContent className={"py-16 "}>
+        <ActionsheetContent className={"py-14 "}>
           <VStack space="lg" className="h-5/6 w-full  flex-grow justify-between items-center">
             <Text className="text-2xl font-semiBold">مود امروزتو با یه ایموجی نشون بده</Text>
             <Badge className="rounded-full" size="lg">
@@ -93,7 +93,7 @@ const MoodCard = () => {
               data={moods}
               keyExtractor={(item) => item.value.toString()}
               numColumns={3}
-              className="w-full mt-8  flex-grow-0"
+              className="w-full   flex-grow-0"
               renderItem={({ item }) => (
                 <Pressable
                   onPress={() => setMoodState(item.value)}

@@ -11,21 +11,13 @@ export default function SettingsScreen() {
     <ScrollView className="bg-white flex-1 p-4">
       {/* اعلان‌ها */}
       <VStack className="mb-6">
-        <Text className="text-primary-500 mb-2 text-right font-medium">
-          اعلان‌ها
-        </Text>
-        <SettingSwitch
-          icon={<AntDesign name="notification" size={24} color="black" />}
-          label="یادآوری مود روزانه"
-        />
-        <SettingSwitch
-          icon={<AntDesign name="notification" size={24} color="black" />}
-          label="اطلاع از تست‌های جدید"
-        />
+        <Text className="text-primary-500 mb-2 text-right font-medium">اعلان‌ها</Text>
+        <SettingSwitch icon={<AntDesign name="notification" size={24} color="black" />} label="یادآوری مود روزانه" />
+        <SettingSwitch icon={<AntDesign name="notification" size={24} color="black" />} label="اطلاع از تست‌های جدید" />
       </VStack>
       <Divider />
       {/* ظاهر و رابط کاربری */}
-      <VStack className="my-6">
+      {/* <VStack className="my-6">
         <Text className="text-primary-500 mb-2 text-right font-medium">
           رابط کاربری
         </Text>
@@ -33,25 +25,18 @@ export default function SettingsScreen() {
           icon={<Ionicons name="moon" size={24} color="black" />}
           label="حالت تاریک"
         />
-        {/* می‌تونی انتخاب رنگ یا فونت هم اضافه کنی بعداً */}
-      </VStack>
+      </VStack> */}
       <Divider />
       {/* عمومی */}
       <VStack className="my-6">
-        <Text className="text-primary-500 mb-2 text-right font-medium">
-          عمومی
-        </Text>
+        <Text className="text-primary-500 mb-2 text-right font-medium">عمومی</Text>
 
         <SettingItem
           icon={<AntDesign name="infocirlceo" size={24} color="black" />}
           label="درباره اپلیکیشن"
           onPress={() => {}}
         />
-        <SettingItem
-          icon={<Ionicons name="call" size={24} color="black" />}
-          label="تماس با ما"
-          onPress={() => {}}
-        />
+        <SettingItem icon={<Ionicons name="call" size={24} color="black" />} label="تماس با ما" onPress={() => {}} />
       </VStack>
     </ScrollView>
   );
@@ -71,22 +56,12 @@ const SettingItem = ({
   <Pressable onPress={onPress}>
     <HStack space="md" className="py-3 items-center flex-row-reverse">
       {IconComp}
-      <Text
-        className={`text-base ${isDanger ? "text-red-500" : "text-gray-800"}`}
-      >
-        {label}
-      </Text>
+      <Text className={`text-base ${isDanger ? "text-red-500" : "text-gray-800"}`}>{label}</Text>
     </HStack>
   </Pressable>
 );
 
-const SettingSwitch = ({
-  icon: IconComp,
-  label,
-}: {
-  icon: any;
-  label: string;
-}) => {
+const SettingSwitch = ({ icon: IconComp, label }: { icon: any; label: string }) => {
   const [value, setValue] = React.useState(false);
 
   return (
