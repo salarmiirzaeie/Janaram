@@ -1,19 +1,35 @@
+import AboutModal from "@/components/settings/about-modal";
 import { Divider } from "@/components/ui/divider";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { useAppSelector } from "@/hooks/useAppSelector";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Pressable, ScrollView, Switch } from "react-native";
+import { Linking, Pressable, ScrollView, Switch } from "react-native";
+import { useDispatch } from "react-redux";
 
 export default function SettingsScreen() {
+  const [aboutModalVisible, setAboutModalVisible] = React.useState(false);
+  const { moodNotification, newMeditationsNotification } = useAppSelector((state) => state.settings);
+  const dispatch = useDispatch();
   return (
     <ScrollView className="bg-white flex-1 p-4">
       {/* اعلان‌ها */}
       <VStack className="mb-6">
         <Text className="text-primary-500 mb-2 text-right font-medium">اعلان‌ها</Text>
-        <SettingSwitch icon={<AntDesign name="notification" size={24} color="black" />} label="یادآوری مود روزانه" />
-        <SettingSwitch icon={<AntDesign name="notification" size={24} color="black" />} label="اطلاع از تست‌های جدید" />
+        <SettingSwitch
+          value={moodNotification}
+          setValue={(value) => dispatch({ type: "settings/setMoodNotification", payload: value })}
+          icon={<AntDesign name="notification" size={24} color="black" />}
+          label="یادآوری مود روزانه"
+        />
+        <SettingSwitch
+          value={newMeditationsNotification}
+          setValue={(value) => dispatch({ type: "settings/setNewMeditationsNotification", payload: value })}
+          icon={<AntDesign name="notification" size={24} color="black" />}
+          label="اطلاع از تست‌های جدید"
+        />
       </VStack>
       <Divider />
       {/* ظاهر و رابط کاربری */}
@@ -34,10 +50,19 @@ export default function SettingsScreen() {
         <SettingItem
           icon={<AntDesign name="infocirlceo" size={24} color="black" />}
           label="درباره اپلیکیشن"
-          onPress={() => {}}
+          onPress={() => {
+            setAboutModalVisible(true);
+          }}
         />
-        <SettingItem icon={<Ionicons name="call" size={24} color="black" />} label="تماس با ما" onPress={() => {}} />
+        <SettingItem
+          icon={<Ionicons name="call" size={24} color="black" />}
+          label="تماس با ما"
+          onPress={() => {
+            Linking.openURL("mailto:salarmiirzapour@gmail.com");
+          }}
+        />
       </VStack>
+      <AboutModal visible={aboutModalVisible} onClose={() => setAboutModalVisible(false)} />
     </ScrollView>
   );
 }
@@ -61,9 +86,17 @@ const SettingItem = ({
   </Pressable>
 );
 
-const SettingSwitch = ({ icon: IconComp, label }: { icon: any; label: string }) => {
-  const [value, setValue] = React.useState(false);
-
+const SettingSwitch = ({
+  icon: IconComp,
+  label,
+  value,
+  setValue,
+}: {
+  icon: any;
+  label: string;
+  value?: boolean;
+  setValue: (value: boolean) => void;
+}) => {
   return (
     <HStack className="py-3 items-center flex-row-reverse justify-between">
       <HStack space="md" className="items-center">

@@ -1,101 +1,66 @@
 [
   {
     "id": 1,
-    "title": "مدیتیشن برای رفتن به یک خواب عمیق و لذت بخش",
-    "type": "sleep",
-    "artist": "Hosein Aura",
-    "kind": "meditation",
-    "duration": "15:40",
-    "image": "https://media.istockphoto.com/id/1028900652/photo/man-meditating-yoga-at-sunset-mountains-travel-lifestyle-relaxation-emotional-concept.jpg?s=612x612&w=0&k=20&c=96TlYdSI8POnOrcqH10GlPgOeWFjEIoY-7G_yMV4Eco="
+    "title": "آرامش فوری برای ذهن و بدن",
+    "type": "calm",
+    "artist": "نیلوفر شیخی",
+    "duration": "12:20",
+    "image": "https://images.squarespace-cdn.com/content/v1/57b5ef68c534a5cc06edc769/1546445075441-D5QNP4G5K00IHKYHZUAA/calm+meditation"
   },
   {
     "id": 2,
-    "title": "مدیتیشن زندگی رویایی",
+    "title": "تمرین آرامش بخش برای ارتباط با لحظه حال",
     "type": "calm",
     "artist": "Hosein Aura",
-    "kind": "meditation",
-    "duration": "10:57",
-    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+    "duration": "25:09",
+    "image": "https://image.jimcdn.com/app/cms/image/transf/none/path/sdfda069760aff065/image/i4928d3b2d1cbd92b/version/1673405089/image.jpg"
   },
   {
     "id": 3,
-    "title": "رهایی از ایگو - اینجا بدون تو!",
+    "title": "رهایی از نشخوار ذهنی",
     "type": "calm",
     "artist": "Hosein Aura",
-    "kind": "meditation",
-    "duration": "25:06",
-    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+    "duration": "19:59",
+    "image": "https://libraryitems.insighttimer.com/y0c8v0c9c6h6t4x4e6m5g4f5t4t3e1r4c2v5k2a3/pictures/tiny_rectangle_large.jpeg"
   },
   {
     "id": 4,
-    "title": "آتش درون",
+    "title": "عمیق‌ترین حالت آرامش",
     "type": "calm",
-    "artist": "Hosein Aura",
-    "kind": "meditation",
-    "duration": "15:51",
-    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+    "artist": "نیلوفر شیخی",
+    "duration": "14:34",
+    "image": "https://themindfool.com/wp-content/uploads/2020/03/best-time-to-meditate.jpg"
   },
   {
     "id": 5,
-    "title": "مدیتیشن صبحگاهی برای جذب خواستها",
+    "title": " رهایی از نگرانی",
     "type": "calm",
-    "artist": "Dr. Rezai",
-    "kind": "meditation",
-    "duration": "11:06",
-    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+    "artist": "Hosein Aura",
+    "duration": "18:36",
+    "image": "https://d1migpe0gurg12.cloudfront.net/Blogs/listingImage/meditation-for-anxiety-and-achieve-banner.webp"
   },
   {
     "id": 6,
-    "title": "قوی ترین مدیتیشن صبحگاهی| نیایش صبحگاهی",
-    "type": "calm",
-    "artist": "Dr. Rezai",
-    "kind": "meditation",
-    "duration": "15:00",
-    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+    "title": "فعال‌سازی عشق به خود و پذیرش درونی",
+    "type": "self-care",
+    "artist": "نیلوفر شیخی",
+    "duration": "14:45",
+    "image": "https://www.keen.com/wp-content/uploads/sites/2/2022/02/self-love-meditation.jpg"
   },
   {
     "id": 7,
-    "title": "مدیتیشن برای بدست آوردن انگیزه / انگیزه ی واقعی و درونی",
-    "type": "anxiety",
+    "title": "مدیتیشن دوست داشتن خود و عشق به خود",
+    "type": "self-care",
     "artist": "نیلوفر شیخی",
-    "kind": "meditation",
-    "duration": "13:03",
-    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+    "duration": "13:16",
+    "image": "https://images.squarespace-cdn.com/content/v1/6052c491e5212c603d24033b/20fbb374-71e7-4fd5-b9d4-6dfddbeb7234/Self-Love-Meditation.jpg"
   },
   {
     "id": 8,
-    "title": " فعال کردن نیروی درونی برای رسیدن به اهداف و موفقیت در زندگی",
-    "type": "anxiety",
-    "artist": "نیلوفر شیخی",
-    "kind": "meditation",
-    "duration": "13:29",
-    "image": "https://s3.amazonaws.com/fathom_media/photos/cave-photograph.jpg.1200x800_q85_crop.jpg"
-  },
-  {
-    "id": 9,
-    "title": "جذب رابطه‌ی عاشقانه",
-    "type": "love",
-    "artist": "سپیده غیاثی",
-    "kind": "meditation",
-    "duration": "7:18",
-    "image": "https://www.nyimc.org/wp-content/uploads/2023/11/woman-horizon.jpg"
-  },
-  {
-    "id": 10,
-    "title": "کاری کن شخص دلخواهت دیوانه وار عاشقت بشه : مدیتیشن با تکنیک نویل گادارد",
-    "type": "love",
-    "artist": "Mitroyal",
-    "kind": "meditation",
-    "duration": "10:39",
-    "image": "https://lwos.life/wp-content/uploads/2022/06/meditation-and-writing.jpg"
-  },
-  {
-    "id": 11,
-    "title": " مدیتیشن برای رهایی از اضطراب و فشارروحی روانی",
-    "type": "anxiety",
-    "artist": "",
-    "kind": "meditation",
-    "duration": "17:11",
-    "image": "https://images.pexels.com/photos/1680170/pexels-photo-1680170.jpeg?auto=compress&cs=tinysrgb&w=600"
+    "title": "قوی ترین تله پاتی و مدیتیشن عشق به خود",
+    "type": "self-care",
+    "artist": "Roya Tarokh",
+    "duration": "18:27",
+    "image": "https://centerstone.org/wp-content/uploads/Smile-1.jpg"
   }
 ]

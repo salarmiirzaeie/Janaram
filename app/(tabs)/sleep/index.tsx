@@ -91,7 +91,7 @@ const Tests = () => {
             horizontal
           >
             {sleepMusics.map((item) => (
-              <SleepCourseCard item={item} key={item.id} />
+              <SleepCourseCard isSleepMusic item={item} key={item.id} />
             ))}
           </ScrollView>
         </VStack>

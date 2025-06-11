@@ -19,19 +19,27 @@ const Explore = () => {
         </Input>
         <VStack space="md" className="m-4">
           <HStack space="md">
-            <VStack className="bg-green-300 flex-1 justify-center items-center rounded-lg h-28">
-              <Text className="text-white text-2xl font-semiBold">آرامش</Text>
+            <VStack className="bg-green-300 flex-1 justify-center items-center rounded-lg h-14">
+              <Text className="text-white text-xl font-semiBold">آرامش 🌿</Text>
             </VStack>
-            <VStack className="bg-purple-300 flex-1 justify-center items-center rounded-lg h-28">
-              <Text className="text-white text-2xl font-semiBold">خواب</Text>
+            <VStack className="bg-purple-300 flex-1 justify-center items-center rounded-lg h-14">
+              <Text className="text-white text-xl font-semiBold">عشق به خود 💗</Text>
             </VStack>
           </HStack>
           <HStack space="md">
-            <VStack className="bg-red-300 flex-1 rounded-lg justify-center items-center h-28">
-              <Text className="text-white text-2xl font-semiBold">استرس</Text>
+            <VStack className="bg-red-300 flex-1 rounded-lg justify-center items-center h-14">
+              <Text className="text-white text-xl font-semiBold">تمرکز 🧠</Text>
             </VStack>
-            <VStack className="bg-blue-300 flex-1 rounded-lg justify-center items-center h-28">
-              <Text className="text-white text-2xl font-semiBold">ناراحتی</Text>
+            <VStack className="bg-blue-300 flex-1 rounded-lg justify-center items-center h-14">
+              <Text className="text-white text-xl font-semiBold">هدف‌گذاری 🎯</Text>
+            </VStack>
+          </HStack>
+          <HStack space="md">
+            <VStack className="bg-pink-300 flex-1 rounded-lg justify-center items-center h-14">
+              <Text className="text-white text-xl font-semiBold">روابط و مهربانی 🌸</Text>
+            </VStack>
+            <VStack className="bg-indigo-300 flex-1 rounded-lg justify-center items-center h-14">
+              <Text className="text-white text-xl font-semiBold">درون‌نگری 🔮</Text>
             </VStack>
           </HStack>
         </VStack>
