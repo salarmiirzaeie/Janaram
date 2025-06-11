@@ -19,7 +19,7 @@ const MoodBarChart = ({ lineData }: any) => {
         xAxisThickness={1}
         yAxisColor="lightgray"
         xAxisColor="lightgray"
-        xAxisLabelTextStyle={{ fontSize: 12 }}
+        xAxisLabelTextStyle={{ opacity: 0 }}
         yAxisTextStyle={{ fontSize: 12 }}
         spacing={30}
         isAnimated

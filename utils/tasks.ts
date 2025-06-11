@@ -5,13 +5,13 @@ import * as BackgroundFetch from "expo-background-fetch";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 
-const TASK_NAME = "mood-reminder-task";
+export const TASK_NAME = "mood-reminder-task";
 
+// ✅ تعریف گلوبال
 TaskManager.defineTask(TASK_NAME, async () => {
   const now = new Date();
   const currentHour = now.getHours();
 
-  // فقط بین ساعت 21 تا 22 اجرا کن
   if (currentHour === 21) {
     const today = format(now, "yyyy-MM-dd");
     const entries = await getPersistedMoodEntries();
@@ -23,16 +23,39 @@ TaskManager.defineTask(TASK_NAME, async () => {
           title: "یادت نره مودتو ثبت کنی 😶",
           body: "همین الان حس‌تو ثبت کن. فقط یه دقیقه وقت می‌گیره.",
         },
-        trigger: null,
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.LOCAL_TIME,
+          seconds: 1,
+        },
       });
+      console.log("📦 Task Running...");
     }
   }
 
   return BackgroundFetch.BackgroundFetchResult.NewData;
 });
 
-export default TASK_NAME;
+// ✅ ثبت background task
+export async function registerMoodReminderTask() {
+  const isTaskDefined = TaskManager.isTaskDefined(TASK_NAME);
+  const status = await BackgroundFetch.getStatusAsync();
+  if (status !== BackgroundFetch.BackgroundFetchStatus.Available) {
+    console.warn("⛔ Background fetch not available");
+    return;
+  }
 
+  const tasks = await TaskManager.getRegisteredTasksAsync();
+  const alreadyRegistered = tasks.some((task) => task.taskName === TASK_NAME);
+  console.log(alreadyRegistered, isTaskDefined);
+  if (!alreadyRegistered && isTaskDefined) {
+    await BackgroundFetch.registerTaskAsync(TASK_NAME, {
+      minimumInterval: 60 * 60, // هر یک ساعت یک‌بار چک کنه
+      stopOnTerminate: false,
+      startOnBoot: true,
+    });
+    console.log("✅ Background task registered");
+  }
+}
 export const getPersistedMoodEntries = async (): Promise<IMood[]> => {
   try {
     const rootStateJson = await AsyncStorage.getItem("persist:root");
@@ -49,21 +72,3 @@ export const getPersistedMoodEntries = async (): Promise<IMood[]> => {
     return [];
   }
 };
-
-export const registerMoodReminderTask = async () => {
-  const isRegistered = await TaskManager.isTaskRegisteredAsync(TASK_NAME);
-  if (!isRegistered) {
-    await BackgroundFetch.registerTaskAsync(TASK_NAME, {
-      minimumInterval: 60 * 60, // هر 1 ساعت یک بار
-      stopOnTerminate: false,
-      startOnBoot: true,
-    });
-  }
-};
-
-export async function requestPermissions() {
-  const { status } = await Notifications.requestPermissionsAsync();
-  if (status !== "granted") {
-    alert("امکان ارسال نوتیفیکیشن فعال نیست");
-  }
-}

@@ -10,15 +10,18 @@ const getDayIndex = (date: Date): number => {
 };
 
 export const prepareBarData = (moodEntries: IMood[]) => {
+  const recentEntries = [...moodEntries]
+    .filter((entry) => entry.mood !== null)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(-7);
+
   const moodMap: Record<number, number[]> = {};
 
-  moodEntries.forEach((entry) => {
-    if (entry.mood !== null) {
-      const fixedDate = new Date(entry.date + "T12:00:00+03:30");
-      const dayIndex = getDayIndex(fixedDate); // مثلاً شنبه = 0
-      if (!moodMap[dayIndex]) moodMap[dayIndex] = [];
-      moodMap[dayIndex].push(entry.mood);
-    }
+  recentEntries.forEach((entry) => {
+    const fixedDate = new Date(entry.date + "T12:00:00+03:30");
+    const dayIndex = getDayIndex(fixedDate); // مثلاً شنبه = 0
+    if (!moodMap[dayIndex]) moodMap[dayIndex] = [];
+    moodMap[dayIndex].push(entry.mood!);
   });
 
   const barData = dayLabels.map((label, index) => {
@@ -27,16 +30,15 @@ export const prepareBarData = (moodEntries: IMood[]) => {
 
     const avgMood = dailyMoods.reduce((a, b) => a + b, 0) / dailyMoods.length;
 
-    // پیدا کردن نزدیک‌ترین مود برای رنگ
     const closestMood = moods.reduce((prev, curr) =>
       Math.abs(curr.value - avgMood) < Math.abs(prev.value - avgMood) ? curr : prev
     );
 
     return {
-      label, // مثل "شنبه"
-      value: avgMood, // میانگین مود
-      frontColor: closestMood.color, // رنگ از آرایه moods
-      emoji: closestMood.emoji, // می‌تونی اگر بخوای، ایموجی هم نشون بدی
+      label,
+      value: avgMood,
+      frontColor: closestMood.color,
+      emoji: closestMood.emoji,
     };
   });
 
@@ -62,16 +64,17 @@ export const getLabelFromMood = (mood: number) => {
   return moods[9 - mood].label;
 };
 export function preparePieData(moodEntries: IMood[]) {
-  // شمارش تعداد هر مود
+  const recentEntries = [...moodEntries]
+    .filter((entry) => entry.mood !== null)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(-7);
+
   const counts: Record<number, number> = {};
 
-  moodEntries.forEach((entry) => {
-    if (entry.mood !== null) {
-      counts[entry.mood] = (counts[entry.mood] || 0) + 1;
-    }
+  recentEntries.forEach((entry) => {
+    counts[entry.mood!] = (counts[entry.mood!] || 0) + 1;
   });
 
-  // ترکیب با اطلاعات لیبل و رنگ
   const pieData = moods
     .map((mood) => {
       const count = counts[mood.value] || 0;
@@ -81,7 +84,7 @@ export function preparePieData(moodEntries: IMood[]) {
         text: mood.label,
       };
     })
-    .filter((item) => item.value > 0); // فقط مودهایی که استفاده شدن
+    .filter((item) => item.value > 0);
 
   return pieData;
 }

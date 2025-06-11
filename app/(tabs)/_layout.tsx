@@ -1,8 +1,7 @@
 import { Tabs } from "expo-router";
-import React, { useEffect } from "react";
+import React from "react";
 
 import { useAppSelector } from "@/hooks/useAppSelector";
-import { syncLast7Days } from "@/redux/mood/mood-slice";
 import { setSleepMode } from "@/redux/sleep-mode/sleep-slice";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
@@ -15,9 +14,6 @@ export default function TabLayout() {
   const sleepModeHandler = (val: boolean) => {
     dispatch(setSleepMode(val));
   };
-  useEffect(() => {
-    dispatch(syncLast7Days());
-  }, []);
 
   if (!isInitialized) {
     return <Start />;
@@ -38,27 +34,21 @@ export default function TabLayout() {
         name="(home)"
         options={{
           title: "خانه",
-          tabBarIcon: ({ color }) => (
-            <AntDesign size={24} name="home" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <AntDesign size={24} name="home" color={color} />,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
           title: "مدیتیشن",
-          tabBarIcon: ({ color }) => (
-            <Ionicons size={24} name="leaf-outline" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <Ionicons size={24} name="leaf-outline" color={color} />,
         }}
       />
       <Tabs.Screen
         name="sleep"
         options={{
           title: "خواب خوب",
-          tabBarIcon: ({ color }) => (
-            <Feather size={24} name="moon" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <Feather size={24} name="moon" color={color} />,
         }}
         listeners={{
           focus: () => {
@@ -73,9 +63,7 @@ export default function TabLayout() {
         name="reports"
         options={{
           title: "مود من",
-          tabBarIcon: ({ color }) => (
-            <AntDesign size={24} name="linechart" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <AntDesign size={24} name="linechart" color={color} />,
         }}
       />
 
@@ -83,9 +71,7 @@ export default function TabLayout() {
         name="setting"
         options={{
           title: "تنظیمات",
-          tabBarIcon: ({ color }) => (
-            <AntDesign size={24} name="setting" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <AntDesign size={24} name="setting" color={color} />,
         }}
       />
     </Tabs>
