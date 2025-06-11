@@ -19,11 +19,12 @@ import MinimalChart from "./minimal-chart";
 const MoodCard = () => {
   const [moodState, setMoodState] = useState(0);
   const [moodSheet, setMoodSheet] = useState(false);
-  const [note, setNote] = useState("");
   const dispatch = useDispatch();
   const today = format(new Date(), "yyyy-MM-dd");
   const yesterday = format(subDays(new Date(), 1), "yyyy-MM-dd");
   const moodData = useAppSelector((state) => state.mood.find((m) => m.date === today));
+  const [note, setNote] = useState(moodData?.note || "");
+
   const moodDataForYesterday = useAppSelector((state) => state.mood.find((m) => m.date === yesterday));
   const yesterdayMood = moodDataForYesterday?.mood ?? 0;
   const mood = moodData?.mood ?? 0;
@@ -31,7 +32,7 @@ const MoodCard = () => {
   const handleSave = () => {
     const today = new Date();
     const formatted = format(today, "yyyy-MM-dd");
-    dispatch(setMood({ date: formatted, mood: moodState, note }));
+    dispatch(setMood({ date: "2025-06-06", mood: moodState, note }));
     setMoodSheet(false);
   };
 
@@ -46,10 +47,11 @@ const MoodCard = () => {
           <Text className="text-white mt-4 text-lg font-semiBold">امروز چه حسی داری؟</Text>
         </Pressable>
       ) : (
-        <Pressable className="w-full h-70 rounded-3xl px-5 py-4 bg-blue-100">
+        <Pressable className="w-full h-60 rounded-3xl px-5 py-4 bg-blue-100">
           <HStack className="items-center">
             <Pressable onPress={() => setMoodSheet(true)}>
               <VStack space="sm" className="items-center">
+                <Text className="text-sm color-gray-400 font-body">مود امروز</Text>
                 <Text className="text-4xl">{getEmojiFromMood(mood)}</Text>
                 <VStack>
                   <Text className="text-center  font-semiBold text-gray-700">{getLabelFromMood(mood)}</Text>
@@ -64,12 +66,6 @@ const MoodCard = () => {
 
             <VStack className="flex-1">
               <MinimalChart />
-              <Text className="text-xs text-gray-400 mb-1 -mt-8 text-center font-semiBold">
-                نوسان مود هفت روز گذشته
-              </Text>
-              <Text className="text-sm text-gray-600 text-center italic">
-                «به خودت افتخار کن، امروز با لبخند شروع شد.»
-              </Text>
             </VStack>
           </HStack>
         </Pressable>
@@ -132,6 +128,7 @@ const MoodCard = () => {
               >
                 <TextareaInput
                   value={note}
+                  className="text-right"
                   onChangeText={(text) => setNote(text)}
                   placeholder="یادداشت امروزتو بنویس"
                 />

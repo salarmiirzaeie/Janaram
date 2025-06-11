@@ -6,7 +6,7 @@ import { VStack } from "@/components/ui/vstack";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Linking, Pressable, ScrollView, Switch } from "react-native";
+import { Linking, Pressable, ScrollView, Share, Switch } from "react-native";
 import { useDispatch } from "react-redux";
 
 export default function SettingsScreen() {
@@ -52,6 +52,19 @@ export default function SettingsScreen() {
           label="درباره اپلیکیشن"
           onPress={() => {
             setAboutModalVisible(true);
+          }}
+        />
+        <SettingItem
+          icon={<Ionicons name="share-social" size={24} color="black" />}
+          label="معرفی به دوستان"
+          onPress={async () => {
+            try {
+              await Share.share({
+                message: "سلام! این اپلیکیشن رو از دست نده 😍 \n\nلینک دانلود: https://example.com/app",
+              });
+            } catch (error) {
+              console.error("Error sharing:", error);
+            }
           }}
         />
         <SettingItem

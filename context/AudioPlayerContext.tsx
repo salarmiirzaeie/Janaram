@@ -20,6 +20,7 @@ type AudioPlayerContextType = {
   seek: (ms: number) => void;
   showPlayingBar: boolean;
   stop: () => void;
+  isLoading: boolean;
 };
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | null>(null);
@@ -35,6 +36,8 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [showPlayingBar, setShowPlayingBar] = useState(true);
   const soundRef = useRef<Audio.Sound | null>(null);
   const segments = useSegments();
@@ -42,35 +45,39 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
 
   const loadTrack = async (newTrack: Track) => {
     if (track?.id === newTrack.id) return;
-    console.log(newTrack);
-    if (soundRef.current) {
-      await soundRef.current.unloadAsync();
-      soundRef.current.setOnPlaybackStatusUpdate(null);
-      soundRef.current = null;
-    }
 
-    // اگر string باشد (آدرس فایل)، همان را استفاده کن
-    let source = {
-      uri: `https://raw.githubusercontent.com/salarmiirzaeie/audio-files/main/${newTrack.id.toString()}.mp3`,
-    };
-    console.log(source);
-    const { sound } = await Audio.Sound.createAsync(source, {
-      shouldPlay: true,
-    });
-
-    soundRef.current = sound;
-    setTrack(newTrack);
-    setIsPlaying(true);
-    setShowPlayingBar(true);
-
-    sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
-      if (!status.isLoaded) return;
-      if ("positionMillis" in status) {
-        setPosition(status.positionMillis);
-        setDuration(status.durationMillis || 1);
-        setIsPlaying(status.isPlaying);
+    setIsLoading(true);
+    try {
+      if (soundRef.current) {
+        await soundRef.current.unloadAsync();
+        soundRef.current.setOnPlaybackStatusUpdate(null);
+        soundRef.current = null;
       }
-    });
+
+      const source = {
+        uri: `https://raw.githubusercontent.com/salarmiirzaeie/audio-files/main/${newTrack.id}.mp3`,
+      };
+
+      const { sound } = await Audio.Sound.createAsync(source, { shouldPlay: true });
+
+      soundRef.current = sound;
+      setTrack(newTrack);
+      setIsPlaying(true);
+      setShowPlayingBar(true);
+
+      sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
+        if (!status.isLoaded) return;
+        if ("positionMillis" in status) {
+          setPosition(status.positionMillis);
+          setDuration(status.durationMillis || 1);
+          setIsPlaying(status.isPlaying);
+        }
+      });
+    } catch (error) {
+      console.error("Error loading track:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const togglePlay = async () => {
@@ -112,6 +119,7 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
         seek,
         stop,
         showPlayingBar,
+        isLoading,
       }}
     >
       {children}

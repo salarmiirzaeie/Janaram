@@ -1,4 +1,5 @@
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@/components/ui/slider";
+import { Spinner } from "@/components/ui/spinner";
 import { Track, useAudioPlayer } from "@/context/AudioPlayerContext"; // <-- your context
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
@@ -20,7 +21,16 @@ export default function PlayerScreen() {
     artist: artist || "Unknown Artist",
     image: image, // در صورت نیاز
   };
-  const { track: currentTrack, isPlaying, position, duration, loadTrack, togglePlay, seek } = useAudioPlayer();
+  const {
+    track: currentTrack,
+    isPlaying,
+    position,
+    duration,
+    loadTrack,
+    togglePlay,
+    seek,
+    isLoading,
+  } = useAudioPlayer();
 
   // Load the selected track when this screen is opened
   useEffect(() => {
@@ -60,11 +70,26 @@ export default function PlayerScreen() {
       <View style={styles.controls}>
         <Ionicons name="play-skip-back" size={32} color="#666" />
         <Pressable onPress={togglePlay}>
-          <Ionicons
-            name={isPlaying ? "pause-circle" : "play-circle"}
-            size={68}
-            color="#4caf50" // سبز آرامش‌بخش
-          />
+          {isLoading ? (
+            <View
+              style={{
+                width: 56,
+                height: 56,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "#4caf50",
+                borderRadius: 34,
+              }}
+            >
+              <Spinner color={"#fff"} />
+            </View>
+          ) : (
+            <Ionicons
+              name={isPlaying ? "pause-circle" : "play-circle"}
+              size={68}
+              color="#4caf50" // سبز آرامش‌بخش
+            />
+          )}
         </Pressable>
         <Ionicons name="play-skip-forward" size={32} color="#666" />
       </View>

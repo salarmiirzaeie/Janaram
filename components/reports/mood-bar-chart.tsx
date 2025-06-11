@@ -7,10 +7,10 @@ const MoodBarChart = ({ lineData }: any) => {
       <BarChart
         width={280}
         parentWidth={300}
-        height={200}
-        barWidth={22}
-        noOfSections={6}
-        maxValue={9}
+        height={250}
+        barWidth={12}
+        noOfSections={0}
+        maxValue={30}
         stepValue={1}
         barBorderRadius={6}
         frontColor="blue"
@@ -19,9 +19,10 @@ const MoodBarChart = ({ lineData }: any) => {
         xAxisThickness={1}
         yAxisColor="lightgray"
         xAxisColor="lightgray"
-        xAxisLabelTextStyle={{ opacity: 0 }}
-        yAxisTextStyle={{ fontSize: 12 }}
-        spacing={30}
+        hideRules
+        xAxisLabelTextStyle={{ fontSize: 10, transform: [{ rotate: "30deg" }] }}
+        yAxisTextStyle={{ fontSize: 8, transform: [{ rotate: "10deg" }] }}
+        spacing={19}
         isAnimated
       />
     </View>

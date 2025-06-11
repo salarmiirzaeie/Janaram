@@ -10,39 +10,23 @@ const getDayIndex = (date: Date): number => {
 };
 
 export const prepareBarData = (moodEntries: IMood[]) => {
-  const recentEntries = [...moodEntries]
-    .filter((entry) => entry.mood !== null)
-    .sort((a, b) => a.date.localeCompare(b.date))
-    .slice(-7);
+  const moodCounts: Record<number, number> = {};
 
-  const moodMap: Record<number, number[]> = {};
-
-  recentEntries.forEach((entry) => {
-    const fixedDate = new Date(entry.date + "T12:00:00+03:30");
-    const dayIndex = getDayIndex(fixedDate); // مثلاً شنبه = 0
-    if (!moodMap[dayIndex]) moodMap[dayIndex] = [];
-    moodMap[dayIndex].push(entry.mood!);
+  moodEntries.forEach((entry) => {
+    if (entry.mood !== null) {
+      const moodValue = entry.mood!;
+      moodCounts[moodValue] = (moodCounts[moodValue] || 0) + 1;
+    }
   });
 
-  const barData = dayLabels.map((label, index) => {
-    const dailyMoods = moodMap[index];
-    if (!dailyMoods || dailyMoods.length === 0) return null;
+  const barData = moods.map((mood) => ({
+    label: mood.label,
+    value: moodCounts[mood.value] || 0,
+    frontColor: mood.color,
+    emoji: mood.emoji,
+  }));
 
-    const avgMood = dailyMoods.reduce((a, b) => a + b, 0) / dailyMoods.length;
-
-    const closestMood = moods.reduce((prev, curr) =>
-      Math.abs(curr.value - avgMood) < Math.abs(prev.value - avgMood) ? curr : prev
-    );
-
-    return {
-      label,
-      value: avgMood,
-      frontColor: closestMood.color,
-      emoji: closestMood.emoji,
-    };
-  });
-
-  return barData.filter(Boolean);
+  return barData;
 };
 
 export const moods = [
@@ -66,8 +50,7 @@ export const getLabelFromMood = (mood: number) => {
 export function preparePieData(moodEntries: IMood[]) {
   const recentEntries = [...moodEntries]
     .filter((entry) => entry.mood !== null)
-    .sort((a, b) => a.date.localeCompare(b.date))
-    .slice(-7);
+    .sort((a, b) => a.date.localeCompare(b.date));
 
   const counts: Record<number, number> = {};
 
@@ -88,3 +71,15 @@ export function preparePieData(moodEntries: IMood[]) {
 
   return pieData;
 }
+
+export const prepareLineDataForLastMonth = (moodEntries: IMood[]) => {
+  return moodEntries
+    .filter((entry) => entry.mood !== null)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map((entry) => {
+      return {
+        label: "", // مثلا "10 خرداد"
+        value: entry.mood!,
+      };
+    });
+};

@@ -1,11 +1,12 @@
 import { Track, useAudioPlayer } from "@/context/AudioPlayerContext";
 import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React from "react";
-import { Image } from "react-native";
+import React, { useState } from "react";
+import { Image, View } from "react-native";
 import { Badge, BadgeText } from "../ui/badge";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
+import { Spinner } from "../ui/spinner";
 import { Text } from "../ui/text";
 import { VStack } from "../ui/vstack";
 export interface IMusic {
@@ -27,7 +28,13 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, isSleepMusic }) => {
     image: item.image, // در صورت نیاز
   };
   const { loadTrack } = useAudioPlayer();
+  const [isLoading, setLoading] = useState(false);
 
+  const handlePlay = async () => {
+    setLoading(true);
+    await loadTrack(track);
+    setLoading(false);
+  };
   return (
     <Pressable
       onPress={() =>
@@ -57,12 +64,27 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, isSleepMusic }) => {
           <Badge className="rounded-full">
             <BadgeText className="font-medium">{item.duration}</BadgeText>
           </Badge>
-          <Pressable
-            onPress={() => loadTrack(track)}
-            className={`rounded-full h-14 w-14 justify-center items-center bg-background-600 `}
-          >
-            <Entypo name="controller-play" size={24} color="white" />
-          </Pressable>
+          {isLoading ? (
+            <View
+              style={{
+                width: 48,
+                height: 48,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "gray",
+                borderRadius: 34,
+              }}
+            >
+              <Spinner color={"#fff"} />
+            </View>
+          ) : (
+            <Pressable
+              onPress={() => handlePlay()}
+              className={`rounded-full h-14 w-14 justify-center items-center bg-background-600 `}
+            >
+              <Entypo name="controller-play" size={24} color="white" />
+            </Pressable>
+          )}
         </HStack>
       </VStack>
     </Pressable>
