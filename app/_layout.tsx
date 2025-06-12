@@ -7,7 +7,6 @@ import { useFonts } from "expo-font";
 import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
 import { useEffect } from "react";
-import { LogBox } from "react-native";
 import "react-native-reanimated";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -68,6 +67,15 @@ export default function RootLayout() {
                   headerTitleAlign: "center",
                   headerTitleStyle: { fontFamily: "vazirBold" },
                   headerTitle: "نوتیفیکیشن",
+                }}
+              />
+              <Stack.Screen
+                name="chat-bot"
+                options={{
+                  headerShown: true,
+                  headerTitleAlign: "center",
+                  headerTitleStyle: { fontFamily: "vazirBold" },
+                  headerTitle: "چت بات",
                 }}
               />
             </Stack>

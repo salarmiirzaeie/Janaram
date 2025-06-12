@@ -9,7 +9,7 @@ import { ScrollView } from "react-native";
 
 const index = () => {
   return (
-    <ScrollView>
+    <ScrollView className="flex-1 bg-white">
       <VStack className="flex-1  py-4 bg-white">
         <VStack className="w-full items-center  justify-center p-5">
           <MoodCard />
@@ -35,13 +35,11 @@ const index = () => {
         </VStack>
         <VStack space="md" className="mt-6 px-5">
           <HStack className="items-center justify-between">
-            <Text className="text-typography-400 text-sm">مشاهده همه</Text>
-            <Text className="text-typography-700 text-lg font-semiBold">مدیتیشن های جدید</Text>
+            <Text className="text-typography-400 text-sm"> </Text>
+            <Text className="text-typography-700 text-lg font-semiBold"> چت بات جان آرام </Text>
           </HStack>
 
-          {[1, 2, 3, 4].map((item) => (
-            <TestCard index={item} key={item} />
-          ))}
+          <TestCard />
         </VStack>
       </VStack>
     </ScrollView>

@@ -42,12 +42,7 @@ const Test = () => {
         </VStack> */}
 
         {/* Line Chart Section */}
-        <VStack className="bg-white rounded-3xl mb-4 p-4">
-          <Text className="text-right font-semiBold text-xl mb-2"> بیشتر چه حالی داشتم؟</Text>
-          <VStack className=" justify-center  my-4">
-            <MoodBarChart lineData={barData} />
-          </VStack>
-        </VStack>
+
         <VStack className="bg-white rounded-3xl mb-4 p-4">
           <Text className="text-right font-semiBold text-xl mb-2">روند حالم</Text>
           <VStack className=" justify-center  my-4">
@@ -70,7 +65,12 @@ const Test = () => {
             />
           </VStack>
         </VStack>
-
+        <VStack className="bg-white rounded-3xl mb-4 p-4">
+          <Text className="text-right font-semiBold text-xl mb-2"> بیشتر چه حالی داشتم</Text>
+          <VStack className=" justify-center  my-4">
+            <MoodBarChart lineData={barData} />
+          </VStack>
+        </VStack>
         {/* Notes Section */}
         <MoodLogger />
       </VStack>

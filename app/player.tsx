@@ -4,7 +4,7 @@ import { Track, useAudioPlayer } from "@/context/AudioPlayerContext"; // <-- you
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StatusBar, StyleSheet, Text, View } from "react-native";
 
 export default function PlayerScreen() {
   const { id, title, artist, fileUri, image } = useLocalSearchParams<{
@@ -51,6 +51,7 @@ export default function PlayerScreen() {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <Image source={{ uri: track.image }} style={styles.cover} />
       <Text style={styles.title}>{track.title}</Text>
       <Text style={styles.artist}>{track.artist}</Text>

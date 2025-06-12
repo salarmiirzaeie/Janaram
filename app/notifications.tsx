@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, StatusBar } from "react-native";
 
 import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
@@ -32,11 +32,13 @@ const Notifications = () => {
   );
   return (
     <VStack className="flex-1 bg-background-50 p-4 pb-8">
+      <StatusBar barStyle="dark-content" />
+
       <FlatList
         data={[...notificationsData].sort((a, b) => b.time.localeCompare(a.time))}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
-        ListEmptyComponent={() => <Text className="text-center text-gray-400">No Notifications</Text>}
+        ListEmptyComponent={() => <Text className="text-center text-gray-400">پیامی وجود ندارد </Text>}
       />
 
       {notificationsData.filter((n: any) => !n.read).length > 0 && (

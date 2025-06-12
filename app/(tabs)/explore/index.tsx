@@ -34,14 +34,14 @@ const Explore = () => {
               <Text className="text-white text-xl font-semiBold">هدف‌گذاری 🎯</Text>
             </VStack>
           </HStack>
-          <HStack space="md">
+          {/* <HStack space="md">
             <VStack className="bg-pink-300 flex-1 rounded-lg justify-center items-center h-14">
               <Text className="text-white text-xl font-semiBold">روابط و مهربانی 🌸</Text>
             </VStack>
             <VStack className="bg-indigo-300 flex-1 rounded-lg justify-center items-center h-14">
               <Text className="text-white text-xl font-semiBold">درون‌نگری 🔮</Text>
             </VStack>
-          </HStack>
+          </HStack> */}
         </VStack>
         <VStack space="lg" className="mt-4 ">
           <HStack className="items-center justify-between  mx-5">
