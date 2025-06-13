@@ -1,9 +1,11 @@
 import CourseCard from "@/components/home/course-card";
 import { HStack } from "@/components/ui/hstack";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
+import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import { ScrollView } from "react-native";
 
@@ -45,7 +47,9 @@ const Explore = () => {
         </VStack>
         <VStack space="lg" className="mt-4 ">
           <HStack className="items-center justify-between  mx-5">
-            <Text className="text-typography-400 text-md">مشاهده همه</Text>
+            <Pressable onPress={() => router.push("/explore/all-files")}>
+              <Text className="text-typography-400 text-md">مشاهده همه</Text>
+            </Pressable>
 
             <Text>آرامش</Text>
           </HStack>

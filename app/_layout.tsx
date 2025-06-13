@@ -75,7 +75,7 @@ export default function RootLayout() {
                   headerShown: true,
                   headerTitleAlign: "center",
                   headerTitleStyle: { fontFamily: "vazirBold" },
-                  headerTitle: "چت بات",
+                  headerTitle: "چت بات جان آرام",
                 }}
               />
             </Stack>

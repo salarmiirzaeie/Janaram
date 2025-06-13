@@ -16,7 +16,7 @@ const index = () => {
         </VStack>
         <VStack space="lg" className="mt-4 ">
           <HStack className="items-center justify-between mx-5">
-            <Text className="text-typography-400 text-sm">مشاهده همه</Text>
+            <Text className="text-typography-400 text-sm"> </Text>
 
             <Text className="text-lg font-semiBold">پیشنهاد ها برای شما</Text>
           </HStack>

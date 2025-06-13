@@ -1,16 +1,18 @@
 import AboutModal from "@/components/settings/about-modal";
+import RulesModal from "@/components/settings/rules-modal";
 import { Divider } from "@/components/ui/divider";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useAppSelector } from "@/hooks/useAppSelector";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, Octicons } from "@expo/vector-icons";
 import React from "react";
 import { Linking, Pressable, ScrollView, Share, Switch } from "react-native";
 import { useDispatch } from "react-redux";
 
 export default function SettingsScreen() {
   const [aboutModalVisible, setAboutModalVisible] = React.useState(false);
+  const [rulesModalVisible, setRulesModalVisible] = React.useState(false);
   const { moodNotification, newMeditationsNotification } = useAppSelector((state) => state.settings);
   const dispatch = useDispatch();
   return (
@@ -55,6 +57,13 @@ export default function SettingsScreen() {
           }}
         />
         <SettingItem
+          icon={<Octicons name="law" size={24} color="black" />}
+          label="قوانین برنامه"
+          onPress={() => {
+            setRulesModalVisible(true);
+          }}
+        />
+        <SettingItem
           icon={<Ionicons name="share-social" size={24} color="black" />}
           label="معرفی به دوستان"
           onPress={async () => {
@@ -76,6 +85,7 @@ export default function SettingsScreen() {
         />
       </VStack>
       <AboutModal visible={aboutModalVisible} onClose={() => setAboutModalVisible(false)} />
+      <RulesModal visible={rulesModalVisible} onClose={() => setRulesModalVisible(false)} />
     </ScrollView>
   );
 }
