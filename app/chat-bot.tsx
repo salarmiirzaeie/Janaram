@@ -65,7 +65,7 @@ export default function ChatWithAI() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 81}
     >
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" backgroundColor={"#fff"} />
       <View style={{ flex: 1 }}>
         <ScrollView
           ref={scrollViewRef}

@@ -51,7 +51,7 @@ export default function PlayerScreen() {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" backgroundColor={"#fff"} />
       <Image source={{ uri: track.image }} style={styles.cover} />
       <Text style={styles.title}>{track.title}</Text>
       <Text style={styles.artist}>{track.artist}</Text>

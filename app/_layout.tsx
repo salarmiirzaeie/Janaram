@@ -66,7 +66,7 @@ export default function RootLayout() {
                   headerShown: true,
                   headerTitleAlign: "center",
                   headerTitleStyle: { fontFamily: "vazirBold" },
-                  headerTitle: "نوتیفیکیشن",
+                  headerTitle: "پیام ها",
                 }}
               />
               <Stack.Screen
@@ -79,7 +79,6 @@ export default function RootLayout() {
                 }}
               />
             </Stack>
-            {/* <StatusBar style="auto" /> */}
           </AudioPlayerProvider>
         </GluestackUIProvider>
       </PersistGate>

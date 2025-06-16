@@ -58,7 +58,7 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, isSleepMusic }) => {
           resizeMode="cover"
         />
         <Text className="color-white text-2xl z-40 text-right font-semiBold">
-          {item.title.length > 35 ? item.title.slice(0, 35) + "..." : item.title}
+          {item.title.length > 25 ? item.title.slice(0, 25) + "..." : item.title}
         </Text>
         <HStack className="items-center justify-between">
           <Badge className="rounded-full">

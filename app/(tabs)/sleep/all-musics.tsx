@@ -26,7 +26,7 @@ const AllMusics = () => {
   return (
     <VStack className="flex-1 bg-background-900 p-4">
       <FlatList
-        data={data.slice(0, 15)}
+        data={data.slice(0, 10)}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => renderMusicCard(item)}
         showsVerticalScrollIndicator={false}

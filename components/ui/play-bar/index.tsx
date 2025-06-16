@@ -9,12 +9,11 @@ export default function NowPlayingBar() {
   const router = useRouter();
 
   if (!track) return null;
-  console.log(track);
   return (
     <View
       style={{
         position: "absolute",
-        bottom: 75,
+        bottom: 60,
         left: 0,
         right: 0,
         backgroundColor: "#FFF",

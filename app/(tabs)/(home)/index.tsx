@@ -4,13 +4,14 @@ import TestCard from "@/components/home/test-card";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import data from "@/database/recommends.json";
 import React from "react";
 import { ScrollView } from "react-native";
 
 const index = () => {
   return (
-    <ScrollView className="flex-1 bg-white">
-      <VStack className="flex-1  py-4 bg-white">
+    <ScrollView className="flex-1 bg-white ">
+      <VStack className="flex-1  py-4 bg-white mb-20">
         <VStack className="w-full items-center  justify-center p-5">
           <MoodCard />
         </VStack>
@@ -28,9 +29,11 @@ const index = () => {
             showsHorizontalScrollIndicator={false}
             horizontal
           >
-            {[1, 2, 3, 4, 5].map((item, index) => (
-              <CourseCard index={index} key={item} />
-            ))}
+            {data
+              .sort((a, b) => b.id - a.id)
+              .map((item, index) => (
+                <CourseCard type={1} item={item} index={index} key={item.id} />
+              ))}
           </ScrollView>
         </VStack>
         <VStack space="md" className="mt-6 px-5">

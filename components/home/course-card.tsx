@@ -1,45 +1,87 @@
+import { Track, useAudioPlayer } from "@/context/AudioPlayerContext";
 import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
+import { Image, View } from "react-native";
+import { IMusic } from "../sleep/course-card-sleep";
 import { Badge, BadgeText } from "../ui/badge";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
+import { Spinner } from "../ui/spinner";
 import { Text } from "../ui/text";
 import { VStack } from "../ui/vstack";
 interface IVStackProps extends React.ComponentProps<typeof VStack> {
   index: number;
+  item: IMusic;
+  type?: number;
 }
-const CourseCard: React.FC<IVStackProps> = (props) => {
+const CourseCard: React.FC<IVStackProps> = ({ index, item, type }) => {
+  const track: Track = {
+    id: `/${type === 1 ? "recommends" : "meditations"}/${item?.id}`,
+    title: item?.title || "Unknown Title",
+    artist: item?.artist || "Unknown Artist",
+    image: item?.image, // در صورت نیاز
+  };
+  const { loadTrack } = useAudioPlayer();
+  const [isLoading, setLoading] = useState(false);
+
+  const handlePlay = async () => {
+    setLoading(true);
+    await loadTrack(track);
+    setLoading(false);
+  };
   return (
     <Pressable
       onPress={() =>
         router.push({
           pathname: "/player",
           params: {
-            id: 1,
-            title: "title",
-            artist: "artist",
+            id: `/${type === 1 ? "recommends" : "meditations"}/${item?.id}`,
+            title: item?.title,
+            artist: item?.artist,
+            image: item?.image,
           },
         })
       }
     >
       <VStack
-        className={`rounded-3xl h-52 w-48 justify-between p-5  mx-2 ${
-          props.index % 2 ? "bg-purple-300" : "bg-blue-300"
-        }`}
+        className={`rounded-3xl h-52 w-48 justify-between p-5  mx-2 ${index % 2 ? "bg-purple-300" : "bg-blue-300"}`}
       >
-        <Text className="color-white text-2xl z-40 text-right font-medium">اسکن بدن و برنامه ریزی</Text>
+        <Image
+          source={require("@/assets/images/log-vector.png")}
+          className="absolute  -left-16 right-0 bottom-0 h-28 w-48 opacity-50 rounded-3xl"
+          resizeMode="cover"
+        />
+        <Text className="color-white text-2xl z-40 text-right font-semiBold">
+          {item?.title?.length > 25 ? item?.title.slice(0, 25) + "..." : item?.title}
+        </Text>
         <HStack className="items-center justify-between">
           <Badge className="rounded-full">
-            <BadgeText>3دقیقه</BadgeText>
+            <BadgeText>{item?.duration}</BadgeText>
           </Badge>
-          <Pressable
-            className={`rounded-full h-14 w-14 justify-center items-center ${
-              props.index % 2 ? "bg-purple-500" : "bg-blue-500"
-            } `}
-          >
-            <Entypo name="controller-play" size={24} color="white" />
-          </Pressable>
+          {isLoading ? (
+            <View
+              style={{
+                width: 48,
+                height: 48,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: index % 2 ? "#8b5cf6" : "#3b82f6",
+                borderRadius: 34,
+              }}
+            >
+              <Spinner color={"#fff"} />
+            </View>
+          ) : (
+            <Pressable
+              onPress={handlePlay}
+              className={`rounded-full h-14 w-14 justify-center items-center ${
+                index % 2 ? "bg-purple-500" : "bg-blue-500"
+              } `}
+            >
+              <Entypo name="controller-play" size={24} color="white" />
+            </Pressable>
+          )}
         </HStack>
       </VStack>
     </Pressable>

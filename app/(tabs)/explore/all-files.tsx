@@ -1,17 +1,25 @@
+import MusicCard from "@/components/explore/music-card";
 import { IMusic } from "@/components/sleep/course-card-sleep";
-import MusicCard from "@/components/sleep/music-card";
 import { VStack } from "@/components/ui/vstack";
+import meditations from "@/database/database.json";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { FlatList } from "react-native";
 
 const AllMusics = () => {
-  const params = useLocalSearchParams<{ fileName: string }>();
+  const calmMedias = meditations.slice(0, 5).sort((a, b) => b.id - a.id);
+  const loveMedias = meditations.slice(5, 10).sort((a, b) => b.id - a.id);
+  const instrumentalMedias = meditations.slice(10, 15).sort((a, b) => b.id - a.id);
+  const params = useLocalSearchParams<{ type: string }>();
 
   const getData = () => {
-    switch (params.fileName) {
-      case "sleep-music":
-        return require("@/database/sleep-music.json");
+    switch (params.type) {
+      case "1":
+        return calmMedias;
+      case "2":
+        return loveMedias;
+      case "3":
+        return instrumentalMedias;
       default:
         return [];
     }
@@ -26,7 +34,7 @@ const AllMusics = () => {
   return (
     <VStack className="flex-1 bg-background-50 p-4">
       <FlatList
-        data={data.slice(0, 15)}
+        data={data}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => renderMusicCard(item)}
         showsVerticalScrollIndicator={false}

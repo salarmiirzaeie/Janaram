@@ -33,7 +33,7 @@ const MusicCard = ({ item }: { item: IMusic }) => {
           <Image source={{ uri: item.image }} style={{ width: 48, height: 48, borderRadius: 8 }} resizeMode="cover" />
         )}
         <VStack className="flex-1 ml-3">
-          <Text className="font-semiBold text-white text-base">{item.title}</Text>
+          <Text className="font-semiBold text-white  text-base">{item.title}</Text>
           <Text className="text-muted-foreground text-white font-thin text-sm">{item.artist}</Text>
         </VStack>
         <HStack space="md" className="items-center space-x-2">

@@ -9,11 +9,11 @@ import React from "react";
 import { Dimensions, Image, ScrollView } from "react-native";
 const Tests = () => {
   const sleepMusics = data.slice(0, 5);
-  const sleepMedias = data.slice(15, 20);
-  const sleepStories = data.slice(20, 22);
+  const sleepMedias = data.slice(10, 15);
+  const sleepStories = data.slice(15, 17);
   return (
     <ScrollView className="flex-1 bg-background-900">
-      <VStack space="md" className="bg-background-900 py-4 flex-1">
+      <VStack space="md" className="bg-background-900 py-4 pb-20 flex-1">
         <ScrollView contentContainerStyle={{ paddingHorizontal: 10 }} horizontal showsHorizontalScrollIndicator={false}>
           {sleepStories.map((item) => (
             <Pressable
@@ -48,9 +48,9 @@ const Tests = () => {
         </ScrollView>
         <VStack space="lg" className="mt-4 ">
           <HStack className="items-center justify-between  mx-5">
-            <Text className="text-typography-400 text-md">مشاهده همه</Text>
+            <Text className="text-typography-400 text-md"> </Text>
 
-            <Text className="text-xl  text-white font-bold">مدیتیشن‌های خواب</Text>
+            <Text className="font-semiBold text-white text-xl">مدیتیشن‌های خواب</Text>
           </HStack>
           <ScrollView
             contentContainerStyle={{
@@ -80,7 +80,7 @@ const Tests = () => {
               <Text className="text-typography-400 text-md">مشاهده همه</Text>
             </Pressable>
 
-            <Text className="text-xl text-white font-bold">آهنگ‌های خواب</Text>
+            <Text className="font-semiBold text-white text-xl">آهنگ‌های خواب</Text>
           </HStack>
           <ScrollView
             contentContainerStyle={{

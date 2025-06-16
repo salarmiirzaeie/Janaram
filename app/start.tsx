@@ -14,7 +14,7 @@ const Start = () => {
   };
   return (
     <VStack className="flex-1 items-center p-8 justify-between">
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" backgroundColor={"#fff"} />
 
       <VStack space="md" className="flex-1 items-center justify-center">
         <Logo className="h-40 w-56" />

@@ -1,66 +1,107 @@
 [
   {
     "id": 1,
-    "title": "آرامش فوری برای ذهن و بدن",
-    "type": "calm",
-    "artist": "نیلوفر شیخی",
-    "duration": "12:20",
+    "title": "بازگشت به سکون",
+    "artist": "۱۰ دقیقه آرامش عمیق برای بازگشت به لحظه حال، با تکنیک‌های علمی تن‌آگاهی و ذهن‌آگاهی. راهنمایی صوتی حرفه‌ای + موسیقی آرام‌بخش.",
+    "duration": "7:01",
     "image": "https://images.squarespace-cdn.com/content/v1/57b5ef68c534a5cc06edc769/1546445075441-D5QNP4G5K00IHKYHZUAA/calm+meditation"
   },
   {
     "id": 2,
-    "title": "تمرین آرامش بخش برای ارتباط با لحظه حال",
-    "type": "calm",
-    "artist": "Hosein Aura",
-    "duration": "25:09",
-    "image": "https://image.jimcdn.com/app/cms/image/transf/none/path/sdfda069760aff065/image/i4928d3b2d1cbd92b/version/1673405089/image.jpg"
+    "title": "مراقبه آرامش و رهایی",
+    "artist": "با این مراقبه تمام تنش‌ها و نگرانی‌ها رو از درونتون پاک کنید. با هر بازدم ناراحتی‌ها رو به بیرون فوت کنید و با هر دم انرژی شفابخش عشق رو وارد بدنتون کنید تا همه جا را پاک و  درخشان کند.",
+    "duration": "9:58",
+    "image": "https://theroyce.com.au/wp-content/uploads/Meditiaion-Image.jpg"
   },
   {
     "id": 3,
-    "title": "رهایی از نشخوار ذهنی",
-    "type": "calm",
-    "artist": "Hosein Aura",
-    "duration": "19:59",
-    "image": "https://libraryitems.insighttimer.com/y0c8v0c9c6h6t4x4e6m5g4f5t4t3e1r4c2v5k2a3/pictures/tiny_rectangle_large.jpeg"
+    "title": "آرامش قلب و جذب معجزه",
+    "artist": "این مراقبه‌ی فوق العاده رو گوش کن. قلب تو پر از نور و عشق الهی‌ است. احساس زیبایی که هم اکنون نسبت به زندگی داری، نعمت‌ها و برکات فراوان بیشتری را به زندگیت جذب می‌کند.",
+    "duration": "10:00",
+    "image": "https://static.vecteezy.com/system/resources/thumbnails/028/889/843/small_2x/generative-ai-zen-garden-hypnotic-simple-illustration-calm-relax-and-meditation-concept-photo.jpg"
   },
   {
     "id": 4,
-    "title": "عمیق‌ترین حالت آرامش",
-    "type": "calm",
-    "artist": "نیلوفر شیخی",
-    "duration": "14:34",
-    "image": "https://themindfool.com/wp-content/uploads/2020/03/best-time-to-meditate.jpg"
+    "title": "آرامش وصف‌ ناپذیر",
+    "artist": "این مراقبه پر از آرامشه و اطمینان قلب رو بهت هدیه می‌ده. حتما گوشش کن",
+    "duration": "10:00",
+    "image": "https://libraryitems.insighttimer.com/y0c8v0c9c6h6t4x4e6m5g4f5t4t3e1r4c2v5k2a3/pictures/tiny_rectangle_large.jpeg"
   },
   {
     "id": 5,
-    "title": " رهایی از نگرانی",
-    "type": "calm",
-    "artist": "Hosein Aura",
-    "duration": "18:36",
-    "image": "https://d1migpe0gurg12.cloudfront.net/Blogs/listingImage/meditation-for-anxiety-and-achieve-banner.webp"
+    "title": "اتصال به منبع الهی",
+    "artist": "این مراقبه‌ی زیبا رو گوش کن. تو به منبع بی‌پایان انرژی و نور متصلی. هوش الهی درون تو جاریه. تو با قدرت‌های کائنات هم‌راستا هستی و تمام کائنات به تو کمک می‌کنند.",
+    "duration": "10:00",
+    "image": "https://www.chadmc.com/cdn/shop/articles/Popular_Meditation_Techniques_for_Health_and_Relaxation_d3fa89dc-1f62-48c6-a181-d27e953268c2_600x.png?v=1722042437"
   },
   {
     "id": 6,
-    "title": "فعال‌سازی عشق به خود و پذیرش درونی",
-    "type": "self-care",
-    "artist": "نیلوفر شیخی",
-    "duration": "14:45",
-    "image": "https://www.keen.com/wp-content/uploads/sites/2/2022/02/self-love-meditation.jpg"
+    "title": "جذب بهترین روابط",
+    "artist": "این مراقبه‌ی لذت‌بخش رو گوش کن. تو در مدار عشق و محبت قرار داری و زندگی‌ات سرشار از عشق شده. این احساسات پر از عشق و امید را به جهان بفرست تا جریان زندگی‌ات را روشن کند.",
+    "duration": "10:00",
+    "image": "https://www.chadmc.com/cdn/shop/articles/Popular_Meditation_Techniques_for_Health_and_Relaxation_d3fa89dc-1f62-48c6-a181-d27e953268c2_600x.png?v=1722042437"
   },
   {
     "id": 7,
-    "title": "مدیتیشن دوست داشتن خود و عشق به خود",
-    "type": "self-care",
-    "artist": "نیلوفر شیخی",
-    "duration": "13:16",
-    "image": "https://images.squarespace-cdn.com/content/v1/6052c491e5212c603d24033b/20fbb374-71e7-4fd5-b9d4-6dfddbeb7234/Self-Love-Meditation.jpg"
+    "title": "شادی عمیق",
+    "artist": "این مراقبه تأثیرگذار را گوش کن و احساس عشق و شادیت را به میدان ارسال کن و اجازه بده که در زندگیت متجلی شود. تمام کیهان با عشق، منتظر یک فرمان از توست",
+    "duration": "10:00",
+    "image": "https://static.vecteezy.com/system/resources/thumbnails/028/889/843/small_2x/generative-ai-zen-garden-hypnotic-simple-illustration-calm-relax-and-meditation-concept-photo.jpg"
   },
   {
     "id": 8,
-    "title": "قوی ترین تله پاتی و مدیتیشن عشق به خود",
-    "type": "self-care",
-    "artist": "Roya Tarokh",
-    "duration": "18:27",
-    "image": "https://centerstone.org/wp-content/uploads/Smile-1.jpg"
+    "title": "مدار عشق",
+    "artist": "این مراقبه‌ لذت‌بخش رو گوش کن و لبریز از عشق شو. با خدای خودت صحبت کن و عشق الهی رو درونت احساس کن. خداوند همیشه همراهته. پس دل‌آسوده باش",
+    "duration": "9:58",
+    "image": "https://images.squarespace-cdn.com/content/v1/57b5ef68c534a5cc06edc769/1546445075441-D5QNP4G5K00IHKYHZUAA/calm+meditation"
+  },
+  {
+    "id": 9,
+    "title": "عشق خدا",
+    "artist": "این مراقبه‌ی لذت‌بخش رو گوش کن. بدان که شما  شایسته‌ی عشق و شایسته‌ی بهترین‌ها هستید. وجود شما سرشار از پاکیه. به زودی چیزی رو که قلبت می‌خواهد دریافت می‌کنی.",
+    "duration": "10:00",
+    "image": "https://theroyce.com.au/wp-content/uploads/Meditiaion-Image.jpg"
+  },
+  {
+    "id": 10,
+    "title": "فرکانس عشق",
+    "artist": "با این مراقبه نیروی قدرتمند عشق رو درونت زنده کن و همسو و هم‌فرکانس شو با قدرت عشق. تمام احساسات ناخوشایند رو کنار بذار و خودت رو دوست داشته باش",
+    "duration": "10:00",
+    "image": "https://libraryitems.insighttimer.com/y0c8v0c9c6h6t4x4e6m5g4f5t4t3e1r4c2v5k2a3/pictures/tiny_rectangle_large.jpeg"
+  },
+  {
+    "id": 11,
+    "title": "فایل فرکانسیک صوتی ترکیبی جذب آرزوها",
+    "artist": "این فرکانس برای بیدارسازی شهود، باز کردن راه‌های جدید، و پاکسازی انرژی‌های مسدودکننده است. به رشد شخصی و ذهن باز کمک می‌کنه، که دقیقاً انرژی مشتریه.",
+    "duration": "9:55",
+    "image": "https://static.vecteezy.com/system/resources/thumbnails/028/889/843/small_2x/generative-ai-zen-garden-hypnotic-simple-illustration-calm-relax-and-meditation-concept-photo.jpg"
+  },
+  {
+    "id": 12,
+    "title": "فرکانس صوتی ۴۳۲ هرتز برای ماه کامل",
+    "artist": " موسیقی خاص با فرکانس ۴۳۲ هرتز برای: 🍀 هم‌راستایی با ارتعاشات طبیعی و افزایش آرامش عمیق درونی. تقویت حس همدلی و عشق و ایجاد حس اتصال بیشتر به خود و جهان.🌟 باز کردن مسیرهای معنوی و تقویت وضوح ذهنی برای تصمیم‌گیری‌های درست.",
+    "image": "https://www.tsvst.ir/wp-content/uploads/2016/06/bigstock-Sacred-Geometry-Evolution-88893806-1024x768.jpg",
+    "duration": "9:00"
+  },
+  {
+    "id": 13,
+    "title": "فرکانس ۹۶۳ هرتز | اتصال به آگاهی برتر و منبع",
+    "artist": "اگه آماده‌ای برای یه شروع تازه، دریافت الهام‌های عمیق و ارتباطی قوی‌تر با کائنات، اتصال به منشأ برکت و فراوانی، این فرکانس انتخاب بی‌نظیریه.",
+    "image": "https://images.squarespace-cdn.com/content/v1/57b5ef68c534a5cc06edc769/1546445075441-D5QNP4G5K00IHKYHZUAA/calm+meditation",
+    "duration": "5:04"
+  },
+  {
+    "id": 14,
+    "title": "فرکانسیک صوتی شرف شمس ",
+    "artist": "موسیقی ویژه با فرکانس 528 هرتز، ارتعاشی قدرتمند برای فراوانی، برکت و قدرت تجلی",
+    "image": "https://static.vecteezy.com/system/resources/thumbnails/028/889/843/small_2x/generative-ai-zen-garden-hypnotic-simple-illustration-calm-relax-and-meditation-concept-photo.jpg",
+    "duration": "8:00"
+  },
+  {
+    "id": 15,
+    "title": "فرکانسیک صوتی شرف قمر",
+    "artist": "موسیقی ویژه با فرکانس 702 هرتز، ارتعاشی خاص برای آگاهی و گشایش",
+    "image": "https://www.chadmc.com/cdn/shop/articles/Popular_Meditation_Techniques_for_Health_and_Relaxation_d3fa89dc-1f62-48c6-a181-d27e953268c2_600x.png?v=1722042437",
+    "duration": "8:40"
   }
 ]
