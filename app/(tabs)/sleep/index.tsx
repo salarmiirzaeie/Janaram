@@ -21,7 +21,7 @@ const Tests = () => {
               onPress={() => {
                 router.push({
                   pathname: "/player",
-                  params: { id: `sleep/${item.id}`, title: item.title, artist: item.artist, image: item.image },
+                  params: { id: `/sleep/${item.id}`, title: item.title, artist: item.artist, image: item.image },
                 });
               }}
             >

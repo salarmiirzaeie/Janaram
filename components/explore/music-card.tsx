@@ -11,7 +11,7 @@ import { VStack } from "../ui/vstack";
 
 const MusicCard = ({ item }: { item: IMusic }) => {
   const track: Track = {
-    id: `meditations/${item.id}`,
+    id: `/meditations/${item.id}`,
     title: item.title || "Unknown Title",
     artist: item.artist || "Unknown Artist",
     image: item.image, // در صورت نیاز
@@ -31,7 +31,7 @@ const MusicCard = ({ item }: { item: IMusic }) => {
       onPress={() => {
         router.push({
           pathname: "/player",
-          params: { id: `sleep/${item.id}`, title: item.title, artist: item.artist, image: item.image },
+          params: { id: `/meditations/${item.id}`, title: item.title, artist: item.artist, image: item.image },
         });
       }}
     >

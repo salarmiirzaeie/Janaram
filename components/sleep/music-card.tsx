@@ -1,7 +1,7 @@
 import { Track, useAudioPlayer } from "@/context/AudioPlayerContext";
 import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import { Image, Text } from "react-native";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
@@ -10,12 +10,19 @@ import { IMusic } from "./course-card-sleep";
 
 const MusicCard = ({ item }: { item: IMusic }) => {
   const track: Track = {
-    id: `sleep/${item.id}`,
+    id: `/sleep/${item.id}`,
     title: item.title || "Unknown Title",
     artist: item.artist || "Unknown Artist",
     image: item.image, // در صورت نیاز
   };
   const { track: currentTrack, isPlaying, position, duration, loadTrack, togglePlay, seek } = useAudioPlayer();
+  const [isLoading, setLoading] = useState(false);
+
+  const handlePlay = async () => {
+    setLoading(true);
+    await loadTrack(track);
+    setLoading(false);
+  };
   return (
     <Pressable
       key={item.id}
@@ -23,7 +30,7 @@ const MusicCard = ({ item }: { item: IMusic }) => {
       onPress={() => {
         router.push({
           pathname: "/player",
-          params: { id: `sleep/${item.id}`, title: item.title, artist: item.artist, image: item.image },
+          params: { id: `/sleep/${item.id}`, title: item.title, artist: item.artist, image: item.image },
         });
       }}
     >
@@ -40,7 +47,7 @@ const MusicCard = ({ item }: { item: IMusic }) => {
           <Text className="text-xs text-muted-foreground text-white">{item.duration}</Text>
           <Pressable
             onPress={() => {
-              loadTrack(track);
+              handlePlay();
             }}
           >
             <Entypo name="controller-play" size={24} color="white" />

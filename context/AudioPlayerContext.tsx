@@ -53,9 +53,9 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
         soundRef.current.setOnPlaybackStatusUpdate(null);
         soundRef.current = null;
       }
-
+      console.log(newTrack.id);
       const source = {
-        uri: `https://raw.githubusercontent.com/salarmiirzaeie/audio-files/main/${newTrack.id}.mp3`,
+        uri: `https://janaram.s3.ir-thr-at1.arvanstorage.ir/janaram-assets${newTrack.id}.mp3`,
       };
 
       const { sound } = await Audio.Sound.createAsync(source, { shouldPlay: true });

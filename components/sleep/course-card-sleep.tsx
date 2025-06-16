@@ -22,7 +22,7 @@ interface IVStackProps extends React.ComponentProps<typeof VStack> {
 }
 const SleepCourseCard: React.FC<IVStackProps> = ({ item, isSleepMusic }) => {
   const track: Track = {
-    id: `sleep/${item.id}`,
+    id: `/sleep/${item.id}`,
     title: item.title || "Unknown Title",
     artist: item.artist || "Unknown Artist",
     image: item.image, // در صورت نیاز
@@ -40,7 +40,7 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, isSleepMusic }) => {
       onPress={() =>
         router.push({
           pathname: "/player",
-          params: { id: `sleep/${item.id}`, title: item.title, artist: item.artist, image: item.image },
+          params: { id: `/sleep/${item.id}`, title: item.title, artist: item.artist, image: item.image },
         })
       }
     >
