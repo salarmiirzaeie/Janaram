@@ -19,6 +19,7 @@
       "edgeToEdgeEnabled": true,
       "package": "com.salarmiirzapour.Janaram",
       "permissions": [
+        "android.permission.SCHEDULE_EXACT_ALARM",
         "android.permission.SCHEDULE_EXACT_ALARM"
       ]
     },
@@ -60,6 +61,12 @@
       "eas": {
         "projectId": "debb88c7-8a40-450b-8578-7a14c9bb202a"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/debb88c7-8a40-450b-8578-7a14c9bb202a"
     }
   }
 }

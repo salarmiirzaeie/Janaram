@@ -82,7 +82,7 @@ const MoodCard = () => {
           className="w-full"
         >
           <ActionsheetContent className={"py-14 "}>
-            <VStack space="lg" className="h-5/6 w-full  flex-grow justify-between items-center">
+            <VStack space="lg" className=" w-full  flex-grow justify-between items-center">
               <Text className="text-2xl font-semiBold">مود امروزتو با یه ایموجی نشون بده</Text>
               <Badge className="rounded-full" size="lg">
                 <BadgeText>{formatJalali(new Date(), "yyyy/MM/dd")}</BadgeText>
