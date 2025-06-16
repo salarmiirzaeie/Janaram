@@ -30,6 +30,14 @@ const _layout = () => {
             };
           }}
         />
+        <Stack.Screen
+          name="search-page"
+          options={({ route }: any) => {
+            return {
+              headerShown: false,
+            };
+          }}
+        />
       </Stack>
     </>
   );

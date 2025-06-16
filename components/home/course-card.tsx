@@ -49,7 +49,7 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item, type }) => {
       >
         <Image
           source={require("@/assets/images/log-vector.png")}
-          className="absolute  -left-16 right-0 bottom-0 h-28 w-48 opacity-50 rounded-3xl"
+          className="absolute  -left-16 right-0 bottom-0 h-[112px] w-52 opacity-50 rounded-3xl"
           resizeMode="cover"
         />
         <Text className="color-white text-2xl z-40 text-right font-semiBold">

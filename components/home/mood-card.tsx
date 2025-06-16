@@ -5,7 +5,7 @@ import { Feather } from "@expo/vector-icons";
 import { format, subDays } from "date-fns";
 import { format as formatJalali } from "date-fns-jalali";
 import React, { useState } from "react";
-import { FlatList, Text } from "react-native";
+import { FlatList, KeyboardAvoidingView, Platform, Text } from "react-native";
 import { useDispatch } from "react-redux";
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent } from "../ui/actionsheet";
 import { Badge, BadgeText } from "../ui/badge";
@@ -47,22 +47,20 @@ const MoodCard = () => {
           <Text className="text-white mt-4 text-lg font-semiBold">امروز چه حسی داری؟</Text>
         </Pressable>
       ) : (
-        <Pressable className="w-full h-60 rounded-3xl px-5 py-4 bg-blue-100">
+        <Pressable onPress={() => setMoodSheet(true)} className="w-full h-60 rounded-3xl px-5 py-4 bg-blue-100">
           <HStack className="items-center">
-            <Pressable onPress={() => setMoodSheet(true)}>
-              <VStack space="sm" className="items-center">
-                <Text className="text-sm color-gray-400 font-body">مود امروز</Text>
-                <Text className="text-4xl">{getEmojiFromMood(mood)}</Text>
-                <VStack>
-                  <Text className="text-center  font-semiBold text-gray-700">{getLabelFromMood(mood)}</Text>
-                  {yesterdayMood < mood ? (
-                    <Text className="text-xs font-medium text-green-600">بهتر از دیروز +</Text>
-                  ) : (
-                    <Text className="text-xs font-medium text-red-600">بدتر از دیروز -</Text>
-                  )}
-                </VStack>
+            <VStack space="sm" className="items-center">
+              <Text className="text-sm color-gray-400 font-body">مود امروز</Text>
+              <Text className="text-4xl">{getEmojiFromMood(mood)}</Text>
+              <VStack>
+                <Text className="text-center  font-semiBold text-gray-700">{getLabelFromMood(mood)}</Text>
+                {yesterdayMood < mood ? (
+                  <Text className="text-xs font-medium text-green-600">بهتر از دیروز +</Text>
+                ) : (
+                  <Text className="text-xs font-medium text-red-600">بدتر از دیروز -</Text>
+                )}
               </VStack>
-            </Pressable>
+            </VStack>
 
             <VStack className="flex-1">
               <MinimalChart />
@@ -79,23 +77,27 @@ const MoodCard = () => {
         }}
       >
         <ActionsheetBackdrop />
-        <ActionsheetContent className={"py-14 "}>
-          <VStack space="lg" className="h-5/6 w-full  flex-grow justify-between items-center">
-            <Text className="text-2xl font-semiBold">مود امروزتو با یه ایموجی نشون بده</Text>
-            <Badge className="rounded-full" size="lg">
-              <BadgeText>{formatJalali(new Date(), "yyyy/MM/dd")}</BadgeText>
-            </Badge>
-            <FlatList
-              data={moods}
-              keyExtractor={(item) => item.value.toString()}
-              numColumns={3}
-              className="w-full   flex-grow-0"
-              renderItem={({ item }) => (
-                <Pressable
-                  onPress={() => setMoodState(item.value)}
-                  className={`h-28 flex-1  shadow-md m-2 border ${
-                    item.value === moodState ? "border-background-300" : "border-transparent"
-                  } 
+        <KeyboardAvoidingView
+          behavior={moodSheet ? (Platform.OS === "ios" ? "padding" : "height") : undefined}
+          className="w-full"
+        >
+          <ActionsheetContent className={"py-14 "}>
+            <VStack space="lg" className="h-5/6 w-full  flex-grow justify-between items-center">
+              <Text className="text-2xl font-semiBold">مود امروزتو با یه ایموجی نشون بده</Text>
+              <Badge className="rounded-full" size="lg">
+                <BadgeText>{formatJalali(new Date(), "yyyy/MM/dd")}</BadgeText>
+              </Badge>
+              <FlatList
+                data={moods}
+                keyExtractor={(item) => item.value.toString()}
+                numColumns={3}
+                className="w-full   flex-grow-0"
+                renderItem={({ item }) => (
+                  <Pressable
+                    onPress={() => setMoodState(item.value)}
+                    className={`h-28 flex-1  shadow-md m-2 border ${
+                      item.value === moodState ? "border-background-300" : "border-transparent"
+                    } 
                   ${
                     moodState
                       ? item.value === moodState
@@ -105,40 +107,41 @@ const MoodCard = () => {
                       ? "bg-white"
                       : "bg-background-100"
                   } border-background-100 rounded-3xl items-center justify-center`}
-                >
-                  <Text style={{ fontSize: 50, fontWeight: "bold", lineHeight: 80 }}>{item.emoji}</Text>
-                  <Text style={{ fontSize: 14, fontWeight: "bold", lineHeight: 20, marginBottom: 10 }}>
-                    {item.label}
-                  </Text>
-                </Pressable>
-              )}
-            />
-            <VStack space="md" className="w-full">
-              <HStack className="items-center justify-end">
-                <Text className="text-black text-right text-sm font-medium">{"(اختیاری)"}</Text>
-                <Text className="text-black text-right text-lg font-semibold">{"یادداشت "}</Text>
-              </HStack>
+                  >
+                    <Text style={{ fontSize: 50, fontWeight: "bold", lineHeight: 80 }}>{item.emoji}</Text>
+                    <Text style={{ fontSize: 14, fontWeight: "bold", lineHeight: 20, marginBottom: 10 }}>
+                      {item.label}
+                    </Text>
+                  </Pressable>
+                )}
+              />
+              <VStack space="md" className="w-full">
+                <HStack className="items-center justify-end">
+                  <Text className="text-black text-right text-sm font-medium">{"(اختیاری)"}</Text>
+                  <Text className="text-black text-right text-lg font-semibold">{"یادداشت "}</Text>
+                </HStack>
 
-              <Textarea
-                size="md"
-                isReadOnly={false}
-                isInvalid={false}
-                isDisabled={false}
-                className="w-full bg-background-100 rounded-3xl border-0 p-4"
-              >
-                <TextareaInput
-                  value={note}
-                  className="text-right"
-                  onChangeText={(text) => setNote(text)}
-                  placeholder="یادداشت امروزتو بنویس"
-                />
-              </Textarea>
+                <Textarea
+                  size="md"
+                  isReadOnly={false}
+                  isInvalid={false}
+                  isDisabled={false}
+                  className="w-full bg-background-100 rounded-3xl border-0 p-4"
+                >
+                  <TextareaInput
+                    value={note}
+                    className="text-right"
+                    onChangeText={(text) => setNote(text)}
+                    placeholder="یادداشت امروزتو بنویس"
+                  />
+                </Textarea>
+              </VStack>
+              <Button onPress={handleSave} className="w-full">
+                <ButtonText>ذخیره</ButtonText>
+              </Button>
             </VStack>
-            <Button onPress={handleSave} className="w-full">
-              <ButtonText>ذخیره</ButtonText>
-            </Button>
-          </VStack>
-        </ActionsheetContent>
+          </ActionsheetContent>
+        </KeyboardAvoidingView>
       </Actionsheet>
     </>
   );

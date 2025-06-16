@@ -30,7 +30,7 @@ export default function SettingsScreen() {
           value={newMeditationsNotification}
           setValue={(value) => dispatch({ type: "settings/setNewMeditationsNotification", payload: value })}
           icon={<AntDesign name="notification" size={24} color="black" />}
-          label="اطلاع از تست‌های جدید"
+          label="اطلاع از مدیتیشن های جدید"
         />
       </VStack>
       <Divider />

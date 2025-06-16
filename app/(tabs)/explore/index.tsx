@@ -1,6 +1,5 @@
 import CourseCard from "@/components/home/course-card";
 import { HStack } from "@/components/ui/hstack";
-import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
@@ -18,12 +17,12 @@ const Explore = () => {
   return (
     <ScrollView className="flex-1  bg-background-50 ">
       <VStack className="flex-1 bg-background-50 pt-8 pb-20">
-        <Input size="xl" className="m-4 bg-white  rounded-lg ">
-          <InputSlot className="px-4 items-center">
-            <InputIcon as={(props) => <Feather name="search" {...props} size={18} color="black" />} />
-          </InputSlot>
-          <InputField placeholder="جستجو" />
-        </Input>
+        <Pressable onPress={() => router.navigate("/explore/search-page")}>
+          <HStack className="mx-4 bg-white border-2 border-gray-200 rounded-lg p-3 items-start ">
+            <Feather name="search" size={18} color="black" />
+          </HStack>
+        </Pressable>
+
         <VStack space="md" className="m-4">
           <HStack space="md">
             <Pressable

@@ -18,7 +18,9 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.salarmiirzapour.Janaram",
-      "permissions": ["android.permission.SCHEDULE_EXACT_ALARM"]
+      "permissions": [
+        "android.permission.SCHEDULE_EXACT_ALARM"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -46,25 +48,18 @@
             "useSQLCipher": false
           },
           "ios": {
-            "customBuildFlags": ["-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"]
+            "customBuildFlags": [
+              "-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"
+            ]
           }
         }
       ]
     ],
-    "experiments": {
-      "typedRoutes": true
-    },
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "84a6141e-b802-4f87-b81d-3676446d1b68"
+        "projectId": "debb88c7-8a40-450b-8578-7a14c9bb202a"
       }
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/84a6141e-b802-4f87-b81d-3676446d1b68"
     }
   }
 }
