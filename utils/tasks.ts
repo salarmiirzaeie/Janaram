@@ -20,7 +20,7 @@ TaskManager.defineTask(TASK_NAME, async () => {
     if (!hasTodayMood) {
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: "یادت نره مودتو ثبت کنی 😶",
+          title: "یادت نره حالتو ثبت کنی 😶",
           body: "همین الان حس‌تو ثبت کن. فقط یه دقیقه وقت می‌گیره.",
         },
         trigger: {

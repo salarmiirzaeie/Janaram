@@ -44,7 +44,7 @@ const Test = () => {
         {/* Line Chart Section */}
 
         <VStack className="bg-white rounded-3xl mb-4 p-4">
-          <Text className="text-right font-semiBold text-xl mb-2">روند حالم</Text>
+          <Text className="text-right font-semiBold text-xl mb-2">روند حال من</Text>
           <VStack className=" justify-center  my-4">
             <LineChart
               data={lineData}

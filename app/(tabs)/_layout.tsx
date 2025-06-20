@@ -62,7 +62,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="reports"
         options={{
-          title: "مود من",
+          title: "حال من",
           tabBarIcon: ({ color }) => <AntDesign size={24} name="linechart" color={color} />,
         }}
       />

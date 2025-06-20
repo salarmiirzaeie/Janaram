@@ -11,7 +11,7 @@ const _layout = () => {
           name="index"
           options={{
             headerShown: true,
-            title: "مود من",
+            title: "حال من",
             headerTitleAlign: "center",
             headerTitleStyle: { fontFamily: "vazirBold" },
           }}

@@ -24,7 +24,7 @@ export default function SettingsScreen() {
           value={moodNotification}
           setValue={(value) => dispatch({ type: "settings/setMoodNotification", payload: value })}
           icon={<AntDesign name="notification" size={24} color="black" />}
-          label="یادآوری مود روزانه"
+          label="یادآوری حال روزانه"
         />
         <SettingSwitch
           value={newMeditationsNotification}

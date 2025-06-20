@@ -16,15 +16,10 @@ export default function MoodLogger() {
       <ScrollView style={styles.scroll}>
         {sortedLogs && sortedLogs.length > 0 ? (
           sortedLogs.map((log, index) => (
-            <MoodLogItem
-              key={index}
-              log={log}
-              isFirst={index === 0}
-              isLast={index === sortedLogs.length - 1}
-            />
+            <MoodLogItem key={index} log={log} isFirst={index === 0} isLast={index === sortedLogs.length - 1} />
           ))
         ) : (
-          <Text>هنوز مودی ثبت نشده</Text>
+          <Text>هنوز حسی ثبت نشده</Text>
         )}
       </ScrollView>
     </View>

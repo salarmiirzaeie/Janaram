@@ -1,6 +1,6 @@
 import Logo from "@/components/ui/logo";
 import { Pressable } from "@/components/ui/pressable";
-import { EvilIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { router, Stack } from "expo-router";
 import React from "react";
 import { StatusBar } from "react-native";
@@ -21,7 +21,7 @@ const _layout = () => {
             headerRight() {
               return (
                 <Pressable onPress={() => router.navigate("/notifications")}>
-                  <EvilIcons size={32} name="bell" color={"#A5C9F5"} />
+                  <FontAwesome5 size={24} name="bell" color={"#A5C9F5"} />
                 </Pressable>
               );
             },

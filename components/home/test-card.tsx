@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { useCustomToast } from "@/hooks/useToast";
 import React from "react";
 import { Image } from "react-native";
 import { Button, ButtonText } from "../ui/button";
@@ -7,6 +7,7 @@ import { Text } from "../ui/text";
 import { VStack } from "../ui/vstack";
 
 const TestCard: React.FC = (props) => {
+  const toast = useCustomToast();
   return (
     <HStack className={`  py-5 pr-5  rounded-3xl  justify-between w-full bg-purple-300 shadow shadow-md`}>
       <VStack className="flex-1 justify-center items-center">
@@ -19,7 +20,7 @@ const TestCard: React.FC = (props) => {
             به راحتی احساسات خود را بیان کن و راهنمایی حرفه‌ای دریافت کن.
           </Text>
         </VStack>
-        <Button onPress={() => router.navigate("/chat-bot")}>
+        <Button onPress={() => toast.show({ msg: "در حال آماده سازی", type: "success" })}>
           <ButtonText>شروع گفتگو</ButtonText>
         </Button>
       </VStack>

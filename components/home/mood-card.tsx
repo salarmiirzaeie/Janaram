@@ -32,7 +32,8 @@ const MoodCard = () => {
   const handleSave = () => {
     const today = new Date();
     const formatted = format(today, "yyyy-MM-dd");
-    dispatch(setMood({ date: formatted, mood: moodState, note }));
+    console.log(formatted);
+    dispatch(setMood({ date: "2025-05-17", mood: moodState, note }));
     setMoodSheet(false);
   };
 
@@ -50,7 +51,7 @@ const MoodCard = () => {
         <Pressable onPress={() => setMoodSheet(true)} className="w-full h-60 rounded-3xl px-5 py-4 bg-blue-100">
           <HStack className="items-center">
             <VStack space="sm" className="items-center">
-              <Text className="text-sm color-gray-400 font-body">مود امروز</Text>
+              <Text className="text-sm color-gray-400 font-body">حس امروز</Text>
               <Text className="text-4xl">{getEmojiFromMood(mood)}</Text>
               <VStack>
                 <Text className="text-center  font-semiBold text-gray-700">{getLabelFromMood(mood)}</Text>
@@ -83,7 +84,7 @@ const MoodCard = () => {
         >
           <ActionsheetContent className={"py-14 "}>
             <VStack space="lg" className=" w-full  flex-grow justify-between items-center">
-              <Text className="text-2xl font-semiBold">مود امروزتو با یه ایموجی نشون بده</Text>
+              <Text className="text-2xl font-semiBold">حس امروزتو با یه ایموجی نشون بده</Text>
               <Badge className="rounded-full" size="lg">
                 <BadgeText>{formatJalali(new Date(), "yyyy/MM/dd")}</BadgeText>
               </Badge>

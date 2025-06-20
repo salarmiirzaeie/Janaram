@@ -54,7 +54,7 @@ export default function ChatWithAI() {
       setMessages([...newMessages, { role: "assistant", content: reply }]);
     } catch (error: any) {
       console.error(error.response?.data || error.message);
-      setMessages([...newMessages, { role: "assistant", content: "❌ خطا در ارتباط با Groq" }]);
+      setMessages([...newMessages, { role: "assistant", content: "❌ خطا در ارتباط با جان آرام" }]);
     } finally {
       setIsLoading(false);
     }
@@ -82,19 +82,7 @@ export default function ChatWithAI() {
           ))}
           {isLoading && <ActivityIndicator size="small" color="#999" style={{ marginTop: 10 }} />}
         </ScrollView>
-        <View
-          style={{
-            borderWidth: 1,
-            borderColor: "blue",
-            backgroundColor: "white",
-            margin: 16,
-            paddingHorizontal: 16,
-            borderRadius: 16,
-            paddingVertical: 10,
-          }}
-        >
-          <Text className="color-blue-600 text-right">برای صحبت با چت بات لطفا وی پی ان خودتون رو روشن کنید</Text>
-        </View>
+
         <View
           style={{
             flexDirection: "row",

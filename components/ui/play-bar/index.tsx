@@ -13,7 +13,7 @@ export default function NowPlayingBar() {
     <View
       style={{
         position: "absolute",
-        bottom: 60,
+        bottom: 80,
         left: 0,
         right: 0,
         backgroundColor: "#FFF",
