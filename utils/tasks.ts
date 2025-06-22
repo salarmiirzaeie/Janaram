@@ -46,7 +46,6 @@ export async function registerMoodReminderTask() {
 
   const tasks = await TaskManager.getRegisteredTasksAsync();
   const alreadyRegistered = tasks.some((task) => task.taskName === TASK_NAME);
-  console.log(alreadyRegistered, isTaskDefined);
   if (!alreadyRegistered && isTaskDefined) {
     await BackgroundFetch.registerTaskAsync(TASK_NAME, {
       minimumInterval: 60 * 60, // هر یک ساعت یک‌بار چک کنه

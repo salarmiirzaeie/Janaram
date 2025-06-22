@@ -32,8 +32,7 @@ const MoodCard = () => {
   const handleSave = () => {
     const today = new Date();
     const formatted = format(today, "yyyy-MM-dd");
-    console.log(formatted);
-    dispatch(setMood({ date: "2025-05-17", mood: moodState, note }));
+    dispatch(setMood({ date: formatted, mood: moodState, note }));
     setMoodSheet(false);
   };
 

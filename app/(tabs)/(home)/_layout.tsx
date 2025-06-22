@@ -1,7 +1,5 @@
 import Logo from "@/components/ui/logo";
-import { Pressable } from "@/components/ui/pressable";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { router, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import React from "react";
 import { StatusBar } from "react-native";
 
@@ -18,13 +16,13 @@ const _layout = () => {
             headerTitle: () => <Logo className="h-10 w-16" />,
             headerShadowVisible: false,
 
-            headerRight() {
-              return (
-                <Pressable onPress={() => router.navigate("/notifications")}>
-                  <FontAwesome5 size={24} name="bell" color={"#A5C9F5"} />
-                </Pressable>
-              );
-            },
+            // headerRight() {
+            //   return (
+            //     <Pressable onPress={() => router.navigate("/notifications")}>
+            //       <FontAwesome5 size={24} name="bell" color={"#A5C9F5"} />
+            //     </Pressable>
+            //   );
+            // },
           }}
         />
       </Stack>
