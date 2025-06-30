@@ -1,5 +1,4 @@
 import { useCustomToast } from "@/hooks/useToast";
-import { router } from "expo-router";
 import React from "react";
 import { Image } from "react-native";
 import { Button, ButtonText } from "../ui/button";
@@ -21,7 +20,15 @@ const TestCard: React.FC = (props) => {
             به راحتی احساسات خود را بیان کن و راهنمایی حرفه‌ای دریافت کن.
           </Text>
         </VStack>
-        <Button onPress={() => router.navigate("/chat-bot")}>
+        <Button
+          onPress={() => {
+            // router.navigate("/chat-bot")
+            toast.show({
+              type: "success",
+              msg: "به زودی",
+            });
+          }}
+        >
           <ButtonText>شروع گفتگو</ButtonText>
         </Button>
       </VStack>

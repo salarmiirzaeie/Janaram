@@ -1,135 +1,126 @@
 import { Button, ButtonText } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { InferenceClient } from "@huggingface/inference";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import Animated, { FadeInUp } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const client = new InferenceClient(process.env.EXPO_PUBLIC_CHATBOT_KEY);
 
-type Message = {
-  role: "user" | "assistant";
-  content: string;
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
+const initialMessage = {
+  role: "assistant",
+  content:
+    "سلام! من یک دستیار روانشناس هوش مصنوعی هستم. می‌تونم به شما در بیان و درک احساساتتون کمک کنم. امروز چه حسی دارید؟",
 };
 
 export default function AIPsychologistChat() {
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState([initialMessage]);
   const [isLoading, setIsLoading] = useState(false);
-  const scrollViewRef = React.useRef<ScrollView>(null);
+  const listRef = React.useRef<FlatList>(null);
 
-  // پیام خوشامدگویی اولیه
+  const insets = useSafeAreaInsets();
+
+  const scrollToEnd = () => {
+    listRef.current?.scrollToEnd({ animated: true });
+  };
+
   useEffect(() => {
-    const welcomeMessage: Message = {
-      role: "assistant",
-      content:
-        "سلام! من یک دستیار روانشناس هوش مصنوعی هستم. می‌تونم به شما در بیان و درک احساساتتون کمک کنم. امروز چه حسی دارید؟",
-    };
-    setMessages([welcomeMessage]);
-  }, []);
-
-  React.useEffect(() => {
-    scrollViewRef.current?.scrollToEnd({ animated: true });
+    scrollToEnd();
   }, [messages]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    const userMessage: Message = { role: "user", content: input };
+    const userMessage = { role: "user", content: input };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInput("");
     setIsLoading(true);
 
     try {
-      const prompt = `
-      شما یک روانشناس حرفه‌ای هستید که به مراجعان خود کمک می‌کنید. 
-      مراجع: "${input}"
-      
-      لطفاً با لحنی گرم، همدلانه و حرفه‌ای پاسخ دهید:
-      - ابتدا احساسات مراجع را تایید کنید
-      - سپس سوالات باز و تشویق‌کننده بپرسید
-      - از قضاوت یا دادن راه‌حل فوری خودداری کنید
-      - پاسخ شما باید بین 2 تا 4 جمله باشد
-      `;
-
-      const response = await client.chatCompletion({
-        provider: "novita",
-        model: "deepseek-ai/DeepSeek-V3-0324",
-        messages: [
-          {
-            role: "system",
-            content:
-              "شما یک روانشناس حرفه‌ای با 20 سال سابقه کار هستید که به مراجعان در بیان و پردازش احساساتشان کمک می‌کنید. از تکنیک‌های درمانی شناختی-رفتاری و درمان متمرکز بر هیجان استفاده می‌کنید.",
-          },
-          ...newMessages.map((msg) => ({
-            role: msg.role,
-            content: msg.role === "user" ? msg.content : msg.content,
-          })),
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
+      const response = await fetch("https://router.huggingface.co/novita/v3/openai/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.EXPO_PUBLIC_CHATBOT_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          provider: "novita",
+          model: "deepseek/deepseek-v3-0324",
+          messages: [{ role: "user", content: `به عنوان یک روانشناسی به این متن پاسخ بده:${userMessage.content}` }],
+        }),
       });
 
-      if (response?.choices?.[0]?.message?.content) {
-        const aiMessage: Message = {
-          role: "assistant",
-          content: response.choices[0].message.content,
-        };
-        setMessages([...newMessages, aiMessage]);
-      } else {
-        throw new Error("پاسخ نامعتبر از سرور دریافت شد");
-      }
-    } catch (error: any) {
-      console.error("API Error:", error);
-      let errorMessage = "متأسفم، در پردازش درخواست شما مشکلی پیش آمد.";
+      const data = await response.json();
 
-      const aiMessage: Message = {
-        role: "assistant",
-        content: errorMessage + "\n\nاگر مایلید، می‌توانید دوباره احساسات خود را با من در میان بگذارید.",
-      };
-      setMessages([...newMessages, aiMessage]);
+      const content = data?.choices?.[0]?.message?.content;
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: content || "متأسفم، مشکلی در پاسخ‌دهی پیش آمد. لطفاً دوباره تلاش کنید.",
+        },
+      ]);
+    } catch (error) {
+      console.error("API Error:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "متأسفم، مشکلی در پردازش درخواست شما پیش آمد.",
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const renderItem = ({ item }: { item: any }) => (
+    <Animated.View
+      entering={FadeInUp.duration(300)}
+      style={[styles.messageCard, item.role === "user" ? styles.userMessage : styles.aiMessage]}
+    >
+      <Text style={styles.messageText}>{item.content}</Text>
+    </Animated.View>
+  );
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 81}
+      keyboardVerticalOffset={insets.top + 56}
     >
-      <StatusBar barStyle="dark-content" backgroundColor={"#fff"} />
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <View style={styles.innerContainer}>
-        <ScrollView
-          ref={scrollViewRef}
+        <AnimatedFlatList
+          ref={listRef}
+          data={messages}
+          renderItem={renderItem}
+          keyExtractor={(_, idx) => idx.toString()}
           contentContainerStyle={styles.messagesContainer}
-          keyboardShouldPersistTaps="handled"
-        >
-          {messages.map((msg, idx) => (
-            <Card key={idx} style={[styles.messageCard, msg.role === "user" ? styles.userMessage : styles.aiMessage]}>
-              <Text style={styles.messageText}>{msg.content}</Text>
-            </Card>
-          ))}
-          {isLoading && (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="small" color="#5D7AFF" />
-              <Text style={styles.loadingText}>در حال پردازش...</Text>
-            </View>
-          )}
-        </ScrollView>
+          onContentSizeChange={scrollToEnd}
+          showsVerticalScrollIndicator={false}
+        />
+        {isLoading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="small" color="#5D7AFF" />
+            <Text style={styles.loadingText}>در حال پردازش...</Text>
+          </View>
+        )}
 
         <View style={styles.inputContainer}>
           <TextInput
@@ -138,9 +129,9 @@ export default function AIPsychologistChat() {
             placeholder="احساسات و افکار خود را اینجا بنویسید..."
             placeholderTextColor="#888"
             style={styles.textInput}
-            onSubmitEditing={handleSend}
             multiline
             returnKeyType="send"
+            onSubmitEditing={handleSend}
             blurOnSubmit={false}
           />
           <Button onPress={handleSend} style={styles.sendButton} disabled={isLoading}>
@@ -197,6 +188,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 12,
     marginTop: 8,
+    justifyContent: "center",
   },
   loadingText: {
     marginLeft: 8,

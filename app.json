@@ -18,7 +18,8 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.salarmiirzapour.Janaram",
-      "permissions": []
+      "permissions": [],
+      "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"]
     },
     "web": {
       "bundler": "metro",
