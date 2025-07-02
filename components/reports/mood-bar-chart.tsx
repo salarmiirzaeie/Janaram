@@ -1,12 +1,12 @@
-import { View } from "react-native";
+import { Dimensions, View } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 
 const MoodBarChart = ({ lineData }: any) => {
   return (
     <View className=" flex-grow">
       <BarChart
-        width={280}
-        parentWidth={300}
+        width={Dimensions.get("screen").width * 0.7}
+        parentWidth={Dimensions.get("screen").width * 0.7}
         height={250}
         barWidth={12}
         noOfSections={0}
@@ -22,7 +22,7 @@ const MoodBarChart = ({ lineData }: any) => {
         hideRules
         xAxisLabelTextStyle={{ fontSize: 10, transform: [{ rotate: "30deg" }] }}
         yAxisTextStyle={{ fontSize: 8, transform: [{ rotate: "10deg" }] }}
-        spacing={19}
+        spacing={15}
         isAnimated
       />
     </View>

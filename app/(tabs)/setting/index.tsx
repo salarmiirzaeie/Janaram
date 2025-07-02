@@ -69,7 +69,8 @@ export default function SettingsScreen() {
           onPress={async () => {
             try {
               await Share.share({
-                message: "سلام! این اپلیکیشن رو از دست نده 😍 \n\nلینک دانلود: https://example.com/app",
+                message:
+                  "سلام! این اپلیکیشن رو از دست نده 😍 \n\nلینک دانلود: https://cafebazaar.ir/app/com.salarmiirzapour.Janaram",
               });
             } catch (error) {
               console.error("Error sharing:", error);

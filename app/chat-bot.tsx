@@ -99,13 +99,13 @@ export default function AIPsychologistChat() {
   );
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={insets.top + 56}
-    >
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      <View style={styles.innerContainer}>
+    <View style={[styles.innerContainer, { paddingBottom: insets.bottom }]}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "android" ? undefined : "padding"}
+        keyboardVerticalOffset={insets.bottom}
+      >
+        <StatusBar barStyle="dark-content" backgroundColor="#fff" />
         <AnimatedFlatList
           ref={listRef}
           data={messages}
@@ -138,16 +138,12 @@ export default function AIPsychologistChat() {
             <ButtonText style={styles.sendButtonText}>{isLoading ? "..." : "ارسال"}</ButtonText>
           </Button>
         </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F9FAFF",
-  },
   innerContainer: {
     flex: 1,
   },

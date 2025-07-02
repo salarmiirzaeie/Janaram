@@ -9,6 +9,7 @@ import { Stack } from "expo-router";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
@@ -49,39 +50,45 @@ export default function RootLayout() {
       <PersistGate persistor={persistor}>
         <GluestackUIProvider mode="light">
           <AudioPlayerProvider>
-            <GestureHandlerRootView>
-              <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="player"
-                  options={{
-                    headerShown: true,
-                    headerTitleAlign: "center",
-                    headerTitleStyle: { fontFamily: "vazirBold" },
-                    headerTitle: "",
-                    headerShadowVisible: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="notifications"
-                  options={{
-                    headerShown: true,
-                    headerTitleAlign: "center",
-                    headerTitleStyle: { fontFamily: "vazirBold" },
-                    headerTitle: "پیام ها",
-                  }}
-                />
-                <Stack.Screen
-                  name="chat-bot"
-                  options={{
-                    headerShown: true,
-                    headerTitleAlign: "center",
-                    headerTitleStyle: { fontFamily: "vazirBold" },
-                    headerTitle: "چت بات جان آرام",
-                  }}
-                />
-              </Stack>
-            </GestureHandlerRootView>
+            <SafeAreaProvider
+              style={{
+                flex: 1,
+              }}
+            >
+              <GestureHandlerRootView>
+                <Stack>
+                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen
+                    name="player"
+                    options={{
+                      headerShown: true,
+                      headerTitleAlign: "center",
+                      headerTitleStyle: { fontFamily: "vazirBold" },
+                      headerTitle: "",
+                      headerShadowVisible: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="notifications"
+                    options={{
+                      headerShown: true,
+                      headerTitleAlign: "center",
+                      headerTitleStyle: { fontFamily: "vazirBold" },
+                      headerTitle: "پیام ها",
+                    }}
+                  />
+                  <Stack.Screen
+                    name="chat-bot"
+                    options={{
+                      headerShown: true,
+                      headerTitleAlign: "center",
+                      headerTitleStyle: { fontFamily: "vazirBold" },
+                      headerTitle: "چت بات جان آرام",
+                    }}
+                  />
+                </Stack>
+              </GestureHandlerRootView>
+            </SafeAreaProvider>
           </AudioPlayerProvider>
         </GluestackUIProvider>
       </PersistGate>

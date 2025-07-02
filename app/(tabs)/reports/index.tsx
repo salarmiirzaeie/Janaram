@@ -3,14 +3,13 @@ import MoodLogger from "@/components/reports/moodLogger";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useAppSelector } from "@/hooks/useAppSelector";
-import { prepareBarData, prepareLineDataForLastMonth, preparePieData } from "@/utils/mood";
+import { prepareBarData, prepareLineDataForLastMonth } from "@/utils/mood";
 import React from "react";
-import { ScrollView } from "react-native";
+import { Dimensions, ScrollView } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 
 const Test = () => {
   const moods = useAppSelector((state) => state.mood);
-  const pieData = preparePieData(moods);
   const barData = prepareBarData(moods);
   const lineData = prepareLineDataForLastMonth(moods);
 
@@ -48,7 +47,7 @@ const Test = () => {
           <VStack className=" justify-center  my-4">
             <LineChart
               data={lineData}
-              width={280}
+              width={Dimensions.get("screen").width * 0.7}
               height={220}
               spacing={9}
               maxValue={9}

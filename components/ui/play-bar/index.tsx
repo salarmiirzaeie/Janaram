@@ -2,18 +2,19 @@ import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Image, Pressable, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HStack } from "../hstack";
 
 export default function NowPlayingBar() {
   const { track, isPlaying, position, duration, loadTrack, togglePlay, seek, stop } = useAudioPlayer();
   const router = useRouter();
-
+  const insets = useSafeAreaInsets();
   if (!track) return null;
   return (
     <View
       style={{
         position: "absolute",
-        bottom: 80,
+        bottom: 60 + insets.bottom,
         left: 0,
         right: 0,
         backgroundColor: "#FFF",
