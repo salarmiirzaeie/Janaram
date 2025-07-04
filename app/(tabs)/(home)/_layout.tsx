@@ -1,7 +1,8 @@
 import Logo from "@/components/ui/logo";
-import { Stack } from "expo-router";
+import { EvilIcons } from "@expo/vector-icons";
+import { router, Stack } from "expo-router";
 import React from "react";
-import { StatusBar } from "react-native";
+import { Pressable, StatusBar } from "react-native";
 
 const _layout = () => {
   return (
@@ -16,13 +17,13 @@ const _layout = () => {
             headerTitle: () => <Logo className="h-10 w-16" />,
             headerShadowVisible: false,
 
-            // headerRight() {
-            //   return (
-            //     <Pressable onPress={() => router.navigate("/notifications")}>
-            //       <FontAwesome5 size={24} name="bell" color={"#A5C9F5"} />
-            //     </Pressable>
-            //   );
-            // },
+            headerRight() {
+              return (
+                <Pressable className="items-center w-10" onPress={() => router.navigate("/notifications")}>
+                  <EvilIcons size={32} name="bell" color={"#A5C9F5"} />
+                </Pressable>
+              );
+            },
           }}
         />
       </Stack>

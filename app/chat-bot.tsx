@@ -1,66 +1,145 @@
-import { Button, ButtonText } from "@/components/ui/button";
-import { InferenceClient } from "@huggingface/inference";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  FlatList,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView, // Still needed for loading indicator
   StatusBar,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
-import Animated, { FadeInUp } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Animated, { FadeIn, useAnimatedStyle, withTiming } from "react-native-reanimated";
 
-const client = new InferenceClient(process.env.EXPO_PUBLIC_CHATBOT_KEY);
+// Define the type for a single message object
+interface MessageType {
+  role: "user" | "assistant"; // Role can be 'user' or 'assistant'
+  content: string; // Message content
+}
 
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+// Define the props for the Message component
+interface MessageProps {
+  item: MessageType; // Changed from 'message' to 'item' to match FlatList renderItem signature
+}
 
-const initialMessage = {
-  role: "assistant",
-  content:
-    "سلام! من یک دستیار روانشناس هوش مصنوعی هستم. می‌تونم به شما در بیان و درک احساساتتون کمک کنم. امروز چه حسی دارید؟",
+// A simple message component to display individual chat messages.
+// It includes basic styling and a Reanimated layout animation for entry.
+const Message: React.FC<MessageProps> = ({ item }) => {
+  // Determine if the message is from the current user based on the role
+  const isCurrentUser = item.role === "user";
+
+  // useAnimatedStyle for subtle fade/slide on initial render (if not using layout animations)
+  // Keeping it here for potential future use or if layout animations are disabled.
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(1, { duration: 300 }),
+      transform: [{ translateY: withTiming(0, { duration: 300 }) }],
+    };
+  });
+
+  return (
+    // Apply layout animation directly to the message bubble for entry
+    <Animated.View
+      // `entering` is a Reanimated layout animation that defines how the component
+      // animates when it is first mounted into the view hierarchy.
+      entering={FadeIn.duration(300).delay(50)} // Reverted to original FadeIn
+      style={[
+        styles.messageBubble, // Reverted to original messageBubble style
+        isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage,
+        animatedStyle, // Apply the animated style for any dynamic changes
+      ]}
+    >
+      <Text style={isCurrentUser ? styles.currentUserText : styles.otherUserText}>{item.content}</Text>
+    </Animated.View>
+  );
 };
 
-export default function AIPsychologistChat() {
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([initialMessage]);
-  const [isLoading, setIsLoading] = useState(false);
-  const listRef = React.useRef<FlatList>(null);
+// Create an Animated FlatList component for better performance with animations
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList<MessageType>);
 
-  const insets = useSafeAreaInsets();
+// The main ChatScreen component that orchestrates the chat interface.
+const App: React.FC = () => {
+  // Initial message from the AI assistant
+  const initialMessage: MessageType = {
+    role: "assistant",
+    content:
+      "سلام! من یک دستیار روانشناس هوش مصنوعی هستم. می‌تونم به شما در بیان و درک احساساتتون کمک کنم. امروز چه حسی دارید؟",
+  };
 
+  // State to hold the list of messages in the chat.
+  const [messages, setMessages] = useState<MessageType[]>([initialMessage]);
+  // State to hold the text currently being typed in the input field.
+  const [input, setInput] = useState<string>("");
+  // State to manage loading indicator during API calls.
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // Ref to access the FlatList component, primarily for scrolling to the end.
+  const listRef = useRef<FlatList<MessageType>>(null);
+
+  // Hook to get safe area insets for correct UI positioning, especially on notched devices.
+  const [insets, setInset] = useState(0);
+
+  // Function to scroll the FlatList to the end.
   const scrollToEnd = () => {
     listRef.current?.scrollToEnd({ animated: true });
   };
 
+  // Effect to scroll to the end whenever new messages are added.
   useEffect(() => {
-    scrollToEnd();
+    setTimeout(() => {
+      scrollToEnd();
+    }, 100);
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  // Effect to manage keyboard listeners.
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", (e) => {
+      setInset(80);
+      // You could use `e.endCoordinates.height` here for custom animations.
+    });
+    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
+      // When keyboard hides, ensure FlatList scrolls to the very end.
+      // A small timeout might be necessary to allow layout to settle.
+      setInset(0);
+      setTimeout(() => {
+        listRef.current?.scrollToEnd({ animated: true });
+      }, 100); // Small delay to allow layout to settle
+    });
 
-    const userMessage = { role: "user", content: input };
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  // Function to handle sending a message and calling the AI API.
+  const handleSend = async () => {
+    if (!input.trim()) return; // Do not send empty messages
+
+    const userMessage: MessageType = { role: "user", content: input.trim() };
     const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
-    setInput("");
-    setIsLoading(true);
+    setMessages(newMessages); // Optimistically add user message to UI
+    setInput(""); // Clear input field
+    setIsLoading(true); // Show loading indicator
 
     try {
+      // API call to Hugging Face router for chatbot response
       const response = await fetch("https://router.huggingface.co/novita/v3/openai/chat/completions", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${process.env.EXPO_PUBLIC_CHATBOT_KEY}`,
+          Authorization: `Bearer ${process.env.EXPO_PUBLIC_CHATBOT_KEY}`, // Placeholder for API key
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           provider: "novita",
           model: "deepseek/deepseek-v3-0324",
-          messages: [{ role: "user", content: `به عنوان یک روانشناسی به این متن پاسخ بده:${userMessage.content}` }],
+          // Prompt the AI to act as a psychologist
+          messages: [
+            { role: "user", content: `به عنوان یک روانشناسی در دو جمله به این متن پاسخ بده:${userMessage.content}` },
+          ],
         }),
       });
 
@@ -68,6 +147,7 @@ export default function AIPsychologistChat() {
 
       const content = data?.choices?.[0]?.message?.content;
 
+      // Add AI's response to messages
       setMessages((prev) => [
         ...prev,
         {
@@ -77,6 +157,7 @@ export default function AIPsychologistChat() {
       ]);
     } catch (error) {
       console.error("API Error:", error);
+      // Add an error message if API call fails
       setMessages((prev) => [
         ...prev,
         {
@@ -85,36 +166,39 @@ export default function AIPsychologistChat() {
         },
       ]);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Hide loading indicator
+      // Ensure scroll to end after response/error
+      requestAnimationFrame(() => {
+        listRef.current?.scrollToEnd({ animated: true });
+      });
     }
   };
 
-  const renderItem = ({ item }: { item: any }) => (
-    <Animated.View
-      entering={FadeInUp.duration(300)}
-      style={[styles.messageCard, item.role === "user" ? styles.userMessage : styles.aiMessage]}
-    >
-      <Text style={styles.messageText}>{item.content}</Text>
-    </Animated.View>
-  );
+  // Render function for each message item in the FlatList
+  const renderItem = ({ item }: { item: MessageType }) => <Message item={item} />;
 
   return (
-    <View style={[styles.innerContainer, { paddingBottom: insets.bottom }]}>
+    <SafeAreaView style={styles.container}>
+      {/* StatusBar for styling the device's status bar */}
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "android" ? undefined : "padding"}
-        keyboardVerticalOffset={insets.bottom}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardAvoidingView}
+        keyboardVerticalOffset={insets} // Use safe area inset for offset
       >
-        <StatusBar barStyle="dark-content" backgroundColor="#fff" />
         <AnimatedFlatList
           ref={listRef}
           data={messages}
-          renderItem={renderItem}
           keyExtractor={(_, idx) => idx.toString()}
-          contentContainerStyle={styles.messagesContainer}
+          renderItem={renderItem}
+          contentContainerStyle={styles.messagesContainer} // Reverted to original messagesContainer
           onContentSizeChange={scrollToEnd}
-          showsVerticalScrollIndicator={false}
+          onLayout={scrollToEnd} // Keep onLayout for initial scroll/layout changes
+          showsVerticalScrollIndicator={false} // Hide scroll indicator
         />
+
+        {/* Loading indicator displayed when AI is processing */}
         {isLoading && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="small" color="#5D7AFF" />
@@ -122,63 +206,108 @@ export default function AIPsychologistChat() {
           </View>
         )}
 
-        <View style={styles.inputContainer}>
+        <View
+          style={styles.inputContainer} // Reverted to original inputContainer
+        >
           <TextInput
+            style={styles.textInput} // Reverted to original textInput
             value={input}
             onChangeText={setInput}
-            placeholder="احساسات و افکار خود را اینجا بنویسید..."
+            placeholder="احساسات و افکار خود را اینجا بنویسید..." // Updated placeholder
             placeholderTextColor="#888"
-            style={styles.textInput}
             multiline
             returnKeyType="send"
             onSubmitEditing={handleSend}
             blurOnSubmit={false}
+            autoFocus
           />
-          <Button onPress={handleSend} style={styles.sendButton} disabled={isLoading}>
-            <ButtonText style={styles.sendButtonText}>{isLoading ? "..." : "ارسال"}</ButtonText>
-          </Button>
+          <TouchableOpacity
+            style={styles.sendButton} // Reverted to original sendButton
+            onPress={handleSend}
+            disabled={isLoading || !input.trim()}
+          >
+            <Text style={styles.sendButtonText}>{isLoading ? "..." : "ارسال"}</Text>
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  innerContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: "#F5F5F5",
+  },
+  keyboardAvoidingView: {
     flex: 1,
   },
   messagesContainer: {
-    padding: 16,
-    paddingBottom: 100,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    justifyContent: "flex-end", // Align messages to the bottom
+    flexGrow: 1, // Allow content to grow and push input to bottom
   },
-  messageCard: {
-    marginBottom: 12,
-    padding: 16,
-    borderRadius: 16,
-    maxWidth: "85%",
-  },
-  userMessage: {
-    alignSelf: "flex-end",
-    backgroundColor: "#E3EEFF",
-    borderBottomRightRadius: 4,
-  },
-  aiMessage: {
-    alignSelf: "flex-start",
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#EDF2F7",
-    borderBottomLeftRadius: 4,
-    shadowColor: "#000",
+  messageBubble: {
+    maxWidth: "80%",
+    padding: 10,
+    borderRadius: 15,
+    marginBottom: 8,
+    elevation: 1, // Android shadow
+    shadowColor: "#000", // iOS shadow
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
   },
-  messageText: {
+  currentUserMessage: {
+    alignSelf: "flex-end",
+    backgroundColor: "#007AFF", // iOS Blue
+  },
+  otherUserMessage: {
+    alignSelf: "flex-start",
+    backgroundColor: "#E5E5EA", // iOS Gray
+  },
+  currentUserText: {
+    color: "#FFFFFF",
+  },
+  otherUserText: {
+    color: "#000000",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 15,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#E0E0E0",
+    backgroundColor: "#FFFFFF",
+    paddingBottom: 24,
+  },
+  textInput: {
+    flex: 1,
+    minHeight: 40,
+    maxHeight: 120, // Limit height for multiline input
+    backgroundColor: "#F0F0F0",
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    marginRight: 10,
     fontSize: 16,
-    lineHeight: 24,
-    color: "#1A202C",
   },
+  sendButton: {
+    backgroundColor: "#007AFF",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  sendButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  // Styles for loading indicator (kept from AI integration)
   loadingContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -191,38 +320,6 @@ const styles = StyleSheet.create({
     color: "#5D7AFF",
     fontSize: 14,
   },
-  inputContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 16,
-    paddingBottom: 24,
-    paddingTop: 12,
-    backgroundColor: "#FFFFFF",
-    borderTopWidth: 1,
-    borderColor: "#EDF2F7",
-  },
-  textInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#E2E8F0",
-    borderRadius: 16,
-    padding: 14,
-    minHeight: 56,
-    maxHeight: 150,
-    textAlignVertical: "top",
-    backgroundColor: "#F8FAFC",
-    fontSize: 16,
-    color: "#1A202C",
-  },
-  sendButton: {
-    marginLeft: 12,
-    alignSelf: "center",
-    backgroundColor: "#5D7AFF",
-    borderRadius: 12,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  sendButtonText: {
-    color: "white",
-    fontWeight: "500",
-  },
 });
+
+export default App;

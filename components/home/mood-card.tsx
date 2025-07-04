@@ -5,7 +5,7 @@ import { Feather } from "@expo/vector-icons";
 import { format, subDays } from "date-fns";
 import { format as formatJalali } from "date-fns-jalali";
 import React, { useState } from "react";
-import { FlatList, KeyboardAvoidingView, Platform, Text } from "react-native";
+import { FlatList, KeyboardAvoidingView, Platform, Text, View } from "react-native";
 import { useDispatch } from "react-redux";
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent } from "../ui/actionsheet";
 import { Badge, BadgeText } from "../ui/badge";
@@ -39,13 +39,15 @@ const MoodCard = () => {
   return (
     <>
       {!mood ? (
-        <Pressable
-          onPress={() => setMoodSheet(true)}
-          className="w-60 h-60   py-4 rounded-full bg-blue-300 items-center justify-center"
-        >
-          <Feather name="smile" size={36} color="white" />
-          <Text className="text-white mt-4 text-lg font-semiBold">امروز چه حسی داری؟</Text>
-        </Pressable>
+        <View className="shadow-2xl rounded-full p-1 bg-white">
+          <Pressable
+            onPress={() => setMoodSheet(true)}
+            className="w-60 h-60  shadow-xl py-4 rounded-full bg-blue-200 items-center justify-center"
+          >
+            <Feather name="smile" size={36} color="#172554" />
+            <Text className="text-blue-950 mt-4 text-lg font-semiBold">امروز چه حسی داری؟</Text>
+          </Pressable>
+        </View>
       ) : (
         <Pressable onPress={() => setMoodSheet(true)} className="w-full h-60 rounded-3xl px-5 py-4 bg-blue-100">
           <HStack className="items-center">
