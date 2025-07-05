@@ -45,7 +45,9 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item, type }) => {
       }
     >
       <VStack
-        className={`rounded-3xl h-52 w-48 justify-between p-5  mx-2 ${index % 2 ? "bg-purple-300" : "bg-blue-300"}`}
+        className={`rounded-3xl h-52 w-48 justify-between p-5  mx-2 ${
+          index % 3 === 0 ? "bg-purple-300" : index % 3 === 1 ? "bg-blue-300" : "bg-pink-300"
+        }`}
       >
         <Image
           source={require("@/assets/images/log-vector.png")}
@@ -66,7 +68,7 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item, type }) => {
                 height: 48,
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: index % 2 ? "#8b5cf6" : "#3b82f6",
+                backgroundColor: index % 3 === 0 ? "#8b5cf6" : index % 3 === 1 ? "#3b82f6" : "#ec4899",
                 borderRadius: 34,
               }}
             >
@@ -76,7 +78,7 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item, type }) => {
             <Pressable
               onPress={handlePlay}
               className={`rounded-full h-14 w-14 justify-center items-center ${
-                index % 2 ? "bg-purple-500" : "bg-blue-500"
+                index % 3 === 0 ? "bg-purple-500" : index % 3 === 1 ? "bg-blue-500" : "bg-pink-500"
               } `}
             >
               <Entypo name="controller-play" size={24} color="white" />

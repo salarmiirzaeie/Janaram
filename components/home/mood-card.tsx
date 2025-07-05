@@ -39,17 +39,17 @@ const MoodCard = () => {
   return (
     <>
       {!mood ? (
-        <View className="shadow-2xl rounded-full p-1 bg-white">
+        <View className="shadow-2xl rounded-full p-2 bg-white">
           <Pressable
             onPress={() => setMoodSheet(true)}
-            className="w-60 h-60  shadow-xl py-4 rounded-full bg-blue-200 items-center justify-center"
+            className="w-60 h-60  shadow-xl py-4 rounded-full bg-blue-300 items-center justify-center"
           >
-            <Feather name="smile" size={36} color="#172554" />
-            <Text className="text-blue-950 mt-4 text-lg font-semiBold">امروز چه حسی داری؟</Text>
+            <Feather name="smile" size={36} color="#fff" />
+            <Text className="text-white mt-4 text-lg font-semiBold">امروز چه حسی داری؟</Text>
           </Pressable>
         </View>
       ) : (
-        <Pressable onPress={() => setMoodSheet(true)} className="w-full h-60 rounded-3xl px-5 py-4 bg-blue-100">
+        <Pressable onPress={() => setMoodSheet(true)} className="w-full h-60 rounded-3xl mx-5 px-5 py-4 bg-blue-100">
           <HStack className="items-center">
             <VStack space="sm" className="items-center">
               <Text className="text-sm color-gray-400 font-body">حس امروز</Text>
@@ -82,8 +82,9 @@ const MoodCard = () => {
         <KeyboardAvoidingView
           behavior={moodSheet ? (Platform.OS === "ios" ? "padding" : "height") : undefined}
           className="w-full"
+          keyboardVerticalOffset={0}
         >
-          <ActionsheetContent className={"py-14 "}>
+          <ActionsheetContent className={"py-14"}>
             <VStack space="lg" className=" w-full  flex-grow justify-between items-center">
               <Text className="text-2xl font-semiBold">حس امروزتو با یه ایموجی نشون بده</Text>
               <Badge className="rounded-full" size="lg">
@@ -120,7 +121,7 @@ const MoodCard = () => {
               <VStack space="md" className="w-full">
                 <HStack className="items-center justify-end">
                   <Text className="text-black text-right text-sm font-medium">{"(اختیاری)"}</Text>
-                  <Text className="text-black text-right text-lg font-semibold">{"یادداشت "}</Text>
+                  <Text className="text-black text-right text-2xl font-semibold">{"یادداشت "}</Text>
                 </HStack>
 
                 <Textarea
@@ -128,7 +129,7 @@ const MoodCard = () => {
                   isReadOnly={false}
                   isInvalid={false}
                   isDisabled={false}
-                  className="w-full bg-background-100 rounded-3xl border-0 p-4"
+                  className="w-full bg-blue-100 rounded-3xl border-0 p-4"
                 >
                   <TextareaInput
                     value={note}

@@ -50,7 +50,7 @@ export default function PlayerScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View className="p-safe flex-1 bg-white p-8 justify-center items-center">
       <StatusBar barStyle="dark-content" backgroundColor={"#fff"} />
       <Image source={{ uri: track.image }} style={styles.cover} />
       <Text style={styles.title}>{track.title}</Text>
@@ -100,13 +100,6 @@ export default function PlayerScreen() {
 
 // رنگ‌ها و فونت‌های جدیدتر برای حس آرامش
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ffff", // زمینه‌ی روشن و آرام
-    alignItems: "center",
-    paddingTop: 60,
-    justifyContent: "center",
-  },
   backBtn: {
     position: "absolute",
     top: 50,

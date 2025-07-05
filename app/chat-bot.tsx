@@ -4,8 +4,7 @@ import {
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
-  Platform,
-  SafeAreaView, // Still needed for loading indicator
+  Platform, // Still needed for loading indicator
   StatusBar,
   StyleSheet,
   Text,
@@ -13,7 +12,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Animated, { FadeIn, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // Define the type for a single message object
 interface MessageType {
@@ -34,27 +34,19 @@ const Message: React.FC<MessageProps> = ({ item }) => {
 
   // useAnimatedStyle for subtle fade/slide on initial render (if not using layout animations)
   // Keeping it here for potential future use or if layout animations are disabled.
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: withTiming(1, { duration: 300 }),
-      transform: [{ translateY: withTiming(0, { duration: 300 }) }],
-    };
-  });
 
   return (
     // Apply layout animation directly to the message bubble for entry
-    <Animated.View
+    <View
       // `entering` is a Reanimated layout animation that defines how the component
       // animates when it is first mounted into the view hierarchy.
-      entering={FadeIn.duration(300).delay(50)} // Reverted to original FadeIn
       style={[
         styles.messageBubble, // Reverted to original messageBubble style
         isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage,
-        animatedStyle, // Apply the animated style for any dynamic changes
       ]}
     >
       <Text style={isCurrentUser ? styles.currentUserText : styles.otherUserText}>{item.content}</Text>
-    </Animated.View>
+    </View>
   );
 };
 
@@ -178,59 +170,61 @@ const App: React.FC = () => {
   const renderItem = ({ item }: { item: MessageType }) => <Message item={item} />;
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* StatusBar for styling the device's status bar */}
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+    <SafeAreaProvider className="flex-1">
+      <View className="p-safe" style={styles.container}>
+        {/* StatusBar for styling the device's status bar */}
+        <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardAvoidingView}
-        keyboardVerticalOffset={insets} // Use safe area inset for offset
-      >
-        <AnimatedFlatList
-          ref={listRef}
-          data={messages}
-          keyExtractor={(_, idx) => idx.toString()}
-          renderItem={renderItem}
-          contentContainerStyle={styles.messagesContainer} // Reverted to original messagesContainer
-          onContentSizeChange={scrollToEnd}
-          onLayout={scrollToEnd} // Keep onLayout for initial scroll/layout changes
-          showsVerticalScrollIndicator={false} // Hide scroll indicator
-        />
-
-        {/* Loading indicator displayed when AI is processing */}
-        {isLoading && (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="small" color="#5D7AFF" />
-            <Text style={styles.loadingText}>در حال پردازش...</Text>
-          </View>
-        )}
-
-        <View
-          style={styles.inputContainer} // Reverted to original inputContainer
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.keyboardAvoidingView}
+          keyboardVerticalOffset={insets} // Use safe area inset for offset
         >
-          <TextInput
-            style={styles.textInput} // Reverted to original textInput
-            value={input}
-            onChangeText={setInput}
-            placeholder="احساسات و افکار خود را اینجا بنویسید..." // Updated placeholder
-            placeholderTextColor="#888"
-            multiline
-            returnKeyType="send"
-            onSubmitEditing={handleSend}
-            blurOnSubmit={false}
-            autoFocus
+          <AnimatedFlatList
+            ref={listRef}
+            data={messages}
+            keyExtractor={(_, idx) => idx.toString()}
+            renderItem={renderItem}
+            contentContainerStyle={styles.messagesContainer} // Reverted to original messagesContainer
+            onContentSizeChange={scrollToEnd}
+            onLayout={scrollToEnd} // Keep onLayout for initial scroll/layout changes
+            showsVerticalScrollIndicator={false} // Hide scroll indicator
           />
-          <TouchableOpacity
-            style={styles.sendButton} // Reverted to original sendButton
-            onPress={handleSend}
-            disabled={isLoading || !input.trim()}
+
+          {/* Loading indicator displayed when AI is processing */}
+          {isLoading && (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="small" color="#5D7AFF" />
+              <Text style={styles.loadingText}>در حال پردازش...</Text>
+            </View>
+          )}
+
+          <View
+            style={styles.inputContainer} // Reverted to original inputContainer
           >
-            <Text style={styles.sendButtonText}>{isLoading ? "..." : "ارسال"}</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            <TextInput
+              style={styles.textInput} // Reverted to original textInput
+              value={input}
+              onChangeText={setInput}
+              placeholder="احساسات و افکار خود را اینجا بنویسید..." // Updated placeholder
+              placeholderTextColor="#888"
+              multiline
+              returnKeyType="send"
+              onSubmitEditing={handleSend}
+              blurOnSubmit={false}
+              autoFocus
+            />
+            <TouchableOpacity
+              style={styles.sendButton} // Reverted to original sendButton
+              onPress={handleSend}
+              disabled={isLoading || !input.trim()}
+            >
+              <Text style={styles.sendButtonText}>{isLoading ? "..." : "ارسال"}</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </View>
+    </SafeAreaProvider>
   );
 };
 

@@ -20,10 +20,10 @@ const Start = () => {
 
       <VStack space="md" className="flex-1 items-center justify-center">
         <Logo className="h-40 w-56" />
-        <Text className="text-2xl font-semiBold">به جان آرام خوش اومدی</Text>
-        <Text className="text-lg  text-center">🌿 جان‌آرام، همراهی برای ذهنی آرام‌تر</Text>
+        <Text className="text-2xl font-semiBold">به جانارام خوش اومدی</Text>
+        <Text className="text-lg  text-center">🌿 جانارام، همراهی برای ذهنی آرام‌تر</Text>
         <Text className="text-typography-400 text-center text-md">
-          با مدیتیشن‌های متنوع، موسیقی و قصه‌های خواب، پیگیری حال روحی و گفت‌و‌گو با چت‌بات روان‌شناسی، «جان‌آرام» همیشه
+          با مدیتیشن‌های متنوع، موسیقی و قصه‌های خواب، پیگیری حال روحی و گفت‌و‌گو با چت بات روان‌شناسی، «جانارام» همیشه
           کنارته… برای خوابی راحت‌تر و ذهنی سبک‌تر.
         </Text>
       </VStack>

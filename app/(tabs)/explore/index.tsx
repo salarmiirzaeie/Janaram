@@ -16,7 +16,7 @@ const Explore = () => {
 
   return (
     <ScrollView className="flex-1  bg-background-50 ">
-      <VStack className="flex-1 bg-background-50 pt-8 pb-20">
+      <VStack className="flex-1 py-safe-offset-4 bg-background-50 pt-8 pb-20">
         <Pressable onPress={() => router.navigate("/explore/search-page")}>
           <HStack className="mx-4 bg-white border-2 border-gray-200 rounded-lg p-3 items-start ">
             <Feather name="search" size={18} color="black" />
@@ -115,7 +115,7 @@ const Explore = () => {
             horizontal
           >
             {loveMedias.map((item, index) => (
-              <CourseCard item={item} index={index} key={item.id} />
+              <CourseCard item={item} index={index + 1} key={item.id} />
             ))}
           </ScrollView>
         </VStack>
@@ -134,7 +134,7 @@ const Explore = () => {
             horizontal
           >
             {instrumentalMedias.map((item, index) => (
-              <CourseCard item={item} index={index} key={item.id} />
+              <CourseCard item={item} index={index + 2} key={item.id} />
             ))}
           </ScrollView>
         </VStack>

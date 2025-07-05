@@ -11,11 +11,11 @@ const AboutModal: React.FC<AboutModalProps> = ({ visible, onClose }) => {
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <View style={styles.backdrop}>
         <View style={styles.modalContainer}>
-          <Text style={styles.header}>درباره جان‌آرام</Text>
+          <Text style={styles.header}>درباره جانارام</Text>
           <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
             <Text style={styles.text}>
               در شلوغی زندگی‌های امروزی، داشتن لحظه‌ای برای آرام‌سازی ذهن و شنیدن صدای درون، یک نیاز واقعی‌ست.{"\n\n"}
-              <Text style={styles.bold}>جان‌آرام</Text> با هدف ایجاد فضایی برای آرامش ذهن، مراقبت از احساسات، و آگاهی از
+              <Text style={styles.bold}>جانارام</Text> با هدف ایجاد فضایی برای آرامش ذهن، مراقبت از احساسات، و آگاهی از
               خود ساخته شده است.{"\n\n"}
               در این اپلیکیشن می‌تونی:{"\n"}• با مدیتیشن‌های کوتاه و کاربردی در دسته‌هایی مثل کاهش استرس، خواب آرام،
               خودپذیری، تمرکز ذهن و عشق به خود، ذهن‌تو آروم کنی.{"\n"}• با{" "}
@@ -23,7 +23,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ visible, onClose }) => {
               و الگوهای روحی‌ت رو مرور کنی.{"\n\n"}
               جان‌آرام فقط یک اپلیکیشن نیست؛ یه همراه روزانه‌ست برای کمک به ذهنی سبک‌تر، دلی آروم‌تر و شناختی عمیق‌تر از
               خودت.{"\n\n"}
-              <Text style={styles.medium}>لحظه‌ای برای خودت باش. با جان‌آرام.</Text>
+              <Text style={styles.medium}>لحظه‌ای برای خودت باش. با جانارام.</Text>
             </Text>
           </ScrollView>
           <Pressable style={styles.button} onPress={onClose}>

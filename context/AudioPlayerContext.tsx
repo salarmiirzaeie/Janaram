@@ -53,7 +53,6 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
         soundRef.current.setOnPlaybackStatusUpdate(null);
         soundRef.current = null;
       }
-      console.log(newTrack.id);
       const source = {
         uri: `https://janaram.s3.ir-thr-at1.arvanstorage.ir/janaram-assets${newTrack.id}.mp3`,
       };

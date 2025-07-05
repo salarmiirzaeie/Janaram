@@ -14,7 +14,7 @@ const RulesModal: React.FC<RulesModalProps> = ({ visible, onClose }) => {
           <Text style={styles.header}>قوانین و مقررات</Text>
           <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
             <Text style={styles.text}>
-              استفاده شما از برنامه جان‌آرام به منزله‌ی پذیرش کامل شرایط زیر است:{"\n\n"}
+              استفاده شما از برنامه جانارام به منزله‌ی پذیرش کامل شرایط زیر است:{"\n\n"}
               <Text style={styles.bold}>۱. هدف اپلیکیشن:</Text> جان‌آرام با هدف آرام‌سازی ذهن، مراقبت احساسی و افزایش
               آگاهی از خود طراحی شده است. این برنامه جایگزین مشاوره حرفه‌ای روان‌شناسی یا پزشکی نیست.{"\n\n"}
               <Text style={styles.bold}>۲. حفظ حریم خصوصی:</Text> اطلاعات شخصی شما نزد ما محرمانه باقی می‌ماند و بدون

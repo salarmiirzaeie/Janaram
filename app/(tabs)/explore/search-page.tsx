@@ -14,7 +14,7 @@ const SearchPage = () => {
   const filteredData = data.filter((item) => item.title.includes(query.trim()));
 
   return (
-    <VStack className="flex-1 px-4 pt-8 pb-16 bg-gray-50">
+    <VStack className="flex-1 px-4 pt-8 py-safe-offset-4 pb-16 bg-gray-50">
       <Input size="xl" className="bg-white">
         <InputSlot className="px-3 h-full">
           <Pressable onPress={() => router.back()} className="flex-1 justify-center items-center">
