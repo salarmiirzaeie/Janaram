@@ -12,15 +12,12 @@ const DAILY_NOTIFICATION_ID = "daily-9am-notification";
 export default function TabLayout() {
   const { isSleepMode } = useAppSelector((state) => state.sleepMode);
   const { isInitialized } = useAppSelector((state) => state.initialize);
+  const isNotificationEnabled = useAppSelector((state) => state.settings.moodNotification);
+
   const dispatch = useDispatch();
   const sleepModeHandler = (val: boolean) => {
     dispatch(setSleepMode(val));
   };
-
-  if (!isInitialized) {
-    return <Start />;
-  }
-  const isNotificationEnabled = useAppSelector((state) => state.settings.moodNotification);
   const scheduleDailyNotification = async () => {
     // 1. Request Permissions
     // Permissions are crucial. The user must grant permission for notifications.
@@ -67,7 +64,9 @@ export default function TabLayout() {
             sound: true, // Use default notification sound
           },
           trigger,
-        }).then(() => {});
+        }).then(() => {
+          console.log("scheduled");
+        });
       }
     } catch (error) {
       console.error("Error scheduling notification:", error);
@@ -80,6 +79,10 @@ export default function TabLayout() {
     }
     setup();
   }, []);
+  if (!isInitialized) {
+    return <Start />;
+  }
+
   return (
     <Tabs
       screenOptions={{

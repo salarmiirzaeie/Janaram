@@ -9,14 +9,14 @@ import { Pressable } from "../ui/pressable";
 import { Spinner } from "../ui/spinner";
 import { VStack } from "../ui/vstack";
 
-const MusicCard = ({ item }: { item: IMusic }) => {
+const MusicCard = ({ item, type }: { item: IMusic; type?: number }) => {
   const track: Track = {
-    id: `/meditations/${item.id}`,
+    id: `/${type === 4 ? "nature" : "meditations"}/${item.id}`,
     title: item.title || "Unknown Title",
     artist: item.artist || "Unknown Artist",
     image: item.image, // در صورت نیاز
   };
-  const { track: currentTrack, isPlaying, position, duration, loadTrack, togglePlay, seek } = useAudioPlayer();
+  const { track: currentTrack, loadTrack } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
 
   const handlePlay = async () => {
@@ -31,7 +31,12 @@ const MusicCard = ({ item }: { item: IMusic }) => {
       onPress={() => {
         router.push({
           pathname: "/player",
-          params: { id: `/meditations/${item.id}`, title: item.title, artist: item.artist, image: item.image },
+          params: {
+            id: `/${type === 4 ? "nature" : "meditations"}/${item.id}`,
+            title: item.title,
+            artist: item.artist,
+            image: item.image,
+          },
         });
       }}
     >

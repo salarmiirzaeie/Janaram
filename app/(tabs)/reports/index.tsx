@@ -59,7 +59,6 @@ const Test = () => {
               yAxisColor="lightgray"
               xAxisColor="lightgray"
               color1="#64B5F6"
-              animateOnDataChange
               stepValue={1}
             />
           </VStack>

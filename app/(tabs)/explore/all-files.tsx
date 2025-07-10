@@ -2,6 +2,7 @@ import MusicCard from "@/components/explore/music-card";
 import { IMusic } from "@/components/sleep/course-card-sleep";
 import { VStack } from "@/components/ui/vstack";
 import meditations from "@/database/database.json";
+import nature from "@/database/nature.json";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { FlatList } from "react-native";
@@ -20,6 +21,8 @@ const AllMusics = () => {
         return loveMedias;
       case "3":
         return instrumentalMedias;
+      case "4":
+        return nature;
       default:
         return [];
     }
@@ -28,7 +31,7 @@ const AllMusics = () => {
   const data: IMusic[] = getData();
 
   const renderMusicCard = (item: IMusic) => {
-    return <MusicCard item={item} />;
+    return <MusicCard type={Number(params.type)} item={item} />;
   };
 
   return (

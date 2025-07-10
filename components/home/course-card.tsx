@@ -17,7 +17,7 @@ interface IVStackProps extends React.ComponentProps<typeof VStack> {
 }
 const CourseCard: React.FC<IVStackProps> = ({ index, item, type }) => {
   const track: Track = {
-    id: `/${type === 1 ? "recommends" : "meditations"}/${item?.id}`,
+    id: `/${type === 1 ? "recommends" : type === 4 ? "nature" : "meditations"}/${item?.id}`,
     title: item?.title || "Unknown Title",
     artist: item?.artist || "Unknown Artist",
     image: item?.image, // در صورت نیاز
@@ -36,7 +36,7 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item, type }) => {
         router.push({
           pathname: "/player",
           params: {
-            id: `/${type === 1 ? "recommends" : "meditations"}/${item?.id}`,
+            id: `/${type === 1 ? "recommends" : type === 4 ? "nature" : "meditations"}/${item?.id}`,
             title: item?.title,
             artist: item?.artist,
             image: item?.image,

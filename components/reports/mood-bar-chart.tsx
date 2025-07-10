@@ -23,7 +23,6 @@ const MoodBarChart = ({ lineData }: any) => {
         xAxisLabelTextStyle={{ fontSize: 10, transform: [{ rotate: "30deg" }] }}
         yAxisTextStyle={{ fontSize: 8, transform: [{ rotate: "10deg" }] }}
         spacing={15}
-        isAnimated
       />
     </View>
   );

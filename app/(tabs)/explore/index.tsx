@@ -4,6 +4,7 @@ import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import data from "@/database/database.json";
+import nature from "@/database/nature.json";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
@@ -15,8 +16,8 @@ const Explore = () => {
   const instrumentalMedias = data.slice(10, 15).sort((a, b) => b.id - a.id);
 
   return (
-    <ScrollView className="flex-1  bg-background-50 ">
-      <VStack className="flex-1 py-safe-offset-4 bg-background-50 pt-8 pb-20">
+    <ScrollView className="flex-1">
+      <VStack className="flex-1 py-safe-offset-4 bg-white pt-8 pb-20">
         <Pressable onPress={() => router.navigate("/explore/search-page")}>
           <HStack className="mx-4 bg-white border-2 border-gray-200 rounded-lg p-3 items-start ">
             <Feather name="search" size={18} color="black" />
@@ -34,7 +35,7 @@ const Explore = () => {
                 })
               }
             >
-              <VStack className="bg-green-300 flex-1 justify-center items-center rounded-lg h-14">
+              <VStack className="bg-blue-300 flex-1 justify-center items-center rounded-lg h-14">
                 <Text className="text-white text-xl font-semiBold">آرامش 🌿</Text>
               </VStack>
             </Pressable>
@@ -52,14 +53,7 @@ const Explore = () => {
               </VStack>
             </Pressable>
           </HStack>
-          {/* <HStack space="md">
-            <VStack className="bg-red-300 flex-1 rounded-lg justify-center items-center h-14">
-              <Text className="text-white text-xl font-semiBold">تمرکز 🧠</Text>
-            </VStack>
-            <VStack className="bg-blue-300 flex-1 rounded-lg justify-center items-center h-14">
-              <Text className="text-white text-xl font-semiBold">هدف‌گذاری 🎯</Text>
-            </VStack>
-          </HStack> */}
+
           <HStack space="md">
             <Pressable
               className="flex-1"
@@ -77,6 +71,16 @@ const Explore = () => {
             <Pressable className="flex-1" onPress={() => router.push("/sleep")}>
               <VStack className="bg-indigo-300  rounded-lg justify-center items-center h-14">
                 <Text className="text-white text-xl font-semiBold">خواب خوب 🌙</Text>
+              </VStack>
+            </Pressable>
+          </HStack>
+          <HStack space="md">
+            <Pressable
+              className="flex-1"
+              onPress={() => router.push({ pathname: "/explore/all-files", params: { type: "4", title: "طبیعت" } })}
+            >
+              <VStack className="bg-green-300  rounded-lg justify-center items-center h-14">
+                <Text className="text-white text-xl font-semiBold"> طبیعت 🌳</Text>
               </VStack>
             </Pressable>
           </HStack>
@@ -135,6 +139,25 @@ const Explore = () => {
           >
             {instrumentalMedias.map((item, index) => (
               <CourseCard item={item} index={index + 2} key={item.id} />
+            ))}
+          </ScrollView>
+        </VStack>
+        <VStack space="lg" className="mt-4 ">
+          <HStack className="items-center justify-between  mx-5">
+            <Text className="text-typography-400 text-md"> </Text>
+
+            <Text className="font-semiBold text-xl">طبیعت</Text>
+          </HStack>
+          <ScrollView
+            contentContainerStyle={{
+              paddingHorizontal: 10,
+              flexDirection: "row-reverse",
+            }}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+          >
+            {nature.slice(0, 5).map((item, index) => (
+              <CourseCard item={item} type={4} index={index} key={item.id} />
             ))}
           </ScrollView>
         </VStack>

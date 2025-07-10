@@ -49,11 +49,11 @@ const MoodCard = () => {
           </Pressable>
         </View>
       ) : (
-        <Pressable onPress={() => setMoodSheet(true)} className="w-full h-60 rounded-3xl mx-5 px-5 py-4 bg-blue-100">
+        <Pressable onPress={() => setMoodSheet(true)} className="w-full h-60 rounded-3xl px-5 py-4 bg-blue-100">
           <HStack className="items-center">
             <VStack space="sm" className="items-center">
               <Text className="text-sm color-gray-400 font-body">حس امروز</Text>
-              <Text className="text-4xl">{getEmojiFromMood(mood)}</Text>
+              <Text style={{ fontSize: 30, fontWeight: "bold", lineHeight: 45 }}>{getEmojiFromMood(mood)}</Text>
               <VStack>
                 <Text className="text-center  font-semiBold text-gray-700">{getLabelFromMood(mood)}</Text>
                 {yesterdayMood < mood ? (
