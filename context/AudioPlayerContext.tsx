@@ -1,7 +1,7 @@
 import NowPlayingBar from "@/components/ui/play-bar";
-import { Audio, AVPlaybackStatus } from "expo-av";
+import { Audio, AVPlaybackStatus, InterruptionModeAndroid } from "expo-av";
 import { useSegments } from "expo-router";
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 export type Track = {
   id: string;
@@ -42,7 +42,30 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
   const soundRef = useRef<Audio.Sound | null>(null);
   const segments = useSegments();
   const isPlayerScreen = segments[0] === "player";
+  useEffect(() => {
+    const configureAudioMode = async () => {
+      try {
+        await Audio.setAudioModeAsync({
+          staysActiveInBackground: true, // Continue playing in the background
+          shouldDuckAndroid: false, // Lower other apps' audio when playing
+          playThroughEarpieceAndroid: false, // Use speaker by default
+          interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+        });
+      } catch (error) {
+        console.error("Error configuring audio mode:", error);
+      }
+    };
 
+    configureAudioMode();
+
+    // Cleanup on unmount
+    return () => {
+      if (soundRef.current) {
+        soundRef.current.unloadAsync();
+        soundRef.current = null;
+      }
+    };
+  }, []);
   const loadTrack = async (newTrack: Track) => {
     if (track?.id === newTrack.id) return;
 
@@ -70,6 +93,14 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
           setPosition(status.positionMillis);
           setDuration(status.durationMillis || 1);
           setIsPlaying(status.isPlaying);
+        }
+        // Handle interruptions
+        if ("didJustFinish" in status && status.didJustFinish) {
+          setIsPlaying(false);
+          setShowPlayingBar(false);
+        }
+        if ("isBuffering" in status) {
+          setIsLoading(status.isBuffering);
         }
       });
     } catch (error) {

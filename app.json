@@ -18,7 +18,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.salarmiirzapour.Janaram",
-      "permissions": [],
+      "permissions": ["android.permission.FOREGROUND_SERVICE"],
       "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"]
     },
     "web": {
