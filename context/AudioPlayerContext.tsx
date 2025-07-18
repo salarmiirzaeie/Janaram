@@ -2,6 +2,7 @@ import NowPlayingBar from "@/components/ui/play-bar";
 import { Audio, AVPlaybackStatus, InterruptionModeAndroid } from "expo-av";
 import { useSegments } from "expo-router";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import MusicControl, { Command } from "react-native-music-control";
 
 export type Track = {
   id: string;
@@ -76,6 +77,7 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
         soundRef.current.setOnPlaybackStatusUpdate(null);
         soundRef.current = null;
       }
+
       const source = {
         uri: `https://janaram.s3.ir-thr-at1.arvanstorage.ir/janaram-assets${newTrack.id}.mp3`,
       };
@@ -87,18 +89,50 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
       setIsPlaying(true);
       setShowPlayingBar(true);
 
+      // 🔊 Configure lock screen
+      MusicControl.enableBackgroundMode(true);
+      MusicControl.setNowPlaying({
+        title: newTrack.title,
+        artist: newTrack.artist,
+        artwork: newTrack.image,
+        duration: 0, // Will update when loaded
+      });
+
+      MusicControl.enableControl(Command.pause, true);
+      MusicControl.enableControl(Command.play, true);
+      MusicControl.enableControl(Command.closeNotification, true);
+
+      MusicControl.on(Command.play, () => {
+        togglePlay();
+      });
+      MusicControl.on(Command.pause, () => {
+        togglePlay();
+      });
+      MusicControl.on(Command.closeNotification, () => {
+        stop();
+      });
+
       sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
         if (!status.isLoaded) return;
+
         if ("positionMillis" in status) {
           setPosition(status.positionMillis);
           setDuration(status.durationMillis || 1);
           setIsPlaying(status.isPlaying);
+
+          // 🔁 Update current playback position on lock screen
+          MusicControl.updatePlayback({
+            state: status.isPlaying ? MusicControl.STATE_PLAYING : MusicControl.STATE_PAUSED,
+            elapsedTime: status.positionMillis / 1000,
+          });
         }
-        // Handle interruptions
+
         if ("didJustFinish" in status && status.didJustFinish) {
           setIsPlaying(false);
           setShowPlayingBar(false);
+          MusicControl.resetNowPlaying();
         }
+
         if ("isBuffering" in status) {
           setIsLoading(status.isBuffering);
         }
@@ -118,10 +152,12 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
     if (status.isPlaying) {
       await soundRef.current.pauseAsync();
       setIsPlaying(false);
+      MusicControl.updatePlayback({ state: MusicControl.STATE_PAUSED });
     } else {
       await soundRef.current.playAsync();
       setIsPlaying(true);
       setShowPlayingBar(true);
+      MusicControl.updatePlayback({ state: MusicControl.STATE_PLAYING });
     }
   };
 
@@ -135,8 +171,11 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
       await soundRef.current.stopAsync();
       setIsPlaying(false);
       setShowPlayingBar(false);
+      MusicControl.stopControl();
+      MusicControl.resetNowPlaying();
     }
   };
+
   return (
     <AudioPlayerContext.Provider
       value={{
