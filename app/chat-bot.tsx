@@ -1,10 +1,11 @@
+import { OpenAI } from "openai";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
-  Platform, // Still needed for loading indicator
+  Platform,
   StatusBar,
   StyleSheet,
   Text,
@@ -17,88 +18,67 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // Define the type for a single message object
 interface MessageType {
-  role: "user" | "assistant"; // Role can be 'user' or 'assistant'
-  content: string; // Message content
+  role: "user" | "assistant";
+  content: string;
 }
 
 // Define the props for the Message component
 interface MessageProps {
-  item: MessageType; // Changed from 'message' to 'item' to match FlatList renderItem signature
+  item: MessageType;
 }
 
 // A simple message component to display individual chat messages.
-// It includes basic styling and a Reanimated layout animation for entry.
 const Message: React.FC<MessageProps> = ({ item }) => {
-  // Determine if the message is from the current user based on the role
   const isCurrentUser = item.role === "user";
 
-  // useAnimatedStyle for subtle fade/slide on initial render (if not using layout animations)
-  // Keeping it here for potential future use or if layout animations are disabled.
-
   return (
-    // Apply layout animation directly to the message bubble for entry
-    <View
-      // `entering` is a Reanimated layout animation that defines how the component
-      // animates when it is first mounted into the view hierarchy.
-      style={[
-        styles.messageBubble, // Reverted to original messageBubble style
-        isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage,
-      ]}
-    >
+    <View style={[styles.messageBubble, isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage]}>
       <Text style={isCurrentUser ? styles.currentUserText : styles.otherUserText}>{item.content}</Text>
     </View>
   );
 };
 
-// Create an Animated FlatList component for better performance with animations
+// Create an Animated FlatList component
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList<MessageType>);
 
-// The main ChatScreen component that orchestrates the chat interface.
+// The main ChatScreen component
 const App: React.FC = () => {
-  // Initial message from the AI assistant
   const initialMessage: MessageType = {
     role: "assistant",
     content:
       "سلام! من یک دستیار روانشناس هوش مصنوعی هستم. می‌تونم به شما در بیان و درک احساساتتون کمک کنم. امروز چه حسی دارید؟",
   };
 
-  // State to hold the list of messages in the chat.
   const [messages, setMessages] = useState<MessageType[]>([initialMessage]);
-  // State to hold the text currently being typed in the input field.
   const [input, setInput] = useState<string>("");
-  // State to manage loading indicator during API calls.
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // Ref to access the FlatList component, primarily for scrolling to the end.
   const listRef = useRef<FlatList<MessageType>>(null);
-
-  // Hook to get safe area insets for correct UI positioning, especially on notched devices.
   const [insets, setInset] = useState(0);
 
-  // Function to scroll the FlatList to the end.
+  const client = new OpenAI({
+    baseURL: "https://openrouter.ai/api/v1",
+    apiKey: process.env.EXPO_PUBLIC_CHATBOT_KEY_NEW,
+  });
+
   const scrollToEnd = () => {
     listRef.current?.scrollToEnd({ animated: true });
   };
 
-  // Effect to scroll to the end whenever new messages are added.
   useEffect(() => {
     setTimeout(() => {
       scrollToEnd();
     }, 100);
   }, [messages]);
 
-  // Effect to manage keyboard listeners.
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", (e) => {
       setInset(80);
-      // You could use `e.endCoordinates.height` here for custom animations.
     });
     const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
-      // When keyboard hides, ensure FlatList scrolls to the very end.
-      // A small timeout might be necessary to allow layout to settle.
       setInset(0);
       setTimeout(() => {
         listRef.current?.scrollToEnd({ animated: true });
-      }, 100); // Small delay to allow layout to settle
+      }, 100);
     });
 
     return () => {
@@ -107,39 +87,28 @@ const App: React.FC = () => {
     };
   }, []);
 
-  // Function to handle sending a message and calling the AI API.
   const handleSend = async () => {
-    if (!input.trim()) return; // Do not send empty messages
+    if (!input.trim()) return;
 
     const userMessage: MessageType = { role: "user", content: input.trim() };
     const newMessages = [...messages, userMessage];
-    setMessages(newMessages); // Optimistically add user message to UI
-    setInput(""); // Clear input field
-    setIsLoading(true); // Show loading indicator
+    setMessages(newMessages);
+    setInput("");
+    setIsLoading(true);
 
     try {
-      // API call to Hugging Face router for chatbot response
-      const response = await fetch("https://router.huggingface.co/novita/v3/openai/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.EXPO_PUBLIC_CHATBOT_KEY}`, // Placeholder for API key
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          provider: "novita",
-          model: "deepseek/deepseek-v3-0324",
-          // Prompt the AI to act as a psychologist
-          messages: [
-            { role: "user", content: `به عنوان یک روانشناسی در دو جمله به این متن پاسخ بده:${userMessage.content}` },
-          ],
-        }),
+      const completion = await client.chat.completions.create({
+        model: "deepseek/deepseek-chat-v3-0324:free",
+        messages: [
+          {
+            role: "user",
+            content: `به عنوان یک روانشناس در دو جمله به این متن پاسخ بده: ${userMessage.content}`,
+          },
+        ],
       });
 
-      const data = await response.json();
+      const content = completion.choices[0]?.message?.content;
 
-      const content = data?.choices?.[0]?.message?.content;
-
-      // Add AI's response to messages
       setMessages((prev) => [
         ...prev,
         {
@@ -149,7 +118,6 @@ const App: React.FC = () => {
       ]);
     } catch (error) {
       console.error("API Error:", error);
-      // Add an error message if API call fails
       setMessages((prev) => [
         ...prev,
         {
@@ -158,40 +126,36 @@ const App: React.FC = () => {
         },
       ]);
     } finally {
-      setIsLoading(false); // Hide loading indicator
-      // Ensure scroll to end after response/error
+      setIsLoading(false);
       requestAnimationFrame(() => {
         listRef.current?.scrollToEnd({ animated: true });
       });
     }
   };
 
-  // Render function for each message item in the FlatList
   const renderItem = ({ item }: { item: MessageType }) => <Message item={item} />;
 
   return (
     <SafeAreaProvider className="flex-1">
       <View className="p-safe" style={styles.container}>
-        {/* StatusBar for styling the device's status bar */}
         <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.keyboardAvoidingView}
-          keyboardVerticalOffset={insets} // Use safe area inset for offset
+          keyboardVerticalOffset={insets}
         >
           <AnimatedFlatList
             ref={listRef}
             data={messages}
             keyExtractor={(_, idx) => idx.toString()}
             renderItem={renderItem}
-            contentContainerStyle={styles.messagesContainer} // Reverted to original messagesContainer
+            contentContainerStyle={styles.messagesContainer}
             onContentSizeChange={scrollToEnd}
-            onLayout={scrollToEnd} // Keep onLayout for initial scroll/layout changes
-            showsVerticalScrollIndicator={false} // Hide scroll indicator
+            onLayout={scrollToEnd}
+            showsVerticalScrollIndicator={false}
           />
 
-          {/* Loading indicator displayed when AI is processing */}
           {isLoading && (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="small" color="#5D7AFF" />
@@ -199,14 +163,12 @@ const App: React.FC = () => {
             </View>
           )}
 
-          <View
-            style={styles.inputContainer} // Reverted to original inputContainer
-          >
+          <View style={styles.inputContainer}>
             <TextInput
-              style={styles.textInput} // Reverted to original textInput
+              style={styles.textInput}
               value={input}
               onChangeText={setInput}
-              placeholder="احساسات و افکار خود را اینجا بنویسید..." // Updated placeholder
+              placeholder="احساسات و افکار خود را اینجا بنویسید..."
               placeholderTextColor="#888"
               multiline
               returnKeyType="send"
@@ -214,11 +176,7 @@ const App: React.FC = () => {
               blurOnSubmit={false}
               autoFocus
             />
-            <TouchableOpacity
-              style={styles.sendButton} // Reverted to original sendButton
-              onPress={handleSend}
-              disabled={isLoading || !input.trim()}
-            >
+            <TouchableOpacity style={styles.sendButton} onPress={handleSend} disabled={isLoading || !input.trim()}>
               <Text style={styles.sendButtonText}>{isLoading ? "..." : "ارسال"}</Text>
             </TouchableOpacity>
           </View>
@@ -239,27 +197,27 @@ const styles = StyleSheet.create({
   messagesContainer: {
     paddingVertical: 10,
     paddingHorizontal: 15,
-    justifyContent: "flex-end", // Align messages to the bottom
-    flexGrow: 1, // Allow content to grow and push input to bottom
+    justifyContent: "flex-end",
+    flexGrow: 1,
   },
   messageBubble: {
     maxWidth: "80%",
     padding: 10,
     borderRadius: 15,
     marginBottom: 8,
-    elevation: 1, // Android shadow
-    shadowColor: "#000", // iOS shadow
+    elevation: 1,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 1,
   },
   currentUserMessage: {
     alignSelf: "flex-end",
-    backgroundColor: "#007AFF", // iOS Blue
+    backgroundColor: "#007AFF",
   },
   otherUserMessage: {
     alignSelf: "flex-start",
-    backgroundColor: "#E5E5EA", // iOS Gray
+    backgroundColor: "#E5E5EA",
   },
   currentUserText: {
     color: "#FFFFFF",
@@ -280,7 +238,7 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     minHeight: 40,
-    maxHeight: 120, // Limit height for multiline input
+    maxHeight: 120,
     backgroundColor: "#F0F0F0",
     borderRadius: 20,
     paddingHorizontal: 15,
@@ -301,7 +259,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-  // Styles for loading indicator (kept from AI integration)
   loadingContainer: {
     flexDirection: "row",
     alignItems: "center",

@@ -49,6 +49,7 @@
     "expo-web-browser": "~14.1.6",
     "moment-jalaali": "^0.10.4",
     "nativewind": "^4.1.23",
+    "openai": "^5.10.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.2",
