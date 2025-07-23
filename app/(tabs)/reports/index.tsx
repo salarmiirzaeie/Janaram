@@ -51,7 +51,7 @@ const Test = () => {
               height={220}
               spacing={9}
               maxValue={9}
-              hideDataPoints={false}
+              hideDataPoints={true}
               hideRules={false}
               yAxisTextStyle={{ fontSize: 10 }}
               xAxisLabelTextStyle={{ fontSize: 10, rotate: 45, opacity: 0 }}
@@ -60,6 +60,7 @@ const Test = () => {
               xAxisColor="lightgray"
               color1="#64B5F6"
               stepValue={1}
+              curved
             />
           </VStack>
         </VStack>

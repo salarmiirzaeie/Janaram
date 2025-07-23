@@ -24,6 +24,9 @@ const MoodCard = () => {
   const yesterday = format(subDays(new Date(), 1), "yyyy-MM-dd");
   const moodData = useAppSelector((state) => state.mood.find((m) => m.date === today));
   const [note, setNote] = useState(moodData?.note || "");
+  const moodss = useAppSelector((state) => state.mood);
+
+  console.log(moodss);
 
   const moodDataForYesterday = useAppSelector((state) => state.mood.find((m) => m.date === yesterday));
   const yesterdayMood = moodDataForYesterday?.mood ?? 0;
