@@ -17,6 +17,8 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
+      "googleServicesFile": "./google-services.json",
+
       "package": "com.salarmiirzapour.Janaram",
       "permissions": ["android.permission.FOREGROUND_SERVICE"],
       "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"]
@@ -54,7 +56,8 @@
             "removePermissions": ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"]
           }
         }
-      ]
+      ],
+      "@react-native-google-signin/google-signin"
     ],
 
     "extra": {
