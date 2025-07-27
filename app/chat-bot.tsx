@@ -1,4 +1,7 @@
+import { Button, ButtonText } from "@/components/ui/button";
+import { VStack } from "@/components/ui/vstack";
 import { useStartConversationMutation } from "@/services/ai/ai-adapter";
+import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -53,8 +56,8 @@ const ChatScreen: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const listRef = useRef<FlatList<MessageType>>(null);
   const [insets, setInset] = useState(0);
-  const [startConversation, { isLoading, error }] = useStartConversationMutation();
-
+  const [showPremium, setShowPremium] = useState(false);
+  const [startConversation, { isLoading, error, data, status }] = useStartConversationMutation();
   const scrollToEnd = () => {
     listRef.current?.scrollToEnd({ animated: true });
   };
@@ -104,7 +107,10 @@ const ChatScreen: React.FC = () => {
         },
       ]);
     } catch (error: any) {
-      console.error("API Error:", error);
+      if (error.status === 429) {
+        setShowPremium(true);
+        return;
+      }
       setMessages((prev) => [
         ...prev,
         {
@@ -141,6 +147,16 @@ const ChatScreen: React.FC = () => {
             onLayout={scrollToEnd}
             showsVerticalScrollIndicator={false}
           />
+          {showPremium && (
+            <VStack className="p-4 m-4 bg-white rounded-2xl">
+              <Text className="text-lg font-semiBold  text-right mb-4 text-gray-600">
+                شما محدودیت روزانه ۱۰ گفت وگو را استفاده کردید با خرید اشتراک به صورت نامحدود مشاوره بگیرید
+              </Text>
+              <Button onPress={() => router.navigate("/(tabs)/setting/subscription")} className="bg-purple-600">
+                <ButtonText>خرید اشتراک</ButtonText>
+              </Button>
+            </VStack>
+          )}
 
           {isLoading && (
             <View style={styles.loadingContainer}>

@@ -7,6 +7,7 @@ import { VStack } from "@/components/ui/vstack";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import useAuth from "@/hooks/useAuth";
 import { AntDesign, Ionicons, Octicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import { Linking, Pressable, ScrollView, Share, Switch } from "react-native";
 import { useDispatch } from "react-redux";
@@ -84,6 +85,13 @@ export default function SettingsScreen() {
           label="تماس با ما"
           onPress={() => {
             Linking.openURL("mailto:salarmiirzapour@gmail.com");
+          }}
+        />
+        <SettingItem
+          icon={<Ionicons name="basket" size={24} color="black" />}
+          label="خرید اشتراک"
+          onPress={() => {
+            router.push("/(tabs)/setting/subscription");
           }}
         />
         <SettingItem
