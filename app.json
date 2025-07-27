@@ -18,16 +18,9 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "googleServicesFile": "./google-services.json",
       "package": "com.salarmiirzapour.Janaram",
-      "permissions": [
-        "android.permission.FOREGROUND_SERVICE",
-        "android.permission.MODIFY_AUDIO_SETTINGS"
-      ],
-      "blockedPermissions": [
-        "android.permission.SYSTEM_ALERT_WINDOW",
-        "android.permission.RECORD_AUDIO"
-      ]
+      "permissions": ["android.permission.FOREGROUND_SERVICE", "android.permission.MODIFY_AUDIO_SETTINGS"],
+      "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"]
     },
     "web": {
       "bundler": "metro",
@@ -59,14 +52,16 @@
         "expo-build-properties",
         {
           "android": {
-            "removePermissions": [
-              "android.permission.SYSTEM_ALERT_WINDOW",
-              "android.permission.RECORD_AUDIO"
-            ]
+            "removePermissions": ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"]
           }
         }
       ],
-      "@react-native-google-signin/google-signin"
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps._some_id_here_"
+        }
+      ]
     ],
     "extra": {
       "router": {},

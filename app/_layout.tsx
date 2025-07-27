@@ -2,6 +2,7 @@ import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { AudioPlayerProvider } from "@/context/AudioPlayerContext";
 import "@/global.css";
 import { persistor, store } from "@/redux/store";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useFonts } from "expo-font";
 import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
@@ -10,7 +11,9 @@ import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-
+GoogleSignin.configure({
+  webClientId: "866288850799-hum6jg6hnhlm7gvjj3ub13gaq2un8e24.apps.googleusercontent.com", // From google-services.json (client_type: 3)
+});
 // Trigger a layout animation
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -64,6 +67,12 @@ export default function RootLayout() {
                       headerTitleAlign: "center",
                       headerTitleStyle: { fontFamily: "vazirBold" },
                       headerTitle: "پیام ها",
+                    }}
+                  />
+                  <Stack.Screen
+                    name="login"
+                    options={{
+                      headerShown: false,
                     }}
                   />
                   <Stack.Screen

@@ -1,4 +1,5 @@
 import { combineReducers } from "@reduxjs/toolkit";
+import authSlice from "./auth/auth-slice";
 import initializeSlice from "./intialize/initialize-slice";
 import moodSlice from "./mood/mood-slice";
 import settingsSlice from "./settings/settings-slice";
@@ -9,4 +10,5 @@ export const rootReducer = combineReducers({
   initialize: initializeSlice,
   mood: moodSlice,
   settings: settingsSlice,
+  auth: authSlice,
 });
