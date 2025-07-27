@@ -40,7 +40,6 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber, phoneNumber }) => {
       otp: ["", "", "", "", "", ""],
     },
   });
-  console.log(phoneNumber);
   const onSubmit = (data: FormData) => {
     const otpCode = data.otp.join("");
     verify({ code: otpCode, phoneNumber: phoneNumber })

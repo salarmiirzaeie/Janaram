@@ -1,4 +1,4 @@
-import { OpenAI } from "openai";
+import { useStartConversationMutation } from "@/services/ai/ai-adapter";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -42,7 +42,7 @@ const Message: React.FC<MessageProps> = ({ item }) => {
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList<MessageType>);
 
 // The main ChatScreen component
-const App: React.FC = () => {
+const ChatScreen: React.FC = () => {
   const initialMessage: MessageType = {
     role: "assistant",
     content:
@@ -51,14 +51,9 @@ const App: React.FC = () => {
 
   const [messages, setMessages] = useState<MessageType[]>([initialMessage]);
   const [input, setInput] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const listRef = useRef<FlatList<MessageType>>(null);
   const [insets, setInset] = useState(0);
-
-  const client = new OpenAI({
-    baseURL: "https://openrouter.ai/api/v1",
-    apiKey: process.env.EXPO_PUBLIC_CHATBOT_KEY_NEW,
-  });
+  const [startConversation, { isLoading, error }] = useStartConversationMutation();
 
   const scrollToEnd = () => {
     listRef.current?.scrollToEnd({ animated: true });
@@ -94,39 +89,30 @@ const App: React.FC = () => {
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInput("");
-    setIsLoading(true);
 
     try {
-      const completion = await client.chat.completions.create({
-        model: "deepseek/deepseek-chat-v3-0324:free",
-        messages: [
-          {
-            role: "user",
-            content: `به عنوان یک روانشناس در دو جمله به این متن پاسخ بده: ${userMessage.content}`,
-          },
-        ],
-      });
-
-      const content = completion.choices[0]?.message?.content;
+      const response = await startConversation({ message: userMessage.content }).unwrap();
+      if (!response.success) {
+        throw new Error(response.message || "خطای سرور");
+      }
 
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: content || "متأسفم، مشکلی در پاسخ‌دهی پیش آمد. لطفاً دوباره تلاش کنید.",
+          content: response.data?.response || "متأسفم، مشکلی در پاسخ‌دهی پیش آمد.",
         },
       ]);
-    } catch (error) {
+    } catch (error: any) {
       console.error("API Error:", error);
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: "متأسفم، مشکلی در پردازش درخواست شما پیش آمد.",
+          content: error.data?.message || "متأسفم، مشکلی در پردازش درخواست شما پیش آمد.",
         },
       ]);
     } finally {
-      setIsLoading(false);
       requestAnimationFrame(() => {
         listRef.current?.scrollToEnd({ animated: true });
       });
@@ -273,4 +259,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default ChatScreen;

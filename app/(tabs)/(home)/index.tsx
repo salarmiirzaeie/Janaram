@@ -15,6 +15,15 @@ const index = () => {
         <VStack className="w-full items-center  justify-center px-5 py-2">
           <MoodCard />
         </VStack>
+
+        <VStack space="md" className="mt-5 px-5">
+          <HStack className="items-center justify-between">
+            <Text className="text-typography-400 text-sm"> </Text>
+            <Text className="text-typography-700 text-lg font-semiBold"> چت بات جانارام </Text>
+          </HStack>
+
+          <TestCard />
+        </VStack>
         <VStack space="lg" className="mt-2">
           <HStack className="items-center justify-between mx-5">
             <Text className="text-typography-400 text-sm"> </Text>
@@ -35,14 +44,6 @@ const index = () => {
                 <CourseCard type={1} item={item} index={index} key={item.id} />
               ))}
           </ScrollView>
-        </VStack>
-        <VStack space="md" className="mt-5 px-5">
-          <HStack className="items-center justify-between">
-            <Text className="text-typography-400 text-sm"> </Text>
-            <Text className="text-typography-700 text-lg font-semiBold"> چت بات جانارام </Text>
-          </HStack>
-
-          <TestCard />
         </VStack>
       </VStack>
     </ScrollView>

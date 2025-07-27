@@ -1,4 +1,5 @@
 import { useCustomToast } from "@/hooks/useToast";
+import { router } from "expo-router";
 import React from "react";
 import { Image } from "react-native";
 import { Button, ButtonText } from "../ui/button";
@@ -12,11 +13,11 @@ const TestCard: React.FC = (props) => {
   return (
     <Pressable
       onPress={() => {
-        // router.navigate("/chat-bot");
-        toast.show({
-          msg: "در حال توسعه",
-          type: "success",
-        });
+        router.navigate("/chat-bot");
+        // toast.show({
+        //   msg: "در حال توسعه",
+        //   type: "success",
+        // });
       }}
     >
       <HStack className={`  py-5 pr-5  rounded-3xl  justify-between w-full bg-pink-300 shadow shadow-md`}>
@@ -33,11 +34,11 @@ const TestCard: React.FC = (props) => {
           <Button
             className="bg-pink-500"
             onPress={() => {
-              // router.navigate("/chat-bot");
-              toast.show({
-                msg: "در حال توسعه",
-                type: "success",
-              });
+              router.navigate("/chat-bot");
+              // toast.show({
+              //   msg: "در حال توسعه",
+              //   type: "success",
+              // });
             }}
           >
             <ButtonText>شروع گفتگو</ButtonText>
