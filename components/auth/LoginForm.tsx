@@ -1,10 +1,13 @@
+import useAuth from "@/hooks/useAuth";
+import { useCustomToast } from "@/hooks/useToast";
+import { useGoogleLoginMutation, useSendOTPMutation } from "@/services/auth/auth-adapter";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { GoogleSignin, GoogleSigninButton } from "@react-native-google-signin/google-signin";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text } from "react-native";
 import * as yup from "yup";
-import { Button, ButtonText } from "../ui/button";
+import { Button, ButtonSpinner, ButtonText } from "../ui/button";
 import { Divider } from "../ui/divider";
 import { HStack } from "../ui/hstack";
 import { Input, InputField } from "../ui/input";
@@ -22,38 +25,29 @@ interface FormData {
 }
 
 interface OTPFormProps {
-  handleAnimate: () => void;
+  handleAnimate: (val: string) => void;
 }
 
 const LoginForm: React.FC<OTPFormProps> = ({ handleAnimate }) => {
+  const [gLogin, { isLoading }] = useGoogleLoginMutation();
+  const { setUser } = useAuth();
+  const [sendOTP, { isLoading: isLoadingOTP }] = useSendOTPMutation();
+  const toast = useCustomToast();
   async function signInWithGoogle() {
     try {
-      await GoogleSignin.signOut();
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
 
-      const idToken = userInfo.data?.idToken;
+      const idToken = userInfo.data?.idToken; // fixed path, not userInfo.data.idToken
       if (!idToken) throw new Error("توکنی دریافت نشد");
 
-      const res = await fetch("http://192.168.39.130:3000/api/auth/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: idToken }),
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`خطای سرور: ${res.status} - ${errorText}`);
-      }
-
-      const data = await res.json();
-      console.log("کاربر وارد شده:", data);
+      const result = await gLogin({ token: idToken }).unwrap();
+      setUser({ accessToken: result.token });
+      // Handle result (e.g., store user/token, navigate)
     } catch (error) {
-      console.error("خطا در ورود با گوگل:", error);
+      toast.show({ type: "error", msg: "خطایی رخ داده است" });
     }
   }
-
   const {
     control,
     handleSubmit,
@@ -65,9 +59,26 @@ const LoginForm: React.FC<OTPFormProps> = ({ handleAnimate }) => {
     },
   });
 
+  const normalizePhoneNumber = (phoneNumber: string): string => {
+    // Remove +98, 98, or 0 from the start, and keep the remaining 10 digits
+    return phoneNumber.replace(/^(\+98|98|0)/, "").slice(-10);
+  };
+
   const onSubmit = (data: FormData) => {
-    console.log("فرم ارسال شد");
-    handleAnimate();
+    const normalizedPhoneNumber = normalizePhoneNumber(data.phoneNumber);
+    sendOTP({ phoneNumber: normalizedPhoneNumber })
+      .unwrap()
+      .then((res) => {
+        console.log(res);
+        if (res.success) {
+          console.log(res);
+          handleAnimate(normalizedPhoneNumber);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.show({ type: "error", msg: err.data.message || "خطایی رخ داده است" });
+      });
   };
 
   return (
@@ -110,7 +121,7 @@ const LoginForm: React.FC<OTPFormProps> = ({ handleAnimate }) => {
 
       <Button className=" rounded-lg p-3 mt-4" onPress={handleSubmit(onSubmit)}>
         <ButtonText className="text-white text-base font-semibold" style={{ fontFamily: "vazirBold" }}>
-          دریافت کد تایید
+          {isLoadingOTP ? <ButtonSpinner /> : "    دریافت کد تایید"}
         </ButtonText>
       </Button>
 
@@ -123,7 +134,13 @@ const LoginForm: React.FC<OTPFormProps> = ({ handleAnimate }) => {
       </HStack>
 
       <VStack className="w-full">
-        <GoogleSigninButton style={{ width: "100%", height: 48, marginBottom: 16 }} onPress={signInWithGoogle} />
+        {!isLoading ? (
+          <GoogleSigninButton style={{ width: "100%", height: 48, marginBottom: 16 }} onPress={signInWithGoogle} />
+        ) : (
+          <Button>
+            <ButtonSpinner />
+          </Button>
+        )}
       </VStack>
     </VStack>
   );

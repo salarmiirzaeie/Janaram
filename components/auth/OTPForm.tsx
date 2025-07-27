@@ -1,9 +1,12 @@
+import useAuth from "@/hooks/useAuth";
+import { useCustomToast } from "@/hooks/useToast";
+import { useVerifyOTPMutation } from "@/services/auth/auth-adapter";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput } from "react-native";
 import * as yup from "yup";
-import { Button, ButtonText } from "../ui/button";
+import { Button, ButtonSpinner, ButtonText } from "../ui/button";
 import { HStack } from "../ui/hstack";
 import { VStack } from "../ui/vstack";
 
@@ -18,12 +21,15 @@ interface FormData {
 
 interface OTPFormProps {
   onChangeNumber: () => void;
+  phoneNumber: string;
 }
 
-const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber }) => {
-  const [otpValues, setOtpValues] = useState(["", "", "", ""]);
+const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber, phoneNumber }) => {
+  const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<TextInput[]>([]);
-
+  const toast = useCustomToast();
+  const [verify, { isLoading }] = useVerifyOTPMutation();
+  const { setUser } = useAuth();
   const {
     control,
     handleSubmit,
@@ -31,14 +37,26 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber }) => {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      otp: ["", "", "", ""],
+      otp: ["", "", "", "", "", ""],
     },
   });
-
+  console.log(phoneNumber);
   const onSubmit = (data: FormData) => {
     const otpCode = data.otp.join("");
-    console.log("کد تایید:", otpCode);
-    // ارسال به سرور یا ادامه‌ی مراحل
+    verify({ code: otpCode, phoneNumber: phoneNumber })
+      .unwrap()
+      .then((res) => {
+        console.log(res);
+        if (res.success) {
+          setUser({
+            accessToken: res.token,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.show({ type: "error", msg: err.data.message || "خطایی رخ داده است" });
+      });
   };
 
   return (
@@ -72,8 +90,13 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber }) => {
                     newOtpValues[index] = text.slice(0, 1);
                     setOtpValues(newOtpValues);
                     onChange(text.slice(0, 1));
-                    if (text && index < 3) {
+
+                    if (text && index < otpValues.length - 1) {
+                      // Move to next input if a digit is entered
                       inputRefs.current[index + 1]?.focus();
+                    } else if (!text && index > 0) {
+                      // Move to previous input if the current input is cleared
+                      inputRefs.current[index - 1]?.focus();
                     }
                   }}
                   keyboardType="numeric"
@@ -99,7 +122,7 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber }) => {
 
       <Button className=" rounded-lg p-3 mt-4" onPress={handleSubmit(onSubmit)}>
         <ButtonText className="text-white text-base font-semibold" style={{ fontFamily: "vazirBold" }}>
-          تایید کد
+          {isLoading ? <ButtonSpinner /> : " تایید کد"}
         </ButtonText>
       </Button>
     </VStack>

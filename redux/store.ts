@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { PERSIST, REHYDRATE, persistReducer, persistStore } from "redux-persist";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { apiSlice } from "./api-slice";
 import { rootReducer } from "./root-reducer";
 
 const persistConfig = {
@@ -21,7 +22,7 @@ export const store = configureStore({
         ignoredActions: [PERSIST, REHYDRATE],
         serializableCheck: false,
       },
-    }),
+    }).concat([apiSlice.middleware]),
 });
 
 export const persistor = persistStore(store);

@@ -5,6 +5,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useAppSelector } from "@/hooks/useAppSelector";
+import useAuth from "@/hooks/useAuth";
 import { AntDesign, Ionicons, Octicons } from "@expo/vector-icons";
 import React from "react";
 import { Linking, Pressable, ScrollView, Share, Switch } from "react-native";
@@ -15,6 +16,7 @@ export default function SettingsScreen() {
   const [rulesModalVisible, setRulesModalVisible] = React.useState(false);
   const { moodNotification, newMeditationsNotification } = useAppSelector((state) => state.settings);
   const dispatch = useDispatch();
+  const { logOutUser } = useAuth();
   return (
     <ScrollView className="bg-white flex-1 p-4">
       {/* اعلان‌ها */}
@@ -82,6 +84,13 @@ export default function SettingsScreen() {
           label="تماس با ما"
           onPress={() => {
             Linking.openURL("mailto:salarmiirzapour@gmail.com");
+          }}
+        />
+        <SettingItem
+          icon={<Ionicons name="exit" size={24} color="black" />}
+          label="خروج"
+          onPress={() => {
+            logOutUser();
           }}
         />
       </VStack>

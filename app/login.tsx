@@ -7,12 +7,14 @@ import { Dimensions, Image, KeyboardAvoidingView, Platform, SafeAreaView } from 
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 const Login: React.FC = () => {
+  const [phoneNumber, setPhoneNumber] = React.useState("");
   const translateX = useSharedValue(0);
   const translateX2 = useSharedValue(32);
 
-  const handleAnimation = () => {
+  const handleAnimation = (val: string) => {
     translateX.value = withTiming(-Dimensions.get("window").width, { duration: 300 });
     translateX2.value = withTiming(-Dimensions.get("window").width + 56, { duration: 300 });
+    setPhoneNumber(val);
   };
 
   const handleAnimation2 = () => {
@@ -40,7 +42,7 @@ const Login: React.FC = () => {
               <LoginForm handleAnimate={handleAnimation} />
             </Animated.View>
             <Animated.View style={animatedStyle2}>
-              <OTPForm onChangeNumber={handleAnimation2} />
+              <OTPForm phoneNumber={phoneNumber} onChangeNumber={handleAnimation2} />
             </Animated.View>
           </HStack>
         </VStack>

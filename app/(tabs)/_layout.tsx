@@ -1,7 +1,8 @@
-import { Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import React, { useEffect } from "react";
 
 import { useAppSelector } from "@/hooks/useAppSelector";
+import useAuth from "@/hooks/useAuth";
 import { setSleepMode } from "@/redux/sleep-mode/sleep-slice";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
@@ -13,7 +14,7 @@ export default function TabLayout() {
   const { isSleepMode } = useAppSelector((state) => state.sleepMode);
   const { isInitialized } = useAppSelector((state) => state.initialize);
   const isNotificationEnabled = useAppSelector((state) => state.settings.moodNotification);
-
+  const { authorized } = useAuth();
   const dispatch = useDispatch();
   const sleepModeHandler = (val: boolean) => {
     dispatch(setSleepMode(val));
@@ -82,7 +83,10 @@ export default function TabLayout() {
   if (!isInitialized) {
     return <Start />;
   }
-
+  if (!authorized) {
+    console.log("object2");
+    return <Redirect href="/login" />;
+  }
   return (
     <Tabs
       screenOptions={{
