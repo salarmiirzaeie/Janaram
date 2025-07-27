@@ -12,7 +12,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 GoogleSignin.configure({
-  webClientId: "866288850799-hum6jg6hnhlm7gvjj3ub13gaq2un8e24.apps.googleusercontent.com", // From google-services.json (client_type: 3)
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID, // From google-services.json (client_type: 3)
 });
 // Trigger a layout animation
 Notifications.setNotificationHandler({

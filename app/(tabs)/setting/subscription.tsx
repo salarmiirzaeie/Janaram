@@ -94,7 +94,7 @@ export default function SubscriptionsScreen() {
               </VStack>
               <Button
                 className={`${plan.buttonColor} rounded-2xl  `}
-                onPress={() => router.push("/payment")} // Replace with actual payment route
+                onPress={() => router.push("/(tabs)/setting/pay")} // Replace with actual payment route
               >
                 <ButtonText className="text-white text-lg font-bold">
                   {plan.name === "رایگان" ? "شروع رایگان" : "اکنون اشتراک کنید"}
