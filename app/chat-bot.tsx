@@ -1,6 +1,6 @@
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
-import { useStartConversationMutation } from "@/services/ai/ai-adapter";
+import { useGetChatHistoryQuery, useStartConversationMutation } from "@/services/ai/ai-adapter";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -51,13 +51,18 @@ const ChatScreen: React.FC = () => {
     content:
       "سلام! من یک دستیار روانشناس هوش مصنوعی هستم. می‌تونم به شما در بیان و درک احساساتتون کمک کنم. امروز چه حسی دارید؟",
   };
-
+  const [conversationId, setConversationId] = useState<string | undefined>(undefined);
   const [messages, setMessages] = useState<MessageType[]>([initialMessage]);
   const [input, setInput] = useState<string>("");
   const listRef = useRef<FlatList<MessageType>>(null);
   const [insets, setInset] = useState(0);
   const [showPremium, setShowPremium] = useState(false);
   const [startConversation, { isLoading, error, data, status }] = useStartConversationMutation();
+  const {
+    data: historyData,
+    error: historyError,
+    isLoading: isHistoryLoading,
+  } = useGetChatHistoryQuery({ page: 1, limit: 10 });
   const scrollToEnd = () => {
     listRef.current?.scrollToEnd({ animated: true });
   };
@@ -94,7 +99,10 @@ const ChatScreen: React.FC = () => {
     setInput("");
 
     try {
-      const response = await startConversation({ message: userMessage.content }).unwrap();
+      const response = await startConversation({
+        message: userMessage.content,
+        conversationId,
+      }).unwrap();
       if (!response.success) {
         throw new Error(response.message || "خطای سرور");
       }
@@ -106,7 +114,9 @@ const ChatScreen: React.FC = () => {
           content: response.data?.response || "متأسفم، مشکلی در پاسخ‌دهی پیش آمد.",
         },
       ]);
+      setConversationId(response.data?.conversationId); // ذخیره conversationId
     } catch (error: any) {
+      console.error("خطا در API:", error);
       if (error.status === 429) {
         setShowPremium(true);
         return;
@@ -273,6 +283,9 @@ const styles = StyleSheet.create({
     color: "#5D7AFF",
     fontSize: 14,
   },
+  historyContainer: { marginBottom: 10 },
+  historyHeader: { fontSize: 16, fontWeight: "bold", marginBottom: 5 },
+  historyList: { maxHeight: 50 },
 });
 
 export default ChatScreen;

@@ -19,7 +19,7 @@ const index = () => {
         <VStack space="md" className="my-5 px-5">
           <HStack className="items-center justify-between">
             <Text className="text-typography-400 text-sm"> </Text>
-            <Text className="text-typography-700 text-lg font-semiBold"> چت بات جانارام </Text>
+            <Text className="text-typography-700 text-lg font-semiBold"> روانشناس من </Text>
           </HStack>
 
           <TestCard />

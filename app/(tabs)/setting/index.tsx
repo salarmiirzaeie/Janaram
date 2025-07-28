@@ -91,7 +91,7 @@ export default function SettingsScreen() {
           icon={<Ionicons name="basket" size={24} color="black" />}
           label="خرید اشتراک"
           onPress={() => {
-            router.push("/(tabs)/setting/subscription");
+            router.navigate("/(tabs)/setting/subscription");
           }}
         />
         <SettingItem

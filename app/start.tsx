@@ -23,8 +23,8 @@ const Start = () => {
         <Text className="text-2xl font-semiBold">به جانارام خوش اومدی</Text>
         <Text className="text-lg  text-center">🌿 جانارام، همراهی برای ذهنی آرام‌تر</Text>
         <Text className="text-typography-400 text-center text-md">
-          با مدیتیشن‌های متنوع، موسیقی و قصه‌های خواب، پیگیری حال روحی و گفت‌و‌گو با چت بات روان‌شناسی، «جانارام» همیشه
-          کنارته… برای خوابی راحت‌تر و ذهنی سبک‌تر.
+          با مدیتیشن‌های متنوع، موسیقی و قصه‌های خواب، پیگیری حال روحی و گفت‌و‌گو با چت بات روانشناس من ، «جانارام»
+          همیشه کنارته… برای خوابی راحت‌تر و ذهنی سبک‌تر.
         </Text>
       </VStack>
       <Button onPress={handlePress} className="w-full " size="xl">
