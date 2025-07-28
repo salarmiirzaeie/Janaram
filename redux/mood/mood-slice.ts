@@ -20,7 +20,7 @@ const getLast7Days = (): IMood[] => {
   }));
 };
 
-const initialState: IMood[] = getLast7Days();
+const initialState: IMood[] = [];
 
 const moodSlice = createSlice({
   name: "mood",

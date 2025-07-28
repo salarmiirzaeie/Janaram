@@ -1,29 +1,43 @@
 import { Dimensions, View } from "react-native";
-import { BarChart } from "react-native-gifted-charts";
+import { BarChart } from "react-native-chart-kit";
+import { Text } from "../ui/text";
 
 const MoodBarChart = ({ lineData }: any) => {
+  console.log(lineData, "lineData");
   return (
-    <View className=" flex-grow">
-      <BarChart
-        width={Dimensions.get("screen").width * 0.7}
-        parentWidth={Dimensions.get("screen").width * 0.7}
-        height={250}
-        barWidth={12}
-        noOfSections={0}
-        maxValue={30}
-        stepValue={1}
-        barBorderRadius={6}
-        frontColor="blue"
-        data={lineData}
-        yAxisThickness={1}
-        xAxisThickness={1}
-        yAxisColor="lightgray"
-        xAxisColor="lightgray"
-        hideRules
-        xAxisLabelTextStyle={{ fontSize: 10, transform: [{ rotate: "30deg" }] }}
-        yAxisTextStyle={{ fontSize: 8, transform: [{ rotate: "10deg" }] }}
-        spacing={15}
-      />
+    <View className="justify-center items-center self-center ">
+      {lineData && lineData?.datasets?.[0]?.data?.length > 0 ? (
+        <BarChart
+          data={lineData}
+          width={Dimensions.get("window").width}
+          style={{ flex: 1 }}
+          height={220}
+          yAxisLabel=""
+          yAxisSuffix=""
+          showValuesOnTopOfBars={false}
+          withInnerLines={false}
+          chartConfig={{
+            backgroundColor: "#000",
+            backgroundGradientFrom: "#fff",
+            backgroundGradientTo: "#fff",
+            strokeWidth: 2,
+            decimalPlaces: 2,
+            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+
+            style: {
+              borderRadius: 16,
+            },
+            propsForHorizontalLabels: {
+              wordSpacing: 0,
+              fontSize: 6,
+            },
+          }}
+          verticalLabelRotation={30}
+        />
+      ) : (
+        <Text className="text-center text-gray-400">موردی برای نمایش وجود ندارد</Text>
+      )}
     </View>
   );
 };

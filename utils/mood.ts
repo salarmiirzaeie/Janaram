@@ -9,26 +9,6 @@ const getDayIndex = (date: Date): number => {
   return dayLabels.indexOf(dayName);
 };
 
-export const prepareBarData = (moodEntries: IMood[]) => {
-  const moodCounts: Record<number, number> = {};
-
-  moodEntries.forEach((entry) => {
-    if (entry.mood !== null) {
-      const moodValue = entry.mood!;
-      moodCounts[moodValue] = (moodCounts[moodValue] || 0) + 1;
-    }
-  });
-
-  const barData = moods.map((mood) => ({
-    label: mood.label,
-    value: moodCounts[mood.value] || 0,
-    frontColor: mood.color,
-    emoji: mood.emoji,
-  }));
-
-  return barData;
-};
-
 export const moods = [
   { emoji: "🥰", label: "ذوق زده", value: 9, color: "#F48FB1" }, // صورتی ملایم، انرژی عاشقانه و مثبت
   { emoji: "😊", label: "خوشحال", value: 8, color: "#FFD54F" }, // زرد گرم، انرژی مثبت
@@ -40,7 +20,9 @@ export const moods = [
   { emoji: "😭", label: "گریه", value: 2, color: "#64B5F6" }, // آبی روشن، حالت گریه و غم
   { emoji: "😰", label: "مضطرب", value: 1, color: "#BA68C8" }, // بنفش روشن، استرس و فشار روحی
 ];
-
+export const formatValue = (value: number) => {
+  return moods.find((mood) => mood.value === value)?.emoji || "";
+};
 export const getEmojiFromMood = (mood: number) => {
   return moods[9 - mood].emoji;
 };
@@ -73,13 +55,41 @@ export function preparePieData(moodEntries: IMood[]) {
 }
 
 export const prepareLineDataForLastMonth = (moodEntries: IMood[]) => {
-  return moodEntries
-    .filter((entry) => entry.mood !== null)
-    .sort((a, b) => a.date.localeCompare(b.date))
-    .map((entry) => {
-      return {
-        label: "", // مثلا "10 خرداد"
-        value: entry.mood!,
-      };
-    });
+  if (moodEntries.length === 0) {
+    return { labels: [], datasets: [] };
+  }
+  const labels = moodEntries.map((entry) => formatJalali(entry.date, "iiii", { locale: faIR }));
+  const data = moodEntries.map((entry) => entry.mood!);
+  const datasets = [
+    {
+      data,
+    },
+  ];
+
+  return { labels, datasets };
+};
+export const prepareBarData = (moodEntries: IMood[]) => {
+  if (moodEntries.length === 0) {
+    return { labels: [], datasets: [] };
+  }
+
+  // Count occurrences of each mood value
+  const counts: Record<number, number> = {};
+  moodEntries.forEach((entry) => {
+    if (entry.mood !== null) {
+      counts[entry.mood] = (counts[entry.mood] || 0) + 1;
+    }
+  });
+
+  const labels = moods.map((mood) => mood.emoji);
+  const data = moods.map((mood) => counts[mood.value] || 0);
+
+  return {
+    labels,
+    datasets: [
+      {
+        data,
+      },
+    ],
+  };
 };

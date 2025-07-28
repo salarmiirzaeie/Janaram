@@ -24,9 +24,6 @@ const MoodCard = () => {
   const yesterday = format(subDays(new Date(), 1), "yyyy-MM-dd");
   const moodData = useAppSelector((state) => state.mood.find((m) => m.date === today));
   const [note, setNote] = useState(moodData?.note || "");
-  const moodss = useAppSelector((state) => state.mood);
-
-  console.log(moodss);
 
   const moodDataForYesterday = useAppSelector((state) => state.mood.find((m) => m.date === yesterday));
   const yesterdayMood = moodDataForYesterday?.mood ?? 0;
@@ -35,7 +32,7 @@ const MoodCard = () => {
   const handleSave = () => {
     const today = new Date();
     const formatted = format(today, "yyyy-MM-dd");
-    dispatch(setMood({ date: formatted, mood: moodState, note }));
+    dispatch(setMood({ date: "2023-01-01", mood: moodState, note }));
     setMoodSheet(false);
   };
 
