@@ -5,12 +5,11 @@ import { Text } from "../ui/text";
 const MoodBarChart = ({ lineData }: any) => {
   console.log(lineData, "lineData");
   return (
-    <View className="justify-center items-center self-center ">
+    <View className="justify-center -ml-10 items-center self-center ">
       {lineData && lineData?.datasets?.[0]?.data?.length > 0 ? (
         <BarChart
           data={lineData}
-          width={Dimensions.get("window").width}
-          style={{ flex: 1 }}
+          width={Dimensions.get("window").width - 64}
           height={220}
           yAxisLabel=""
           yAxisSuffix=""
@@ -22,7 +21,8 @@ const MoodBarChart = ({ lineData }: any) => {
             backgroundGradientTo: "#fff",
             strokeWidth: 2,
             decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            color: (opacity = 1) => `#1976D2`,
+
             labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
 
             style: {
@@ -32,6 +32,7 @@ const MoodBarChart = ({ lineData }: any) => {
               wordSpacing: 0,
               fontSize: 6,
             },
+            barPercentage: 0.4,
           }}
           verticalLabelRotation={30}
         />

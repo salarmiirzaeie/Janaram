@@ -3,7 +3,7 @@ import { Alert } from "react-native";
 import { logout } from "./auth/auth-slice";
 import { RootState } from "./store";
 // const BASE_URL = process.env.EXPO_PUBLIC_JANARAM_API_URL;
-const BASE_URL = "http://192.168.5.77:3000/api/";
+const BASE_URL = "http://192.168.39.130:3000/api/";
 // const BASE_URL = "http://localhost:3000/api/";
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,

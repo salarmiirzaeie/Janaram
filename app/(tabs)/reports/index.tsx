@@ -16,18 +16,18 @@ const Test = () => {
   console.log(barData);
   return (
     <ScrollView className="flex-1 bg-background-50">
-      <VStack className="flex-1  space-y-6">
+      <VStack className="flex-1 p-4 space-y-6">
         {/* Pie Chart Section */}
 
         {/* Line Chart Section */}
 
         <VStack className="bg-white rounded-3xl mb-4 p-4">
           <Text className="text-right font-semiBold text-xl mb-2">روند حال من</Text>
-          <VStack className=" justify-center items-center    mt-4">
+          <VStack className=" justify-center items-center -ml-10  mt-4">
             {lineData?.datasets?.[0]?.data?.length > 0 ? (
               <LineChart
                 data={lineData}
-                width={Dimensions.get("window").width} // from react-native
+                width={Dimensions.get("window").width - 64} // from react-native
                 height={220}
                 withInnerLines={false}
                 formatYLabel={(yValue) => formatValue(Number(yValue))}
@@ -38,7 +38,7 @@ const Test = () => {
                   backgroundGradientFrom: "#fff",
                   backgroundGradientTo: "#fff",
 
-                  color: (opacity = 1) => `gray`,
+                  color: (opacity = 1) => `#1976D2`,
                   labelColor: (opacity = 1) => `transparent`,
 
                   style: {
@@ -59,9 +59,9 @@ const Test = () => {
             )}
           </VStack>
         </VStack>
-        <VStack className="bg-red-200 rounded-3xl mb-4  p-4">
+        <VStack className="bg-white rounded-3xl mb-4  p-4">
           <Text className="text-right font-semiBold text-xl mb-2"> بیشتر چه حالی داشتم</Text>
-          <VStack className=" justify-center bg-red-600  my-4">
+          <VStack className=" justify-center  my-4">
             <MoodBarChart lineData={barData} />
           </VStack>
         </VStack>
