@@ -37,7 +37,6 @@ const LoginForm: React.FC<OTPFormProps> = ({ handleAnimate }) => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-
       const idToken = userInfo.data?.idToken; // fixed path, not userInfo.data.idToken
       if (!idToken) throw new Error("توکنی دریافت نشد");
 

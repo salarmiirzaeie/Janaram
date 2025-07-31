@@ -7,7 +7,7 @@ import { VStack } from "@/components/ui/vstack";
 import { usePlansQuery, useUpgradePlanMutation } from "@/services/upgrade/upgrade-adapter";
 import { toPersianDigits } from "@/utils/persian";
 import { useBazaar } from "@cafebazaar/react-native-poolakey";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { Pressable, ScrollView, View } from "react-native";
@@ -46,6 +46,8 @@ export default function SubscriptionsScreen() {
                   }`}
                   style={{ direction: "rtl" }}
                 >
+                  {plan.isActive && <FontAwesome name="star" size={24} color="#facc15" />}
+
                   {plan.price !== 0 && (
                     <Text className="text-3xl font-medium text-primary-800 my-2">
                       {toPersianDigits(plan.price) + " "}تومان/ماه

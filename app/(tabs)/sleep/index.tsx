@@ -100,4 +100,4 @@ const Tests = () => {
   );
 };
 
-export default Tests;
+export default React.memo(Tests);

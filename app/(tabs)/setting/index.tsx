@@ -1,4 +1,5 @@
 import AboutModal from "@/components/settings/about-modal";
+import LogoutModal from "@/components/settings/logout-modal";
 import RulesModal from "@/components/settings/rules-modal";
 import { Divider } from "@/components/ui/divider";
 import { HStack } from "@/components/ui/hstack";
@@ -12,8 +13,9 @@ import React from "react";
 import { Linking, Pressable, ScrollView, Share, Switch } from "react-native";
 import { useDispatch } from "react-redux";
 
-export default function SettingsScreen() {
+function SettingsScreen() {
   const [aboutModalVisible, setAboutModalVisible] = React.useState(false);
+  const [logoutModalVisible, setLogoutModalVisible] = React.useState(false);
   const [rulesModalVisible, setRulesModalVisible] = React.useState(false);
   const { moodNotification, newMeditationsNotification } = useAppSelector((state) => state.settings);
   const dispatch = useDispatch();
@@ -98,16 +100,17 @@ export default function SettingsScreen() {
           icon={<Ionicons name="exit" size={24} color="black" />}
           label="خروج"
           onPress={() => {
-            logOutUser();
+            setLogoutModalVisible(true);
           }}
         />
       </VStack>
       <AboutModal visible={aboutModalVisible} onClose={() => setAboutModalVisible(false)} />
       <RulesModal visible={rulesModalVisible} onClose={() => setRulesModalVisible(false)} />
+      <LogoutModal visible={logoutModalVisible} onClose={() => setLogoutModalVisible(false)} />
     </ScrollView>
   );
 }
-
+export default React.memo(SettingsScreen);
 const SettingItem = ({
   icon: IconComp,
   label,

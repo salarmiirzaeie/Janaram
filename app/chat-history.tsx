@@ -1,4 +1,6 @@
+import { useCustomToast } from "@/hooks/useToast";
 import { useGetChatHistoryQuery } from "@/services/ai/ai-adapter";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -23,7 +25,7 @@ const ChatHistory = () => {
   const [page, setPage] = useState(1);
   const [selectedConversation, setSelectedConversation] = useState<ChatHistoryItem | null>(null);
   const limit = 10;
-
+  const toast = useCustomToast();
   const { data, error, isLoading, refetch } = useGetChatHistoryQuery({ page, limit });
 
   const handleLoadMore = () => {
@@ -51,9 +53,8 @@ const ChatHistory = () => {
   }
 
   if (error) {
-    Alert.alert("خطا", (error as any)?.data?.message || "خطایی در دریافت تاریخچه گفت‌وگو رخ داد", [
-      { text: "تلاش مجدد", onPress: () => refetch() },
-    ]);
+    Alert.alert("خطا", (error as any)?.data?.message || "خطایی در دریافت تاریخچه گفت‌وگو رخ داد");
+    router.back();
     return (
       <View style={styles.centered}>
         <Text style={styles.errorText}>
