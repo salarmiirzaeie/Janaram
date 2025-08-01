@@ -95,6 +95,15 @@ export default function RootLayout() {
                     }}
                   />
                   <Stack.Screen
+                    name="subscription"
+                    options={{
+                      headerShown: true,
+                      title: "اشتراک",
+                      headerTitleAlign: "center",
+                      headerTitleStyle: { fontFamily: "vazirBold" },
+                    }}
+                  />
+                  <Stack.Screen
                     name="chat-history"
                     options={{
                       headerShown: true,

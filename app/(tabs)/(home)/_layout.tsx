@@ -34,10 +34,7 @@ const _layout = () => {
             },
             headerLeft() {
               return (
-                <Pressable
-                  className="items-center w-10"
-                  onPress={() => router.navigate("/(tabs)/setting/subscription")}
-                >
+                <Pressable className="items-center w-10" onPress={() => router.navigate("/subscription")}>
                   <FontAwesome6 size={24} name="crown" color={"gold"} />
                 </Pressable>
               );

@@ -1,5 +1,4 @@
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
-import { Divider } from "@/components/ui/divider";
 import { HStack } from "@/components/ui/hstack";
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
@@ -8,9 +7,8 @@ import { usePlansQuery, useUpgradePlanMutation } from "@/services/upgrade/upgrad
 import { toPersianDigits } from "@/utils/persian";
 import { useBazaar } from "@cafebazaar/react-native-poolakey";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
 import React from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 
 export default function SubscriptionsScreen() {
   const bazaar = useBazaar(process.env.EXPO_PUBLIC_BAZAR_RSA_KEY);
@@ -75,8 +73,8 @@ export default function SubscriptionsScreen() {
           </HStack>
         )}
       </VStack>
-      <Divider className=" bg-gray-400 h-0.5" />
-      <VStack className="items-center justify-center py-8">
+      {/* <Divider className=" bg-gray-400 h-0.5" /> */}
+      {/* <VStack className="items-center justify-center py-8">
         <HStack className="items-center flex-row-reverse">
           <Text className="text-gray-700 text-base font-medium" style={{ direction: "rtl" }}>
             سؤالی دارید؟{" "}
@@ -85,7 +83,7 @@ export default function SubscriptionsScreen() {
             <Text className="text-primary-600 underline font-bold">با تیم پشتیبانی دوستانه ما تماس بگیرید! 😄</Text>
           </Pressable>
         </HStack>
-      </VStack>
+      </VStack> */}
     </ScrollView>
   );
 }

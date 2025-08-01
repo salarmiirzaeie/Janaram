@@ -24,6 +24,13 @@ const authAdapter = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    editProfile: builder.mutation<any, { name: string; phoneNumber: string; email: string }>({
+      query: (data) => ({
+        url: "auth/otp/verify",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 

@@ -17,10 +17,10 @@ const _layout = () => {
           }}
         />
         <Stack.Screen
-          name="subscription"
+          name="edit-profile"
           options={{
             headerShown: true,
-            title: "اشتراک",
+            title: "پروفایل",
             headerTitleAlign: "center",
             headerTitleStyle: { fontFamily: "vazirBold" },
           }}

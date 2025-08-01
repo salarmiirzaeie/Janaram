@@ -24,34 +24,6 @@ function SettingsScreen() {
     <ScrollView className="bg-white flex-1 p-4">
       {/* اعلان‌ها */}
       <VStack className="mb-6">
-        <Text className="text-primary-500 mb-2 text-right font-medium">اعلان‌ها</Text>
-        <SettingSwitch
-          value={moodNotification}
-          setValue={(value) => dispatch({ type: "settings/setMoodNotification", payload: value })}
-          icon={<AntDesign name="notification" size={24} color="black" />}
-          label="یادآوری حال روزانه"
-        />
-        <SettingSwitch
-          value={newMeditationsNotification}
-          setValue={(value) => dispatch({ type: "settings/setNewMeditationsNotification", payload: value })}
-          icon={<AntDesign name="notification" size={24} color="black" />}
-          label="اطلاع از مدیتیشن های جدید"
-        />
-      </VStack>
-      <Divider />
-      {/* ظاهر و رابط کاربری */}
-      {/* <VStack className="my-6">
-        <Text className="text-primary-500 mb-2 text-right font-medium">
-          رابط کاربری
-        </Text>
-        <SettingSwitch
-          icon={<Ionicons name="moon" size={24} color="black" />}
-          label="حالت تاریک"
-        />
-      </VStack> */}
-      <Divider />
-      {/* عمومی */}
-      <VStack className="my-6">
         <Text className="text-primary-500 mb-2 text-right font-medium">عمومی</Text>
 
         <SettingItem
@@ -59,6 +31,13 @@ function SettingsScreen() {
           label="درباره اپلیکیشن"
           onPress={() => {
             setAboutModalVisible(true);
+          }}
+        />
+        <SettingItem
+          icon={<Ionicons name="basket" size={24} color="black" />}
+          label="خرید اشتراک"
+          onPress={() => {
+            router.navigate("/subscription");
           }}
         />
         <SettingItem
@@ -89,13 +68,7 @@ function SettingsScreen() {
             Linking.openURL("mailto:salarmiirzapour@gmail.com");
           }}
         />
-        <SettingItem
-          icon={<Ionicons name="basket" size={24} color="black" />}
-          label="خرید اشتراک"
-          onPress={() => {
-            router.navigate("/(tabs)/setting/subscription");
-          }}
-        />
+
         <SettingItem
           icon={<Ionicons name="exit" size={24} color="black" />}
           label="خروج"
@@ -104,6 +77,47 @@ function SettingsScreen() {
           }}
         />
       </VStack>
+      <Divider />
+      {/* <VStack className="my-6">
+        <Text className="text-primary-500 mb-2 text-right font-medium">اطلاعات حساب کاربری</Text>
+        <SettingItem
+          icon={<AntDesign name="user" size={24} color="black" />}
+          label="ویرایش پروفایل"
+          onPress={() => {
+            router.navigate("/edit-profile");
+          }}
+        />
+      </VStack>
+      <Divider /> */}
+      <VStack className="my-6">
+        <Text className="text-primary-500 mb-2 text-right font-medium">اعلان‌ها</Text>
+        <SettingSwitch
+          value={moodNotification}
+          setValue={(value) => dispatch({ type: "settings/setMoodNotification", payload: value })}
+          icon={<AntDesign name="notification" size={24} color="black" />}
+          label="یادآوری حال روزانه"
+        />
+        <SettingSwitch
+          value={newMeditationsNotification}
+          setValue={(value) => dispatch({ type: "settings/setNewMeditationsNotification", payload: value })}
+          icon={<AntDesign name="notification" size={24} color="black" />}
+          label="اطلاع از مدیتیشن های جدید"
+        />
+      </VStack>
+      {/* ظاهر و رابط کاربری */}
+      {/* <VStack className="my-6">
+        <Text className="text-primary-500 mb-2 text-right font-medium">
+          رابط کاربری
+        </Text>
+        <SettingSwitch
+          icon={<Ionicons name="moon" size={24} color="black" />}
+          label="حالت تاریک"
+        />
+      </VStack> */}
+
+      <Divider />
+      {/* عمومی */}
+
       <AboutModal visible={aboutModalVisible} onClose={() => setAboutModalVisible(false)} />
       <RulesModal visible={rulesModalVisible} onClose={() => setRulesModalVisible(false)} />
       <LogoutModal visible={logoutModalVisible} onClose={() => setLogoutModalVisible(false)} />
