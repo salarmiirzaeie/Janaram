@@ -35,6 +35,11 @@ const LoginForm: React.FC<OTPFormProps> = ({ handleAnimate }) => {
   const toast = useCustomToast();
   async function signInWithGoogle() {
     try {
+      console.log(GoogleSignin.hasPreviousSignIn());
+      if (GoogleSignin.hasPreviousSignIn()) {
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+      }
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       const idToken = userInfo.data?.idToken; // fixed path, not userInfo.data.idToken
@@ -118,7 +123,7 @@ const LoginForm: React.FC<OTPFormProps> = ({ handleAnimate }) => {
         )}
       />
 
-      <Button className=" rounded-lg p-3 mt-4" onPress={handleSubmit(onSubmit)}>
+      <Button className="rounded-lg p-3 bg-primary-600 mt-4" onPress={handleSubmit(onSubmit)}>
         <ButtonText className="text-white text-base font-semibold" style={{ fontFamily: "vazirBold" }}>
           {isLoadingOTP ? <ButtonSpinner /> : "    دریافت کد تایید"}
         </ButtonText>

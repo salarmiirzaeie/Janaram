@@ -32,7 +32,7 @@ const MoodCard = () => {
   const handleSave = () => {
     const today = new Date();
     const formatted = format(today, "yyyy-MM-dd");
-    dispatch(setMood({ date: "2023-01-01", mood: moodState, note }));
+    dispatch(setMood({ date: formatted, mood: moodState, note }));
     setMoodSheet(false);
   };
 

@@ -119,7 +119,7 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber, phoneNumber }) => {
         </Button>
       </VStack>
 
-      <Button className=" rounded-lg p-3 mt-4" onPress={handleSubmit(onSubmit)}>
+      <Button className=" rounded-lg bg-primary-600 p-3 mt-4" onPress={handleSubmit(onSubmit)}>
         <ButtonText className="text-white text-base font-semibold" style={{ fontFamily: "vazirBold" }}>
           {isLoading ? <ButtonSpinner /> : " تایید کد"}
         </ButtonText>
