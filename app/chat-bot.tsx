@@ -162,7 +162,7 @@ const ChatScreen: React.FC = () => {
               <Text className="text-lg font-semiBold  text-right mb-4 text-gray-600">
                 شما محدودیت روزانه ۱۰ گفت وگو را استفاده کردید با خرید اشتراک به صورت نامحدود مشاوره بگیرید
               </Text>
-              <Button onPress={() => router.navigate("/(tabs)/setting/subscription")} className="bg-purple-600">
+              <Button onPress={() => router.navigate("/subscription")} className="bg-purple-600">
                 <ButtonText>خرید اشتراک</ButtonText>
               </Button>
             </VStack>

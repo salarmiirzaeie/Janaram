@@ -2,14 +2,12 @@ import useAuth from "@/hooks/useAuth";
 import { useCustomToast } from "@/hooks/useToast";
 import { useGoogleLoginMutation, useSendOTPMutation } from "@/services/auth/auth-adapter";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { GoogleSignin, GoogleSigninButton } from "@react-native-google-signin/google-signin";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Text } from "react-native";
+import { StatusBar, Text } from "react-native";
 import * as yup from "yup";
 import { Button, ButtonSpinner, ButtonText } from "../ui/button";
-import { Divider } from "../ui/divider";
-import { HStack } from "../ui/hstack";
 import { Input, InputField } from "../ui/input";
 import { VStack } from "../ui/vstack";
 
@@ -35,12 +33,11 @@ const LoginForm: React.FC<OTPFormProps> = ({ handleAnimate }) => {
   const toast = useCustomToast();
   async function signInWithGoogle() {
     try {
-      console.log(GoogleSignin.hasPreviousSignIn());
+      await GoogleSignin.hasPlayServices();
       if (GoogleSignin.hasPreviousSignIn()) {
         await GoogleSignin.revokeAccess();
         await GoogleSignin.signOut();
       }
-      await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       const idToken = userInfo.data?.idToken; // fixed path, not userInfo.data.idToken
       if (!idToken) throw new Error("توکنی دریافت نشد");
@@ -87,6 +84,7 @@ const LoginForm: React.FC<OTPFormProps> = ({ handleAnimate }) => {
 
   return (
     <VStack className="w-full">
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <Text className="text-3xl font-bold text-gray-800 text-center mb-2" style={{ fontFamily: "vazirBold" }}>
         خوش آمدید
       </Text>
@@ -129,7 +127,7 @@ const LoginForm: React.FC<OTPFormProps> = ({ handleAnimate }) => {
         </ButtonText>
       </Button>
 
-      <HStack className="items-center w-full my-6">
+      {/* <HStack className="items-center w-full my-6">
         <Divider className="flex-1 bg-gray-300 h-px" />
         <Text className="text-gray-600 mx-4" style={{ fontFamily: "vazir" }}>
           یا
@@ -145,7 +143,7 @@ const LoginForm: React.FC<OTPFormProps> = ({ handleAnimate }) => {
             <ButtonSpinner />
           </Button>
         )}
-      </VStack>
+      </VStack> */}
     </VStack>
   );
 };

@@ -98,7 +98,7 @@ export default function RootLayout() {
                     name="subscription"
                     options={{
                       headerShown: true,
-                      title: "اشتراک",
+                      title: "اشتراک روانشناس من",
                       headerTitleAlign: "center",
                       headerTitleStyle: { fontFamily: "vazirBold" },
                     }}
