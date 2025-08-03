@@ -10,7 +10,7 @@ const authAdapter = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    sendOTP: builder.mutation<any, { phoneNumber: string }>({
+    sendOTP: builder.mutation<any, { phoneNumber: string; appHash: string }>({
       query: (data) => ({
         url: "auth/otp/request",
         method: "POST",

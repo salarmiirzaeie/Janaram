@@ -2,7 +2,7 @@
   "expo": {
     "name": "جانارام",
     "slug": "Janaram",
-    "version": "1.0.5",
+    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "janaram",
@@ -19,7 +19,12 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.salarmiirzapour.Janaram",
-      "permissions": ["android.permission.FOREGROUND_SERVICE", "android.permission.MODIFY_AUDIO_SETTINGS"],
+      "permissions": [
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "READ_SMS",
+        "RECEIVE_SMS"
+      ],
       "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"]
     },
     "web": {

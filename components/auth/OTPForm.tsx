@@ -2,7 +2,7 @@ import useAuth from "@/hooks/useAuth";
 import { useCustomToast } from "@/hooks/useToast";
 import { useVerifyOTPMutation } from "@/services/auth/auth-adapter";
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput } from "react-native";
 import * as yup from "yup";
@@ -30,6 +30,7 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber, phoneNumber }) => {
   const toast = useCustomToast();
   const [verify, { isLoading }] = useVerifyOTPMutation();
   const { setUser } = useAuth();
+
   const {
     control,
     handleSubmit,
@@ -40,21 +41,43 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber, phoneNumber }) => {
       otp: ["", "", "", "", "", ""],
     },
   });
+
+  const [timeLeft, setTimeLeft] = useState(120); // 2 minutes
+
+  // ⏱ Countdown Timer
+  useEffect(() => {
+    if (timeLeft === 0) return;
+    const interval = setInterval(() => {
+      setTimeLeft((t) => t - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timeLeft]);
+
+  // ⌨️ Auto focus first input on mount
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      inputRefs.current[0]?.focus();
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const s = String(seconds % 60).padStart(2, "0");
+    return `${m}:${s}`;
+  };
+
   const onSubmit = (data: FormData) => {
     const otpCode = data.otp.join("");
     verify({ code: otpCode, phoneNumber: phoneNumber })
       .unwrap()
       .then((res) => {
-        console.log(res);
         if (res.success) {
-          setUser({
-            accessToken: res.token,
-          });
+          setUser({ accessToken: res.token });
         }
       })
       .catch((err) => {
-        console.log(err);
-        toast.show({ type: "error", msg: err.data.message || "خطایی رخ داده است" });
+        toast.show({ type: "error", msg: err?.data?.message || "خطایی رخ داده است" });
       });
   };
 
@@ -63,7 +86,10 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber, phoneNumber }) => {
       <Text className="text-3xl font-bold text-gray-800 text-center mb-2" style={{ fontFamily: "vazirBold" }}>
         تایید شماره موبایل
       </Text>
-      <Text className="text-base text-gray-600 text-center mb-8" style={{ fontFamily: "vazir" }}>
+      <Text className="text-base text-gray-600 text-center mb-2" style={{ fontFamily: "vazir" }}>
+        کد برای شماره {phoneNumber} ارسال شده است
+      </Text>
+      <Text className="text-base text-gray-600 text-center mb-6" style={{ fontFamily: "vazir" }}>
         لطفا کدی که برای شما پیامک شده را وارد کنید
       </Text>
 
@@ -91,10 +117,8 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber, phoneNumber }) => {
                     onChange(text.slice(0, 1));
 
                     if (text && index < otpValues.length - 1) {
-                      // Move to next input if a digit is entered
                       inputRefs.current[index + 1]?.focus();
                     } else if (!text && index > 0) {
-                      // Move to previous input if the current input is cleared
                       inputRefs.current[index - 1]?.focus();
                     }
                   }}
@@ -112,6 +136,10 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber, phoneNumber }) => {
           </Text>
         )}
 
+        <Text className="text-sm text-center mt-4 text-gray-600" style={{ fontFamily: "vazir" }}>
+          {timeLeft > 0 ? `زمان باقی‌مانده: ${formatTime(timeLeft)}` : "مهلت وارد کردن کد به پایان رسید"}
+        </Text>
+
         <Button onPress={onChangeNumber} variant="link" className="mt-4 self-start">
           <ButtonText className="text-blue-600 text-sm underline" style={{ fontFamily: "vazirBold" }}>
             تغییر شماره موبایل
@@ -119,7 +147,7 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber, phoneNumber }) => {
         </Button>
       </VStack>
 
-      <Button className=" rounded-lg bg-primary-600 p-3 mt-4" onPress={handleSubmit(onSubmit)}>
+      <Button className="rounded-lg bg-primary-600 p-3 mt-4" onPress={handleSubmit(onSubmit)} disabled={timeLeft === 0}>
         <ButtonText className="text-white text-base font-semibold" style={{ fontFamily: "vazirBold" }}>
           {isLoading ? <ButtonSpinner /> : " تایید کد"}
         </ButtonText>
