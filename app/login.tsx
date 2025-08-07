@@ -26,7 +26,6 @@ interface FormData {
 }
 
 const Login: React.FC = () => {
-  const [phoneNumber, setPhoneNumber] = React.useState("");
   const [gLogin, { isLoading }] = useGoogleLoginMutation();
   const { setUser } = useAuth();
   const [sendOTP, { isLoading: isLoadingOTP }] = useSendOTPMutation();
@@ -142,7 +141,7 @@ const Login: React.FC = () => {
 
             <Button className="rounded-lg p-3 bg-primary-600 mt-4" onPress={handleSubmit(onSubmit)}>
               <ButtonText className="text-white text-base font-semibold" style={{ fontFamily: "vazirBold" }}>
-                {isLoadingOTP ? <ButtonSpinner /> : "دریافت کد تایید"}
+                {isLoadingOTP ? <ButtonSpinner color={"white"} /> : "دریافت کد تایید"}
               </ButtonText>
             </Button>
           </VStack>

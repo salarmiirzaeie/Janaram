@@ -233,7 +233,7 @@ const OTPForm = () => {
                 {timeLeft === 0 && (
                   <Button onPress={onResendOTP} variant="link" disabled={isLoadingOTP}>
                     <ButtonText className="text-blue-600 text-sm underline" style={{ fontFamily: "vazirBold" }}>
-                      {isLoadingOTP ? <ButtonSpinner /> : "ارسال مجدد کد"}
+                      {isLoadingOTP ? <ButtonSpinner color={"white"} /> : "ارسال مجدد کد"}
                     </ButtonText>
                   </Button>
                 )}
@@ -242,7 +242,7 @@ const OTPForm = () => {
 
             <Button className="rounded-lg bg-primary-600 p-3 mt-4" onPress={handleSubmit(onSubmit)}>
               <ButtonText className="text-white text-base font-semibold" style={{ fontFamily: "vazirBold" }}>
-                {isLoading ? <ButtonSpinner /> : "تایید کد"}
+                {isLoading ? <ButtonSpinner color={"white"} /> : "تایید کد"}
               </ButtonText>
             </Button>
           </VStack>

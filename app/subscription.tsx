@@ -78,7 +78,13 @@ export default function SubscriptionsScreen() {
                       }} // Replace with actual payment route
                     >
                       <ButtonText className="text-white text-lg font-bold">
-                        {isUpgrading ? <ButtonSpinner /> : !plan.price ? "شروع رایگان" : " خرید اشتراک "}
+                        {isUpgrading ? (
+                          <ButtonSpinner color={"white"} />
+                        ) : !plan.price ? (
+                          "شروع رایگان"
+                        ) : (
+                          " خرید اشتراک "
+                        )}
                       </ButtonText>
                     </Button>
                   )}
