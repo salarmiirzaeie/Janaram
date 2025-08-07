@@ -79,6 +79,12 @@ export default function RootLayout() {
                     }}
                   />
                   <Stack.Screen
+                    name="start"
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
                     name="verifyOTP"
                     options={{
                       headerShown: false,

@@ -7,7 +7,6 @@ import { setSleepMode } from "@/redux/sleep-mode/sleep-slice";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
 import { useDispatch } from "react-redux";
-import Start from "../start";
 const DAILY_NOTIFICATION_ID = "daily-9am-notification";
 
 export default function TabLayout() {
@@ -81,7 +80,7 @@ export default function TabLayout() {
     setup();
   }, []);
   if (!isInitialized) {
-    return <Start />;
+    return <Redirect href="/start" />;
   }
   if (!authorized) {
     console.log("object2");
