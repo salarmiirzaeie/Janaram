@@ -19,12 +19,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.salarmiirzapour.Janaram",
-      "permissions": [
-        "android.permission.FOREGROUND_SERVICE",
-        "android.permission.MODIFY_AUDIO_SETTINGS",
-        "READ_SMS",
-        "RECEIVE_SMS"
-      ],
+      "permissions": ["android.permission.FOREGROUND_SERVICE", "android.permission.MODIFY_AUDIO_SETTINGS"],
       "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"]
     },
     "web": {

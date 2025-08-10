@@ -65,7 +65,7 @@ function SettingsScreen() {
           icon={<Ionicons name="call" size={24} color="black" />}
           label="تماس با ما"
           onPress={() => {
-            Linking.openURL("mailto:salarmiirzapour@gmail.com");
+            Linking.openURL("mailto:info@janaram.ir");
           }}
         />
 

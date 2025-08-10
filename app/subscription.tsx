@@ -58,7 +58,7 @@ export default function SubscriptionsScreen() {
 
                   {plan.price !== 0 && (
                     <Text className="text-3xl font-medium text-primary-800 my-2">
-                      {toPersianDigits(plan.price) + " "}تومان/ماه
+                      {toPersianDigits(plan.price) + " "}هزار تومان/ماه
                     </Text>
                   )}
                   <Text className="text-gray-600 text-base mb-6 leading-relaxed">{plan.description}</Text>
