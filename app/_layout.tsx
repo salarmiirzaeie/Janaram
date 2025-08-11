@@ -4,7 +4,6 @@ import { AudioPlayerProvider } from "@/context/AudioPlayerContext";
 import "@/global.css";
 import { persistor, store } from "@/redux/store";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useFonts } from "expo-font";
 import * as Notifications from "expo-notifications";
 import { router, Stack } from "expo-router";
@@ -13,10 +12,7 @@ import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-GoogleSignin.configure({
-  // webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-  webClientId: "866288850799-hl9scv2mt9r0g006et5nfpggtf03qi7m.apps.googleusercontent.com",
-});
+
 // Trigger a layout animation
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

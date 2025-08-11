@@ -1,7 +1,6 @@
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { apiSlice } from "@/redux/api-slice";
 import { logout, setTokens } from "@/redux/auth/auth-slice";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router"; // Move this to the top level
 import { useDispatch } from "react-redux";
 
@@ -34,7 +33,6 @@ const useAuth = () => {
     try {
       dispatch(logout());
       dispatch(apiSlice.util.resetApiState());
-      await GoogleSignin.signOut();
 
       // Optionally, make an API request to invalidate the session
       // await api.logout();

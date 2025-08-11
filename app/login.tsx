@@ -6,7 +6,6 @@ import useAuth from "@/hooks/useAuth";
 import { useCustomToast } from "@/hooks/useToast";
 import { useGoogleLoginMutation, useSendOTPMutation } from "@/services/auth/auth-adapter";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -30,24 +29,6 @@ const Login: React.FC = () => {
   const { setUser } = useAuth();
   const [sendOTP, { isLoading: isLoadingOTP }] = useSendOTPMutation();
   const toast = useCustomToast();
-
-  async function signInWithGoogle() {
-    try {
-      await GoogleSignin.hasPlayServices();
-      if (GoogleSignin.hasPreviousSignIn()) {
-        await GoogleSignin.revokeAccess();
-        await GoogleSignin.signOut();
-      }
-      const userInfo = await GoogleSignin.signIn();
-      const idToken = userInfo.data?.idToken;
-      if (!idToken) throw new Error("توکنی دریافت نشد");
-
-      const result = await gLogin({ token: idToken }).unwrap();
-      setUser({ accessToken: result.token });
-    } catch (error) {
-      toast.show({ type: "error", msg: "خطایی رخ داده است" });
-    }
-  }
 
   const {
     control,
