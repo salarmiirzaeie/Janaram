@@ -1,16 +1,10 @@
-import { normalizePhoneNumber, unNormalizePhoneNumber } from "@/utils/phone";
-import { AntDesign } from "@expo/vector-icons";
-import * as FileSystem from "expo-file-system";
-import * as ImagePicker from "expo-image-picker";
+import { unNormalizePhoneNumber } from "@/utils/phone";
 import { router } from "expo-router";
-import React, { useState } from "react";
-import { Alert } from "react-native";
+import React from "react";
 
-import { Avatar, AvatarBadge, AvatarImage } from "@/components/ui/avatar";
 import { Button, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import { Input, InputField } from "@/components/ui/input";
-import { Pressable } from "@/components/ui/pressable";
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
@@ -36,13 +30,11 @@ type FormData = {
 const EditProfile = () => {
   const { data, isLoading } = useProfileQuery(null);
   const [updateProfile, { isLoading: isUpdating }] = useEditProfileMutation();
-  const [profilePhoto, setProfilePhoto] = useState<string | null>(data?.data.profilePhoto || null);
   const toast = useCustomToast();
   const {
     control,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<FormData>({
     resolver: yupResolver(profileSchema),
     defaultValues: {
@@ -51,75 +43,9 @@ const EditProfile = () => {
     },
   });
 
-  const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      Alert.alert("Permission required", "Please allow access to your photo library.");
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.7,
-    });
-
-    if (!result.canceled && result.assets?.[0]?.uri) {
-      console.log("Selected image:", {
-        uri: result.assets[0].uri,
-        mimeType: result.assets[0].mimeType,
-        fileSize: result.assets[0].fileSize,
-        fileName: result.assets[0].fileName,
-      });
-      setProfilePhoto(result.assets[0].uri);
-    } else {
-      console.log("Image selection canceled or failed:", result);
-    }
-  };
-
   const onSubmit = async (formData: FormData) => {
-    const formDataToSend = new FormData();
-    formDataToSend.append("name", formData.name);
-    const normalizedPhone = normalizePhoneNumber(formData.phoneNumber);
-    formDataToSend.append("phoneNumber", normalizedPhone);
-
-    if (profilePhoto) {
-      try {
-        const fileInfo = await FileSystem.getInfoAsync(profilePhoto);
-        console.log("File info:", fileInfo);
-        if (!fileInfo.exists) {
-          throw new Error("Image file does not exist");
-        }
-        if (fileInfo.size > 5 * 1024 * 1024) {
-          throw new Error("Image size exceeds 5MB limit");
-        }
-        console.log(profilePhoto, "profilePhoto");
-        const response = await fetch(profilePhoto);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch image: ${response.statusText}`);
-        }
-        const blob = await response.blob();
-        console.log("Image blob:", {
-          type: blob.type,
-          size: blob.size,
-          fileName: profilePhoto.split("/").pop(),
-        });
-        if (!["image/jpeg", "image/png"].includes(blob.type)) {
-          throw new Error("Invalid image type. Only JPEG and PNG are allowed.");
-        }
-        const fileName = profilePhoto.split("/").pop() || `profile-photo.${blob.type.split("/")[1] || "jpg"}`;
-        console.log("profilePhoto", blob, fileName);
-        formDataToSend.append("files", blob, fileName);
-      } catch (error: any) {
-        console.error("Error preparing image for upload:", error.message);
-        toast.show({ msg: `Failed to process image: ${error.message}`, type: "error" });
-        return;
-      }
-    }
-
     try {
-      const response = await updateProfile(formDataToSend).unwrap();
+      const response = await updateProfile(formData).unwrap();
       if (response.success) {
         router.back();
         toast.show({ msg: response.message, type: "success" });
@@ -150,40 +76,15 @@ const EditProfile = () => {
 
   return (
     <VStack className="flex-1 bg-background-0 p-4">
-      <VStack className="items-center mt-4">
-        <Avatar size="xl">
-          <AvatarImage
-            source={
-              profilePhoto
-                ? { uri: profilePhoto.startsWith("file://") ? profilePhoto : `http://192.168.5.96:3000${profilePhoto}` }
-                : require("@/assets/images/defaultAvatar.png")
-            }
-          />
-          <AvatarBadge size="2xl" className="justify-center items-center bg-blue-200">
-            <Pressable onPress={pickImage}>
-              <AntDesign color="purple" name="camera" size={20} />
-            </Pressable>
-          </AvatarBadge>
-        </Avatar>
-        <Pressable onPress={pickImage}>
-          <Text className="text-primary-500 mt-2 font-semibold">Change Profile Photo</Text>
-        </Pressable>
-      </VStack>
-
       <VStack space="md" className="mt-6">
         <VStack>
-          <Text className="text-sm font-medium text-typography-900">Name</Text>
+          <Text className="text-sm text-right font-medium text-typography-900">نام</Text>
           <Controller
             control={control}
             name="name"
             render={({ field: { onChange, value } }) => (
               <Input>
-                <InputField
-                  value={value}
-                  onChangeText={onChange}
-                  placeholder="Enter your name"
-                  autoCapitalize="words"
-                />
+                <InputField value={value} onChangeText={onChange} autoCapitalize="words" className="text-right" />
               </Input>
             )}
           />
@@ -191,18 +92,13 @@ const EditProfile = () => {
         </VStack>
 
         <VStack>
-          <Text className="text-sm font-medium text-typography-900">Phone Number</Text>
+          <Text className="text-sm text-right font-medium text-typography-900">شماره موبایل</Text>
           <Controller
             control={control}
             name="phoneNumber"
             render={({ field: { onChange, value } }) => (
-              <Input>
-                <InputField
-                  value={value}
-                  onChangeText={onChange}
-                  placeholder="Enter your phone number (e.g., +989123456789)"
-                  keyboardType="phone-pad"
-                />
+              <Input isDisabled>
+                <InputField value={value} onChangeText={onChange} keyboardType="phone-pad" />
               </Input>
             )}
           />

@@ -11,7 +11,7 @@ import useAuth from "@/hooks/useAuth";
 import { AntDesign, Ionicons, Octicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Linking, Pressable, SafeAreaView, ScrollView, Share, StatusBar, Switch } from "react-native";
+import { Linking, Pressable, SafeAreaView, ScrollView, Share, Switch } from "react-native";
 import { useDispatch } from "react-redux";
 
 function SettingsScreen() {
@@ -24,7 +24,6 @@ function SettingsScreen() {
   return (
     <SafeAreaView className="flex-1">
       <ScrollView className="bg-white flex-1 ">
-        <StatusBar barStyle={"dark-content"} backgroundColor={"rgb(134,179,210)"} />
         <ProfileCard />
         {/* اعلان‌ها */}
         <VStack className="mb-6 p-4">

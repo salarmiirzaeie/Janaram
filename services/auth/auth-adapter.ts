@@ -24,7 +24,7 @@ const authAdapter = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    editProfile: builder.mutation<any, FormData>({
+    editProfile: builder.mutation<any, { name: string; phoneNumber: string }>({
       query: (data) => ({
         url: "auth/edit-profile",
         method: "PUT",

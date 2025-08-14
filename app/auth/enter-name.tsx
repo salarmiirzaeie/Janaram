@@ -4,7 +4,6 @@ import { VStack } from "@/components/ui/vstack";
 import useAuth from "@/hooks/useAuth";
 import { useEditProfileMutation } from "@/services/auth/auth-adapter";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { Controller, Resolver, useForm } from "react-hook-form";
@@ -50,34 +49,11 @@ const EnterName = () => {
   });
 
   // Image picker function
-  const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      alert("نیاز به اجازه دسترسی به گالری است");
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.5,
-      base64: true,
-    });
-
-    if (!result.canceled && result.assets[0].base64) {
-      setImage(`data:image/jpeg;base64,${result.assets[0].base64}`);
-    }
-  };
 
   // Submit handler
   const onSubmit = async (data: FormData) => {
-    const formDataToSend = new FormData();
-    formDataToSend.append("name", data.name);
-    const normalizedPhone = data.phoneNumber;
-    formDataToSend.append("phoneNumber", normalizedPhone);
     try {
-      const response = await updateProfile(formDataToSend).unwrap();
+      const response = await updateProfile(data).unwrap();
 
       if (response.success) {
         setUserAuthorized(true);

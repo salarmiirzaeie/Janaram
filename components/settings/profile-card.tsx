@@ -1,44 +1,44 @@
 import { useProfileQuery } from "@/services/auth/auth-adapter";
 import { unNormalizePhoneNumber } from "@/utils/phone";
-import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { Text } from "react-native";
-import { Avatar, AvatarBadge, AvatarImage } from "../ui/avatar";
+import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
-import { Skeleton, SkeletonText } from "../ui/skeleton";
+import { Skeleton } from "../ui/skeleton";
 import { VStack } from "../ui/vstack";
 
 const ProfileCard = () => {
   const { data, isLoading } = useProfileQuery(null);
   if (isLoading) {
     return (
-      <VStack className="bg-primary-500 rounded-b-3xl py-10 px-4 justify-center items-center">
-        <Skeleton variant="circular" className="h-[96px] w-[96px]" />
-        <SkeletonText _lines={1} className="h-4 w-24 mt-6 self-center" />
-        <SkeletonText _lines={1} className="h-4 w-32 mt-2 self-center" />
-      </VStack>
+      <HStack className="border-b-2 border-gray-200 p-6 justify-between items-center">
+        <Pressable>
+          <Skeleton className="bg-gray-200 w-10 h-10 rounded-full" />
+        </Pressable>
+        <VStack>
+          <Skeleton className="bg-gray-200 w-20 h-2" />
+          <Skeleton className="bg-gray-200 mt-1 w-20 h-2" />
+        </VStack>
+      </HStack>
     );
   }
 
   return (
-    <VStack className="bg-primary-500 rounded-b-3xl py-10 px-4 justify-center items-center">
-      <Avatar size="xl">
-        <AvatarImage source={require("@/assets/images/defaultAvatar.png")} />
-
-        <AvatarBadge className="justify-center items-center bg-white">
-          <Pressable
-            onPress={() => {
-              router.navigate("/(tabs)/setting/edit-profile");
-            }}
-          >
-            <AntDesign color={"purple"} name="edit" />
-          </Pressable>
-        </AvatarBadge>
-      </Avatar>
-      <Text className="font-semiBold mt-6 text-white">{data?.data.name}</Text>
-      <Text className="mt-2 text-white">{unNormalizePhoneNumber(data?.data.phoneNumber || "")}</Text>
-    </VStack>
+    <HStack className="border-b-2 border-gray-200 p-6 justify-between items-center">
+      <Pressable
+        onPress={() => {
+          router.navigate("/(tabs)/setting/edit-profile");
+        }}
+      >
+        <FontAwesome name="edit" size={24} color="rgb(134,179,210)" />
+      </Pressable>
+      <VStack>
+        <Text className="font-semiBold text-right">{data?.data.name}</Text>
+        <Text className="">{unNormalizePhoneNumber(data?.data.phoneNumber || "")}</Text>
+      </VStack>
+    </HStack>
   );
 };
 

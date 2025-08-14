@@ -10,8 +10,8 @@ const _layout = () => {
         <Stack.Screen
           name="index"
           options={{
-            headerShown: false,
-            title: "تنظیمات",
+            headerShown: true,
+            title: "پروفایل",
             headerTitleAlign: "center",
             headerTitleStyle: { fontFamily: "vazirBold" },
           }}
