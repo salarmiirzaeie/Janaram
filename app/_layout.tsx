@@ -1,12 +1,10 @@
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { Pressable } from "@/components/ui/pressable";
 import { AudioPlayerProvider } from "@/context/AudioPlayerContext";
 import "@/global.css";
 import { persistor, store } from "@/redux/store";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import * as Notifications from "expo-notifications";
-import { router, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -93,13 +91,13 @@ export default function RootLayout() {
                       headerTitleAlign: "center",
                       headerTitleStyle: { fontFamily: "vazirBold" },
                       headerTitle: "روانشناس من",
-                      headerRight(props) {
-                        return (
-                          <Pressable className="items-center w-10" onPress={() => router.navigate("/chat-history")}>
-                            <FontAwesome5 size={24} name="history" color={"#000"} />
-                          </Pressable>
-                        );
-                      },
+                      // headerRight(props) {
+                      //   return (
+                      //     <Pressable className="items-center w-10" onPress={() => router.navigate("/chat-history")}>
+                      //       <FontAwesome5 size={24} name="history" color={"#000"} />
+                      //     </Pressable>
+                      //   );
+                      // },
                     }}
                   />
                   <Stack.Screen

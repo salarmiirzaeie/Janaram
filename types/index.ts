@@ -1,3 +1,5 @@
+import { ApiMessageType } from "@/app/chat-bot";
+
 export interface IGLoginRequest {
   token: string;
 }
@@ -51,12 +53,14 @@ export interface ChatHistoryItem {
 
 export interface ChatHistoryResponse {
   success: boolean;
-  data?: {
-    conversations: ChatHistoryItem[];
-    totalConversations: number;
-    page: number;
-    limit: number;
-    totalPages: number;
+  data: {
+    messages: ApiMessageType[];
+    pagination: {
+      page: number;
+      limit: number;
+      totalMessages: number;
+      totalPages: number;
+    };
   };
   message?: string;
 }
