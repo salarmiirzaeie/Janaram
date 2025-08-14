@@ -10,11 +10,29 @@ const aiAdapter = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    getChatHistory: builder.query<ChatHistoryResponse, { page?: number; limit?: number }>({
+    getChatHistory: builder.query<ChatHistoryResponse, { page: number; limit: number }>({
       query: ({ page = 1, limit = 10 }) => ({
-        url: `/conversation/history?page=${page}&limit=${limit}`,
+        url: `conversation/chat-history`,
         method: "GET",
+        params: { page, limit },
       }),
+      serializeQueryArgs: ({ endpointName }) => endpointName,
+      merge: (currentCache, newItems) => {
+        if (newItems.data.pagination.page === 1) {
+          return newItems;
+        }
+        return {
+          ...newItems,
+          data: {
+            ...newItems.data,
+            messages: [...newItems.data.messages, ...currentCache.data.messages],
+          },
+        };
+      },
+      forceRefetch({ currentArg, previousArg }) {
+        return true;
+      },
+      providesTags: ["ChatHistory"],
     }),
   }),
 });

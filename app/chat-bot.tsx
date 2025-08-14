@@ -1,4 +1,4 @@
-import { Button, ButtonText } from "@/components/ui/button";
+import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { useGetChatHistoryQuery, useStartConversationMutation } from "@/services/ai/ai-adapter";
 import { router } from "expo-router";
@@ -16,13 +16,20 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Animated from "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-// Define the type for a single message object
-interface MessageType {
+// Define the type for a single message object (aligned with frontend display)
+export interface MessageType {
   role: "user" | "assistant";
   content: string;
+  timestamp?: Date;
+}
+
+// Define the type for API message format
+export interface ApiMessageType {
+  user: string;
+  ai: string;
+  timestamp: Date;
 }
 
 // Define the props for the Message component
@@ -41,47 +48,138 @@ const Message: React.FC<MessageProps> = ({ item }) => {
   );
 };
 
-// Create an Animated FlatList component
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList<MessageType>);
-
 // The main ChatScreen component
 const ChatScreen: React.FC = () => {
   const initialMessage: MessageType = {
     role: "assistant",
     content:
       "سلام! من یک دستیار روانشناس هوش مصنوعی هستم. می‌تونم به شما در بیان و درک احساساتتون کمک کنم. امروز چه حسی دارید؟",
+    timestamp: new Date(),
   };
-  const [conversationId, setConversationId] = useState<string | undefined>(undefined);
-  const [messages, setMessages] = useState<MessageType[]>([initialMessage]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const [input, setInput] = useState<string>("");
   const listRef = useRef<FlatList<MessageType>>(null);
   const [insets, setInset] = useState(0);
   const [showPremium, setShowPremium] = useState(false);
-  const [startConversation, { isLoading, error, data, status }] = useStartConversationMutation();
+  const [startConversation, { isLoading, error, data }] = useStartConversationMutation();
+  const [page, setPage] = useState(1);
+  const limit = 10; // Messages per page
   const {
     data: historyData,
+    isFetching: isFetchingHistory,
     error: historyError,
-    isLoading: isHistoryLoading,
-  } = useGetChatHistoryQuery({ page: 1, limit: 10 });
-  const scrollToEnd = () => {
-    listRef.current?.scrollToEnd({ animated: true });
+  } = useGetChatHistoryQuery({ page, limit });
+  const [hasMore, setHasMore] = useState(true);
+  // Transform API messages to frontend MessageType
+  const transformApiMessages = (apiMessages: ApiMessageType[]): MessageType[] => {
+    return apiMessages.flatMap((msg) => [
+      { role: "assistant", content: msg.ai, timestamp: msg.timestamp },
+
+      { role: "user", content: msg.user, timestamp: msg.timestamp },
+    ]);
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      scrollToEnd();
-    }, 100);
-  }, [messages]);
+  // Scroll to the newest message (index 0 in inverted list)
+  const scrollToBottom = () => {
+    if (messages.length > 0) {
+      listRef.current?.scrollToIndex({ index: 0, animated: true });
+    }
+  };
 
+  // Handle new messages from startConversation
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", (e) => {
+    if (data && data.success && data.data?.response) {
+      setMessages((prev) => [
+        {
+          role: "assistant",
+          content: data.data.response,
+          timestamp: new Date(),
+        },
+        ...prev,
+      ]);
+      setShowPremium(false);
+    } else if (error) {
+      console.error("خطا در API:", error);
+      let errorMessage = "متأسفم، مشکلی در پردازش درخواست شما پیش آمد.";
+      if ("status" in error) {
+        if (error.status === 429) {
+          setShowPremium(true);
+          errorMessage = "حداکثر تعداد گفت‌وگوهای روزانه برای طرح رایگان به پایان رسیده است.";
+        } else if (error.status === 404) {
+          errorMessage = "کاربر یافت نشد.";
+        } else if (error.status === 400) {
+          errorMessage = "درخواست نامعتبر است.";
+        } else if (error.status === 502) {
+          errorMessage = "درخواست به دلیل زمان‌بندی سرور هوش مصنوعی ناموفق بود. لطفاً دوباره تلاش کنید.";
+        }
+      }
+      setMessages((prev) => [
+        {
+          role: "assistant",
+          content: errorMessage,
+          timestamp: new Date(),
+        },
+        ...prev,
+      ]);
+    }
+    scrollToBottom();
+  }, [data, error]);
+
+  // Load initial history
+  useEffect(() => {
+    if (historyData?.success) {
+      if (historyData.data.messages.length > 0) {
+        const newMessages = transformApiMessages(historyData.data.messages).filter(
+          (newMsg) => !messages.some((msg) => msg.content === newMsg.content && msg.role === newMsg.role)
+        );
+        setMessages((prev) => {
+          if (page === 1) {
+            return [...newMessages, ...prev];
+          } else {
+            return [...prev, ...newMessages];
+          }
+        });
+        const totalPages = historyData.data.pagination.totalPages;
+        setHasMore(page < totalPages);
+        if (page === 1 && page < totalPages) {
+          setPage(2);
+        }
+      } else if (page === 1 && messages.length === 0) {
+        // Only set initial message if no history and no messages exist
+        setMessages([initialMessage]);
+        setHasMore(false);
+      }
+    } else if (historyError) {
+      console.error("Error fetching history:", historyError);
+      let errorMessage = "خطا در بارگذاری تاریخچه گفت‌وگو. لطفاً دوباره تلاش کنید.";
+      if ("status" in historyError) {
+        if (historyError.status === 404) {
+          errorMessage = "کاربر یافت نشد.";
+        } else if (historyError.status === 400) {
+          errorMessage = "پارامترهای صفحه‌بندی نامعتبر هستند.";
+        }
+      }
+      setMessages((prev) => [
+        {
+          role: "assistant",
+          content: errorMessage,
+          timestamp: new Date(),
+        },
+        ...prev,
+      ]);
+    }
+    scrollToBottom();
+  }, [historyData, historyError, page]);
+
+  // Keyboard handling
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
       setInset(80);
+      scrollToBottom();
     });
     const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
       setInset(0);
-      setTimeout(() => {
-        listRef.current?.scrollToEnd({ animated: true });
-      }, 100);
+      scrollToBottom();
     });
 
     return () => {
@@ -90,49 +188,28 @@ const ChatScreen: React.FC = () => {
     };
   }, []);
 
+  // Load more history when scrolling to top
+  const handleLoadMore = () => {
+    if (!isFetchingHistory && hasMore) {
+      setPage((prev) => prev + 1);
+    }
+  };
+
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    const userMessage: MessageType = { role: "user", content: input.trim() };
-    const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
+    const userMessage: MessageType = { role: "user", content: input.trim(), timestamp: new Date() };
+    setMessages((prev) => [userMessage, ...prev]);
     setInput("");
 
     try {
-      const response = await startConversation({
+      await startConversation({
         message: userMessage.content,
-        conversationId,
       }).unwrap();
-      if (!response.success) {
-        throw new Error(response.message || "خطای سرور");
-      }
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: response.data?.response || "متأسفم، مشکلی در پاسخ‌دهی پیش آمد.",
-        },
-      ]);
-      setConversationId(response.data?.conversationId); // ذخیره conversationId
-    } catch (error: any) {
-      console.error("خطا در API:", error);
-      if (error.status === 429) {
-        setShowPremium(true);
-        return;
-      }
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: error.data?.message || "متأسفم، مشکلی در پردازش درخواست شما پیش آمد.",
-        },
-      ]);
-    } finally {
-      requestAnimationFrame(() => {
-        listRef.current?.scrollToEnd({ animated: true });
-      });
+    } catch (error) {
+      // Error handling is managed in the useEffect for startConversation
     }
+    scrollToBottom();
   };
 
   const renderItem = ({ item }: { item: MessageType }) => <Message item={item} />;
@@ -147,32 +224,47 @@ const ChatScreen: React.FC = () => {
           style={styles.keyboardAvoidingView}
           keyboardVerticalOffset={insets}
         >
-          <AnimatedFlatList
+          <FlatList
             ref={listRef}
             data={messages}
             keyExtractor={(_, idx) => idx.toString()}
             renderItem={renderItem}
             contentContainerStyle={styles.messagesContainer}
-            onContentSizeChange={scrollToEnd}
-            onLayout={scrollToEnd}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.1}
             showsVerticalScrollIndicator={false}
+            inverted // Reverse the list to show newest messages at the bottom
+            maintainVisibleContentPosition={{
+              minIndexForVisible: 0,
+              autoscrollToTopThreshold: 100,
+            }}
+            onScrollToIndexFailed={(info) => {
+              setTimeout(() => {
+                listRef.current?.scrollToIndex({ index: info.index, animated: true });
+              }, 100);
+            }}
+            initialNumToRender={20}
+            windowSize={5}
+            maxToRenderPerBatch={5}
+            removeClippedSubviews={Platform.OS === "android"}
+            ListHeaderComponent={
+              isFetchingHistory ? (
+                <View style={styles.loadingContainer}>
+                  <ActivityIndicator size="small" color="#5D7AFF" />
+                  <Text style={styles.loadingText}>در حال بارگذاری تاریخچه...</Text>
+                </View>
+              ) : null
+            }
           />
           {showPremium && (
             <VStack className="p-4 m-4 bg-white rounded-2xl">
-              <Text className="text-lg font-semiBold  text-right mb-4 text-gray-600">
-                شما محدودیت روزانه ۱۰ گفت وگو را استفاده کردید با خرید اشتراک به صورت نامحدود مشاوره بگیرید
+              <Text className="text-lg font-semiBold text-right mb-4 text-gray-600">
+                شما محدودیت روزانه ۱۰ گفت‌وگو را استفاده کردید. با خرید اشتراک به صورت نامحدود مشاوره بگیرید.
               </Text>
               <Button onPress={() => router.navigate("/subscription")} className="bg-purple-600">
                 <ButtonText>خرید اشتراک</ButtonText>
               </Button>
             </VStack>
-          )}
-
-          {isLoading && (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="small" color="#5D7AFF" />
-              <Text style={styles.loadingText}>در حال پردازش...</Text>
-            </View>
           )}
 
           <View style={styles.inputContainer}>
@@ -189,7 +281,7 @@ const ChatScreen: React.FC = () => {
               autoFocus
             />
             <TouchableOpacity style={styles.sendButton} onPress={handleSend} disabled={isLoading || !input.trim()}>
-              <Text style={styles.sendButtonText}>{isLoading ? "..." : "ارسال"}</Text>
+              <Text style={styles.sendButtonText}>{isLoading ? <ButtonSpinner color={"#fff"} /> : "ارسال"}</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
@@ -283,9 +375,6 @@ const styles = StyleSheet.create({
     color: "#5D7AFF",
     fontSize: 14,
   },
-  historyContainer: { marginBottom: 10 },
-  historyHeader: { fontSize: 16, fontWeight: "bold", marginBottom: 5 },
-  historyList: { maxHeight: 50 },
 });
 
 export default ChatScreen;
