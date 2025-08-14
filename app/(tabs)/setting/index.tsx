@@ -1,5 +1,6 @@
 import AboutModal from "@/components/settings/about-modal";
 import LogoutModal from "@/components/settings/logout-modal";
+import ProfileCard from "@/components/settings/profile-card";
 import RulesModal from "@/components/settings/rules-modal";
 import { Divider } from "@/components/ui/divider";
 import { HStack } from "@/components/ui/hstack";
@@ -10,7 +11,7 @@ import useAuth from "@/hooks/useAuth";
 import { AntDesign, Ionicons, Octicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Linking, Pressable, ScrollView, Share, Switch } from "react-native";
+import { Linking, Pressable, SafeAreaView, ScrollView, Share, Switch } from "react-native";
 import { useDispatch } from "react-redux";
 
 function SettingsScreen() {
@@ -21,64 +22,66 @@ function SettingsScreen() {
   const dispatch = useDispatch();
   const { logOutUser } = useAuth();
   return (
-    <ScrollView className="bg-white flex-1 p-4">
-      {/* اعلان‌ها */}
-      <VStack className="mb-6">
-        <Text className="text-primary-500 mb-2 text-right font-medium">عمومی</Text>
+    <SafeAreaView className="flex-1">
+      <ScrollView className="bg-white flex-1 ">
+        <ProfileCard />
+        {/* اعلان‌ها */}
+        <VStack className="mb-6 p-4">
+          <Text className="text-primary-500 mb-2 text-right font-medium">عمومی</Text>
 
-        <SettingItem
-          icon={<AntDesign name="infocirlceo" size={24} color="black" />}
-          label="درباره اپلیکیشن"
-          onPress={() => {
-            setAboutModalVisible(true);
-          }}
-        />
-        <SettingItem
-          icon={<Ionicons name="basket" size={24} color="black" />}
-          label="خرید اشتراک"
-          onPress={() => {
-            router.navigate("/subscription");
-          }}
-        />
-        <SettingItem
-          icon={<Octicons name="law" size={24} color="black" />}
-          label="قوانین برنامه"
-          onPress={() => {
-            setRulesModalVisible(true);
-          }}
-        />
-        <SettingItem
-          icon={<Ionicons name="share-social" size={24} color="black" />}
-          label="معرفی به دوستان"
-          onPress={async () => {
-            try {
-              await Share.share({
-                message:
-                  "سلام! این اپلیکیشن رو از دست نده 😍 \n\nلینک دانلود: https://cafebazaar.ir/app/com.salarmiirzapour.Janaram",
-              });
-            } catch (error) {
-              console.error("Error sharing:", error);
-            }
-          }}
-        />
-        <SettingItem
-          icon={<Ionicons name="call" size={24} color="black" />}
-          label="تماس با ما"
-          onPress={() => {
-            Linking.openURL("mailto:info@janaram.ir");
-          }}
-        />
+          <SettingItem
+            icon={<AntDesign name="infocirlceo" size={24} color="black" />}
+            label="درباره اپلیکیشن"
+            onPress={() => {
+              setAboutModalVisible(true);
+            }}
+          />
+          <SettingItem
+            icon={<Ionicons name="basket" size={24} color="black" />}
+            label="خرید اشتراک"
+            onPress={() => {
+              router.navigate("/subscription");
+            }}
+          />
+          <SettingItem
+            icon={<Octicons name="law" size={24} color="black" />}
+            label="قوانین برنامه"
+            onPress={() => {
+              setRulesModalVisible(true);
+            }}
+          />
+          <SettingItem
+            icon={<Ionicons name="share-social" size={24} color="black" />}
+            label="معرفی به دوستان"
+            onPress={async () => {
+              try {
+                await Share.share({
+                  message:
+                    "سلام! این اپلیکیشن رو از دست نده 😍 \n\nلینک دانلود: https://cafebazaar.ir/app/com.salarmiirzapour.Janaram",
+                });
+              } catch (error) {
+                console.error("Error sharing:", error);
+              }
+            }}
+          />
+          <SettingItem
+            icon={<Ionicons name="call" size={24} color="black" />}
+            label="تماس با ما"
+            onPress={() => {
+              Linking.openURL("mailto:info@janaram.ir");
+            }}
+          />
 
-        <SettingItem
-          icon={<Ionicons name="exit" size={24} color="black" />}
-          label="خروج"
-          onPress={() => {
-            setLogoutModalVisible(true);
-          }}
-        />
-      </VStack>
-      <Divider />
-      {/* <VStack className="my-6">
+          <SettingItem
+            icon={<Ionicons name="exit" size={24} color="black" />}
+            label="خروج"
+            onPress={() => {
+              setLogoutModalVisible(true);
+            }}
+          />
+        </VStack>
+        <Divider />
+        {/* <VStack className="my-6">
         <Text className="text-primary-500 mb-2 text-right font-medium">اطلاعات حساب کاربری</Text>
         <SettingItem
           icon={<AntDesign name="user" size={24} color="black" />}
@@ -89,23 +92,23 @@ function SettingsScreen() {
         />
       </VStack>
       <Divider /> */}
-      <VStack className="my-6">
-        <Text className="text-primary-500 mb-2 text-right font-medium">اعلان‌ها</Text>
-        <SettingSwitch
-          value={moodNotification}
-          setValue={(value) => dispatch({ type: "settings/setMoodNotification", payload: value })}
-          icon={<AntDesign name="notification" size={24} color="black" />}
-          label="یادآوری حال روزانه"
-        />
-        <SettingSwitch
-          value={newMeditationsNotification}
-          setValue={(value) => dispatch({ type: "settings/setNewMeditationsNotification", payload: value })}
-          icon={<AntDesign name="notification" size={24} color="black" />}
-          label="اطلاع از مدیتیشن های جدید"
-        />
-      </VStack>
-      {/* ظاهر و رابط کاربری */}
-      {/* <VStack className="my-6">
+        <VStack className="my-6 p-4">
+          <Text className="text-primary-500 mb-2 text-right font-medium">اعلان‌ها</Text>
+          <SettingSwitch
+            value={moodNotification}
+            setValue={(value) => dispatch({ type: "settings/setMoodNotification", payload: value })}
+            icon={<AntDesign name="notification" size={24} color="black" />}
+            label="یادآوری حال روزانه"
+          />
+          <SettingSwitch
+            value={newMeditationsNotification}
+            setValue={(value) => dispatch({ type: "settings/setNewMeditationsNotification", payload: value })}
+            icon={<AntDesign name="notification" size={24} color="black" />}
+            label="اطلاع از مدیتیشن های جدید"
+          />
+        </VStack>
+        {/* ظاهر و رابط کاربری */}
+        {/* <VStack className="my-6">
         <Text className="text-primary-500 mb-2 text-right font-medium">
           رابط کاربری
         </Text>
@@ -115,13 +118,14 @@ function SettingsScreen() {
         />
       </VStack> */}
 
-      <Divider />
-      {/* عمومی */}
+        <Divider />
+        {/* عمومی */}
 
-      <AboutModal visible={aboutModalVisible} onClose={() => setAboutModalVisible(false)} />
-      <RulesModal visible={rulesModalVisible} onClose={() => setRulesModalVisible(false)} />
-      <LogoutModal visible={logoutModalVisible} onClose={() => setLogoutModalVisible(false)} />
-    </ScrollView>
+        <AboutModal visible={aboutModalVisible} onClose={() => setAboutModalVisible(false)} />
+        <RulesModal visible={rulesModalVisible} onClose={() => setRulesModalVisible(false)} />
+        <LogoutModal visible={logoutModalVisible} onClose={() => setLogoutModalVisible(false)} />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 export default React.memo(SettingsScreen);

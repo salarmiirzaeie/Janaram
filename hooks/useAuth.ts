@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { apiSlice } from "@/redux/api-slice";
-import { logout, setTokens } from "@/redux/auth/auth-slice";
+import { logout, setAuthorized, setTokens } from "@/redux/auth/auth-slice";
 import { router } from "expo-router"; // Move this to the top level
 import { useDispatch } from "react-redux";
 
@@ -15,18 +15,6 @@ const useAuth = () => {
         accessToken: val.accessToken,
       })
     );
-    // await getCustomer(null).then((res) => {
-    //   if (res.data?.code === 200) {
-    //     dispatch(
-    //       setUserInfo({
-    //         email: res.data.result.email,
-    //         phone_number: res.data.result.phoneNumber,
-    //       })
-    //     );
-    //   }
-    // });
-
-    router.replace("/");
   };
 
   const logOutUser = async () => {
@@ -41,12 +29,16 @@ const useAuth = () => {
       // Optionally show a message to the user
     }
   };
-
+  const setUserAuthorized = async (val: boolean) => {
+    dispatch(setAuthorized(val));
+    router.replace("/");
+  };
   return {
     authorized,
     accessToken,
     logOutUser,
     setUser,
+    setUserAuthorized,
   };
 };
 

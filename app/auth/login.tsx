@@ -63,7 +63,7 @@ const Login: React.FC = () => {
 
       if (result.success) {
         router.push({
-          pathname: "/verifyOTP",
+          pathname: "/auth/verifyOTP",
           params: {
             phoneNumber: data.phoneNumber,
           },

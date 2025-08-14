@@ -11,12 +11,12 @@ const _layout = () => {
           name="index"
           options={{
             headerShown: true,
-            title: "تنظیمات",
+            title: "پروفایل",
             headerTitleAlign: "center",
             headerTitleStyle: { fontFamily: "vazirBold" },
           }}
         />
-        {/* <Stack.Screen
+        <Stack.Screen
           name="edit-profile"
           options={{
             headerShown: true,
@@ -24,7 +24,7 @@ const _layout = () => {
             headerTitleAlign: "center",
             headerTitleStyle: { fontFamily: "vazirBold" },
           }}
-        /> */}
+        />
       </Stack>
     </>
   );

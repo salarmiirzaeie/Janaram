@@ -69,23 +69,12 @@ export default function RootLayout() {
                     }}
                   />
                   <Stack.Screen
-                    name="login"
+                    name="auth"
                     options={{
                       headerShown: false,
                     }}
                   />
-                  <Stack.Screen
-                    name="start"
-                    options={{
-                      headerShown: false,
-                    }}
-                  />
-                  <Stack.Screen
-                    name="verifyOTP"
-                    options={{
-                      headerShown: false,
-                    }}
-                  />
+
                   <Stack.Screen
                     name="chat-bot"
                     options={{

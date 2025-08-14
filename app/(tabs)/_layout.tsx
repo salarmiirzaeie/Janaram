@@ -80,11 +80,11 @@ export default function TabLayout() {
     setup();
   }, []);
   if (!isInitialized) {
-    return <Redirect href="/start" />;
+    return <Redirect href="/auth/start" />;
   }
   if (!authorized) {
     console.log("object2");
-    return <Redirect href="/login" />;
+    return <Redirect href="/auth/login" />;
   }
   return (
     <Tabs
@@ -140,8 +140,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="setting"
         options={{
-          title: "تنظیمات",
-          tabBarIcon: ({ color }) => <AntDesign size={24} name="setting" color={color} />,
+          title: "پروفایل",
+          tabBarIcon: ({ color }) => <AntDesign size={24} name="user" color={color} />,
         }}
       />
     </Tabs>

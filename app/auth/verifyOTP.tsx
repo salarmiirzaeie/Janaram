@@ -27,7 +27,7 @@ const OTPForm = () => {
   const toast = useCustomToast();
   const [verify, { isLoading }] = useVerifyOTPMutation();
   const [sendOTP, { isLoading: isLoadingOTP }] = useSendOTPMutation();
-  const { setUser } = useAuth();
+  const { setUser, setUserAuthorized } = useAuth();
   const { phoneNumber } = useLocalSearchParams<{ phoneNumber: string }>();
   const {
     control,
@@ -136,7 +136,20 @@ const OTPForm = () => {
       .unwrap()
       .then((res) => {
         if (res.success) {
-          setUser({ accessToken: res.token });
+          console.log(res);
+          if (res.isNewUser) {
+            setUser({ accessToken: res.token });
+            router.push({
+              pathname: "/auth/enter-name",
+              params: {
+                phoneNumber: normalizePhoneNumber(phoneNumber),
+              },
+            });
+          } else {
+            setUser({ accessToken: res.token });
+            setUserAuthorized(true);
+          }
+          // setUser({ accessToken: res.token });
         }
       })
       .catch((err) => {
