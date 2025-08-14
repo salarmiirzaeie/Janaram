@@ -32,7 +32,6 @@ const aiAdapter = apiSlice.injectEndpoints({
       forceRefetch({ currentArg, previousArg }) {
         return true;
       },
-      providesTags: ["ChatHistory"],
     }),
   }),
 });

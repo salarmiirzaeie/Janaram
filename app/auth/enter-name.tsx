@@ -53,7 +53,10 @@ const EnterName = () => {
   // Submit handler
   const onSubmit = async (data: FormData) => {
     try {
-      const response = await updateProfile(data).unwrap();
+      const response = await updateProfile({
+        name: data.name,
+        phoneNumber: data.phoneNumber,
+      }).unwrap();
 
       if (response.success) {
         setUserAuthorized(true);

@@ -1,4 +1,3 @@
-import { unNormalizePhoneNumber } from "@/utils/phone";
 import { router } from "expo-router";
 import React from "react";
 
@@ -39,7 +38,7 @@ const EditProfile = () => {
     resolver: yupResolver(profileSchema),
     defaultValues: {
       name: data?.data.name || "",
-      phoneNumber: unNormalizePhoneNumber(data?.data.phoneNumber || ""),
+      phoneNumber: data?.data.phoneNumber,
     },
   });
 

@@ -28,6 +28,7 @@ const ProfileCard = () => {
   return (
     <HStack className="border-b-2 border-gray-200 p-6 justify-between items-center">
       <Pressable
+        className="p-3"
         onPress={() => {
           router.navigate("/(tabs)/setting/edit-profile");
         }}
