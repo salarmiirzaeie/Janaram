@@ -3,7 +3,7 @@ import { useAppSelector } from "@/hooks/useAppSelector";
 import { EvilIcons, FontAwesome6 } from "@expo/vector-icons";
 import { Redirect, router, Stack } from "expo-router";
 import React from "react";
-import { Pressable, StatusBar } from "react-native";
+import { Pressable } from "react-native";
 
 const _layout = () => {
   const { authorized } = useAppSelector((state) => state.auth);
@@ -15,7 +15,7 @@ const _layout = () => {
 
   return (
     <>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      {/* <StatusBar backgroundColor="#fff" barStyle="dark-content" /> */}
       <Stack>
         <Stack.Screen
           name="index"
