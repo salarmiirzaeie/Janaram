@@ -1,12 +1,10 @@
 import { Stack } from "expo-router";
 import React from "react";
-import { StatusBar } from "react-native";
 
 const _layout = () => {
   return (
     <>
-      <StatusBar backgroundColor="#000" barStyle="light-content" />
-      <Stack>
+      <Stack screenOptions={{ statusBarStyle: "light" }}>
         <Stack.Screen
           name="index"
           options={{

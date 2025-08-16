@@ -16,7 +16,7 @@ const _layout = () => {
   return (
     <>
       {/* <StatusBar backgroundColor="#fff" barStyle="dark-content" /> */}
-      <Stack>
+      <Stack screenOptions={{ statusBarStyle: "dark" }}>
         <Stack.Screen
           name="index"
           options={{
