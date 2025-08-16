@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import React from "react";
 
-import { Button, ButtonText } from "@/components/ui/button";
+import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import { Input, InputField } from "@/components/ui/input";
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
@@ -107,6 +107,7 @@ const EditProfile = () => {
 
       <HStack space="md" className="mt-8">
         <Button className="flex-1" onPress={handleSubmit(onSubmit)} disabled={isUpdating}>
+          {isUpdating && <ButtonSpinner color={"white"} />}
           <ButtonText>Save</ButtonText>
         </Button>
         <Button className="flex-1 bg-gray-200" onPress={() => router.back()} disabled={isUpdating}>

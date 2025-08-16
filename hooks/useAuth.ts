@@ -1,6 +1,7 @@
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { apiSlice } from "@/redux/api-slice";
 import { logout, setAuthorized, setTokens } from "@/redux/auth/auth-slice";
+import { clearMoods } from "@/redux/mood/mood-slice";
 import { router } from "expo-router"; // Move this to the top level
 import { useDispatch } from "react-redux";
 
@@ -20,6 +21,7 @@ const useAuth = () => {
   const logOutUser = async () => {
     try {
       dispatch(logout());
+      dispatch(clearMoods());
       dispatch(apiSlice.util.resetApiState());
 
       // Optionally, make an API request to invalidate the session

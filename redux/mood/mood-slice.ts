@@ -44,8 +44,11 @@ const moodSlice = createSlice({
         }
       }
     },
+    clearMoods: () => {
+      return [];
+    },
   },
 });
 
-export const { setMood } = moodSlice.actions;
+export const { setMood, clearMoods } = moodSlice.actions;
 export default moodSlice.reducer;
