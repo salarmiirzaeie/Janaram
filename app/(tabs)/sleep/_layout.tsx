@@ -4,7 +4,7 @@ import React from "react";
 const _layout = () => {
   return (
     <>
-      <Stack screenOptions={{ statusBarStyle: "light" }}>
+      <Stack>
         <Stack.Screen
           name="index"
           options={{

@@ -1,3 +1,4 @@
+import useAuth from "@/hooks/useAuth";
 import { useProfileQuery } from "@/services/auth/auth-adapter";
 import { unNormalizePhoneNumber } from "@/utils/phone";
 import { FontAwesome } from "@expo/vector-icons";
@@ -11,6 +12,10 @@ import { VStack } from "../ui/vstack";
 
 const ProfileCard = () => {
   const { data, isLoading } = useProfileQuery(null);
+  const { logOutUser } = useAuth();
+  if (!data?.data?.name) {
+    logOutUser();
+  }
   if (isLoading) {
     return (
       <HStack className="border-b-2 border-gray-200 p-6 justify-between items-center">
