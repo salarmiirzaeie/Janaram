@@ -64,9 +64,7 @@ export default function TabLayout() {
             sound: true, // Use default notification sound
           },
           trigger,
-        }).then(() => {
-          console.log("scheduled");
-        });
+        }).then(() => {});
       }
     } catch (error) {
       console.error("Error scheduling notification:", error);
@@ -83,7 +81,6 @@ export default function TabLayout() {
     return <Redirect href="/auth/start" />;
   }
   if (!authorized) {
-    console.log("object2");
     return <Redirect href="/auth/login" />;
   }
   return (

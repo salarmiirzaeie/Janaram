@@ -1,21 +1,16 @@
 import NowPlayingBar from "@/components/ui/play-bar";
+import { BASE_URL_IMAGES } from "@/redux/api-slice";
+import { Meditation } from "@/types";
 import { Audio, AVPlaybackStatus, InterruptionModeAndroid } from "expo-av";
 import { useSegments } from "expo-router";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
-export type Track = {
-  id: string;
-  title: string;
-  artist: string;
-  image: string;
-};
-
 type AudioPlayerContextType = {
-  track: Track | null;
+  track: Meditation | null;
   isPlaying: boolean;
   position: number;
   duration: number;
-  loadTrack: (track: Track) => Promise<void>;
+  loadTrack: (track: Meditation) => Promise<void>;
   togglePlay: () => void;
   seek: (ms: number) => void;
   showPlayingBar: boolean;
@@ -32,7 +27,7 @@ export const useAudioPlayer = () => {
 };
 
 export const AudioPlayerProvider = ({ children }: { children: React.ReactNode }) => {
-  const [track, setTrack] = useState<Track | null>(null);
+  const [track, setTrack] = useState<Meditation | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(1);
@@ -66,7 +61,7 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
       }
     };
   }, []);
-  const loadTrack = async (newTrack: Track) => {
+  const loadTrack = async (newTrack: Meditation) => {
     if (track?.id === newTrack.id) return;
 
     setIsLoading(true);
@@ -78,7 +73,7 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
       }
 
       const source = {
-        uri: `https://janaram.s3.ir-thr-at1.arvanstorage.ir/janaram-assets${newTrack.id}.mp3`,
+        uri: BASE_URL_IMAGES + newTrack.file,
       };
 
       const { sound } = await Audio.Sound.createAsync(source, { shouldPlay: true });

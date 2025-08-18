@@ -1,50 +1,61 @@
 import SleepCourseCard from "@/components/sleep/course-card-sleep";
 import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import data from "@/database/sleep-music.json";
+import { useGetExploreQuery } from "@/services/meditations/meditation-adapter";
 import { router } from "expo-router";
 import React from "react";
 import { Dimensions, Image, ScrollView } from "react-native";
 const Tests = () => {
-  const sleepMusics = data.slice(0, 5);
-  const sleepMedias = data.slice(10, 15);
-  const sleepStories = data.slice(15, 17);
+  const { data: exploreData, isLoading } = useGetExploreQuery(null);
+  const sleepMusics = exploreData?.meditations.sleepMusic;
+  const sleepMedias = exploreData?.meditations.sleep;
+
+  const sleepStories = exploreData?.meditations.story;
   return (
     <ScrollView className="flex-1 bg-background-900">
       <VStack space="md" className="bg-background-900 py-4 pb-20 flex-1">
         <ScrollView contentContainerStyle={{ paddingHorizontal: 10 }} horizontal showsHorizontalScrollIndicator={false}>
-          {sleepStories.map((item) => (
-            <Pressable
-              key={item.id}
-              onPress={() => {
-                router.push({
-                  pathname: "/player",
-                  params: { id: `/sleep/${item.id}`, title: item.title, artist: item.artist, image: item.image },
-                });
-              }}
-            >
-              <VStack
-                style={{ width: Dimensions.get("screen").width - 60 }}
-                className="h-56 rounded-3xl   bg-background-700 mx-2"
-              >
-                <Image
-                  source={{
-                    uri: item.image,
-                  }}
-                  className="absolute top-0 left-0 right-0 bottom-0 h-56 w-full opacity-50 rounded-3xl"
-                  resizeMode="cover"
+          {isLoading
+            ? [1, 2, 3, 4].map((item, index) => (
+                <Skeleton
+                  key={item}
+                  style={{ width: Dimensions.get("screen").width - 60 }}
+                  className="h-56  mx-2 rounded-xl"
                 />
-                <Text className=" text-white font-semiBold text-2xl text-right m-6">{item.title}</Text>
-                <HStack className="flex-1 my-2 mx-6">
-                  <Text className=" text-white  font-medium text-sm text-right  self-end">{item.duration}</Text>
+              ))
+            : sleepStories?.map((item) => (
+                <Pressable
+                  key={item.id}
+                  onPress={() => {
+                    router.push({
+                      pathname: "/player",
+                      params: { id: item.id },
+                    });
+                  }}
+                >
+                  <VStack
+                    style={{ width: Dimensions.get("screen").width - 60 }}
+                    className="h-56 rounded-3xl   bg-background-700 mx-2"
+                  >
+                    <Image
+                      source={{
+                        uri: item.image,
+                      }}
+                      className="absolute top-0 left-0 right-0 bottom-0 h-56 w-full opacity-50 rounded-3xl"
+                      resizeMode="cover"
+                    />
+                    <Text className=" text-white font-semiBold text-2xl text-right m-6">{item.title}</Text>
+                    <HStack className="flex-1 my-2 mx-6">
+                      <Text className=" text-white  font-medium text-sm text-right  self-end">{item.duration}</Text>
 
-                  <Text className=" text-white font-medium text-md text-right flex-1">{item.artist}</Text>
-                </HStack>
-              </VStack>
-            </Pressable>
-          ))}
+                      <Text className=" text-white font-medium text-md text-right flex-1">{item.description}</Text>
+                    </HStack>
+                  </VStack>
+                </Pressable>
+              ))}
         </ScrollView>
         <VStack space="lg" className="mt-4 ">
           <HStack className="items-center justify-between  mx-5">
@@ -60,9 +71,9 @@ const Tests = () => {
             showsHorizontalScrollIndicator={false}
             horizontal
           >
-            {sleepMedias.map((item) => (
-              <SleepCourseCard item={item} key={item.id} />
-            ))}
+            {isLoading
+              ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
+              : sleepMedias?.map((item, index) => <SleepCourseCard index={index} item={item} key={item.id} />)}
           </ScrollView>
         </VStack>
         <VStack space="lg" className="mt-4 ">
@@ -72,7 +83,7 @@ const Tests = () => {
                 router.push({
                   pathname: "/(tabs)/sleep/all-musics",
                   params: {
-                    fileName: "sleep-music",
+                    type: "sleep-music",
                   },
                 })
               }
@@ -90,9 +101,9 @@ const Tests = () => {
             showsHorizontalScrollIndicator={false}
             horizontal
           >
-            {sleepMusics.map((item) => (
-              <SleepCourseCard isSleepMusic item={item} key={item.id} />
-            ))}
+            {isLoading
+              ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
+              : sleepMusics?.map((item, index) => <SleepCourseCard index={index} item={item} key={item.id} />)}
           </ScrollView>
         </VStack>
       </VStack>

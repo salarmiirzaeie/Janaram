@@ -1,27 +1,26 @@
-import { Track, useAudioPlayer } from "@/context/AudioPlayerContext";
+import { useAudioPlayer } from "@/context/AudioPlayerContext";
+import { BASE_URL_IMAGES } from "@/redux/api-slice";
+import { useGetMeditationQuery } from "@/services/meditations/meditation-adapter";
+import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Image, Text } from "react-native";
-import { IMusic } from "../sleep/course-card-sleep";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
 import { Spinner } from "../ui/spinner";
 import { VStack } from "../ui/vstack";
 
-const MusicCard = ({ item, type }: { item: IMusic; type?: number }) => {
-  const track: Track = {
-    id: `/${type === 4 ? "nature" : "meditations"}/${item.id}`,
-    title: item.title || "Unknown Title",
-    artist: item.artist || "Unknown Artist",
-    image: item.image, // در صورت نیاز
-  };
+const MusicCard = ({ item }: { item: Meditation }) => {
   const { track: currentTrack, loadTrack } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
+  const { data } = useGetMeditationQuery({ id: item?.id });
 
   const handlePlay = async () => {
     setLoading(true);
-    await loadTrack(track);
+    if (data?.meditation) {
+      await loadTrack(data?.meditation);
+    }
     setLoading(false);
   };
   return (
@@ -32,10 +31,7 @@ const MusicCard = ({ item, type }: { item: IMusic; type?: number }) => {
         router.push({
           pathname: "/player",
           params: {
-            id: `/${type === 4 ? "nature" : "meditations"}/${item.id}`,
-            title: item.title,
-            artist: item.artist,
-            image: item.image,
+            id: `${item.id}`,
           },
         });
       }}
@@ -43,7 +39,11 @@ const MusicCard = ({ item, type }: { item: IMusic; type?: number }) => {
       <HStack space="md" className="items-center justify-between flex-1">
         {/* Optional thumbnail if available */}
         {item.image && (
-          <Image source={{ uri: item.image }} style={{ width: 48, height: 48, borderRadius: 8 }} resizeMode="cover" />
+          <Image
+            source={{ uri: BASE_URL_IMAGES + item.image }}
+            style={{ width: 48, height: 48, borderRadius: 8 }}
+            resizeMode="cover"
+          />
         )}
         <VStack className="flex-1 ml-3">
           <Text className="font-semiBold text-right text-base">{item.title}</Text>

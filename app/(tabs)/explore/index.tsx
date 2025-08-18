@@ -1,19 +1,21 @@
 import CourseCard from "@/components/home/course-card";
 import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import data from "@/database/database.json";
-import nature from "@/database/nature.json";
+import { useGetExploreQuery } from "@/services/meditations/meditation-adapter";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { ScrollView } from "react-native";
 
 const Explore = () => {
-  const calmMedias = data.slice(0, 5).sort((a, b) => b.id - a.id);
-  const loveMedias = data.slice(5, 10).sort((a, b) => b.id - a.id);
-  const instrumentalMedias = data.slice(10, 15).sort((a, b) => b.id - a.id);
+  const { data: exploreData, isLoading } = useGetExploreQuery(null);
+  const calmMedias = exploreData?.meditations?.calm;
+  const loveMedias = exploreData?.meditations.love;
+  const instrumentalMedias = exploreData?.meditations.instrumental;
+  const nature = exploreData?.meditations.nature;
 
   return (
     <ScrollView className="flex-1">
@@ -31,7 +33,7 @@ const Explore = () => {
               onPress={() =>
                 router.push({
                   pathname: "/explore/all-files",
-                  params: { type: "1", title: "آرامش" },
+                  params: { type: "calm", title: "آرامش" },
                 })
               }
             >
@@ -44,7 +46,7 @@ const Explore = () => {
               onPress={() =>
                 router.push({
                   pathname: "/explore/all-files",
-                  params: { type: "2", title: "عشق" },
+                  params: { type: "love", title: "عشق" },
                 })
               }
             >
@@ -60,7 +62,7 @@ const Explore = () => {
               onPress={() =>
                 router.push({
                   pathname: "/explore/all-files",
-                  params: { type: "3", title: "بی کلام" },
+                  params: { type: "instrumental", title: "بی کلام" },
                 })
               }
             >
@@ -77,7 +79,9 @@ const Explore = () => {
           <HStack space="md">
             <Pressable
               className="flex-1"
-              onPress={() => router.push({ pathname: "/explore/all-files", params: { type: "4", title: "طبیعت" } })}
+              onPress={() =>
+                router.push({ pathname: "/explore/all-files", params: { type: "nature", title: "طبیعت" } })
+              }
             >
               <VStack className="bg-green-300  rounded-lg justify-center items-center h-14">
                 <Text className="text-white text-xl font-semiBold"> طبیعت 🌳</Text>
@@ -85,6 +89,7 @@ const Explore = () => {
             </Pressable>
           </HStack>
         </VStack>
+
         <VStack space="lg" className="mt-4 ">
           <HStack className="items-center justify-between  mx-5">
             <Text className="text-typography-400 text-md"> </Text>
@@ -99,9 +104,9 @@ const Explore = () => {
             showsHorizontalScrollIndicator={false}
             horizontal
           >
-            {calmMedias.map((item, index) => (
-              <CourseCard item={item} index={index} key={item.id} />
-            ))}
+            {isLoading
+              ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
+              : calmMedias?.map((item, index) => <CourseCard item={item} index={index} key={item.id} />)}
           </ScrollView>
         </VStack>
         <VStack space="lg" className="mt-4 ">
@@ -118,9 +123,9 @@ const Explore = () => {
             showsHorizontalScrollIndicator={false}
             horizontal
           >
-            {loveMedias.map((item, index) => (
-              <CourseCard item={item} index={index + 1} key={item.id} />
-            ))}
+            {isLoading
+              ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
+              : loveMedias?.map((item, index) => <CourseCard item={item} index={index + 1} key={item.id} />)}
           </ScrollView>
         </VStack>
         <VStack space="lg" className="mt-4 ">
@@ -137,9 +142,9 @@ const Explore = () => {
             showsHorizontalScrollIndicator={false}
             horizontal
           >
-            {instrumentalMedias.map((item, index) => (
-              <CourseCard item={item} index={index + 2} key={item.id} />
-            ))}
+            {isLoading
+              ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
+              : instrumentalMedias?.map((item, index) => <CourseCard item={item} index={index + 2} key={item.id} />)}
           </ScrollView>
         </VStack>
         <VStack space="lg" className="mt-4 ">
@@ -156,9 +161,9 @@ const Explore = () => {
             showsHorizontalScrollIndicator={false}
             horizontal
           >
-            {nature.slice(0, 5).map((item, index) => (
-              <CourseCard item={item} type={4} index={index} key={item.id} />
-            ))}
+            {isLoading
+              ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
+              : nature?.slice(0, 5).map((item, index) => <CourseCard item={item} index={index} key={item.id} />)}
           </ScrollView>
         </VStack>
       </VStack>

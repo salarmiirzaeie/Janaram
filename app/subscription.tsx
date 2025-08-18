@@ -21,7 +21,6 @@ export default function SubscriptionsScreen() {
       await bazaar
         .subscribeProduct(id)
         .then(() => {
-          console.log(id);
           upgradePlan({ id })
             .unwrap()
             .then((res) => {

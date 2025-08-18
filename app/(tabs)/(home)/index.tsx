@@ -1,10 +1,9 @@
-import CourseCard from "@/components/home/course-card";
 import MoodCard from "@/components/home/mood-card";
+import Recommends from "@/components/home/recommends";
 import TestCard from "@/components/home/test-card";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import data from "@/database/recommends.json";
 import React from "react";
 import { ScrollView } from "react-native";
 
@@ -30,20 +29,7 @@ const index = () => {
 
             <Text className="text-lg font-semiBold">پیشنهاد ها برای شما</Text>
           </HStack>
-          <ScrollView
-            contentContainerStyle={{
-              paddingHorizontal: 10,
-              flexDirection: "row-reverse",
-            }}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-          >
-            {data
-              .sort((a, b) => b.id - a.id)
-              .map((item, index) => (
-                <CourseCard type={1} item={item} index={index} key={item.id} />
-              ))}
-          </ScrollView>
+          <Recommends />
         </VStack>
       </VStack>
     </ScrollView>

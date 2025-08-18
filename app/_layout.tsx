@@ -5,6 +5,7 @@ import { persistor, store } from "@/redux/store";
 import { useFonts } from "expo-font";
 import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
+import { StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -98,16 +99,8 @@ export default function RootLayout() {
                       headerTitleStyle: { fontFamily: "vazirBold" },
                     }}
                   />
-                  <Stack.Screen
-                    name="chat-history"
-                    options={{
-                      headerShown: true,
-                      headerTitleAlign: "center",
-                      headerTitleStyle: { fontFamily: "vazirBold" },
-                      headerTitle: "تاریخچه چت ها",
-                    }}
-                  />
                 </Stack>
+                <StatusBar barStyle="dark-content" backgroundColor={"#fff"} />
               </GestureHandlerRootView>
             </SafeAreaProvider>
           </AudioPlayerProvider>
