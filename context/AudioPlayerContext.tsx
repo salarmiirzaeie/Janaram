@@ -1,5 +1,6 @@
 import NowPlayingBar from "@/components/ui/play-bar";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
+import { useLazyGetMeditationQuery } from "@/services/meditations/meditation-adapter";
 import { Meditation } from "@/types";
 import { Audio, AVPlaybackStatus, InterruptionModeAndroid } from "expo-av";
 import { useSegments } from "expo-router";
@@ -10,7 +11,7 @@ type AudioPlayerContextType = {
   isPlaying: boolean;
   position: number;
   duration: number;
-  loadTrack: (track: Meditation) => Promise<void>;
+  loadTrack: (id: string) => Promise<void>;
   togglePlay: () => void;
   seek: (ms: number) => void;
   showPlayingBar: boolean;
@@ -27,12 +28,12 @@ export const useAudioPlayer = () => {
 };
 
 export const AudioPlayerProvider = ({ children }: { children: React.ReactNode }) => {
+  const [getMeditation, { data, isLoading: isApiLoading }] = useLazyGetMeditationQuery();
   const [track, setTrack] = useState<Meditation | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-
   const [showPlayingBar, setShowPlayingBar] = useState(true);
   const soundRef = useRef<Audio.Sound | null>(null);
   const segments = useSegments();
@@ -61,55 +62,58 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
       }
     };
   }, []);
-  const loadTrack = async (newTrack: Meditation) => {
-    if (track?.id === newTrack.id) return;
+  const loadTrack = async (id: string) => {
+    if (!id) return;
+    getMeditation({ id })
+      .unwrap()
+      .then(async (res) => {
+        try {
+          setIsLoading(true);
+          if (soundRef.current) {
+            await soundRef.current.unloadAsync();
+            soundRef.current.setOnPlaybackStatusUpdate(null);
+            soundRef.current = null;
+          }
 
-    setIsLoading(true);
-    try {
-      if (soundRef.current) {
-        await soundRef.current.unloadAsync();
-        soundRef.current.setOnPlaybackStatusUpdate(null);
-        soundRef.current = null;
-      }
+          const source = {
+            uri: BASE_URL_IMAGES + res.meditation.file,
+          };
 
-      const source = {
-        uri: BASE_URL_IMAGES + newTrack.file,
-      };
+          const { sound } = await Audio.Sound.createAsync(source, { shouldPlay: true });
 
-      const { sound } = await Audio.Sound.createAsync(source, { shouldPlay: true });
+          soundRef.current = sound;
+          setTrack(res.meditation);
+          setIsPlaying(true);
+          setShowPlayingBar(true);
 
-      soundRef.current = sound;
-      setTrack(newTrack);
-      setIsPlaying(true);
-      setShowPlayingBar(true);
+          // 🔊 Configure lock screen
 
-      // 🔊 Configure lock screen
+          sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
+            if (!status.isLoaded) return;
 
-      sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
-        if (!status.isLoaded) return;
+            if ("positionMillis" in status) {
+              setPosition(status.positionMillis);
+              setDuration(status.durationMillis || 1);
+              setIsPlaying(status.isPlaying);
 
-        if ("positionMillis" in status) {
-          setPosition(status.positionMillis);
-          setDuration(status.durationMillis || 1);
-          setIsPlaying(status.isPlaying);
+              // 🔁 Update current playback position on lock screen
+            }
 
-          // 🔁 Update current playback position on lock screen
-        }
+            if ("didJustFinish" in status && status.didJustFinish) {
+              setIsPlaying(false);
+              setShowPlayingBar(false);
+            }
 
-        if ("didJustFinish" in status && status.didJustFinish) {
-          setIsPlaying(false);
-          setShowPlayingBar(false);
-        }
-
-        if ("isBuffering" in status) {
-          setIsLoading(status.isBuffering);
+            if ("isBuffering" in status) {
+              setIsLoading(status.isBuffering);
+            }
+          });
+        } catch (error) {
+          console.error("Error loading track:", error);
+        } finally {
+          setIsLoading(false);
         }
       });
-    } catch (error) {
-      console.error("Error loading track:", error);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const togglePlay = async () => {
@@ -152,7 +156,7 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
         seek,
         stop,
         showPlayingBar,
-        isLoading,
+        isLoading: isApiLoading || isLoading,
       }}
     >
       {children}

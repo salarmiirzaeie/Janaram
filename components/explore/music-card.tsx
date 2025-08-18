@@ -1,6 +1,5 @@
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
-import { useGetMeditationQuery } from "@/services/meditations/meditation-adapter";
 import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -12,14 +11,13 @@ import { Spinner } from "../ui/spinner";
 import { VStack } from "../ui/vstack";
 
 const MusicCard = ({ item }: { item: Meditation }) => {
-  const { track: currentTrack, loadTrack } = useAudioPlayer();
+  const { track, loadTrack } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
-  const { data } = useGetMeditationQuery({ id: item?.id });
 
   const handlePlay = async () => {
     setLoading(true);
-    if (data?.meditation) {
-      await loadTrack(data?.meditation);
+    if (item.id) {
+      await loadTrack(item.id);
     }
     setLoading(false);
   };

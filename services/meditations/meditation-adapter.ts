@@ -21,7 +21,6 @@ const meditationAdapter = apiSlice.injectEndpoints({
         url: `meditation/${id}`,
         method: "GET",
       }),
-      keepUnusedDataFor: 0,
     }),
     getMeditations: builder.query<{ meditations: Meditation[] }, null>({
       query: () => ({
@@ -58,4 +57,5 @@ export const {
   useGetMeditationQuery,
   useGetExploreQuery,
   useGetMeditationsQuery,
+  useLazyGetMeditationQuery,
 } = meditationAdapter;

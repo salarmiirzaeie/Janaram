@@ -1,5 +1,4 @@
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
-import { useGetMeditationQuery } from "@/services/meditations/meditation-adapter";
 import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -16,14 +15,13 @@ interface IVStackProps extends React.ComponentProps<typeof VStack> {
   item: Meditation;
 }
 const CourseCard: React.FC<IVStackProps> = ({ index, item }) => {
-  const { data, isLoading: loading } = useGetMeditationQuery({ id: item?.id });
-  const { loadTrack } = useAudioPlayer();
+  const { loadTrack, track } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
 
   const handlePlay = async () => {
     setLoading(true);
-    if (data?.meditation) {
-      await loadTrack(data?.meditation);
+    if (item.id) {
+      await loadTrack(item.id);
     }
     setLoading(false);
   };
