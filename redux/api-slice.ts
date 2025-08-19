@@ -6,7 +6,7 @@ import { RootState } from "./store";
 // const BASE_URL = "http://192.168.39.130:3000/api/";
 // const BASE_URL = "https://janaram.ir/api/";
 const BASE_URL = "http://10.63.124.248:3000/api/";
-export const BASE_URL_IMAGES = "http://10.63.124.248:3000";
+export const BASE_URL_IMAGES = "https://janaram.storage.c2.liara.space";
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
   prepareHeaders: (Headers, { getState }) => {

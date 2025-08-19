@@ -4,6 +4,7 @@ import { Pressable } from "@/components/ui/pressable";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { useGetExploreQuery } from "@/services/meditations/meditation-adapter";
 import { router } from "expo-router";
 import React from "react";
@@ -42,7 +43,7 @@ const Tests = () => {
                   >
                     <Image
                       source={{
-                        uri: item.image,
+                        uri: BASE_URL_IMAGES + item.image,
                       }}
                       className="absolute top-0 left-0 right-0 bottom-0 h-56 w-full opacity-50 rounded-3xl"
                       resizeMode="cover"
