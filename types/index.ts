@@ -85,3 +85,12 @@ export interface User {
   createdAt: Date;
   updatedAt: Date | null;
 }
+export interface Meditation {
+  id: string;
+  title: string;
+  type: "calm" | "love" | "instrumental" | "sleep" | "sleep-music" | "nature" | "story";
+  file: string;
+  image: string; // اضافه کردن فیلد URL تصویر
+  duration: number;
+  description: string;
+}

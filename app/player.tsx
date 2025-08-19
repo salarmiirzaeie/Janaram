@@ -1,41 +1,23 @@
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@/components/ui/slider";
 import { Spinner } from "@/components/ui/spinner";
-import { Track, useAudioPlayer } from "@/context/AudioPlayerContext"; // <-- your context
+import { useAudioPlayer } from "@/context/AudioPlayerContext"; // <-- your context
+import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
-import { Image, Pressable, StatusBar, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function PlayerScreen() {
-  const { id, title, artist, fileUri, image } = useLocalSearchParams<{
+  const { id } = useLocalSearchParams<{
     id: string;
-    title: string;
-    artist: string;
-    fileUri: string;
-    image: string;
   }>();
 
-  const track: Track = {
-    id,
-    title: title || "Unknown Title",
-    artist: artist || "Unknown Artist",
-    image: image, // در صورت نیاز
-  };
-  const {
-    track: currentTrack,
-    isPlaying,
-    position,
-    duration,
-    loadTrack,
-    togglePlay,
-    seek,
-    isLoading,
-  } = useAudioPlayer();
+  const { track, isPlaying, position, duration, loadTrack, togglePlay, seek, isLoading } = useAudioPlayer();
 
   // Load the selected track when this screen is opened
   useEffect(() => {
-    if (track) {
-      loadTrack(track); // Only load once; it won't reload if it's already playing the same track
+    if (id) {
+      loadTrack(id); // Only load once; it won't reload if it's already playing the same track
     }
   }, [id]);
 
@@ -45,16 +27,15 @@ export default function PlayerScreen() {
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
-  if (!track) {
+  if (!id) {
     return <Text style={{ padding: 20 }}>Track not found</Text>;
   }
 
   return (
     <View className="p-safe flex-1 bg-white p-8 justify-center items-center">
-      <StatusBar barStyle="dark-content" backgroundColor={"#fff"} />
-      <Image source={{ uri: track.image }} style={styles.cover} />
-      <Text style={styles.title}>{track.title}</Text>
-      <Text style={styles.artist}>{track.artist}</Text>
+      <Image source={{ uri: BASE_URL_IMAGES + track?.image }} style={styles.cover} />
+      <Text style={styles.title}>{track?.title}</Text>
+      <Text style={styles.artist}>{track?.description}</Text>
 
       <Slider size="md" value={position} minValue={0} maxValue={duration} onChange={seek} className="w-11/12">
         <SliderTrack>

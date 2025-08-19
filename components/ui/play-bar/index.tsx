@@ -1,4 +1,5 @@
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
+import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Image, Pressable, Text, View } from "react-native";
@@ -24,12 +25,12 @@ export default function NowPlayingBar() {
         zIndex: 100,
       }}
     >
-      <Image source={{ uri: track.image }} style={{ width: 48, height: 48, borderRadius: 8 }} />
+      <Image source={{ uri: BASE_URL_IMAGES + track.image }} style={{ width: 48, height: 48, borderRadius: 8 }} />
       <Pressable
         onPress={() =>
           router.push({
             pathname: "/player",
-            params: { id: track.id, title: track.title, artist: track.artist, image: track.image },
+            params: { id: track.id, title: track.title, artist: track.description, image: track.image },
           })
         }
         style={{ flex: 1, marginLeft: 10 }}
@@ -38,7 +39,7 @@ export default function NowPlayingBar() {
           {track.title}
         </Text>
         <Text numberOfLines={1} style={{ color: "#000", fontSize: 10, fontFamily: "vazir" }}>
-          {track.artist}
+          {track.description}
         </Text>
       </Pressable>
       <HStack space="md" className="items-center">

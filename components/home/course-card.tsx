@@ -1,9 +1,9 @@
-import { Track, useAudioPlayer } from "@/context/AudioPlayerContext";
+import { useAudioPlayer } from "@/context/AudioPlayerContext";
+import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Image, View } from "react-native";
-import { IMusic } from "../sleep/course-card-sleep";
 import { Badge, BadgeText } from "../ui/badge";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
@@ -12,22 +12,17 @@ import { Text } from "../ui/text";
 import { VStack } from "../ui/vstack";
 interface IVStackProps extends React.ComponentProps<typeof VStack> {
   index: number;
-  item: IMusic;
-  type?: number;
+  item: Meditation;
 }
-const CourseCard: React.FC<IVStackProps> = ({ index, item, type }) => {
-  const track: Track = {
-    id: `/${type === 1 ? "recommends" : type === 4 ? "nature" : "meditations"}/${item?.id}`,
-    title: item?.title || "Unknown Title",
-    artist: item?.artist || "Unknown Artist",
-    image: item?.image, // در صورت نیاز
-  };
-  const { loadTrack } = useAudioPlayer();
+const CourseCard: React.FC<IVStackProps> = ({ index, item }) => {
+  const { loadTrack, track } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
 
   const handlePlay = async () => {
     setLoading(true);
-    await loadTrack(track);
+    if (item.id) {
+      await loadTrack(item.id);
+    }
     setLoading(false);
   };
   return (
@@ -36,10 +31,7 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item, type }) => {
         router.push({
           pathname: "/player",
           params: {
-            id: `/${type === 1 ? "recommends" : type === 4 ? "nature" : "meditations"}/${item?.id}`,
-            title: item?.title,
-            artist: item?.artist,
-            image: item?.image,
+            id: `${item?.id}`,
           },
         })
       }

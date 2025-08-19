@@ -1,4 +1,6 @@
-import { Track, useAudioPlayer } from "@/context/AudioPlayerContext";
+import { useAudioPlayer } from "@/context/AudioPlayerContext";
+import { BASE_URL_IMAGES } from "@/redux/api-slice";
+import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
@@ -17,22 +19,18 @@ export interface IMusic {
   duration: string;
 }
 interface IVStackProps extends React.ComponentProps<typeof VStack> {
-  item: IMusic;
-  isSleepMusic?: boolean;
+  index: number;
+  item: Meditation;
 }
-const SleepCourseCard: React.FC<IVStackProps> = ({ item, isSleepMusic }) => {
-  const track: Track = {
-    id: `/sleep/${item.id}`,
-    title: item.title || "Unknown Title",
-    artist: item.artist || "Unknown Artist",
-    image: item.image, // در صورت نیاز
-  };
+const SleepCourseCard: React.FC<IVStackProps> = ({ item }) => {
   const { loadTrack } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
 
   const handlePlay = async () => {
     setLoading(true);
-    await loadTrack(track);
+    if (item.id) {
+      await loadTrack(item.id);
+    }
     setLoading(false);
   };
   return (
@@ -40,7 +38,7 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, isSleepMusic }) => {
       onPress={() =>
         router.push({
           pathname: "/player",
-          params: { id: `/sleep/${item.id}`, title: item.title, artist: item.artist, image: item.image },
+          params: { id: item.id },
         })
       }
     >
@@ -50,9 +48,7 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, isSleepMusic }) => {
       >
         <Image
           source={{
-            uri: !isSleepMusic
-              ? item.image
-              : "https://www.dreams.co.uk/sleep-matters-club/wp-content/uploads/mike-petrucci-uIf6H1or1nE-unsplash-1000x751.jpg",
+            uri: BASE_URL_IMAGES + item.image,
           }}
           className="absolute top-0 left-0 right-0 bottom-0 h-52 w-48 opacity-50 rounded-3xl"
           resizeMode="cover"

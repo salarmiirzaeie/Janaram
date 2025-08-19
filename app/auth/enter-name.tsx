@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { Controller, Resolver, useForm } from "react-hook-form";
-import { Image, KeyboardAvoidingView, Platform, SafeAreaView, StatusBar, Text } from "react-native";
+import { Image, KeyboardAvoidingView, Platform, SafeAreaView, Text } from "react-native";
 import * as yup from "yup";
 
 // Validation schema
@@ -60,7 +60,6 @@ const EnterName = () => {
 
       if (response.success) {
         setUserAuthorized(true);
-        console.log(response);
       } else {
         throw new Error(response.message || "خطا در به‌روزرسانی پروفایل");
       }
@@ -72,7 +71,6 @@ const EnterName = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 py-10 px-4">
         <VStack className="w-full p-4">
           <Image source={require("@/assets/images/logo.png")} className="w-32 h-32 mx-auto mb-6" resizeMode="contain" />

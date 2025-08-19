@@ -3,7 +3,6 @@ import { BarChart } from "react-native-chart-kit";
 import { Text } from "../ui/text";
 
 const MoodBarChart = ({ lineData }: any) => {
-  console.log(lineData, "lineData");
   return (
     <View className="justify-center -ml-10 items-center self-center ">
       {lineData && lineData?.datasets?.[0]?.data?.length > 0 ? (

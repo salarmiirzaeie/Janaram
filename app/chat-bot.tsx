@@ -9,7 +9,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  StatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -217,8 +216,6 @@ const ChatScreen: React.FC = () => {
   return (
     <SafeAreaProvider className="flex-1">
       <View className="p-safe" style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.keyboardAvoidingView}

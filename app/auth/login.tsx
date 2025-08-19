@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { router } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Image, KeyboardAvoidingView, Platform, SafeAreaView, StatusBar } from "react-native";
+import { Image, KeyboardAvoidingView, Platform, SafeAreaView } from "react-native";
 import OtpVerify from "react-native-otp-verify";
 import * as yup from "yup";
 
@@ -77,8 +77,6 @@ const Login: React.FC = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 py-10 px-4">
         <VStack className="w-full p-4">
           <Image source={require("@/assets/images/logo.png")} className="w-32 h-32 mx-auto mb-6" resizeMode="contain" />

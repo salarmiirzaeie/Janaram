@@ -5,7 +5,6 @@ import { VStack } from "@/components/ui/vstack";
 import { setIsInitialized } from "@/redux/intialize/initialize-slice";
 import { router } from "expo-router";
 import React from "react";
-import { StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 
@@ -19,8 +18,6 @@ const Start = () => {
   };
   return (
     <VStack style={{ paddingBottom: insets.bottom + 24 }} className="flex-1 items-center p-8  justify-between">
-      <StatusBar barStyle="dark-content" backgroundColor={"#fff"} />
-
       <VStack space="md" className="flex-1 items-center justify-center">
         <Logo className="h-40 w-56" />
         <Text className="text-2xl font-semiBold">به جانارام خوش اومدی</Text>
