@@ -17,6 +17,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "googleServicesFile": "./google-services.json",
       "edgeToEdgeEnabled": true,
       "package": "com.salarmiirzapour.Janaram",
       "permissions": ["android.permission.FOREGROUND_SERVICE", "android.permission.MODIFY_AUDIO_SETTINGS"],
@@ -30,6 +31,7 @@
     "plugins": [
       "expo-router",
       "./plugins/withPoolakey.js",
+      "expo-notifications",
       [
         "expo-splash-screen",
         {

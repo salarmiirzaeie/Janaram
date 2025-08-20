@@ -3,7 +3,6 @@ import { AudioPlayerProvider } from "@/context/AudioPlayerContext";
 import "@/global.css";
 import { persistor, store } from "@/redux/store";
 import { useFonts } from "expo-font";
-import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
 import { StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -13,15 +12,6 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
 // Trigger a layout animation
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
 
 export default function RootLayout() {
   const [loaded] = useFonts({

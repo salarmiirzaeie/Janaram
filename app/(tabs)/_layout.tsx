@@ -5,87 +5,70 @@ import UpdateModal from "@/components/settings/update-modal";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import useAuth from "@/hooks/useAuth";
 import { setSleepMode } from "@/redux/sleep-mode/sleep-slice";
+import { useInitializeNotificationsMutation } from "@/services/notification/notifications-adapter";
 import { useCheckVersionQuery } from "@/services/version/version-adapter";
+import {
+  getNotificationsPermissions,
+  registerForPushNotificationsAsync,
+  scheduleDailyNotification,
+} from "@/utils/notifications";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
 import { useDispatch } from "react-redux";
-const DAILY_NOTIFICATION_ID = "daily-9am-notification";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 export default function TabLayout() {
   const { isSleepMode } = useAppSelector((state) => state.sleepMode);
   const { isInitialized } = useAppSelector((state) => state.initialize);
   const isNotificationEnabled = useAppSelector((state) => state.settings.moodNotification);
   const [showUpdateModal, setShowUpdateModal] = React.useState(false);
   const { data } = useCheckVersionQuery({ version: "1.0.8" });
-  useEffect(() => {
-    if (data?.isNewVersionAvailable) {
-      setShowUpdateModal(true);
-    }
-  }, [data]);
+  const [initialNotification] = useInitializeNotificationsMutation();
   const { authorized } = useAuth();
   const dispatch = useDispatch();
   const sleepModeHandler = (val: boolean) => {
     dispatch(setSleepMode(val));
   };
-  const scheduleDailyNotification = async () => {
-    // 1. Request Permissions
-    // Permissions are crucial. The user must grant permission for notifications.
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
+  useEffect(() => {
+    if (data?.isNewVersionAvailable) {
+      setShowUpdateModal(true);
     }
-
-    if (finalStatus !== "granted") {
-      console.warn(
-        "Permission Denied: User needs to enable notification permissions in device settings to receive daily reminders."
-      );
-      // No Alert.alert here as there's no UI for user interaction
-      return;
-    }
-
-    // 2. Cancel any existing daily notifications to prevent duplicates.
-    // This is important to ensure only one daily notification is active.
-    try {
-      await Notifications.cancelScheduledNotificationAsync(DAILY_NOTIFICATION_ID);
-    } catch (error) {
-      console.error("Error cancelling existing notification:", error);
-    }
-
-    // 3. Define the trigger for the daily notification.
-    // We want it to repeat daily at 9:00 AM.
-    const trigger: Notifications.DailyTriggerInput = {
-      type: Notifications.SchedulableTriggerInputTypes.DAILY,
-      hour: 11,
-      minute: 0,
-    };
-    // 4. Schedule the notification.
-    try {
-      if (isNotificationEnabled) {
-        await Notifications.scheduleNotificationAsync({
-          identifier: DAILY_NOTIFICATION_ID, // Assign our unique ID
-          content: {
-            title: "یادت نره حالتو ثبت کنی 😶",
-            body: "همین الان حس‌تو ثبت کن. فقط یه دقیقه وقت می‌گیره.",
-            data: { type: "daily_check_in" }, // Optional data payload
-            sound: true, // Use default notification sound
-          },
-          trigger,
-        }).then(() => {});
-      }
-    } catch (error) {
-      console.error("Error scheduling notification:", error);
-    }
-  };
-
+  }, [data]);
   useEffect(() => {
     async function setup() {
-      await scheduleDailyNotification();
+      if (authorized) {
+        getNotificationsPermissions().then(async () => {
+          const pusToken = await registerForPushNotificationsAsync();
+          initialNotification({ pushToken: pusToken });
+
+          if (isNotificationEnabled) {
+            await scheduleDailyNotification();
+          }
+        });
+      }
     }
     setup();
-  }, []);
+    const notificationListener = Notifications.addNotificationReceivedListener((notification) => {
+      console.log(notification);
+    });
+
+    const responseListener = Notifications.addNotificationResponseReceivedListener((response) => {
+      console.log(response);
+    });
+
+    return () => {
+      notificationListener.remove();
+      responseListener.remove();
+    };
+  }, [isNotificationEnabled, authorized]);
   if (!isInitialized) {
     return <Redirect href="/auth/start" />;
   }
