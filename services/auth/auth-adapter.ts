@@ -17,7 +17,10 @@ const authAdapter = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    verifyOTP: builder.mutation<IVerifyOtpRes, { code: string; phoneNumber: string; goals?: string[] }>({
+    verifyOTP: builder.mutation<
+      IVerifyOtpRes,
+      { code: string; phoneNumber: string; goals?: string[]; meditationTime?: number }
+    >({
       query: (data) => ({
         url: "auth/otp/verify",
         method: "POST",

@@ -29,7 +29,7 @@ const OTPForm = () => {
   const [verify, { isLoading }] = useVerifyOTPMutation();
   const [sendOTP, { isLoading: isLoadingOTP }] = useSendOTPMutation();
   const { setUser, setUserAuthorized } = useAuth();
-  const { goal } = useAppSelector((state) => state.initialize);
+  const { goal, meditationTimer } = useAppSelector((state) => state.initialize);
   const { phoneNumber } = useLocalSearchParams<{ phoneNumber: string }>();
   const {
     control,
@@ -134,7 +134,12 @@ const OTPForm = () => {
 
   const onSubmit = (data: FormData) => {
     const otpCode = data.otp.join("");
-    verify({ code: otpCode, phoneNumber: normalizePhoneNumber(phoneNumber), goals: goal })
+    verify({
+      code: otpCode,
+      phoneNumber: normalizePhoneNumber(phoneNumber),
+      goals: goal,
+      meditationTime: meditationTimer,
+    })
       .unwrap()
       .then((res) => {
         if (res.success) {
