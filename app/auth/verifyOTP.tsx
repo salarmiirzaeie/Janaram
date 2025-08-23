@@ -1,6 +1,7 @@
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
+import { useAppSelector } from "@/hooks/useAppSelector";
 import useAuth from "@/hooks/useAuth";
 import { useCustomToast } from "@/hooks/useToast";
 import { useSendOTPMutation, useVerifyOTPMutation } from "@/services/auth/auth-adapter";
@@ -28,6 +29,7 @@ const OTPForm = () => {
   const [verify, { isLoading }] = useVerifyOTPMutation();
   const [sendOTP, { isLoading: isLoadingOTP }] = useSendOTPMutation();
   const { setUser, setUserAuthorized } = useAuth();
+  const { goal } = useAppSelector((state) => state.initialize);
   const { phoneNumber } = useLocalSearchParams<{ phoneNumber: string }>();
   const {
     control,
@@ -132,7 +134,7 @@ const OTPForm = () => {
 
   const onSubmit = (data: FormData) => {
     const otpCode = data.otp.join("");
-    verify({ code: otpCode, phoneNumber: normalizePhoneNumber(phoneNumber) })
+    verify({ code: otpCode, phoneNumber: normalizePhoneNumber(phoneNumber), goals: goal })
       .unwrap()
       .then((res) => {
         if (res.success) {

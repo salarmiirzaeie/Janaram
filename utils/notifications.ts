@@ -55,7 +55,7 @@ export async function registerForPushNotificationsAsync() {
   }
 }
 
-export const scheduleDailyNotification = async () => {
+export const scheduleDailyNotification = async (hour: number) => {
   try {
     await Notifications.cancelScheduledNotificationAsync(DAILY_NOTIFICATION_ID);
   } catch (error) {
@@ -66,7 +66,7 @@ export const scheduleDailyNotification = async () => {
   // We want it to repeat daily at 9:00 AM.
   const trigger: Notifications.DailyTriggerInput = {
     type: Notifications.SchedulableTriggerInputTypes.DAILY,
-    hour: 11,
+    hour: hour,
     minute: 0,
   };
   // 4. Schedule the notification.

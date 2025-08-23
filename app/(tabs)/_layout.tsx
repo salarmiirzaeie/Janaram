@@ -27,7 +27,7 @@ Notifications.setNotificationHandler({
 });
 export default function TabLayout() {
   const { isSleepMode } = useAppSelector((state) => state.sleepMode);
-  const { isInitialized } = useAppSelector((state) => state.initialize);
+  const { isInitialized, meditationTimer } = useAppSelector((state) => state.initialize);
   const isNotificationEnabled = useAppSelector((state) => state.settings.moodNotification);
   const [showUpdateModal, setShowUpdateModal] = React.useState(false);
   const { data } = useCheckVersionQuery({ version: "1.0.8" });
@@ -50,7 +50,7 @@ export default function TabLayout() {
           initialNotification({ pushToken: pusToken });
 
           if (isNotificationEnabled) {
-            await scheduleDailyNotification();
+            await scheduleDailyNotification(meditationTimer);
           }
         });
       }

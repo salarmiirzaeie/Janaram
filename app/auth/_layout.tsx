@@ -24,6 +24,36 @@ const _layout = () => {
           }}
         />
         <Stack.Screen
+          name="goal-select"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="select-time"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="mood-tracking"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="personalizing"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="robot-introduce"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
           name="enter-name"
           options={{
             headerShown: false,
