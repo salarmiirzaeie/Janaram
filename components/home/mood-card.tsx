@@ -5,7 +5,7 @@ import { Feather } from "@expo/vector-icons";
 import { format, subDays } from "date-fns";
 import { format as formatJalali } from "date-fns-jalali";
 import React, { useState } from "react";
-import { FlatList, KeyboardAvoidingView, Platform, Text, View } from "react-native";
+import { FlatList, Image, KeyboardAvoidingView, Platform, Text, View } from "react-native";
 import { useDispatch } from "react-redux";
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent } from "../ui/actionsheet";
 import { Badge, BadgeText } from "../ui/badge";
@@ -53,7 +53,9 @@ const MoodCard = () => {
           <HStack className="items-center">
             <VStack space="sm" className="items-center">
               <Text className="text-sm color-gray-400 font-body">حس امروز</Text>
-              <Text style={{ fontSize: 30, fontWeight: "bold", lineHeight: 45 }}>{getEmojiFromMood(mood)}</Text>
+              {/* <Text style={{ fontSize: 30, fontWeight: "bold", lineHeight: 45 }}>{getEmojiFromMood(mood)}</Text> */}
+              <Image source={getEmojiFromMood(mood)} resizeMode="cover" className="h-12 w-12" />
+
               <VStack>
                 <Text className="text-center  font-semiBold text-gray-700">{getLabelFromMood(mood)}</Text>
                 {yesterdayMood < mood ? (
@@ -109,12 +111,13 @@ const MoodCard = () => {
                       : mood === item.value
                       ? "bg-white"
                       : "bg-background-100"
-                  } border-background-100 rounded-3xl items-center justify-center`}
+                  } border-background-100 rounded-3xl items-center justify-between py-3`}
                   >
-                    <Text style={{ fontSize: 50, fontWeight: "bold", lineHeight: 80 }}>{item.emoji}</Text>
-                    <Text style={{ fontSize: 14, fontWeight: "bold", lineHeight: 20, marginBottom: 10 }}>
-                      {item.label}
-                    </Text>
+                    {/* <Text style={{ fontSize: 50, fontWeight: "bold", lineHeight: 80 }}>{item.emoji}</Text> */}
+                    {/* <Image src={require("@/assets/emojis/e-9.png")} style={{ width: 50, height: 50 }} /> */}
+                    <Image source={item.emoji} resizeMode="cover" className="h-4/6 w-3/6 " />
+
+                    <Text className="font-semiBold mt-1">{item.label}</Text>
                   </Pressable>
                 )}
               />

@@ -4,9 +4,9 @@ import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useAppSelector } from "@/hooks/useAppSelector";
-import { formatValue, prepareBarData, prepareLineDataForLastMonth } from "@/utils/mood";
+import { moods as moodsEmoji, prepareBarData, prepareLineDataForLastMonth } from "@/utils/mood";
 import React, { useEffect, useState } from "react";
-import { Dimensions, ScrollView, View } from "react-native";
+import { Dimensions, Image, ScrollView, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 
 const Test = () => {
@@ -21,7 +21,7 @@ const Test = () => {
 
     return () => clearTimeout(timer); // cleanup on unmount
   }, []);
-
+  console.log(lineData.datasets[0].data);
   return (
     <ScrollView className="flex-1 bg-background-50">
       {loading ? (
@@ -37,13 +37,18 @@ const Test = () => {
           <VStack className="bg-white rounded-3xl mb-4 p-4">
             <Text className="text-right font-semiBold text-xl mb-2">روند حال من</Text>
             <VStack className=" justify-center items-center -ml-10  mt-4">
+              <View className="absolute z-50 top-0 left-16 h-full  ">
+                {moodsEmoji.map((label: any) => (
+                  <Image key={label.label} source={label.emoji} resizeMode="cover" className="h-5   mb-1 w-5" />
+                ))}
+              </View>
               {lineData?.datasets?.[0]?.data?.length > 0 ? (
                 <LineChart
                   data={lineData}
                   width={Dimensions.get("window").width - 64} // from react-native
                   height={220}
                   withInnerLines={false}
-                  formatYLabel={(yValue) => formatValue(Number(yValue))}
+                  // formatYLabel={(yValue) => formatValue(Number(yValue))}
                   yAxisInterval={1} // optional, defaults to 1
                   bezier // ✅ This makes the line smooth/curved
                   chartConfig={{

@@ -2,34 +2,21 @@ import { IMood } from "@/redux/mood/mood-slice";
 import { getEmojiFromMood, getLabelFromMood } from "@/utils/mood";
 import { format as formatJalali } from "date-fns-jalali";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { Divider } from "../ui/divider";
 import { VStack } from "../ui/vstack";
 
-export const MoodLogItem = ({
-  log,
-  isFirst,
-  isLast,
-}: {
-  log: IMood;
-  isFirst?: boolean;
-  isLast?: boolean;
-}) => {
+export const MoodLogItem = ({ log, isFirst, isLast }: { log: IMood; isFirst?: boolean; isLast?: boolean }) => {
   return (
     <View style={styles.container}>
       <VStack className="items-center ml-4 justify-center ">
-        <Text style={styles.emoji}>{getEmojiFromMood(log.mood || 2)}</Text>
+        <Image source={getEmojiFromMood(log.mood || 2)} resizeMode="cover" className="h-12 w-12" />
 
-        <Divider
-          className={`flex-1 ${isLast ? "bg-transparent" : ""}`}
-          orientation="vertical"
-        />
+        <Divider className={`flex-1 ${isLast ? "bg-transparent" : ""}`} orientation="vertical" />
       </VStack>
       <View style={styles.content}>
         <View style={styles.row}>
-          <Text style={styles.time}>
-            {formatJalali(log.date, "yyyy/MM/dd")}
-          </Text>
+          <Text style={styles.time}>{formatJalali(log.date, "yyyy/MM/dd")}</Text>
         </View>
         <Text style={styles.mood}>{getLabelFromMood(log.mood || 2)}</Text>
 
