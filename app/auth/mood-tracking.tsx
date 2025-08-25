@@ -14,7 +14,7 @@ const MoodTrackingIntro = () => {
 
   return (
     <VStack className="flex-1 bg-white items-center p-4 justify-between">
-      <ProgressOnboarding onBack={() => router.back()} currentStep={2} totalSteps={5} />
+      <ProgressOnboarding onBack={() => router.back()} currentStep={5} totalSteps={8} />
 
       <VStack space="md" className="flex-1 items-center justify-center">
         <Text className="text-2xl font-semiBold mb-8  tracking-wide"> ردیابی حال روحی </Text>

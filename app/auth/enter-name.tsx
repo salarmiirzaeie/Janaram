@@ -1,10 +1,11 @@
+import ProgressOnboarding from "@/components/auth/Pregoress-bar";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Input, InputField } from "@/components/ui/input";
 import { VStack } from "@/components/ui/vstack";
 import useAuth from "@/hooks/useAuth";
 import { useEditProfileMutation } from "@/services/auth/auth-adapter";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { Controller, Resolver, useForm } from "react-hook-form";
 import { Image, KeyboardAvoidingView, Platform, SafeAreaView, Text } from "react-native";
@@ -59,7 +60,8 @@ const EnterName = () => {
       }).unwrap();
 
       if (response.success) {
-        setUserAuthorized(true);
+        // setUserAuthorized(true);
+        router.push("/auth/robot-introduce");
       } else {
         throw new Error(response.message || "خطا در به‌روزرسانی پروفایل");
       }
@@ -72,6 +74,8 @@ const EnterName = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 py-10 px-4">
+        <ProgressOnboarding onBack={() => router.back()} currentStep={3} totalSteps={8} />
+
         <VStack className="w-full p-4">
           <Image source={require("@/assets/images/logo.png")} className="w-32 h-32 mx-auto mb-6" resizeMode="contain" />
           <VStack className="w-full">

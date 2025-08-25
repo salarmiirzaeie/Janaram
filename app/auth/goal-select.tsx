@@ -41,7 +41,7 @@ const GoalSelection = () => {
 
   return (
     <VStack className="flex-1 bg-white items-center p-4  justify-between">
-      <ProgressOnboarding onBack={() => router.back()} currentStep={3} totalSteps={5} />
+      <ProgressOnboarding onBack={() => router.back()} currentStep={6} totalSteps={8} />
       <VStack space="md" className="flex-1 items-center justify-center">
         {/* <Image
           source={require("@/assets/illustrations/GoalSelection.png")} // تصویر سفارشی اضافه کن

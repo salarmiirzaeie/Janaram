@@ -48,7 +48,7 @@ const TimeSelection = () => {
 
   return (
     <VStack className="flex-1 bg-white items-center p-4 justify-between">
-      <ProgressOnboarding className="" onBack={() => router.back()} currentStep={4} totalSteps={5} />
+      <ProgressOnboarding className="" onBack={() => router.back()} currentStep={7} totalSteps={8} />
       <VStack space="md" className="flex-1 items-center justify-center">
         <Image
           source={require("@/assets/illustrations/meditation.png")} // Assume a cute clock illustration

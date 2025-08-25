@@ -1,6 +1,8 @@
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { setIsInitialized } from "@/redux/intialize/initialize-slice";
+import { useAppSelector } from "@/hooks/useAppSelector";
+import { setAuthorized } from "@/redux/auth/auth-slice";
+import { usePersonalizeMutation } from "@/services/auth/auth-adapter";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
 import React, { useEffect } from "react";
@@ -9,14 +11,22 @@ import { useDispatch } from "react-redux";
 const Personalizing = () => {
   const animationRef = React.useRef(null);
   const dispatch = useDispatch();
+  const [personalize, { isLoading }] = usePersonalizeMutation();
+  const { goal, meditationTimer } = useAppSelector((state) => state.initialize);
   const handleStartChat = () => {
     // Navigate to the chatbot interface
-    router.push("/auth/login");
+    dispatch(setAuthorized(true));
+    router.replace("/");
   };
   useEffect(() => {
     const timeout = setTimeout(() => {
-      handleStartChat();
-      dispatch(setIsInitialized(true));
+      personalize({ goals: goal, meditationTime: meditationTimer })
+        .unwrap()
+        .then(() => {
+          if (!isLoading) {
+            handleStartChat();
+          }
+        });
     }, 4000);
     return () => {
       clearTimeout(timeout);

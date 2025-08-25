@@ -17,13 +17,17 @@ const authAdapter = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    verifyOTP: builder.mutation<
-      IVerifyOtpRes,
-      { code: string; phoneNumber: string; goals?: string[]; meditationTime?: number }
-    >({
+    verifyOTP: builder.mutation<IVerifyOtpRes, { code: string; phoneNumber: string }>({
       query: (data) => ({
         url: "auth/otp/verify",
         method: "POST",
+        body: data,
+      }),
+    }),
+    personalize: builder.mutation<IVerifyOtpRes, { goals: string[]; meditationTime: number }>({
+      query: (data) => ({
+        url: "auth/personalize",
+        method: "PUT",
         body: data,
       }),
     }),
@@ -52,4 +56,5 @@ export const {
   useVerifyOTPMutation,
   useEditProfileMutation,
   useProfileQuery,
+  usePersonalizeMutation,
 } = authAdapter;

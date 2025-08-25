@@ -14,7 +14,7 @@ const PsychologistIntro = () => {
 
   return (
     <VStack className="flex-1 bg-white items-center p-4 justify-between">
-      <ProgressOnboarding onBack={() => router.back()} currentStep={1} totalSteps={5} />
+      <ProgressOnboarding onBack={() => router.back()} currentStep={4} totalSteps={8} />
 
       <VStack space="md" className="flex-1 items-center justify-center">
         <Image

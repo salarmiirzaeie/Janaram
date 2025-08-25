@@ -68,7 +68,8 @@ export interface IVerifyOtpRes {
   success: boolean;
   token: string;
   user: User;
-  isNewUser: boolean; // Add isNewUser flag to response
+  isNewUser: boolean;
+  isOnboardingSelected: boolean; // Add isNewUser flag to response
 }
 export interface User {
   _id?: string; // Make _id optional to allow creation before insertion

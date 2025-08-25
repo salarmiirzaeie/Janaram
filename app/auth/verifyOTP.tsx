@@ -1,7 +1,7 @@
+import ProgressOnboarding from "@/components/auth/Pregoress-bar";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
-import { useAppSelector } from "@/hooks/useAppSelector";
 import useAuth from "@/hooks/useAuth";
 import { useCustomToast } from "@/hooks/useToast";
 import { useSendOTPMutation, useVerifyOTPMutation } from "@/services/auth/auth-adapter";
@@ -29,7 +29,6 @@ const OTPForm = () => {
   const [verify, { isLoading }] = useVerifyOTPMutation();
   const [sendOTP, { isLoading: isLoadingOTP }] = useSendOTPMutation();
   const { setUser, setUserAuthorized } = useAuth();
-  const { goal, meditationTimer } = useAppSelector((state) => state.initialize);
   const { phoneNumber } = useLocalSearchParams<{ phoneNumber: string }>();
   const {
     control,
@@ -137,14 +136,13 @@ const OTPForm = () => {
     verify({
       code: otpCode,
       phoneNumber: normalizePhoneNumber(phoneNumber),
-      goals: goal,
-      meditationTime: meditationTimer,
     })
       .unwrap()
       .then((res) => {
         if (res.success) {
+          setUser({ accessToken: res.token });
+
           if (res.isNewUser) {
-            setUser({ accessToken: res.token });
             router.push({
               pathname: "/auth/enter-name",
               params: {
@@ -152,8 +150,16 @@ const OTPForm = () => {
               },
             });
           } else {
-            setUser({ accessToken: res.token });
-            setUserAuthorized(true);
+            if (!res.isOnboardingSelected) {
+              router.push({
+                pathname: "/auth/robot-introduce",
+                params: {
+                  phoneNumber: normalizePhoneNumber(phoneNumber),
+                },
+              });
+            } else {
+              setUserAuthorized(true);
+            }
           }
           // setUser({ accessToken: res.token });
         }
@@ -177,7 +183,9 @@ const OTPForm = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 py-10 px-4">
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 p-4">
+        <ProgressOnboarding onBack={() => router.back()} currentStep={2} totalSteps={8} />
+
         <VStack className="w-full p-4">
           <Image source={require("@/assets/images/logo.png")} className="w-32 h-32 mx-auto mb-6" resizeMode="contain" />
           <VStack className="w-full">

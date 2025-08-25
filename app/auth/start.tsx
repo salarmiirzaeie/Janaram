@@ -2,6 +2,7 @@ import { Button, ButtonText } from "@/components/ui/button";
 import Logo from "@/components/ui/logo";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { setIsInitialized } from "@/redux/intialize/initialize-slice";
 import { router } from "expo-router";
 import React from "react";
 import { Image } from "react-native";
@@ -13,9 +14,9 @@ const Start = () => {
   const dispatch = useDispatch();
 
   const handleInitialize = () => {
-    // dispatch(setIsInitialized(true));
-    // router.replace("/");
-    router.push("/auth/robot-introduce");
+    dispatch(setIsInitialized(true));
+    router.replace("/");
+    // router.push("/auth/login");
   };
   return (
     <VStack style={{ paddingBottom: insets.bottom + 24 }} className="flex-1 bg-white items-center p-8  justify-between">
