@@ -1,24 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { eachDayOfInterval, format, subDays } from "date-fns";
 
 export interface IMood {
   date: string; // YYYY-MM-DD
   mood: number | null;
   note?: string;
 }
-
-const getLast7Days = (): IMood[] => {
-  const today = new Date();
-  const last7Days = eachDayOfInterval({
-    start: subDays(today, 6),
-    end: today,
-  });
-
-  return last7Days.map((day) => ({
-    date: format(day, "yyyy-MM-dd"),
-    mood: null,
-  }));
-};
 
 const initialState: IMood[] = [];
 

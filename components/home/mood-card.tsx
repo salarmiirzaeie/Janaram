@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/hooks/useAppSelector";
-import { setMood } from "@/redux/mood/mood-slice";
+import { useSetMoodMutation } from "@/services/mood/mood-adapter";
 import { getEmojiFromMood, getLabelFromMood, moods } from "@/utils/mood";
 import { Feather } from "@expo/vector-icons";
 import { format, subDays } from "date-fns";
@@ -9,7 +9,7 @@ import { FlatList, Image, KeyboardAvoidingView, Platform, Text, View } from "rea
 import { useDispatch } from "react-redux";
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent } from "../ui/actionsheet";
 import { Badge, BadgeText } from "../ui/badge";
-import { Button, ButtonText } from "../ui/button";
+import { Button, ButtonSpinner, ButtonText } from "../ui/button";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
 import { Textarea, TextareaInput } from "../ui/textarea";
@@ -24,7 +24,7 @@ const MoodCard = () => {
   const yesterday = format(subDays(new Date(), 1), "yyyy-MM-dd");
   const moodData = useAppSelector((state) => state.mood.find((m) => m.date === today));
   const [note, setNote] = useState(moodData?.note || "");
-
+  const [setMood, { isLoading }] = useSetMoodMutation();
   const moodDataForYesterday = useAppSelector((state) => state.mood.find((m) => m.date === yesterday));
   const yesterdayMood = moodDataForYesterday?.mood ?? 0;
   const mood = moodData?.mood ?? 0;
@@ -32,8 +32,11 @@ const MoodCard = () => {
   const handleSave = () => {
     const today = new Date();
     const formatted = format(today, "yyyy-MM-dd");
-    dispatch(setMood({ date: formatted, mood: moodState, note }));
-    setMoodSheet(false);
+    setMood({ date: formatted, mood: moodState, note })
+      .unwrap()
+      .then(() => {
+        setMoodSheet(false);
+      });
   };
 
   return (
@@ -142,7 +145,8 @@ const MoodCard = () => {
                   />
                 </Textarea>
               </VStack>
-              <Button onPress={handleSave} className="w-full">
+              <Button onPress={handleSave} disabled={isLoading} className="w-full">
+                {isLoading ? <ButtonSpinner /> : null}
                 <ButtonText>ذخیره</ButtonText>
               </Button>
             </VStack>
