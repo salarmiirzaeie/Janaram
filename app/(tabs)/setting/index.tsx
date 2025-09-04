@@ -14,41 +14,37 @@ import React from "react";
 import { Linking, Pressable, SafeAreaView, ScrollView, Share, Switch } from "react-native";
 import { useDispatch } from "react-redux";
 
-function SettingsScreen() {
+const SettingsScreen = () => {
   const [aboutModalVisible, setAboutModalVisible] = React.useState(false);
   const [logoutModalVisible, setLogoutModalVisible] = React.useState(false);
   const [rulesModalVisible, setRulesModalVisible] = React.useState(false);
+
   const { moodNotification, newMeditationsNotification } = useAppSelector((state) => state.settings);
   const dispatch = useDispatch();
   const { logOutUser } = useAuth();
-  return (
-    <SafeAreaView className="flex-1">
-      <ScrollView className="bg-white flex-1 ">
-        <ProfileCard />
-        {/* اعلان‌ها */}
-        <VStack className="mb-6 p-4">
-          <Text className="text-primary-500 mb-2 text-right font-medium">عمومی</Text>
 
+  return (
+    <SafeAreaView className="flex-1 bg-white">
+      <ScrollView className="flex-1">
+        <ProfileCard />
+
+        {/* بخش عمومی */}
+        <VStack className="mb-6 p-4">
+          <Text className="text-primary-500 mb-2 text-right font-vazir">عمومی</Text>
           <SettingItem
             icon={<AntDesign name="infocirlceo" size={24} color="black" />}
             label="درباره اپلیکیشن"
-            onPress={() => {
-              setAboutModalVisible(true);
-            }}
+            onPress={() => setAboutModalVisible(true)}
           />
           <SettingItem
             icon={<Ionicons name="basket" size={24} color="black" />}
             label="خرید اشتراک"
-            onPress={() => {
-              router.navigate("/subscription");
-            }}
+            onPress={() => router.navigate("/subscription")}
           />
           <SettingItem
             icon={<Octicons name="law" size={24} color="black" />}
             label="قوانین برنامه"
-            onPress={() => {
-              setRulesModalVisible(true);
-            }}
+            onPress={() => setRulesModalVisible(true)}
           />
           <SettingItem
             icon={<Ionicons name="share-social" size={24} color="black" />}
@@ -67,59 +63,36 @@ function SettingsScreen() {
           <SettingItem
             icon={<Ionicons name="call" size={24} color="black" />}
             label="تماس با ما"
-            onPress={() => {
-              Linking.openURL("mailto:info@janaram.ir");
-            }}
+            onPress={() => Linking.openURL("mailto:info@janaram.ir")}
           />
-
           <SettingItem
             icon={<Ionicons name="exit" size={24} color="black" />}
             label="خروج"
-            onPress={() => {
-              setLogoutModalVisible(true);
-            }}
+            onPress={() => setLogoutModalVisible(true)}
+            isDanger
           />
         </VStack>
-        <Divider />
-        {/* <VStack className="my-6">
-        <Text className="text-primary-500 mb-2 text-right font-medium">اطلاعات حساب کاربری</Text>
-        <SettingItem
-          icon={<AntDesign name="user" size={24} color="black" />}
-          label="ویرایش پروفایل"
-          onPress={() => {
-            router.navigate("/edit-profile");
-          }}
-        />
-      </VStack>
-      <Divider /> */}
-        <VStack className="my-6 p-4">
-          <Text className="text-primary-500 mb-2 text-right font-medium">اعلان‌ها</Text>
-          <SettingSwitch
-            value={moodNotification}
-            setValue={(value) => dispatch({ type: "settings/setMoodNotification", payload: value })}
-            icon={<AntDesign name="notification" size={24} color="black" />}
-            label="یادآوری حال روزانه"
-          />
-          <SettingSwitch
-            value={newMeditationsNotification}
-            setValue={(value) => dispatch({ type: "settings/setNewMeditationsNotification", payload: value })}
-            icon={<AntDesign name="notification" size={24} color="black" />}
-            label="اطلاع از مدیتیشن های جدید"
-          />
-        </VStack>
-        {/* ظاهر و رابط کاربری */}
-        {/* <VStack className="my-6">
-        <Text className="text-primary-500 mb-2 text-right font-medium">
-          رابط کاربری
-        </Text>
-        <SettingSwitch
-          icon={<Ionicons name="moon" size={24} color="black" />}
-          label="حالت تاریک"
-        />
-      </VStack> */}
 
         <Divider />
-        {/* عمومی */}
+
+        {/* بخش اعلان‌ها */}
+        <VStack className="my-6 p-4">
+          <Text className="text-primary-500 mb-2 text-right font-vazir">اعلان‌ها</Text>
+          <SettingSwitch
+            icon={<AntDesign name="notification" size={24} color="black" />}
+            label="یادآوری حال روزانه"
+            value={moodNotification}
+            setValue={(value) => dispatch({ type: "settings/setMoodNotification", payload: value })}
+          />
+          <SettingSwitch
+            icon={<AntDesign name="notification" size={24} color="black" />}
+            label="اطلاع از مدیتیشن های جدید"
+            value={newMeditationsNotification}
+            setValue={(value) => dispatch({ type: "settings/setNewMeditationsNotification", payload: value })}
+          />
+        </VStack>
+
+        <Divider />
 
         <AboutModal visible={aboutModalVisible} onClose={() => setAboutModalVisible(false)} />
         <RulesModal visible={rulesModalVisible} onClose={() => setRulesModalVisible(false)} />
@@ -127,45 +100,45 @@ function SettingsScreen() {
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
+
 export default React.memo(SettingsScreen);
+
 const SettingItem = ({
-  icon: IconComp,
+  icon,
   label,
   onPress,
   isDanger = false,
 }: {
-  icon: any;
+  icon: React.ReactNode;
   label: string;
   onPress: () => void;
   isDanger?: boolean;
 }) => (
   <Pressable onPress={onPress}>
     <HStack space="md" className="py-3 items-center flex-row-reverse">
-      {IconComp}
-      <Text className={`text-base ${isDanger ? "text-red-500" : "text-gray-800"}`}>{label}</Text>
+      {icon}
+      <Text className={`text-base ${isDanger ? "text-red-500" : "text-gray-800"} font-vazir`}>{label}</Text>
     </HStack>
   </Pressable>
 );
 
 const SettingSwitch = ({
-  icon: IconComp,
+  icon,
   label,
   value,
   setValue,
 }: {
-  icon: any;
+  icon: React.ReactNode;
   label: string;
   value?: boolean;
   setValue: (value: boolean) => void;
-}) => {
-  return (
-    <HStack className="py-3 items-center flex-row-reverse justify-between">
-      <HStack space="md" className="items-center">
-        {IconComp}
-        <Text className="text-base text-gray-800">{label}</Text>
-      </HStack>
-      <Switch value={value} onValueChange={setValue} />
+}) => (
+  <HStack className="py-3 items-center flex-row-reverse justify-between">
+    <HStack space="md" className="items-center">
+      {icon}
+      <Text className="text-base text-gray-800 font-vazir">{label}</Text>
     </HStack>
-  );
-};
+    <Switch value={value} onValueChange={setValue} />
+  </HStack>
+);

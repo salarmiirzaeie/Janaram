@@ -38,7 +38,7 @@ const Personalizing = () => {
       {/* <ProgressOnboarding onBack={() => router.back()} currentStep={7} totalSteps={7} /> */}
 
       <VStack space="md" className="flex-1 items-center justify-center">
-        <Text className="text-2xl font-semiBold mb-8  tracking-wide"> در حال شخصی‌سازی</Text>
+        <Text className="text-2xl font-vazirBold mb-8  tracking-wide"> در حال شخصی‌سازی</Text>
         <LottieView
           style={{ width: 260, height: 260 }}
           ref={animationRef}
@@ -51,7 +51,7 @@ const Personalizing = () => {
       </VStack>
       {/* <VStack className="w-full p-4">
         <Button onPress={handleStartChat} className="w-full  rounded-xl" size="xl">
-          <ButtonText className="text-white font-bold">ادامه</ButtonText>
+          <ButtonText className="text-white font-vazirBold">ادامه</ButtonText>
         </Button>
       </VStack> */}
     </VStack>

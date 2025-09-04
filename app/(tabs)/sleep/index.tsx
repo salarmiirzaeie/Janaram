@@ -48,11 +48,11 @@ const Tests = () => {
                       className="absolute top-0 left-0 right-0 bottom-0 h-56 w-full opacity-50 rounded-3xl"
                       resizeMode="cover"
                     />
-                    <Text className=" text-white font-semiBold text-2xl text-right m-6">{item.title}</Text>
+                    <Text className=" text-white font-vazirBold text-2xl text-right m-6">{item.title}</Text>
                     <HStack className="flex-1 my-2 mx-6">
-                      <Text className=" text-white  font-medium text-sm text-right  self-end">{item.duration}</Text>
+                      <Text className=" text-white  font-vazir text-sm text-right  self-end">{item.duration}</Text>
 
-                      <Text className=" text-white font-medium text-md text-right flex-1">{item.description}</Text>
+                      <Text className=" text-white font-vazir text-md text-right flex-1">{item.description}</Text>
                     </HStack>
                   </VStack>
                 </Pressable>
@@ -62,7 +62,7 @@ const Tests = () => {
           <HStack className="items-center justify-between  mx-5">
             <Text className="text-typography-400 text-md"> </Text>
 
-            <Text className="font-semiBold text-white text-xl">مدیتیشن‌های خواب</Text>
+            <Text className="font-vazirBold text-white text-xl">مدیتیشن‌های خواب</Text>
           </HStack>
           <ScrollView
             contentContainerStyle={{
@@ -92,7 +92,7 @@ const Tests = () => {
               <Text className="text-typography-400 text-md">مشاهده همه</Text>
             </Pressable>
 
-            <Text className="font-semiBold text-white text-xl">آهنگ‌های خواب</Text>
+            <Text className="font-vazirBold text-white text-xl">آهنگ‌های خواب</Text>
           </HStack>
           <ScrollView
             contentContainerStyle={{

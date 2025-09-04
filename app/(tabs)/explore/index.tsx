@@ -37,8 +37,8 @@ const Explore = () => {
                 })
               }
             >
-              <VStack className="bg-blue-300 flex-1 justify-center items-center rounded-lg h-14">
-                <Text className="text-white text-xl font-semiBold">آرامش 🌿</Text>
+              <VStack className="bg-calm-300 flex-1 justify-center items-center rounded-lg h-14">
+                <Text className="text-white text-xl font-vazirBold">آرامش 🌿</Text>
               </VStack>
             </Pressable>
             <Pressable
@@ -50,8 +50,8 @@ const Explore = () => {
                 })
               }
             >
-              <VStack className="bg-purple-300 flex-1 justify-center items-center rounded-lg h-14">
-                <Text className="text-white text-xl font-semiBold">عشق 💗</Text>
+              <VStack className="bg-primary-300 flex-1 justify-center items-center rounded-lg h-14">
+                <Text className="text-white text-xl font-vazirBold">عشق 💗</Text>
               </VStack>
             </Pressable>
           </HStack>
@@ -66,13 +66,13 @@ const Explore = () => {
                 })
               }
             >
-              <VStack className="bg-pink-300 rounded-lg justify-center items-center h-14">
-                <Text className="text-white text-xl font-semiBold"> بی کلام 🤫 </Text>
+              <VStack className="bg-secondary-300 rounded-lg justify-center items-center h-14">
+                <Text className="text-white text-xl font-vazirBold"> بی کلام 🤫 </Text>
               </VStack>
             </Pressable>
             <Pressable className="flex-1" onPress={() => router.push("/sleep")}>
-              <VStack className="bg-indigo-300  rounded-lg justify-center items-center h-14">
-                <Text className="text-white text-xl font-semiBold">خواب خوب 🌙</Text>
+              <VStack className="bg-accent-300  rounded-lg justify-center items-center h-14">
+                <Text className="text-white text-xl font-vazirBold">خواب خوب 🌙</Text>
               </VStack>
             </Pressable>
           </HStack>
@@ -83,8 +83,8 @@ const Explore = () => {
                 router.push({ pathname: "/explore/all-files", params: { type: "nature", title: "طبیعت" } })
               }
             >
-              <VStack className="bg-green-300  rounded-lg justify-center items-center h-14">
-                <Text className="text-white text-xl font-semiBold"> طبیعت 🌳</Text>
+              <VStack className="bg-primary-300  rounded-lg justify-center items-center h-14">
+                <Text className="text-white text-xl font-vazirBold"> طبیعت 🌳</Text>
               </VStack>
             </Pressable>
           </HStack>
@@ -94,7 +94,7 @@ const Explore = () => {
           <HStack className="items-center justify-between  mx-5">
             <Text className="text-typography-400 text-md"> </Text>
 
-            <Text className="font-semiBold text-xl">آرامش</Text>
+            <Text className="font-vazirBold text-xl">آرامش</Text>
           </HStack>
           <ScrollView
             contentContainerStyle={{
@@ -113,7 +113,7 @@ const Explore = () => {
           <HStack className="items-center justify-between  mx-5">
             <Text className="text-typography-400 text-md"> </Text>
 
-            <Text className="font-semiBold text-xl">عشق</Text>
+            <Text className="font-vazirBold text-xl">عشق</Text>
           </HStack>
           <ScrollView
             contentContainerStyle={{
@@ -132,7 +132,7 @@ const Explore = () => {
           <HStack className="items-center justify-between  mx-5">
             <Text className="text-typography-400 text-md"> </Text>
 
-            <Text className="font-semiBold text-xl">بی کلام</Text>
+            <Text className="font-vazirBold text-xl">بی کلام</Text>
           </HStack>
           <ScrollView
             contentContainerStyle={{
@@ -151,7 +151,7 @@ const Explore = () => {
           <HStack className="items-center justify-between  mx-5">
             <Text className="text-typography-400 text-md"> </Text>
 
-            <Text className="font-semiBold text-xl">طبیعت</Text>
+            <Text className="font-vazirBold text-xl">طبیعت</Text>
           </HStack>
           <ScrollView
             contentContainerStyle={{

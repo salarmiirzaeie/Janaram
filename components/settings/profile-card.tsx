@@ -37,7 +37,7 @@ const ProfileCard = () => {
         <FontAwesome name="edit" size={24} color="rgb(134,179,210)" />
       </Pressable>
       <VStack>
-        <Text className="font-semiBold text-right">
+        <Text className="font-vazirBold text-right">
           {data?.data.name === "" ? "لطفا پروفایل خود را تکمیل کنید" : data?.data.name || ""}
         </Text>
         <Text className=" text-right">{unNormalizePhoneNumber(data?.data.phoneNumber || "")}</Text>

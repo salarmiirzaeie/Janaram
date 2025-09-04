@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/hooks/useAppSelector";
+import { IMood } from "@/redux/mood/mood-slice";
 import { preparePieData } from "@/utils/mood";
 import React from "react";
 import { View } from "react-native";
@@ -6,24 +6,14 @@ import { PieChart } from "react-native-gifted-charts";
 import { HStack } from "../ui/hstack";
 import { Text } from "../ui/text";
 import { VStack } from "../ui/vstack";
-
-const MinimalChart = () => {
-  const moods = useAppSelector((state) => state.mood);
+interface Props {
+  moods: IMood[];
+}
+const MinimalChart: React.FC<Props> = ({ moods }) => {
   const pieData = preparePieData(moods);
-  const moodCount = moods.filter((mood) => mood.mood !== null).length;
 
   return (
-    <View className="  h-[210px] items-center">
-      {/* <Text
-        style={{
-          fontSize: 14,
-          color: "gray",
-          textAlign: "center",
-          marginBottom: 16,
-        }}
-      >
-        15 April - 21 April
-      </Text> */}
+    <View className="  items-center">
       <HStack className="items-center justify-between ">
         <PieChart
           data={pieData}
@@ -31,8 +21,8 @@ const MinimalChart = () => {
           textSize={14}
           focusOnPress
           innerRadius={50}
-          innerCircleColor={"#dbeafe"}
-          centerLabelComponent={() => <Text className="text-sm font-bold text-black"> ماه گذشته</Text>}
+          innerCircleColor={"#fff"}
+          centerLabelComponent={() => <Text className="text-sm font-vazirBold text-black"> ماه گذشته</Text>}
         />
         {/* PieChart Legend */}
         <VStack>

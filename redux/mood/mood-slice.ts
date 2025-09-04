@@ -4,6 +4,7 @@ export interface IMood {
   date: string; // YYYY-MM-DD
   mood: number | null;
   note?: string;
+  _id?: string;
 }
 
 const initialState: IMood[] = [];

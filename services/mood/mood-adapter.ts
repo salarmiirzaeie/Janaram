@@ -1,23 +1,81 @@
 import { apiSlice } from "@/redux/api-slice";
 import { IMood } from "@/redux/mood/mood-slice";
 
+// Define the response type for the GET endpoint
+interface DailyStatusResponse {
+  success: boolean;
+  data: {
+    date: string;
+    moodRegistered: boolean;
+    exercisesRegistered: boolean;
+    totalExercises?: number;
+    completedExercises?: number;
+    progressPercent?: number; // 0-100
+    status: "no-mood" | "not-started" | "in-progress" | "completed";
+    totalMoodDays?: number;
+  };
+}
+// types/mood.ts
+
+export interface ExerciseBase {
+  type: "task" | "meditation";
+  id: string;
+  title: string;
+  duration: number; // دقیقه
+  description: string;
+}
+
+export interface ExerciseMeditation extends ExerciseBase {
+  type: "meditation";
+  typeMeditation: string; // مثل "calm", "love", "sleep" و ...
+}
+
+export interface ExerciseTask extends ExerciseBase {
+  type: "task";
+}
+
+export type Exercise = ExerciseTask | ExerciseMeditation;
+
+export interface MoodTrainsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    mood: string;
+    exercises: Exercise[];
+  };
+}
+
 const moodAdapter = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    setMood: builder.mutation<any, IMood>({
+    setMood: builder.mutation<
+      { success: boolean; message: string; data: IMood & { isTodayFirstMood: boolean } },
+      { mood: number | null; note?: string }
+    >({
       query: (data) => ({
         url: "mood/set",
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Mood", "Exercises"],
     }),
-    updateMood: builder.mutation<any, IMood>({
-      query: (data) => ({
-        url: "mood/set",
-        method: "PUT",
+    getMood: builder.query<DailyStatusResponse, any>({
+      query: () => ({
+        url: `mood/set`,
+        method: "GET",
       }),
+      providesTags: ["Mood"],
+    }),
+    getActivity: builder.query<any, any>({
+      query: () => ({
+        url: `mood/activity`,
+        method: "GET",
+      }),
+    }),
+    getMoodTrains: builder.query<MoodTrainsResponse, number>({
+      query: (moodValue) => `/mood/trains?mood=${moodValue}`,
     }),
   }),
 });
 
 // Export hooks
-export const { useSetMoodMutation, useUpdateMoodMutation } = moodAdapter;
+export const { useSetMoodMutation, useGetMoodQuery, useGetActivityQuery, useGetMoodTrainsQuery } = moodAdapter;

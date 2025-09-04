@@ -53,12 +53,12 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item }) => {
           className="absolute top-0 left-0 right-0 bottom-0 h-52 w-48 opacity-50 rounded-3xl"
           resizeMode="cover"
         />
-        <Text className="color-white text-2xl z-40 text-right font-semiBold">
+        <Text className="color-white text-2xl z-40 text-right font-vazirBold">
           {item.title.length > 25 ? item.title.slice(0, 25) + "..." : item.title}
         </Text>
         <HStack className="items-center justify-between">
           <Badge className="rounded-full">
-            <BadgeText className="font-medium">{item.duration}</BadgeText>
+            <BadgeText className="font-vazir">{item.duration}</BadgeText>
           </Badge>
           {isLoading ? (
             <View

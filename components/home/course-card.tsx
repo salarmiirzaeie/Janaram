@@ -14,6 +14,12 @@ interface IVStackProps extends React.ComponentProps<typeof VStack> {
   index: number;
   item: Meditation;
 }
+const cardColors = [
+  { bg: "bg-secondary-300", btn: "bg-secondary-500" },
+  { bg: "bg-primary-300", btn: "bg-primary-500" },
+  { bg: "bg-calm-300", btn: "bg-calm-500" },
+];
+
 const CourseCard: React.FC<IVStackProps> = ({ index, item }) => {
   const { loadTrack, track } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
@@ -25,6 +31,9 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item }) => {
     }
     setLoading(false);
   };
+
+  const colorSet = cardColors[index % cardColors.length];
+
   return (
     <Pressable
       onPress={() =>
@@ -36,22 +45,18 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item }) => {
         })
       }
     >
-      <VStack
-        className={`rounded-3xl h-52 w-48 justify-between p-5  mx-2 ${
-          index % 3 === 0 ? "bg-purple-300" : index % 3 === 1 ? "bg-blue-300" : "bg-pink-300"
-        }`}
-      >
+      <VStack className={`rounded-3xl shadow-md h-52 w-48 justify-between p-5 mx-2 ${colorSet.bg}`}>
         <Image
           source={require("@/assets/images/log-vector.png")}
-          className="absolute  -left-16 right-0 bottom-0 h-[112px] w-52 opacity-50 rounded-3xl"
+          className="absolute -left-16 right-0 bottom-0 h-[112px] w-52 opacity-40 rounded-3xl"
           resizeMode="cover"
         />
-        <Text className="color-white text-2xl z-40 text-right font-semiBold">
+        <Text className="text-xl z-40 text-right font-vazir text-white">
           {item?.title?.length > 25 ? item?.title.slice(0, 25) + "..." : item?.title}
         </Text>
         <HStack className="items-center justify-between">
           <Badge className="rounded-full">
-            <BadgeText>{item?.duration}</BadgeText>
+            <BadgeText>{item?.duration} دقیقه</BadgeText>
           </Badge>
           {isLoading ? (
             <View
@@ -60,7 +65,7 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item }) => {
                 height: 48,
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: index % 3 === 0 ? "#8b5cf6" : index % 3 === 1 ? "#3b82f6" : "#ec4899",
+                backgroundColor: "#999",
                 borderRadius: 34,
               }}
             >
@@ -69,9 +74,7 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item }) => {
           ) : (
             <Pressable
               onPress={handlePlay}
-              className={`rounded-full h-14 w-14 justify-center items-center ${
-                index % 3 === 0 ? "bg-purple-500" : index % 3 === 1 ? "bg-blue-500" : "bg-pink-500"
-              } `}
+              className={`rounded-full h-14 w-14 justify-center items-center ${colorSet.btn}`}
             >
               <Entypo name="controller-play" size={24} color="white" />
             </Pressable>

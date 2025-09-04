@@ -25,7 +25,7 @@ const UpdateModal: React.FC<Props> = ({ showActionsheet, handleClose }) => {
         </ActionsheetDragIndicatorWrapper>
         <VStack space="lg" className="p-4 items-center justify-center">
           <VStack className="space-y-2">
-            <Text className="text-lg font-bold text-center">بروزرسانی جدید موجود است </Text>
+            <Text className="text-lg font-vazirBold text-center">بروزرسانی جدید موجود است </Text>
             <Text className="text-sm text-gray-500">لطفا برای استفاده از اپلیکیشن جدید، بروزرسانی را انجام دهید</Text>
           </VStack>
           <HStack className="space-x-2 justify-center">

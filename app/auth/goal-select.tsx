@@ -47,9 +47,11 @@ const GoalSelection = () => {
           source={require("@/assets/illustrations/GoalSelection.png")} // تصویر سفارشی اضافه کن
           className="h-40 mb-16 w-56"
         /> */}
-        <Text className="text-2xl font-semiBold">هدفت چیه؟ </Text>
-        <Text className="text-typography-400 text-center text-md">{"بگو دنبال چی هستی تا برات شخصی‌سازی کنیم!"}</Text>
-        <Text className="text-typography-400 text-center text-sm">{"(حداقل ۲ مورد)"}</Text>
+        <Text className="text-2xl font-vazirBold">هدفت چیه؟ </Text>
+        <Text className="text-typography-400 text-center font-vazir text-md">
+          {"بگو دنبال چی هستی تا برات شخصی‌سازی کنیم!"}
+        </Text>
+        <Text className="text-typography-400 text-center font-vazir text-sm">{"(حداقل ۲ مورد)"}</Text>
         <VStack space="sm" className="w-full mt-6 items-center">
           <Image source={require("@/assets/illustrations/Teamwork.png")} className="h-40 mb-16 w-40" />
 
@@ -66,7 +68,7 @@ const GoalSelection = () => {
                   }`}
                 >
                   <Text
-                    className={`text-md ${
+                    className={`text-md font-vazir ${
                       selectedGoals.includes(item.id) ? "text-white" : "text-typography-600 text-right"
                     }`}
                   >

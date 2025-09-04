@@ -83,7 +83,7 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber, phoneNumber }) => {
 
   return (
     <VStack className="w-full">
-      <Text className="text-3xl font-bold text-gray-800 text-center mb-2" style={{ fontFamily: "vazirBold" }}>
+      <Text className="text-3xl font-vazirBold text-gray-800 text-center mb-2" style={{ fontFamily: "vazirBold" }}>
         تایید شماره موبایل
       </Text>
       <Text className="text-base text-gray-600 text-center mb-2" style={{ fontFamily: "vazir" }}>
@@ -148,7 +148,7 @@ const OTPForm: React.FC<OTPFormProps> = ({ onChangeNumber, phoneNumber }) => {
       </VStack>
 
       <Button className="rounded-lg bg-primary-600 p-3 mt-4" onPress={handleSubmit(onSubmit)} disabled={timeLeft === 0}>
-        <ButtonText className="text-white text-base font-semibold" style={{ fontFamily: "vazirBold" }}>
+        <ButtonText className="text-white text-base font-vazirBold" style={{ fontFamily: "vazirBold" }}>
           {isLoading ? <ButtonSpinner color="white" /> : " تایید کد"}
         </ButtonText>
       </Button>

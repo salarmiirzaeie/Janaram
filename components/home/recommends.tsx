@@ -11,6 +11,7 @@ const Recommends = () => {
       contentContainerStyle={{
         paddingHorizontal: 10,
         flexDirection: "row-reverse",
+        paddingBottom: 24,
       }}
       showsHorizontalScrollIndicator={false}
       horizontal

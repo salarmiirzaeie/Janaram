@@ -49,12 +49,40 @@ export default function RootLayout() {
                     }}
                   />
                   <Stack.Screen
+                    name="breathingPlayer"
+                    options={{
+                      headerShown: true,
+                      headerTitleAlign: "center",
+                      headerTitleStyle: { fontFamily: "vazirBold" },
+                      headerTitle: "",
+                      headerShadowVisible: false,
+                    }}
+                  />
+                  <Stack.Screen
                     name="notifications"
                     options={{
                       headerShown: true,
                       headerTitleAlign: "center",
                       headerTitleStyle: { fontFamily: "vazirBold" },
                       headerTitle: "پیام ها",
+                    }}
+                  />
+                  <Stack.Screen
+                    name="streak"
+                    options={{
+                      headerShown: true,
+                      headerTitleAlign: "center",
+                      headerTitleStyle: { fontFamily: "vazirBold" },
+                      headerTitle: "جانارام",
+                    }}
+                  />
+                  <Stack.Screen
+                    name="train"
+                    options={{
+                      headerShown: true,
+                      headerTitleAlign: "center",
+                      headerTitleStyle: { fontFamily: "vazirBold" },
+                      headerTitle: "تمرین روز",
                     }}
                   />
                   <Stack.Screen

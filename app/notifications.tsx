@@ -21,7 +21,7 @@ const Notifications = () => {
         <HStack space="md" className="items-center">
           <Feather name={item.read ? "check-circle" : "bell"} size={20} color={item.read ? "#6c757d" : "#007bff"} />
           <VStack>
-            <Text className="font-bold ">{item.title}</Text>
+            <Text className="font-vazirBold ">{item.title}</Text>
             <Text className="font-sm">{item.message}</Text>
           </VStack>
         </HStack>

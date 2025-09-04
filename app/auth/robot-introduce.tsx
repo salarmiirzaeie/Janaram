@@ -21,15 +21,15 @@ const PsychologistIntro = () => {
           source={require("@/assets/illustrations/robot.png")} // Cute robot illustration
           style={styles.robotImage}
         />
-        <Text className="text-2xl font-semiBold  tracking-wide">با ربات روانشناس ما آشنا شو!</Text>
-        <Text className="text-typography-400 text-center text-md px-4">
+        <Text className="text-2xl font-vazirBold  tracking-wide">با ربات روانشناس ما آشنا شو!</Text>
+        <Text className="text-typography-400 font-vazir text-center text-md px-4">
           من یک ربات روانشناس که همیشه آماده‌ام تا بهت گوش بدم و کمکت کنم احساس بهتری داشته باشی.هر وفت خواستی بیا با هم
           گپ بزنیم!
         </Text>
       </VStack>
       <VStack className="w-full p-4">
-        <Button onPress={handleStartChat} className="w-full  rounded-xl" size="xl">
-          <ButtonText className="text-white font-bold">ادامه</ButtonText>
+        <Button onPress={handleStartChat} className="w-full bg-primary-500 rounded-xl" size="xl">
+          <ButtonText className="text-white font-vazirBold">ادامه</ButtonText>
         </Button>
       </VStack>
     </VStack>

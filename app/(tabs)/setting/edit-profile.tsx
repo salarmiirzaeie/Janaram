@@ -77,7 +77,7 @@ const EditProfile = () => {
     <VStack className="flex-1 bg-background-0 p-4">
       <VStack space="md" className="mt-6">
         <VStack>
-          <Text className="text-sm text-right font-medium text-typography-900">نام</Text>
+          <Text className="text-sm text-right font-vazir text-typography-900">نام</Text>
           <Controller
             control={control}
             name="name"
@@ -91,7 +91,7 @@ const EditProfile = () => {
         </VStack>
 
         <VStack>
-          <Text className="text-sm text-right font-medium text-typography-900">شماره موبایل</Text>
+          <Text className="text-sm text-right font-vazir text-typography-900">شماره موبایل</Text>
           <Controller
             control={control}
             name="phoneNumber"

@@ -39,9 +39,12 @@ const MoodBarChart = ({ lineData }: any) => {
             xAxisLabel=""
             verticalLabelRotation={30}
           />
-          <View className="flex-row justify-end -mt-6" style={{ width: Dimensions.get("window").width - 64 }}>
+          <View
+            className="flex-row justify-between  pl-[68px] pr-2 w -mt-6"
+            style={{ width: Dimensions.get("window").width - 64 }}
+          >
             {moods.map((label: any) => (
-              <Image key={label.label} source={label.emoji} resizeMode="cover" className="h-5 ml-1.5 mr-2 w-5" />
+              <Image key={label.label} source={label.emoji} resizeMode="cover" className="h-5  w-5" />
             ))}
           </View>
         </VStack>

@@ -15,28 +15,32 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          50: "#E3F2FD",
-          100: "#BBDEFB",
-          200: "#90CAF9",
-          300: "#64B5F6",
-          400: "#42A5F5",
-          500: "rgb(134,179,210)",
-          600: "#1E88E5",
-          700: "#1976D2",
-          800: "#1565C0",
-          900: "#0D47A1",
+          100: "#E3F2F9", // آبی خیلی روشن نزدیک سفید
+          200: "#C5E4F3", // آبی آسمونی ملایم
+          300: "#A2D4EC", // آبی فیروزه‌ای کم‌رنگ
+          400: "#7AC1E4", // آبی دریاچه‌ای
+          500: "#47A9DA", // آبی آرامش‌بخش (اصلی)
         },
         secondary: {
-          50: "#FFF3E0",
-          100: "#FFE0B2",
-          200: "#FFCC80",
-          300: "#FFB74D",
-          400: "#FFA726",
-          500: "#FF9800",
-          600: "#FB8C00",
-          700: "#F57C00",
-          800: "#EF6C00",
-          900: "#E65100",
+          100: "#F3E5F5",
+          200: "#E1BEE7",
+          300: "#CE93D8",
+          400: "#BA68C8",
+          500: "#AB47BC",
+        },
+        accent: {
+          100: "#FFF3E0",
+          200: "#FFE0B2",
+          300: "#FFCC80",
+          400: "#FFB74D",
+          500: "#FFA726",
+        },
+        calm: {
+          100: "#E8F5E9",
+          200: "#C8E6C9",
+          300: "#A5D6A7",
+          400: "#81C784",
+          500: "#66BB6A",
         },
 
         tertiary: {
@@ -167,10 +171,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        normal: "vazir",
-        semiBold: "vazirBold",
-        thin: "iranSans",
-        body: "vazir",
+        vazir: ["vazir", "sans-serif"],
+        vazirBold: ["vazirBold", "sans-serif"],
       },
       fontWeight: {
         extrablack: "950",

@@ -77,8 +77,6 @@ const OTPForm = () => {
             });
             inputRefs.current[otp.length - 1]?.focus();
             OtpVerify.removeListener();
-
-            // Auto-submit the form after setting OTP
             handleSubmit(onSubmit)();
           }
         })
@@ -112,17 +110,17 @@ const OTPForm = () => {
       let appHash = null;
       if (Platform.OS === "android") {
         const hash = await OtpVerify.getHash();
-        appHash = hash[0]; // 11-character hash, e.g., "FA+9qCX9VSu"
+        appHash = hash[0];
       }
 
       const normalizedPhoneNumber = normalizePhoneNumber(phoneNumber);
       const result = await sendOTP({
         phoneNumber: normalizedPhoneNumber,
-        appHash: appHash || "", // Send null for iOS, hash for Android
+        appHash: appHash || "",
       }).unwrap();
 
       if (result.success) {
-        setTimeLeft(120); // Reset timer
+        setTimeLeft(120);
         toast.show({ type: "success", msg: "کد جدید ارسال شد" });
       }
     } catch (err: any) {
@@ -141,27 +139,21 @@ const OTPForm = () => {
       .then((res) => {
         if (res.success) {
           setUser({ accessToken: res.token });
-
           if (res.isNewUser) {
             router.push({
               pathname: "/auth/enter-name",
-              params: {
-                phoneNumber: normalizePhoneNumber(phoneNumber),
-              },
+              params: { phoneNumber: normalizePhoneNumber(phoneNumber) },
             });
           } else {
             if (!res.isOnboardingSelected) {
               router.push({
                 pathname: "/auth/robot-introduce",
-                params: {
-                  phoneNumber: normalizePhoneNumber(phoneNumber),
-                },
+                params: { phoneNumber: normalizePhoneNumber(phoneNumber) },
               });
             } else {
               setUserAuthorized(true);
             }
           }
-          // setUser({ accessToken: res.token });
         }
       })
       .catch((err) => {
@@ -169,14 +161,11 @@ const OTPForm = () => {
       });
   };
 
-  // Handle paste behavior
   const handlePaste = (text: string, index: number) => {
     if (text.length > 1) {
-      const newOtp = text.split("").slice(0, 6); // Assuming 6-digit OTP
+      const newOtp = text.split("").slice(0, 6);
       setOtpValues(newOtp);
-      newOtp.forEach((digit, i) => {
-        setValue(`otp.${i}`, digit);
-      });
+      newOtp.forEach((digit, i) => setValue(`otp.${i}`, digit));
       inputRefs.current[newOtp.length - 1]?.focus();
     }
   };
@@ -188,17 +177,22 @@ const OTPForm = () => {
 
         <VStack className="w-full p-4">
           <Image source={require("@/assets/images/logo.png")} className="w-32 h-32 mx-auto mb-6" resizeMode="contain" />
+
           <VStack className="w-full">
-            <Text className="text-3xl font-bold text-gray-800 text-center mb-2" style={{ fontFamily: "vazirBold" }}>
+            <Text
+              className="text-3xl font-vazirBold text-primary-800 text-center mb-2"
+              style={{ fontFamily: "vazirBold" }}
+            >
               تایید شماره موبایل
             </Text>
-            <Text className="text-base text-gray-600 text-center mb-2" style={{ fontFamily: "vazir" }}>
+            <Text className="text-base text-primary-600 text-center mb-2" style={{ fontFamily: "vazir" }}>
               کد برای شماره {phoneNumber} ارسال شده است
             </Text>
-            <Text className="text-base text-gray-600 text-center mb-6" style={{ fontFamily: "vazir" }}>
+            <Text className="text-base text-primary-600 text-center mb-6" style={{ fontFamily: "vazir" }}>
               لطفا کدی که برای شما پیامک شده را وارد کنید
             </Text>
 
+            {/* OTP Inputs */}
             <VStack className="mt-4 w-full">
               <HStack className="justify-between">
                 {otpValues.map((_, index) => (
@@ -211,8 +205,10 @@ const OTPForm = () => {
                         ref={(ref) => {
                           if (ref) inputRefs.current[index] = ref;
                         }}
-                        className={`border w-14 h-14 text-center text-lg text-gray-800 rounded-lg bg-white ${
-                          errors.otp ? "border-red-500" : "border-gray-300"
+                        className={`border w-14 h-14 text-center text-lg rounded-lg ${
+                          errors.otp
+                            ? "border-accent-500 bg-accent-100 text-accent-500"
+                            : "border-primary-300 bg-white text-primary-500"
                         }`}
                         style={{ fontFamily: "vazir" }}
                         value={value || ""}
@@ -231,8 +227,8 @@ const OTPForm = () => {
                         onChange={(e) => handlePaste(e.nativeEvent.text, index)}
                         keyboardType="numeric"
                         maxLength={1}
-                        autoComplete="sms-otp" // For Android AutoFill
-                        textContentType="oneTimeCode" // For iOS AutoFill
+                        autoComplete="sms-otp"
+                        textContentType="oneTimeCode"
                       />
                     )}
                   />
@@ -240,24 +236,24 @@ const OTPForm = () => {
               </HStack>
 
               {errors.otp && (
-                <Text className="text-red-500 text-sm mt-1 text-right" style={{ fontFamily: "vazir" }}>
+                <Text className="text-accent-500 text-sm mt-1 text-right" style={{ fontFamily: "vazir" }}>
                   {(errors.otp as any)?.message || "کد نامعتبر است"}
                 </Text>
               )}
 
-              <Text className="text-sm text-center mt-4 text-gray-600" style={{ fontFamily: "vazir" }}>
+              <Text className="text-sm text-center mt-4 text-primary-600" style={{ fontFamily: "vazir" }}>
                 {timeLeft > 0 ? `زمان باقی‌مانده: ${formatTime(timeLeft)}` : "مهلت وارد کردن کد به پایان رسید"}
               </Text>
 
               <HStack className="mt-4 justify-between">
                 <Button onPress={onChangeNumber} variant="link">
-                  <ButtonText className="text-blue-600 text-sm underline" style={{ fontFamily: "vazirBold" }}>
+                  <ButtonText className="text-secondary-500 text-sm underline" style={{ fontFamily: "vazirBold" }}>
                     تغییر شماره موبایل
                   </ButtonText>
                 </Button>
                 {timeLeft === 0 && (
                   <Button onPress={onResendOTP} variant="link" disabled={isLoadingOTP}>
-                    <ButtonText className="text-blue-600 text-sm underline" style={{ fontFamily: "vazirBold" }}>
+                    <ButtonText className="text-secondary-500 text-sm underline" style={{ fontFamily: "vazirBold" }}>
                       {isLoadingOTP ? <ButtonSpinner color={"white"} /> : "ارسال مجدد کد"}
                     </ButtonText>
                   </Button>
@@ -265,8 +261,9 @@ const OTPForm = () => {
               </HStack>
             </VStack>
 
-            <Button className="rounded-lg bg-primary-600 p-3 mt-4" onPress={handleSubmit(onSubmit)}>
-              <ButtonText className="text-white text-base font-semibold" style={{ fontFamily: "vazirBold" }}>
+            {/* Submit Button */}
+            <Button className="rounded-lg bg-primary-500 p-3 mt-4" onPress={handleSubmit(onSubmit)}>
+              <ButtonText className="text-white text-base font-vazirBold" style={{ fontFamily: "vazirBold" }}>
                 {isLoading ? <ButtonSpinner color={"white"} /> : "تایید کد"}
               </ButtonText>
             </Button>

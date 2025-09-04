@@ -40,7 +40,7 @@ const TimeSelection = () => {
       onPress={() => handleHourSelect(item.id)}
       style={[styles.hourItem, selectedHour === item.id ? styles.selectedHour : null]}
     >
-      <Text className={`text-md font-medium ${selectedHour === item.id ? "text-white" : "text-[#4A4E69]"}`}>
+      <Text className={`text-md font-vazir ${selectedHour === item.id ? "text-white" : "text-[#4A4E69]"}`}>
         {item.label}
       </Text>
     </TouchableOpacity>
@@ -54,8 +54,10 @@ const TimeSelection = () => {
           source={require("@/assets/illustrations/meditation.png")} // Assume a cute clock illustration
           className="h-48 w-48 mb-8"
         />
-        <Text className="text-2xl font-semiBold  tracking-wide">چه ساعتی دوست داری مدیتیشن کنی؟</Text>
-        <Text className=" text-typography-400 text-center text-md px-4">یه ساعت انتخاب کن تا با هم شروع کنیم!</Text>
+        <Text className="text-2xl font-vazirBold  tracking-wide">چه ساعتی دوست داری مدیتیشن کنی؟</Text>
+        <Text className=" text-typography-400  font-vazir text-center text-md px-4">
+          یه ساعت انتخاب کن تا با هم شروع کنیم!
+        </Text>
         <View style={styles.squareContainer}>
           <FlatList
             data={hours}
@@ -68,7 +70,7 @@ const TimeSelection = () => {
       </VStack>
       <VStack className="w-full p-4">
         <Button onPress={handleNext} className="w-full  rounded-xl" size="xl">
-          <ButtonText className="text-white font-bold"> ادامه </ButtonText>
+          <ButtonText className="text-white font-vazirBold"> ادامه </ButtonText>
         </Button>
       </VStack>
     </VStack>

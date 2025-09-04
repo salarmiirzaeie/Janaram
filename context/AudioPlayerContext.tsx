@@ -67,6 +67,7 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
     getMeditation({ id })
       .unwrap()
       .then(async (res) => {
+        console.log(res);
         try {
           setIsLoading(true);
           if (soundRef.current) {

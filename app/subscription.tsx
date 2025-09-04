@@ -47,82 +47,44 @@ export default function SubscriptionsScreen() {
           <HStack space="lg" className="flex-row flex-wrap justify-center">
             {plans &&
               plans.data.plans.map((plan, index) => {
-                let index2 = index;
+                const color = index % 2 === 0 ? "primary-500" : "secondary-500";
                 return (
                   <VStack
                     key={plan.id}
-                    className={`bg-white rounded-3xl p-4 mx-4 shadow-2xl w-full sm:w-96  ${
-                      plan.isActive
-                        ? `border-4 ${
-                            index === 0
-                              ? "border-primary-600"
-                              : index === 1
-                              ? "border-pink-500"
-                              : index === 2
-                              ? "border-primary-600"
-                              : "border-purple-400"
-                          }`
-                        : "border-2 border-gray-300"
+                    className={`bg-white rounded-3xl p-4 mx-4 shadow-md w-full sm:w-96 ${
+                      plan.isActive ? `border-4 border-${color}` : "border-2 border-gray-300"
                     }`}
                     style={{ direction: "rtl" }}
                   >
                     {plan.isActive && <FontAwesome name="star" size={24} color="#facc15" />}
 
-                    <Text className="text-gray-600 text-lg mb-6 font-semiBold leading-relaxed">{plan.description}</Text>
-                    <VStack className="">
-                      {plan.features.map((feature, index) => {
-                        return (
-                          <HStack key={index} className="items-center mb-2 justify-between flex-row-reverse">
-                            <Ionicons
-                              name="checkmark-circle"
-                              size={24}
-                              color={
-                                index2 === 0
-                                  ? "#1E88E5"
-                                  : index2 === 1
-                                  ? "#f6339a"
-                                  : index2 === 2
-                                  ? "#1E88E5"
-                                  : "#ad46ff"
-                              }
-                            />
-                            <Text className="text-gray-800 text-right text-sm mr-3 font-medium">{feature}</Text>
-                          </HStack>
-                        );
-                      })}
+                    <Text className="text-gray-600 text-xl mb-6 font-vazirBold leading-relaxed">
+                      {plan.description}
+                    </Text>
+
+                    <VStack>
+                      {plan.features.map((feature, i) => (
+                        <HStack key={i} className="items-center mb-2 justify-between flex-row-reverse">
+                          <Ionicons
+                            name="checkmark-circle"
+                            size={24}
+                            color={color === "primary-500" ? "#1E88E5" : "#ad46ff"}
+                          />
+                          <Text className="text-gray-800 text-right text-sm mr-3 font-vazir">{feature}</Text>
+                        </HStack>
+                      ))}
                     </VStack>
+
                     {plan.price !== 0 && (
-                      <Text
-                        className={`text-lg self-end font-medium ${
-                          index === 0
-                            ? "text-primary-600"
-                            : index === 1
-                            ? "text-pink-500"
-                            : index === 2
-                            ? "text-primary-600"
-                            : "text-purple-400"
-                        }  my-2`}
-                      >
-                        {toPersianDigits(plan.price) + " "}هزار تومان
+                      <Text className={`text-lg self-end font-vazirBold my-2 text-${color}`}>
+                        {toPersianDigits(plan.price)} هزار تومان
                       </Text>
                     )}
+
                     {plan.price !== 0 && (
-                      <Button
-                        className={`${
-                          index === 0
-                            ? "bg-primary-600"
-                            : index === 1
-                            ? "bg-pink-500"
-                            : index === 2
-                            ? "bg-primary-600"
-                            : "bg-purple-400"
-                        } rounded-2xl  `}
-                        onPress={() => {
-                          handleSubscribe(plan.id);
-                        }} // Replace with actual payment route
-                      >
-                        <ButtonText className="text-white text-lg font-bold">
-                          {!plan.price ? "شروع رایگان" : " خرید اشتراک "}
+                      <Button className={`bg-${color} rounded-2xl`} onPress={() => handleSubscribe(plan.id)}>
+                        <ButtonText className="text-white text-lg font-vazirBold">
+                          {!plan.price ? "شروع رایگان" : "خرید اشتراک"}
                         </ButtonText>
                       </Button>
                     )}

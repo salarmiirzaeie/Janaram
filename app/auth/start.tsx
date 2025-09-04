@@ -23,7 +23,7 @@ const Start = () => {
       <VStack space="md" className="flex-1 items-center justify-center">
         {/* <Logo className="h-40 w-56" /> */}
         <Image source={require("@/assets/illustrations/Welcome.png")} className="h-40 mb-16 w-56" />
-        <Text className="text-2xl font-semiBold">
+        <Text className="text-2xl font-vazirBold">
           به جانارام <Logo className="h-10 w-14" /> خوش اومدی
         </Text>
         <Text className="text-typography-400 text-center text-md">با جانارام آرامشت رو پیدا کن</Text>

@@ -74,8 +74,8 @@ export const scheduleDailyNotification = async (hour: number) => {
     await Notifications.scheduleNotificationAsync({
       identifier: DAILY_NOTIFICATION_ID, // Assign our unique ID
       content: {
-        title: "یادت نره حالتو ثبت کنی 😶",
-        body: "همین الان حس‌تو ثبت کن. فقط یه دقیقه وقت می‌گیره.",
+        title: "به وقت جانارام",
+        body: "وقت ثبت حال امروز و مدیتیشنه",
         data: { type: "daily_check_in" }, // Optional data payload
         sound: true, // Use default notification sound
       },

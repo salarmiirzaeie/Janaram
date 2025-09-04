@@ -1,4 +1,4 @@
-import { Redirect, Tabs } from "expo-router";
+import { Redirect, router, Tabs } from "expo-router";
 import React, { useEffect } from "react";
 
 import UpdateModal from "@/components/settings/update-modal";
@@ -61,7 +61,11 @@ export default function TabLayout() {
     });
 
     const responseListener = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
+      console.log("Notification response:", response);
+      const { action } = response.notification.request.content.data;
+      if (action === "OPEN_CHATBOT") {
+        router.push("/chat-bot"); // هدایت به صفحه چت‌بات
+      }
     });
 
     return () => {
@@ -88,6 +92,7 @@ export default function TabLayout() {
           },
           lazy: true, // Keeps screens mounted after initial load
           freezeOnBlur: true, // Prevents re-rendering of inactive screens
+          tabBarActiveTintColor: "#47A9DA",
         }}
       >
         <Tabs.Screen

@@ -11,7 +11,7 @@ export default function PlayerScreen() {
   const { id } = useLocalSearchParams<{
     id: string;
   }>();
-
+  console.log(id);
   const { track, isPlaying, position, duration, loadTrack, togglePlay, seek, isLoading } = useAudioPlayer();
 
   // Load the selected track when this screen is opened
