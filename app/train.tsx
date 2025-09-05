@@ -33,6 +33,10 @@ const Train = () => {
           if (item.type === "breathing") {
             router.push({ pathname: "/breathingPlayer", params: { id: item.exerciseId } });
           }
+          if (item.type === "text-activity") {
+            // if (item.done) return;
+            router.push({ pathname: "/text-activity", params: { subType: item.exerciseId, title: item.title } });
+          }
         }}
         className={item.done ? "bg-calm-500" : "bg-primary-500"}
         size="sm"

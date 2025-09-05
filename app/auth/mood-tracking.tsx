@@ -17,15 +17,15 @@ const MoodTrackingIntro = () => {
       <ProgressOnboarding onBack={() => router.back()} currentStep={5} totalSteps={8} />
 
       <VStack space="md" className="flex-1 items-center justify-center">
-        <Text className="text-2xl font-vazirBold mb-8  tracking-wide"> ردیابی حال روحی </Text>
+        <Text className="text-2xl font-vazirBold mb-8  tracking-wide"> مدیتیشن برا اساس حال روحی </Text>
 
         <Image
           source={require("@/assets/images/mood-onboarding.png")} // Cute robot illustration
           style={styles.robotImage}
         />
         <Text className="text-typography-400 font-vazir text-center text-md px-4">
-          تو این بخش می‌تونی حال و روزت رو ببینی و باهاش آشنا شی! جانارام با ردیابی خلق‌وخو بهت کمک می‌کنه روندت رو
-          بشناسی. می‌تونی حالتو ثبت کنی و پیشرفتتو دنبال کنی.
+          تو این بخش اول حالت رو ثبت می‌کنی و بعد، بر اساس همون حال، هر روز تمرین‌های مختلف مدیتیشن بهت پیشنهاد می‌دیم
+          تا راحت‌تر مسیر آرامشت رو پیدا کنی.
         </Text>
       </VStack>
       <VStack className="w-full p-4">

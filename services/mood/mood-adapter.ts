@@ -56,7 +56,7 @@ const moodAdapter = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Mood", "Exercises"],
+      invalidatesTags: ["Mood"],
     }),
     getMood: builder.query<DailyStatusResponse, any>({
       query: () => ({

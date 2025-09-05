@@ -59,6 +59,16 @@ export default function RootLayout() {
                     }}
                   />
                   <Stack.Screen
+                    name="text-activity"
+                    options={({ route }: any) => ({
+                      headerShown: true,
+                      headerTitleAlign: "center",
+                      headerTitleStyle: { fontFamily: "vazirBold" },
+                      headerTitle: route.params?.title ?? "", // 👈 read title from params
+                      headerShadowVisible: false,
+                    })}
+                  />
+                  <Stack.Screen
                     name="notifications"
                     options={{
                       headerShown: true,
