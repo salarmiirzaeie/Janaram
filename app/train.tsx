@@ -1,3 +1,4 @@
+import { Badge, BadgeText } from "@/components/ui/badge";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import Logo from "@/components/ui/logo";
@@ -29,6 +30,9 @@ const Train = () => {
           if (item.type === "chatbot") {
             router.push({ pathname: "/chat-bot", params: { id: item.exerciseId } });
           }
+          if (item.type === "breathing") {
+            router.push({ pathname: "/breathingPlayer", params: { id: item.exerciseId } });
+          }
         }}
         className={item.done ? "bg-calm-500" : "bg-primary-500"}
         size="sm"
@@ -40,14 +44,16 @@ const Train = () => {
         <ButtonText className="text-white font-vazirBold">{item.done ? "انجام شد" : "شروع"}</ButtonText>
       </Button>
 
-      <VStack className="flex-1 mr-4">
+      <VStack className="flex-1 mr-4 items-end">
         <Text className="text-right font-vazirBold text-md text-primary-800">{item.title}</Text>
         {item.description && (
           <Text className="text-right font-vazir text-sm text-primary-700">
             {item.description.length > 50 ? item.description.slice(0, 50) + "..." : item.description}
           </Text>
         )}
-        <Text className="text-right font-vazir text-xs text-gray-600">{item.duration} دقیقه</Text>
+        <Badge className="mt-2 flex-grow-0">
+          <BadgeText className="text-right font-vazir text-xs text-gray-600">{item.duration} دقیقه</BadgeText>
+        </Badge>
       </VStack>
 
       {item.type !== "meditation" ? (

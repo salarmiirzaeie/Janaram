@@ -66,12 +66,12 @@ const Explore = () => {
                 })
               }
             >
-              <VStack className="bg-secondary-300 rounded-lg justify-center items-center h-14">
+              <VStack className="bg-primary-300 rounded-lg justify-center items-center h-14">
                 <Text className="text-white text-xl font-vazirBold"> بی کلام 🤫 </Text>
               </VStack>
             </Pressable>
             <Pressable className="flex-1" onPress={() => router.push("/sleep")}>
-              <VStack className="bg-accent-300  rounded-lg justify-center items-center h-14">
+              <VStack className="bg-secondary-300  rounded-lg justify-center items-center h-14">
                 <Text className="text-white text-xl font-vazirBold">خواب خوب 🌙</Text>
               </VStack>
             </Pressable>
@@ -83,7 +83,7 @@ const Explore = () => {
                 router.push({ pathname: "/explore/all-files", params: { type: "nature", title: "طبیعت" } })
               }
             >
-              <VStack className="bg-primary-300  rounded-lg justify-center items-center h-14">
+              <VStack className="bg-accent-300  rounded-lg justify-center items-center h-14">
                 <Text className="text-white text-xl font-vazirBold"> طبیعت 🌳</Text>
               </VStack>
             </Pressable>

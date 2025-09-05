@@ -12,7 +12,6 @@ import { LineChart } from "react-native-chart-kit";
 
 const Test = () => {
   const { data, isLoading } = useGetMoodReportQuery({ page: 1, limit: 30 });
-  console.log(data);
   const moods = data?.data || [];
   const barData = prepareBarData(moods);
   const lineData = prepareLineDataForLastMonth(moods);
