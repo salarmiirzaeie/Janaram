@@ -23,8 +23,8 @@ const PsychologistIntro = () => {
         />
         <Text className="text-2xl font-vazirBold  tracking-wide">با ربات روانشناس ما آشنا شو!</Text>
         <Text className="text-typography-400 font-vazir text-center text-md px-4">
-          من یک ربات روانشناس که همیشه آماده‌ام تا بهت گوش بدم و کمکت کنم احساس بهتری داشته باشی.هر وفت خواستی بیا با هم
-          گپ بزنیم!
+          من یک ربات روانشناس هوش مصنوعی هستم که همیشه آماده‌ام تا بهت گوش بدم و کمکت کنم احساس بهتری داشته باشی.هر وفت
+          خواستی بیا با هم گپ بزنیم!
         </Text>
       </VStack>
       <VStack className="w-full p-4">

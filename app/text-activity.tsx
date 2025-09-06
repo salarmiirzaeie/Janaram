@@ -4,7 +4,8 @@ import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { VStack } from "@/components/ui/vstack";
-import { useLocalSearchParams } from "expo-router";
+import { useCustomToast } from "@/hooks/useToast";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ScrollView, TextInput } from "react-native";
 
@@ -14,7 +15,7 @@ export default function TextActivityScreen() {
   const { subType } = useLocalSearchParams<{ subType: SubType }>();
   const [text, setText] = useState("");
   const [gratitudeList, setGratitudeList] = useState<string[]>([]);
-
+  const toast = useCustomToast();
   const handleAddGratitude = () => {
     if (text.trim() !== "") {
       setGratitudeList([...gratitudeList, text.trim()]);
@@ -31,6 +32,8 @@ export default function TextActivityScreen() {
       gratitudeList,
       journaling: text,
     });
+    toast.show({ msg: "با موفقیت ذخیره شد", type: "success" });
+    router.back();
     // اینجا می‌تونی API بزنی و ذخیره کنی
   };
 

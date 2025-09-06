@@ -1,4 +1,5 @@
 import AboutModal from "@/components/settings/about-modal";
+import MeditationHourActionsheet from "@/components/settings/hour-actionsheet";
 import LogoutModal from "@/components/settings/logout-modal";
 import ProfileCard from "@/components/settings/profile-card";
 import RulesModal from "@/components/settings/rules-modal";
@@ -9,7 +10,6 @@ import { VStack } from "@/components/ui/vstack";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import useAuth from "@/hooks/useAuth";
 import { AntDesign, Ionicons, Octicons } from "@expo/vector-icons";
-import { router } from "expo-router";
 import React from "react";
 import { Linking, Pressable, SafeAreaView, ScrollView, Share, Switch } from "react-native";
 import { useDispatch } from "react-redux";
@@ -18,7 +18,8 @@ const SettingsScreen = () => {
   const [aboutModalVisible, setAboutModalVisible] = React.useState(false);
   const [logoutModalVisible, setLogoutModalVisible] = React.useState(false);
   const [rulesModalVisible, setRulesModalVisible] = React.useState(false);
-
+  const [showMeditationSheet, setShowMeditationSheet] = React.useState(false);
+  const meditationHour = useAppSelector((state) => state.initialize.meditationTimer);
   const { moodNotification, newMeditationsNotification } = useAppSelector((state) => state.settings);
   const dispatch = useDispatch();
   const { logOutUser } = useAuth();
@@ -39,7 +40,12 @@ const SettingsScreen = () => {
           <SettingItem
             icon={<Ionicons name="basket" size={24} color="black" />}
             label="خرید اشتراک"
-            onPress={() => router.navigate("/subscription")}
+            onPress={() =>
+              dispatch({
+                type: "initialize/setIsFirstModalShow",
+                payload: true,
+              })
+            }
           />
           <SettingItem
             icon={<Octicons name="law" size={24} color="black" />}
@@ -59,6 +65,11 @@ const SettingsScreen = () => {
                 console.error("Error sharing:", error);
               }
             }}
+          />
+          <SettingItem
+            icon={<AntDesign name="clockcircleo" size={24} color="black" />}
+            label={`ساعت مدیتیشن: ${meditationHour ? `${meditationHour}:00` : "انتخاب نشده"}`}
+            onPress={() => setShowMeditationSheet(true)}
           />
           <SettingItem
             icon={<Ionicons name="call" size={24} color="black" />}
@@ -84,6 +95,7 @@ const SettingsScreen = () => {
             value={moodNotification}
             setValue={(value) => dispatch({ type: "settings/setMoodNotification", payload: value })}
           />
+
           <SettingSwitch
             icon={<AntDesign name="notification" size={24} color="black" />}
             label="اطلاع از مدیتیشن های جدید"
@@ -97,6 +109,7 @@ const SettingsScreen = () => {
         <AboutModal visible={aboutModalVisible} onClose={() => setAboutModalVisible(false)} />
         <RulesModal visible={rulesModalVisible} onClose={() => setRulesModalVisible(false)} />
         <LogoutModal visible={logoutModalVisible} onClose={() => setLogoutModalVisible(false)} />
+        <MeditationHourActionsheet isOpen={showMeditationSheet} onClose={() => setShowMeditationSheet(false)} />
       </ScrollView>
     </SafeAreaView>
   );

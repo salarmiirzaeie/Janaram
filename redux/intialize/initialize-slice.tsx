@@ -4,12 +4,14 @@ interface initialState {
   isInitialized: boolean;
   meditationTimer: number;
   goal: string[];
+  isFirstModalShow: boolean;
 }
 
 const initialState: initialState = {
   isInitialized: false,
-  meditationTimer: 0,
+  meditationTimer: 11,
   goal: [],
+  isFirstModalShow: true,
 };
 
 const initializeSlice = createSlice({
@@ -25,8 +27,11 @@ const initializeSlice = createSlice({
     setGoal: (state, action: PayloadAction<string[]>) => {
       state.goal = action.payload;
     },
+    setIsFirstModalShow: (state, action: PayloadAction<boolean>) => {
+      state.isFirstModalShow = action.payload;
+    },
   },
 });
 
-export const { setIsInitialized, setMeditationTimer, setGoal } = initializeSlice.actions;
+export const { setIsInitialized, setMeditationTimer, setGoal, setIsFirstModalShow } = initializeSlice.actions;
 export default initializeSlice.reducer;

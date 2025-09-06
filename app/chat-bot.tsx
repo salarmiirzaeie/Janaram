@@ -1,7 +1,6 @@
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { useGetChatHistoryQuery, useStartConversationMutation } from "@/services/ai/ai-adapter";
-import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
@@ -15,6 +14,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
 
 export interface MessageType {
   role: "user" | "assistant";
@@ -63,6 +63,7 @@ const ChatScreen: React.FC = () => {
   const [showPremium, setShowPremium] = useState(false);
   const [startConversation, { isLoading, error, data }] = useStartConversationMutation();
   const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
   const limit = 10;
   const {
     data: historyData,
@@ -181,7 +182,15 @@ const ChatScreen: React.FC = () => {
               <Text className="text-lg font-vazirBold text-right text-accent-500 mb-4">
                 شما محدودیت روزانه ۱۰ گفت‌وگو را استفاده کردید. با خرید اشتراک به صورت نامحدود مشاوره بگیرید.
               </Text>
-              <Button onPress={() => router.navigate("/subscription")} className="bg-primary-500">
+              <Button
+                onPress={() =>
+                  dispatch({
+                    type: "initialize/setIsFirstModalShow",
+                    payload: true,
+                  })
+                }
+                className="bg-primary-500"
+              >
                 <ButtonText className="text-white">خرید اشتراک</ButtonText>
               </Button>
             </VStack>

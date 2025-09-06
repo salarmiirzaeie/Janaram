@@ -1,6 +1,7 @@
 import { Redirect, router, Tabs } from "expo-router";
 import React, { useEffect } from "react";
 
+import ProPlanFullScreenModal from "@/components/home/pro-modal";
 import UpdateModal from "@/components/settings/update-modal";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import useAuth from "@/hooks/useAuth";
@@ -26,6 +27,7 @@ Notifications.setNotificationHandler({
   }),
 });
 export default function TabLayout() {
+  const { isFirstModalShow } = useAppSelector((state) => state.initialize);
   const { isSleepMode } = useAppSelector((state) => state.sleepMode);
   const { isInitialized, meditationTimer } = useAppSelector((state) => state.initialize);
   const isNotificationEnabled = useAppSelector((state) => state.settings.moodNotification);
@@ -34,6 +36,12 @@ export default function TabLayout() {
   const [initialNotification] = useInitializeNotificationsMutation();
   const { authorized } = useAuth();
   const dispatch = useDispatch();
+  const handleDismissProModal = () => {
+    dispatch({
+      type: "initialize/setIsFirstModalShow",
+      payload: false,
+    });
+  };
   const sleepModeHandler = (val: boolean) => {
     dispatch(setSleepMode(val));
   };
@@ -140,6 +148,7 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
+      <ProPlanFullScreenModal visible={isFirstModalShow} onClose={handleDismissProModal} />
       <UpdateModal showActionsheet={showUpdateModal} handleClose={() => setShowUpdateModal(false)} />
     </>
   );

@@ -21,6 +21,7 @@ export interface Plan {
   bgColor: string;
   buttonColor: string;
   id: string;
+  oldPrice: number;
 }
 interface StartConversationResponse {
   success: boolean;

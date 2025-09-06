@@ -30,7 +30,7 @@ const GoalSelection = () => {
 
   const handleNext = () => {
     // منطق بعدی (مثلاً ذخیره انتخاب‌ها و رفتن به صفحه بعد)
-    if (selectedGoals.length < 2) {
+    if (selectedGoals.length < 1) {
       toast.show({ msg: "لطفا حداقل دو مورد انتخاب کنید", type: "error" });
       return;
     }
@@ -51,7 +51,7 @@ const GoalSelection = () => {
         <Text className="text-typography-400 text-center font-vazir text-md">
           {"بگو دنبال چی هستی تا برات شخصی‌سازی کنیم!"}
         </Text>
-        <Text className="text-typography-400 text-center font-vazir text-sm">{"(حداقل ۲ مورد)"}</Text>
+        <Text className="text-typography-400 text-center font-vazir text-sm">{"(حداقل ۱ مورد)"}</Text>
         <VStack space="sm" className="w-full mt-6 items-center">
           <Image source={require("@/assets/illustrations/Teamwork.png")} className="h-40 mb-16 w-40" />
 
