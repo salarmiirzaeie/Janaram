@@ -7,6 +7,7 @@ import { useAppSelector } from "@/hooks/useAppSelector";
 import useAuth from "@/hooks/useAuth";
 import { addNotificationCount } from "@/redux/notifications/notifications-slice";
 import { setSleepMode } from "@/redux/sleep-mode/sleep-slice";
+import { useSendPrevMoodsMutation } from "@/services/mood/mood-adapter";
 import { useInitializeNotificationsMutation } from "@/services/notification/notifications-adapter";
 import { useCheckVersionQuery } from "@/services/version/version-adapter";
 import {
@@ -31,12 +32,13 @@ export default function TabLayout() {
   const { isFirstModalShow } = useAppSelector((state) => state.initialize);
   const { isSleepMode } = useAppSelector((state) => state.sleepMode);
   const { isInitialized, meditationTimer } = useAppSelector((state) => state.initialize);
+  const moods = useAppSelector((state) => state.mood);
   const isNotificationEnabled = useAppSelector((state) => state.settings.moodNotification);
   const [showUpdateModal, setShowUpdateModal] = React.useState(false);
   const { data } = useCheckVersionQuery({ version: "1.0.8" });
   const [initialNotification] = useInitializeNotificationsMutation();
   const { authorized } = useAuth();
-
+  const [sendOldMoods] = useSendPrevMoodsMutation();
   const dispatch = useDispatch();
   const handleDismissProModal = () => {
     dispatch({
@@ -58,6 +60,10 @@ export default function TabLayout() {
         getNotificationsPermissions().then(async () => {
           const pusToken = await registerForPushNotificationsAsync();
           initialNotification({ pushToken: pusToken });
+          console.log(moods, "moods");
+          if (moods.length > 0) {
+            sendOldMoods(moods);
+          }
 
           if (isNotificationEnabled) {
             await scheduleDailyNotification(meditationTimer);

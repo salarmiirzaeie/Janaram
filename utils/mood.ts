@@ -15,7 +15,7 @@ export const moods: { emoji: ImageSourcePropType; label: string; value: number; 
   { emoji: require(`@/assets/emojis/e-8.png`), label: "خوشحال", value: 8, color: "#FFD54F" },
   { emoji: require(`@/assets/emojis/e-7.png`), label: "معمولی", value: 7, color: "#90A4AE" },
   { emoji: require(`@/assets/emojis/e-6.png`), label: "ریلکس", value: 6, color: "#80CBC4" },
-  { emoji: require(`@/assets/emojis/e-5.png`), label: "خسته", value: 5, color: "#B39DDB" },
+  { emoji: require(`@/assets/emojis/e-5.png`), label: "بی خواب", value: 5, color: "#B39DDB" },
   { emoji: require(`@/assets/emojis/e-4.png`), label: "ناراحت", value: 4, color: "#7986CB" },
   { emoji: require(`@/assets/emojis/e-3.png`), label: "عصبانی", value: 3, color: "#E57373" },
   { emoji: require(`@/assets/emojis/e-2.png`), label: "گریه", value: 2, color: "#64B5F6" },

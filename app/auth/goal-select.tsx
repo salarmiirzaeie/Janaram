@@ -31,7 +31,7 @@ const GoalSelection = () => {
   const handleNext = () => {
     // منطق بعدی (مثلاً ذخیره انتخاب‌ها و رفتن به صفحه بعد)
     if (selectedGoals.length < 1) {
-      toast.show({ msg: "لطفا حداقل دو مورد انتخاب کنید", type: "error" });
+      toast.show({ msg: "لطفا حداقل یک مورد انتخاب کنید", type: "error" });
       return;
     }
     dispatch(setGoal(selectedGoals));

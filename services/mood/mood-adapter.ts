@@ -74,8 +74,21 @@ const moodAdapter = apiSlice.injectEndpoints({
     getMoodTrains: builder.query<MoodTrainsResponse, number>({
       query: (moodValue) => `/mood/trains?mood=${moodValue}`,
     }),
+    sendPrevMoods: builder.mutation<any, IMood[]>({
+      query: (data) => ({
+        url: "mood/prev-moods",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
 // Export hooks
-export const { useSetMoodMutation, useGetMoodQuery, useGetActivityQuery, useGetMoodTrainsQuery } = moodAdapter;
+export const {
+  useSetMoodMutation,
+  useGetMoodQuery,
+  useGetActivityQuery,
+  useGetMoodTrainsQuery,
+  useSendPrevMoodsMutation,
+} = moodAdapter;

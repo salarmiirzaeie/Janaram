@@ -22,7 +22,7 @@ const Train = () => {
   useEffect(() => {
     setTimeout(() => {
       setFakeLoading(false);
-    }, 8000);
+    }, 6000);
   }, []);
 
   const renderItem = ({ item }: { item: UserExercise }) => (

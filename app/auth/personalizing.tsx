@@ -38,7 +38,7 @@ const Personalizing = () => {
       {/* <ProgressOnboarding onBack={() => router.back()} currentStep={7} totalSteps={7} /> */}
 
       <VStack space="md" className="flex-1 items-center justify-center">
-        <Text className="text-2xl font-vazirBold mb-8  tracking-wide"> در حال شخصی‌سازی</Text>
+        <Text className="text-2xl font-vazirBold mb-8  tracking-wide">در حال شخصی‌سازی باهوش مصنوعی</Text>
         <LottieView
           style={{ width: 260, height: 260 }}
           ref={animationRef}
