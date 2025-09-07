@@ -208,7 +208,7 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
         seek,
         stop,
         showPlayingBar,
-        isLoading: isApiLoading || isLoading,
+        isLoading: isApiLoading || isLoading || isBreathingLoading,
       }}
     >
       {children}

@@ -3,18 +3,9 @@ import { VStack } from "@/components/ui/vstack";
 import { resetNotificationCount } from "@/redux/notifications/notifications-slice";
 import { useGetChatHistoryQuery, useStartConversationMutation } from "@/services/ai/ai-adapter";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  FlatList,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
+import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 
 export interface MessageType {
@@ -59,8 +50,7 @@ const ChatScreen: React.FC = () => {
 
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [input, setInput] = useState<string>("");
-  const listRef = useRef<FlatList<MessageType>>(null);
-  const [insets, setInset] = useState(0);
+  const flatListRef = useRef<FlatList<MessageType> | null>(null);
   const [showPremium, setShowPremium] = useState(false);
   const [startConversation, { isLoading, error, data }] = useStartConversationMutation();
   const [page, setPage] = useState(1);
@@ -72,6 +62,7 @@ const ChatScreen: React.FC = () => {
     error: historyError,
   } = useGetChatHistoryQuery({ page, limit });
   const [hasMore, setHasMore] = useState(true);
+  const insets = useSafeAreaInsets();
 
   const transformApiMessages = (apiMessages: ApiMessageType[]): MessageType[] =>
     apiMessages.flatMap((msg) => [
@@ -80,12 +71,13 @@ const ChatScreen: React.FC = () => {
     ]);
 
   const scrollToBottom = () => {
-    if (messages.length > 0) listRef.current?.scrollToIndex({ index: 0, animated: true });
+    if (messages.length > 0) flatListRef.current?.scrollToIndex({ index: 0, animated: true });
   };
 
   useEffect(() => {
     dispatch(resetNotificationCount());
   }, []);
+
   useEffect(() => {
     if (data && data.success && data.data?.response) {
       setMessages((prev) => [{ role: "assistant", content: data.data.response, timestamp: new Date() }, ...prev]);
@@ -128,21 +120,6 @@ const ChatScreen: React.FC = () => {
     scrollToBottom();
   }, [historyData, historyError, page]);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
-      setInset(80);
-      scrollToBottom();
-    });
-    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
-      setInset(0);
-      scrollToBottom();
-    });
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
   const handleLoadMore = () => {
     if (!isFetchingHistory && hasMore) setPage((prev) => prev + 1);
   };
@@ -161,75 +138,77 @@ const ChatScreen: React.FC = () => {
   const renderItem = ({ item }: { item: MessageType }) => <Message item={item} />;
 
   return (
-    <SafeAreaProvider style={{ flex: 1, backgroundColor: "#fff" /* calm-100 */ }}>
-      <View style={{ flex: 1 }}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
-          keyboardVerticalOffset={insets}
-        >
-          <FlatList
-            ref={listRef}
-            data={messages}
-            keyExtractor={(_, idx) => idx.toString()}
-            renderItem={renderItem}
-            contentContainerStyle={styles.messagesContainer}
-            onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.1}
-            showsVerticalScrollIndicator={false}
-            inverted
-            initialNumToRender={20}
-            windowSize={5}
-          />
-          {showPremium && (
-            <VStack className="p-4 m-4 bg-accent-200 rounded-2xl">
-              <Text className="text-lg font-vazirBold text-right text-accent-500 mb-4">
-                شما محدودیت روزانه ۱۰ گفت‌وگو را استفاده کردید. با خرید اشتراک به صورت نامحدود مشاوره بگیرید.
-              </Text>
-              <Button
-                onPress={() =>
-                  dispatch({
-                    type: "initialize/setIsFirstModalShow",
-                    payload: true,
-                  })
-                }
-                className="bg-primary-500"
-              >
-                <ButtonText className="text-white">خرید اشتراک</ButtonText>
-              </Button>
-            </VStack>
-          )}
+    <SafeAreaProvider style={{ flex: 1, backgroundColor: "#fff" }}>
+      <KeyboardAwareFlatList
+        innerRef={(ref) => {
+          flatListRef.current = ref;
+        }}
+        data={messages}
+        keyExtractor={(_, idx) => idx.toString()}
+        renderItem={renderItem}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "flex-start",
+          paddingBottom: insets.bottom + 80,
+          paddingHorizontal: 15,
+        }}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.1}
+        showsVerticalScrollIndicator={false}
+        inverted
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+        initialNumToRender={20}
+        windowSize={5}
+      />
 
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.textInput}
-              value={input}
-              onChangeText={setInput}
-              placeholder="احساسات و افکار خود را اینجا بنویسید..."
-              placeholderTextColor="#888"
-              multiline
-              returnKeyType="send"
-              onSubmitEditing={handleSend}
-              blurOnSubmit={false}
-              autoFocus
-            />
-            <TouchableOpacity style={styles.sendButton} onPress={handleSend} disabled={isLoading || !input.trim()}>
-              {isLoading ? <ButtonSpinner color="#fff" /> : <Text style={styles.sendButtonText}>ارسال</Text>}
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+      {showPremium && (
+        <VStack className="p-4 m-4 bg-accent-200 rounded-2xl">
+          <Text className="text-lg font-vazirBold text-right text-accent-500 mb-4">
+            شما محدودیت روزانه ۱۰ گفت‌وگو را استفاده کردید. با خرید اشتراک به صورت نامحدود مشاوره بگیرید.
+          </Text>
+          <Button
+            onPress={() =>
+              dispatch({
+                type: "initialize/setIsFirstModalShow",
+                payload: true,
+              })
+            }
+            className="bg-primary-500"
+          >
+            <ButtonText className="text-white">خرید اشتراک</ButtonText>
+          </Button>
+        </VStack>
+      )}
+
+      <View style={[styles.inputContainer, { paddingBottom: insets.bottom + 10 }]}>
+        <TextInput
+          style={styles.textInput}
+          value={input}
+          onChangeText={setInput}
+          placeholder="احساسات و افکار خود را اینجا بنویسید..."
+          placeholderTextColor="#888"
+          multiline
+          returnKeyType="send"
+          onSubmitEditing={handleSend}
+          blurOnSubmit={false}
+          autoFocus
+        />
+        <TouchableOpacity style={styles.sendButton} onPress={handleSend} disabled={isLoading || !input.trim()}>
+          {isLoading ? <ButtonSpinner color="#fff" /> : <Text style={styles.sendButtonText}>ارسال</Text>}
+        </TouchableOpacity>
       </View>
     </SafeAreaProvider>
   );
 };
 
 const styles = StyleSheet.create({
-  messagesContainer: { paddingVertical: 10, paddingHorizontal: 15, flexGrow: 1, justifyContent: "flex-end" },
+  messagesContainer: { paddingVertical: 10, flexGrow: 1, justifyContent: "flex-end" },
   messageBubble: { maxWidth: "80%", padding: 10, borderRadius: 15, marginBottom: 8 },
-  currentUserMessage: { alignSelf: "flex-end", backgroundColor: "#47A9DA" }, // primary-500
-  otherUserMessage: { alignSelf: "flex-start", backgroundColor: "#C8E6C9" }, // calm-200
+  currentUserMessage: { alignSelf: "flex-end", backgroundColor: "#47A9DA" },
+  otherUserMessage: { alignSelf: "flex-start", backgroundColor: "#C8E6C9" },
   currentUserText: { color: "#FFFFFF" },
-  otherUserText: { color: "#388E3C" }, // calm-500
+  otherUserText: { color: "#388E3C" },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -238,8 +217,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#A5D6A7",
     backgroundColor: "#FFFFFF",
-    paddingBottom: 10,
-  }, // بدون رنگ اضافی
+  },
   textInput: {
     flex: 1,
     minHeight: 40,
@@ -250,7 +228,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     fontSize: 16,
     color: "#000000",
-  }, // بدون رنگ پالت
+  },
   sendButton: {
     backgroundColor: "#47A9DA",
     borderRadius: 20,
@@ -258,7 +236,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     justifyContent: "center",
     alignItems: "center",
-  }, // primary-500
+  },
   sendButtonText: { color: "#FFFFFF", fontSize: 16, fontWeight: "600", fontFamily: "vazirBold" },
 });
 

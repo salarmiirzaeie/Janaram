@@ -6,7 +6,6 @@ import {
   ActionsheetDragIndicatorWrapper,
 } from "@/components/ui/actionsheet";
 import { Button, ButtonText } from "@/components/ui/button";
-import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@/components/ui/slider";
 import { Spinner } from "@/components/ui/spinner";
 import { VStack } from "@/components/ui/vstack";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
@@ -15,8 +14,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, Pressable, StyleSheet, Text, Vibration, View } from "react-native";
+import { TapGestureHandler, TapGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import Animated, {
   Easing,
+  interpolate,
   interpolateColor,
   runOnJS,
   useAnimatedReaction,
@@ -31,6 +32,7 @@ export default function BreathingPlayerScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { track, isPlaying, position, duration, loadTrack, togglePlay, seek, isLoading } = useAudioPlayer();
   const [isSheetOpen, setIsSheetOpen] = useState(true);
+  const [progressBarWidth, setProgressBarWidth] = useState(0);
 
   // Durations in ms (fallbacks)
   const INHALE_DURATION = track?.inhaleDuration ?? 6000;
@@ -40,8 +42,8 @@ export default function BreathingPlayerScreen() {
   // Shared values for animations & countdown
   const scale = useSharedValue(1);
   const phaseShared = useSharedValue<"inhale" | "hold_after_inhale" | "exhale" | "hold_after_exhale">("inhale");
-  // secondsShared holds remaining seconds for current phase (animated from phaseSeconds -> 0)
   const secondsShared = useSharedValue(INHALE_DURATION / 1000);
+  const progress = useSharedValue(0);
 
   // React state to show on UI
   const [phaseText, setPhaseText] = useState<"inhale" | "hold_after_inhale" | "exhale" | "hold_after_exhale">("inhale");
@@ -58,47 +60,42 @@ export default function BreathingPlayerScreen() {
   useAnimatedReaction(
     () => secondsShared.value,
     (secs) => {
-      // round up so it shows 3 -> 1 -> 0 in a friendly way
       runOnJS(setPhaseSeconds)(Math.ceil(secs));
     }
   );
 
-  // Helper to start countdown for UI (runs on UI thread)
+  // Update progress smoothly when position changes
+  useEffect(() => {
+    progress.value = withTiming(duration ? (position / duration) * 100 : 0, { duration: 100 });
+  }, [position, duration]);
+
+  // Helper to start countdown for UI
   const startPhaseCountdown = (phaseDurationMs: number) => {
-    // set starting seconds (e.g. 6 -> animate to 0 across duration)
     secondsShared.value = phaseDurationMs / 1000;
     secondsShared.value = withTiming(0, { duration: phaseDurationMs });
   };
 
   useEffect(() => {
     if (!isPlaying) {
-      // stop animation and reset
       scale.value = withTiming(1, { duration: 250, easing: Easing.out(Easing.ease) });
       phaseShared.value = "inhale";
       secondsShared.value = INHALE_DURATION / 1000;
       return;
     }
 
-    // When playback starts, set initial phase and countdown
     phaseShared.value = "inhale";
     startPhaseCountdown(INHALE_DURATION);
 
-    // Build a sequence with optional hold steps (skip holds when HOLD_DURATION === 0)
     const seq: any[] = [];
-
-    // inhale: grow -> callback sets either hold or exhale countdown/phase
     seq.push(
       withTiming(1.3, { duration: INHALE_DURATION, easing: Easing.inOut(Easing.ease) }, (finished) => {
         if (!finished) return;
         runOnJS(Vibration.vibrate)(50);
         if (HOLD_DURATION > 0) {
-          // transition to hold_after_inhale
           phaseShared.value = "hold_after_inhale";
-          // start hold countdown
           secondsShared.value = HOLD_DURATION / 1000;
           secondsShared.value = withTiming(0, { duration: HOLD_DURATION });
         } else {
-          // go directly to exhale
           phaseShared.value = "exhale";
           secondsShared.value = EXHALE_DURATION / 1000;
           secondsShared.value = withTiming(0, { duration: EXHALE_DURATION });
@@ -106,14 +103,11 @@ export default function BreathingPlayerScreen() {
       })
     );
 
-    // optional hold after inhale
     if (HOLD_DURATION > 0) {
       seq.push(
-        // animate to same scale (1.3) over HOLD_DURATION so it's effectively a "pause"
         withTiming(1.3, { duration: HOLD_DURATION }, (finished) => {
           if (!finished) return;
           runOnJS(Vibration.vibrate)(50);
-          // then move to exhale
           phaseShared.value = "exhale";
           secondsShared.value = EXHALE_DURATION / 1000;
           secondsShared.value = withTiming(0, { duration: EXHALE_DURATION });
@@ -121,7 +115,6 @@ export default function BreathingPlayerScreen() {
       );
     }
 
-    // exhale: shrink
     seq.push(
       withTiming(1, { duration: EXHALE_DURATION, easing: Easing.inOut(Easing.ease) }, (finished) => {
         if (!finished) return;
@@ -131,7 +124,6 @@ export default function BreathingPlayerScreen() {
           secondsShared.value = HOLD_DURATION / 1000;
           secondsShared.value = withTiming(0, { duration: HOLD_DURATION });
         } else {
-          // go back to inhale
           phaseShared.value = "inhale";
           secondsShared.value = INHALE_DURATION / 1000;
           secondsShared.value = withTiming(0, { duration: INHALE_DURATION });
@@ -139,13 +131,11 @@ export default function BreathingPlayerScreen() {
       })
     );
 
-    // optional hold after exhale
     if (HOLD_DURATION > 0) {
       seq.push(
         withTiming(1, { duration: HOLD_DURATION }, (finished) => {
           if (!finished) return;
           runOnJS(Vibration.vibrate)(50);
-          // then restart inhale
           phaseShared.value = "inhale";
           secondsShared.value = INHALE_DURATION / 1000;
           secondsShared.value = withTiming(0, { duration: INHALE_DURATION });
@@ -153,11 +143,9 @@ export default function BreathingPlayerScreen() {
       );
     }
 
-    // Start the repeating sequence (runs on UI thread)
     scale.value = withRepeat(withSequence(...seq), -1, false);
   }, [isPlaying, INHALE_DURATION, EXHALE_DURATION, HOLD_DURATION, scale, phaseShared, secondsShared]);
 
-  // load track when id changes
   useEffect(() => {
     if (id) {
       loadTrack(id, "breathing");
@@ -169,6 +157,25 @@ export default function BreathingPlayerScreen() {
     const secs = Math.floor((millis % 60000) / 1000);
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
+
+  // Tap to seek
+  const onTap = ({ nativeEvent: { x } }: TapGestureHandlerGestureEvent) => {
+    if (!progressBarWidth || !duration) return;
+    const newPos = (x / progressBarWidth) * duration;
+    runOnJS(seek)(newPos);
+    progress.value = withTiming((newPos / duration) * 100, { duration: 100 });
+  };
+
+  // Animated style for the filled progress bar
+  const filledStyle = useAnimatedStyle(() => ({
+    width: `${progress.value}%`,
+  }));
+
+  // Animated style for the thumb
+  const thumbStyle = useAnimatedStyle(() => {
+    const translateX = interpolate(progress.value, [0, 100], [0, progressBarWidth - 20]);
+    return { transform: [{ translateX }] };
+  });
 
   if (!id) return <Text style={{ padding: 20 }}>Breathing track not found</Text>;
 
@@ -182,7 +189,6 @@ export default function BreathingPlayerScreen() {
         style={[
           styles.circle,
           useAnimatedStyle(() => {
-            // Keep background color coupled to scale value
             return {
               transform: [{ scale: scale.value }],
               backgroundColor: interpolateColor(
@@ -199,12 +205,16 @@ export default function BreathingPlayerScreen() {
 
       <Text style={styles.title}>{track?.title}</Text>
 
-      <Slider size="md" value={position} minValue={0} maxValue={duration} onChange={seek} className="w-11/12">
-        <SliderTrack>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <SliderThumb />
-      </Slider>
+      <TapGestureHandler onHandlerStateChange={onTap}>
+        <Animated.View
+          style={styles.progressBarContainer}
+          onLayout={(e) => setProgressBarWidth(e.nativeEvent.layout.width)}
+        >
+          <View style={styles.progressBarBackground} />
+          <Animated.View style={[styles.progressBarFilled, filledStyle]} />
+          <Animated.View style={[styles.thumb, thumbStyle]} />
+        </Animated.View>
+      </TapGestureHandler>
 
       <View style={styles.timeRow}>
         <Text style={styles.time}>{formatMillis(position)}</Text>
@@ -233,7 +243,6 @@ export default function BreathingPlayerScreen() {
           </ActionsheetDragIndicatorWrapper>
 
           {isLoading || !track ? (
-            // Skeleton state
             <VStack space="lg" className="p-4 items-center justify-center w-full">
               <View style={styles.skeletonTitle} />
               <View style={styles.skeletonDesc} />
@@ -256,7 +265,6 @@ export default function BreathingPlayerScreen() {
               <View style={styles.skeletonButton} />
             </VStack>
           ) : (
-            // Content after loading
             <View className="w-full">
               <VStack space="lg" className="p-4 items-center justify-center">
                 <Text className="text-lg font-vazirBold text-center">{track?.title}</Text>
@@ -321,6 +329,38 @@ const styles = StyleSheet.create({
     fontFamily: "vazirBold",
     marginHorizontal: 20,
     textAlign: "center",
+  },
+  progressBarContainer: {
+    width: "90%",
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: "#e0e0e0",
+    overflow: "visible",
+    marginBottom: 12,
+    justifyContent: "center",
+  },
+  progressBarFilled: {
+    height: 12,
+    backgroundColor: "#47A9DA",
+    borderRadius: 6,
+  },
+  thumb: {
+    position: "absolute",
+    top: -6,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: "#47A9DA",
+    zIndex: 100,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  progressBarBackground: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "#e0e0e0",
   },
   timeRow: {
     width: "90%",

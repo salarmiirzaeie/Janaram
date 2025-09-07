@@ -2,6 +2,7 @@ import { Badge, BadgeText } from "@/components/ui/badge";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import Logo from "@/components/ui/logo";
+import { Pressable } from "@/components/ui/pressable";
 import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { VStack } from "@/components/ui/vstack";
 import { useCompleteExerciseMutation, useGetExerciseQuery, UserExercise } from "@/services/exercise/exercise-adapter";
@@ -26,7 +27,25 @@ const Train = () => {
   }, []);
 
   const renderItem = ({ item }: { item: UserExercise }) => (
-    <HStack space="md" className="bg-white shadow-md mb-2 items-center justify-between rounded-2xl p-4">
+    <Pressable
+      onPress={() => {
+        if (!item.done) completeExercise({ exerciseId: item._id });
+        if (item.type === "meditation") {
+          router.push({ pathname: "/player", params: { id: item.exerciseId } });
+        }
+        if (item.type === "chatbot") {
+          router.push({ pathname: "/chat-bot", params: { id: item.exerciseId } });
+        }
+        if (item.type === "breathing") {
+          router.push({ pathname: "/breathingPlayer", params: { id: item.exerciseId } });
+        }
+        if (item.type === "text-activity") {
+          // if (item.done) return;
+          router.push({ pathname: "/text-activity", params: { subType: item.exerciseId, title: item.title } });
+        }
+      }}
+      className="bg-white flex-row shadow-md mb-2 items-center justify-between rounded-2xl p-4"
+    >
       <Button
         onPress={() => {
           if (!item.done) completeExercise({ exerciseId: item._id });
@@ -54,7 +73,7 @@ const Train = () => {
         <ButtonText className="text-white font-vazirBold">{item.done ? "انجام شد" : "شروع"}</ButtonText>
       </Button>
 
-      <VStack className="flex-1 mr-4 items-end">
+      <VStack className="flex-1 mx-4 items-end">
         <Text className="text-right font-vazirBold text-md text-primary-800">{item.title}</Text>
         {item.description && (
           <Text className="text-right font-vazir text-sm text-primary-700">
@@ -85,7 +104,7 @@ const Train = () => {
       ) : (
         <Logo className="h-8 w-8" />
       )}
-    </HStack>
+    </Pressable>
   );
 
   return (

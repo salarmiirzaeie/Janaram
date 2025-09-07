@@ -1,21 +1,27 @@
-import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@/components/ui/slider";
-import { Spinner } from "@/components/ui/spinner";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { TapGestureHandler, TapGestureHandlerGestureEvent } from "react-native-gesture-handler";
+import Animated, { interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 export default function PlayerScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { track, isPlaying, position, duration, loadTrack, togglePlay, seek, isLoading } = useAudioPlayer();
 
+  const [progressBarWidth, setProgressBarWidth] = useState(0);
+  const progress = useSharedValue(0);
+
   useEffect(() => {
-    if (id) {
-      loadTrack(id);
-    }
+    if (id && id !== track?.id) loadTrack(id);
   }, [id]);
+
+  // Update progress smoothly when position changes
+  useEffect(() => {
+    progress.value = withTiming(duration ? (position / duration) * 100 : 0, { duration: 100 });
+  }, [position, duration]);
 
   const formatMillis = (millis: number) => {
     const mins = Math.floor(millis / 60000);
@@ -23,14 +29,30 @@ export default function PlayerScreen() {
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
-  if (!id) {
-    return <Text style={{ padding: 20 }}>Track not found</Text>;
-  }
+  // Animated style for the filled progress bar
+  const filledStyle = useAnimatedStyle(() => ({
+    width: `${progress.value}%`,
+  }));
+
+  // Animated style for the thumb
+  const thumbStyle = useAnimatedStyle(() => {
+    const translateX = interpolate(progress.value, [0, 100], [0, progressBarWidth - 20]); // thumb width 20
+    return { transform: [{ translateX }] };
+  });
+
+  // Tap to seek
+  const onTap = ({ nativeEvent: { x } }: TapGestureHandlerGestureEvent) => {
+    if (!progressBarWidth || !duration) return;
+    const newPos = (x / progressBarWidth) * duration;
+    runOnJS(seek)(newPos);
+    progress.value = withTiming((newPos / duration) * 100, { duration: 100 });
+  };
+
+  if (!id) return <Text style={{ padding: 20 }}>Track not found</Text>;
 
   return (
     <View className="p-safe flex-1 bg-white p-8 justify-center items-center">
-      {isLoading || !track ? (
-        // Skeleton Loading State
+      {!track ? (
         <>
           <View style={styles.skeletonCover} />
           <View style={styles.skeletonTitle} />
@@ -43,18 +65,22 @@ export default function PlayerScreen() {
           <View style={styles.skeletonControls} />
         </>
       ) : (
-        // Real Content
         <>
           <Image source={{ uri: BASE_URL_IMAGES + track?.image }} style={styles.cover} />
           <Text style={styles.title}>{track?.title}</Text>
           <Text style={styles.artist}>{track?.description}</Text>
 
-          <Slider size="md" value={position} minValue={0} maxValue={duration} onChange={seek} className="w-11/12">
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb />
-          </Slider>
+          {/* Progress Bar */}
+          <TapGestureHandler onHandlerStateChange={onTap}>
+            <Animated.View
+              style={styles.progressBarContainer}
+              onLayout={(e) => setProgressBarWidth(e.nativeEvent.layout.width)}
+            >
+              <View style={styles.progressBarBackground} />
+              <Animated.View style={[styles.progressBarFilled, filledStyle]} />
+              <Animated.View style={[styles.thumb, thumbStyle]} />
+            </Animated.View>
+          </TapGestureHandler>
 
           <View style={styles.timeRow}>
             <Text style={styles.time}>{formatMillis(position)}</Text>
@@ -62,26 +88,14 @@ export default function PlayerScreen() {
           </View>
 
           <View style={styles.controls}>
-            <Ionicons name="play-skip-back" size={32} color="#666" />
-            <Pressable onPress={togglePlay}>
-              {isLoading ? (
-                <View
-                  style={{
-                    width: 56,
-                    height: 56,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "#4caf50",
-                    borderRadius: 34,
-                  }}
-                >
-                  <Spinner color={"#fff"} />
-                </View>
-              ) : (
-                <Ionicons name={isPlaying ? "pause-circle" : "play-circle"} size={68} color="#4caf50" />
-              )}
-            </Pressable>
-            <Ionicons name="play-skip-forward" size={32} color="#666" />
+            <Ionicons name="play-skip-back" size={32} color="#666" onPress={() => seek(position - 10000)} />
+            <Ionicons
+              name={isPlaying ? "pause-circle" : "play-circle"}
+              size={68}
+              color="#47A9DA"
+              onPress={togglePlay}
+            />
+            <Ionicons name="play-skip-forward" size={32} color="#666" onPress={() => seek(position + 10000)} />
           </View>
         </>
       )}
@@ -115,6 +129,38 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     fontFamily: "vazir",
   },
+  progressBarContainer: {
+    width: "90%",
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: "#e0e0e0",
+    overflow: "visible", // allow thumb to go outside
+    marginBottom: 12,
+    justifyContent: "center",
+  },
+  progressBarFilled: {
+    height: 12,
+    backgroundColor: "#47A9DA",
+    borderRadius: 6,
+  },
+  thumb: {
+    position: "absolute",
+    top: -6, // move thumb above the bar
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: "#47A9DA",
+    zIndex: 100,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  progressBarBackground: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "#e0e0e0",
+  },
   timeRow: {
     width: "90%",
     flexDirection: "row",
@@ -132,8 +178,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 40,
   },
-
-  // Skeleton styles
   skeletonCover: {
     width: 220,
     height: 220,
