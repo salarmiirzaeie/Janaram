@@ -1,5 +1,6 @@
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
+import { resetNotificationCount } from "@/redux/notifications/notifications-slice";
 import { useGetChatHistoryQuery, useStartConversationMutation } from "@/services/ai/ai-adapter";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -82,6 +83,9 @@ const ChatScreen: React.FC = () => {
     if (messages.length > 0) listRef.current?.scrollToIndex({ index: 0, animated: true });
   };
 
+  useEffect(() => {
+    dispatch(resetNotificationCount());
+  }, []);
   useEffect(() => {
     if (data && data.success && data.data?.response) {
       setMessages((prev) => [{ role: "assistant", content: data.data.response, timestamp: new Date() }, ...prev]);

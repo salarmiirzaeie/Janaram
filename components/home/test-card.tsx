@@ -1,3 +1,4 @@
+import { useAppSelector } from "@/hooks/useAppSelector";
 import { useCustomToast } from "@/hooks/useToast";
 import { router } from "expo-router";
 import React from "react";
@@ -10,6 +11,7 @@ import { VStack } from "../ui/vstack";
 
 const TestCard: React.FC = (props) => {
   const toast = useCustomToast();
+  const notificationCount = useAppSelector((state) => state.notification.unReadNotifications);
   return (
     <Pressable
       className="shadow-md bg-white rounded-full"
@@ -18,9 +20,11 @@ const TestCard: React.FC = (props) => {
       }}
     >
       {/* شماره بالای کارت */}
-      <VStack className="absolute bg-primary-500 -top-1.5 w-7 h-7 justify-center items-center rounded-full z-50 -left-1.5">
-        <Text className="font-vazirBold text-md text-white">1</Text>
-      </VStack>
+      {notificationCount > 0 && (
+        <VStack className="absolute bg-primary-500 -top-1.5 w-7 h-7 justify-center items-center rounded-full z-50 -left-1.5">
+          <Text className="font-vazirBold text-md text-white">{notificationCount}</Text>
+        </VStack>
+      )}
 
       {/* بدنه کارت */}
       <HStack className="py-5 pr-5 rounded-3xl justify-between w-full bg-secondary-300 shadow">

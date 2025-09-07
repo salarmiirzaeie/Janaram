@@ -47,7 +47,7 @@ const _layout = () => {
 
             return (
               <Pressable
-                className="items-center flex-row space-x-2"
+                className="items-center flex-row mr-1"
                 onPress={() =>
                   !isActive
                     ? dispatch({

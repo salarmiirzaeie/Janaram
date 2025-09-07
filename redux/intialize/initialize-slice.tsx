@@ -5,6 +5,7 @@ interface initialState {
   meditationTimer: number;
   goal: string[];
   isFirstModalShow: boolean;
+  isCommented: boolean;
 }
 
 const initialState: initialState = {
@@ -12,6 +13,7 @@ const initialState: initialState = {
   meditationTimer: 11,
   goal: [],
   isFirstModalShow: true,
+  isCommented: false,
 };
 
 const initializeSlice = createSlice({
@@ -30,8 +32,12 @@ const initializeSlice = createSlice({
     setIsFirstModalShow: (state, action: PayloadAction<boolean>) => {
       state.isFirstModalShow = action.payload;
     },
+    setIsCommented: (state, action: PayloadAction<boolean>) => {
+      state.isCommented = action.payload;
+    },
   },
 });
 
-export const { setIsInitialized, setMeditationTimer, setGoal, setIsFirstModalShow } = initializeSlice.actions;
+export const { setIsInitialized, setMeditationTimer, setGoal, setIsFirstModalShow, setIsCommented } =
+  initializeSlice.actions;
 export default initializeSlice.reducer;

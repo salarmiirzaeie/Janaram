@@ -5,6 +5,7 @@ import ProPlanFullScreenModal from "@/components/home/pro-modal";
 import UpdateModal from "@/components/settings/update-modal";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import useAuth from "@/hooks/useAuth";
+import { addNotificationCount } from "@/redux/notifications/notifications-slice";
 import { setSleepMode } from "@/redux/sleep-mode/sleep-slice";
 import { useInitializeNotificationsMutation } from "@/services/notification/notifications-adapter";
 import { useCheckVersionQuery } from "@/services/version/version-adapter";
@@ -35,6 +36,7 @@ export default function TabLayout() {
   const { data } = useCheckVersionQuery({ version: "1.0.8" });
   const [initialNotification] = useInitializeNotificationsMutation();
   const { authorized } = useAuth();
+
   const dispatch = useDispatch();
   const handleDismissProModal = () => {
     dispatch({
@@ -65,14 +67,20 @@ export default function TabLayout() {
     }
     setup();
     const notificationListener = Notifications.addNotificationReceivedListener((notification) => {
-      console.log(notification);
+      dispatch(addNotificationCount(1));
     });
 
     const responseListener = Notifications.addNotificationResponseReceivedListener((response) => {
       console.log("Notification response:", response);
       const { action } = response.notification.request.content.data;
-      if (action === "OPEN_CHATBOT") {
+      if (action === "mood") {
         router.push("/chat-bot"); // هدایت به صفحه چت‌بات
+      }
+      if (action === "pro") {
+        dispatch({
+          type: "initialize/setIsFirstModalShow",
+          payload: true,
+        });
       }
     });
 
@@ -81,6 +89,7 @@ export default function TabLayout() {
       responseListener.remove();
     };
   }, [isNotificationEnabled, authorized]);
+
   if (!isInitialized) {
     return <Redirect href="/auth/start" />;
   }

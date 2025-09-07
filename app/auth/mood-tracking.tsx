@@ -24,8 +24,8 @@ const MoodTrackingIntro = () => {
           style={styles.robotImage}
         />
         <Text className="text-typography-400 font-vazir text-center text-md px-4">
-          تو این بخش اول حالت رو ثبت می‌کنی و بعد، با استفاده از هوش مصنوعی، هر روز تمرین‌های مدیتیشن متناسب با حالتت
-          بهت پیشنهاد می‌دیم تا راحت‌تر مسیر آرامشت رو پیدا کنی.
+          حالتت رو ثبت کن و ما با هوش مصنوعی، هر روز تمرینات مدیتیشن‌ مناسب حالت رو پیشنهاد می‌دیم تا مسیر آرامشت رو
+          آسون‌تر پیدا کنی.
         </Text>
       </VStack>
       <VStack className="w-full p-4">

@@ -10,14 +10,20 @@ import { toPersianDigits } from "@/utils/persian";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
 
 const Train = () => {
   const animationRef = React.useRef(null);
   const { data, isLoading } = useGetExerciseQuery(null);
   const { data: mood, isLoading: moodLoading } = useGetMoodQuery(null);
+  const [fakeLoading, setFakeLoading] = React.useState(true);
   const [completeExercise, { isLoading: completeLoading }] = useCompleteExerciseMutation();
+  useEffect(() => {
+    setTimeout(() => {
+      setFakeLoading(false);
+    }, 8000);
+  }, []);
 
   const renderItem = ({ item }: { item: UserExercise }) => (
     <HStack space="md" className="bg-white shadow-md mb-2 items-center justify-between rounded-2xl p-4">
@@ -101,11 +107,9 @@ const Train = () => {
           <ProgressFilledTrack className="bg-primary-500" />
         </Progress>
       </View>
-
       {/* Exercises List */}
       <Text className="text-right font-vazirBold text-xl text-primary-800 mb-4">تمرینات امروز</Text>
-
-      {isLoading ? (
+      {isLoading || fakeLoading ? (
         <VStack className="flex-1 justify-center items-center">
           <LottieView
             style={{ width: 260, height: 260 }}
@@ -114,7 +118,13 @@ const Train = () => {
             autoPlay
             loop
           />
-          <Text className="text-right font-vazir text-md text-primary-700 mt-4">در حال آماده سازی...</Text>
+          <Text className="text-right font-vazir text-md text-primary-700 mt-4">
+            در حال آماده سازی با هوش مصنوعی...
+          </Text>
+          <Text className="text-typography-400 font-vazir text-center text-md px-4">
+            اینجا تمرین‌های متناسب با حالت رو می‌بینی. برای دریافت تمرینات پیشرفته‌تر و تخصصی تر، می‌تونی به{" "}
+            <Text className="font-bold">نسخه Pro</Text> ارتقا بدی.
+          </Text>
         </VStack>
       ) : (
         <FlatList data={data?.data} renderItem={renderItem} keyExtractor={(item) => item._id} />

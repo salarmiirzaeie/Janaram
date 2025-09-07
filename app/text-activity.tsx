@@ -7,7 +7,7 @@ import { VStack } from "@/components/ui/vstack";
 import { useCustomToast } from "@/hooks/useToast";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { ScrollView, TextInput } from "react-native";
+import { ScrollView, TextInput, View } from "react-native";
 
 type SubType = "gratitude_exercise" | "daily_tip" | "journaling";
 
@@ -16,6 +16,7 @@ export default function TextActivityScreen() {
   const [text, setText] = useState("");
   const [gratitudeList, setGratitudeList] = useState<string[]>([]);
   const toast = useCustomToast();
+
   const handleAddGratitude = () => {
     if (text.trim() !== "") {
       setGratitudeList([...gratitudeList, text.trim()]);
@@ -34,7 +35,6 @@ export default function TextActivityScreen() {
     });
     toast.show({ msg: "با موفقیت ذخیره شد", type: "success" });
     router.back();
-    // اینجا می‌تونی API بزنی و ذخیره کنی
   };
 
   const tips = [
@@ -66,16 +66,17 @@ export default function TextActivityScreen() {
       case "gratitude_exercise":
         return (
           <VStack space="lg">
-            <Text className="text-xl font-vazirBold text-right">شکرگزاری</Text>
-            <Text className="text-base font-vazir text-gray-600 text-right">
-              امروز بابت چه چیزهایی شکرگزار هستی؟ هر مورد رو جداگانه بنویس.
+            <Text className="text-xl font-vazirBold text-right">🌸 شکرگزاری</Text>
+            <Text className="text-base font-vazir text-gray-600 text-right leading-6">
+              نوشتن چیزهایی که بابت آن‌ها شکرگزار هستی باعث افزایش حس مثبت و آرامش درونی می‌شود. هر مورد را جداگانه
+              بنویس، حتی چیزهای کوچک مثل یک لبخند یا یک فنجان چای گرم.
             </Text>
 
             <HStack space="md" className="items-center">
               <TextInput
                 value={text}
                 onChangeText={setText}
-                placeholder="بنویس..."
+                placeholder="مثلاً: امروز از بودن کنار خانواده‌ام خوشحالم..."
                 className="flex-1 border border-gray-300 rounded-2xl p-4 text-right"
               />
               <Button size="md" onPress={handleAddGratitude}>
@@ -101,38 +102,48 @@ export default function TextActivityScreen() {
               ))}
             </VStack>
 
-            {/* هشدار */}
-            {/* <Text className="text-xs text-gray-500 text-right mt-2">
-              ⚠️ متن‌هایی که اینجا می‌نویسی جایی ذخیره نمی‌شن و فقط برای خودته.
-            </Text> */}
+            <Text className="text-xs text-gray-500 text-right mt-2">
+              ⚠️ نوشته‌های تو فقط روی دستگاهت هستن و جایی ذخیره نمی‌شن.
+            </Text>
           </VStack>
         );
 
       case "daily_tip":
         return (
           <Card className="p-6 bg-primary-100">
-            <Text className="text-lg font-vazirBold text-right">نکته امروز</Text>
-            <Text className="text-base font-vazir mt-2 text-right text-gray-700">{randomTip} </Text>
+            <Text className="text-lg font-vazirBold text-right">💡 نکته امروز</Text>
+            <Text className="text-base font-vazir mt-2 text-right text-gray-700 leading-6">
+              {randomTip}
+              <Text className="block mt-3 text-sm text-gray-500">
+                این جمله‌های انگیزشی می‌تونن بهت انرژی بدن. چند بار در روز بخون و یادت باشه عمل کردن به همین نکات کوچیک
+                می‌تونه تغییر بزرگی بسازه.
+              </Text>
+            </Text>
           </Card>
         );
 
       case "journaling":
         return (
           <VStack space="lg">
-            <Text className="text-xl font-vazirBold text-right">ژورنال روزانه</Text>
-            <Text className="text-base text-gray-600 font-vazir text-right">
-              افکارت رو همینجا بنویس. هر چیزی که توی ذهنت هست.
+            <Text className="text-xl font-vazirBold text-right">📝 ژورنال روزانه</Text>
+            <Text className="text-base text-gray-600 font-vazir text-right leading-6">
+              ژورنال نوشتن یعنی تخلیه‌ی ذهنی. می‌تونی احساساتت، نگرانی‌ها یا حتی ایده‌های خلاقانه‌ات رو روی کاغذ (اینجا)
+              بیاری. این تمرین باعث می‌شه ذهن سبک‌تر بشه و دید بهتری به روزت پیدا کنی.
             </Text>
-            <Textarea className="border  border-gray-300 rounded-2xl p-4 text-right">
-              <TextareaInput className="text-right" value={text} onChangeText={setText} placeholder="بنویس..." />
+            <Textarea className="border border-gray-300 rounded-2xl p-4 text-right">
+              <TextareaInput
+                className="text-right"
+                value={text}
+                onChangeText={setText}
+                placeholder="شروع کن به نوشتن..."
+              />
             </Textarea>
 
-            {/* هشدار */}
-            {/* <View className="border border-warning-400 rounded-2xl p-3">
-              <Text className="text-xs text-warning-600 text-right mt-2">
-                ⚠️ متن‌هایی که اینجا می‌نویسی جایی ذخیره نمی‌شن و فقط برای خودته.
+            <View className="border border-warning-400 rounded-2xl p-3">
+              <Text className="text-xs text-warning-600 text-right mt-1">
+                ⚠️ نوشته‌های این بخش فقط برای خودته و در جایی ذخیره نمی‌شن.
               </Text>
-            </View> */}
+            </View>
           </VStack>
         );
 
