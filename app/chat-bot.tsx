@@ -4,7 +4,7 @@ import { resetNotificationCount } from "@/redux/notifications/notifications-slic
 import { useGetChatHistoryQuery, useStartConversationMutation } from "@/services/ai/ai-adapter";
 import React, { useEffect, useRef, useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 
 // 👇 from @good-react-native/keyboard-avoider
@@ -143,7 +143,7 @@ const ChatScreen: React.FC = () => {
   const renderItem = ({ item }: { item: MessageType }) => <Message item={item} />;
 
   return (
-    <SafeAreaProvider style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView edges={["bottom"]} className="bg-white">
       <FlatList
         ref={flatListRef}
         data={messages}
@@ -203,7 +203,7 @@ const ChatScreen: React.FC = () => {
       {/* 👇 Adds safe spacing above keyboard */}
       {/* <KeyboardAvoiderInsets /> */}
       {/* </KeyboardAvoiderView> */}
-    </SafeAreaProvider>
+    </SafeAreaView>
   );
 };
 
