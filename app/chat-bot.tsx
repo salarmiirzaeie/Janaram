@@ -3,11 +3,10 @@ import { VStack } from "@/components/ui/vstack";
 import { resetNotificationCount } from "@/redux/notifications/notifications-slice";
 import { useGetChatHistoryQuery, useStartConversationMutation } from "@/services/ai/ai-adapter";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
-
-// 👇 from @good-react-native/keyboard-avoider
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 
 export interface MessageType {
   role: "user" | "assistant";
@@ -51,7 +50,7 @@ const ChatScreen: React.FC = () => {
 
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [input, setInput] = useState<string>("");
-  const flatListRef = useRef<FlatList<MessageType> | null>(null);
+  const flatListRef = useRef<KeyboardAwareFlatList<MessageType> | null>(null);
   const [showPremium, setShowPremium] = useState(false);
   const [startConversation, { isLoading, error, data }] = useStartConversationMutation();
   const [page, setPage] = useState(1);
@@ -72,7 +71,7 @@ const ChatScreen: React.FC = () => {
     ]);
 
   const scrollToBottom = () => {
-    if (messages.length > 0) flatListRef.current?.scrollToIndex({ index: 0, animated: true });
+    if (messages.length > 0) flatListRef.current?.scrollToEnd(true);
   };
 
   useEffect(() => {
@@ -143,66 +142,62 @@ const ChatScreen: React.FC = () => {
   const renderItem = ({ item }: { item: MessageType }) => <Message item={item} />;
 
   return (
-    <SafeAreaView edges={["bottom"]} className="bg-white">
-      <FlatList
-        ref={flatListRef}
-        data={messages}
-        keyExtractor={(_, idx) => idx.toString()}
-        renderItem={renderItem}
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: "flex-start",
-          paddingBottom: insets.bottom + 80,
-          paddingHorizontal: 15,
-        }}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.1}
-        showsVerticalScrollIndicator={false}
-        inverted
-        keyboardShouldPersistTaps="handled"
-      />
-
-      {showPremium && (
-        <VStack className="p-4 m-4 bg-accent-200 rounded-2xl">
-          <Text className="text-lg font-vazirBold text-right text-accent-500 mb-4">
-            شما محدودیت روزانه ۱۰ گفت‌وگو را استفاده کردید. با خرید اشتراک به صورت نامحدود مشاوره بگیرید.
-          </Text>
-          <Button
-            onPress={() =>
-              dispatch({
-                type: "initialize/setIsFirstModalShow",
-                payload: true,
-              })
-            }
-            className="bg-primary-500"
-          >
-            <ButtonText className="text-white">خرید اشتراک</ButtonText>
-          </Button>
-        </VStack>
-      )}
-
-      {/* 👇 Input bar inside KeyboardAvoiderView */}
-      {/* <KeyboardAvoiderView> */}
-      <View style={[styles.inputContainer]}>
-        <TextInput
-          style={styles.textInput}
-          value={input}
-          onChangeText={setInput}
-          placeholder="احساسات و افکار خود را اینجا بنویسید..."
-          placeholderTextColor="#888"
-          multiline
-          returnKeyType="send"
-          onSubmitEditing={handleSend}
-          blurOnSubmit={false}
+    <SafeAreaView edges={["bottom"]} style={{ flex: 1, backgroundColor: "white" }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 80} // adjust if needed
+      >
+        <KeyboardAwareFlatList
+          ref={flatListRef}
+          data={messages}
+          keyExtractor={(_, idx) => idx.toString()}
+          renderItem={renderItem}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: "flex-start",
+            paddingHorizontal: 15,
+            paddingBottom: insets.bottom + 80,
+          }}
+          extraScrollHeight={120} // ensures input moves above keyboard on Samsung
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.1}
+          showsVerticalScrollIndicator={false}
+          inverted
+          keyboardShouldPersistTaps="handled"
         />
-        <TouchableOpacity style={styles.sendButton} onPress={handleSend} disabled={isLoading || !input.trim()}>
-          {isLoading ? <ButtonSpinner color="#fff" /> : <Text style={styles.sendButtonText}>ارسال</Text>}
-        </TouchableOpacity>
-      </View>
 
-      {/* 👇 Adds safe spacing above keyboard */}
-      {/* <KeyboardAvoiderInsets /> */}
-      {/* </KeyboardAvoiderView> */}
+        {showPremium && (
+          <VStack className="p-4 m-4 bg-accent-200 rounded-2xl">
+            <Text className="text-lg font-vazirBold text-right text-accent-500 mb-4">
+              شما محدودیت روزانه ۱۰ گفت‌وگو را استفاده کردید. با خرید اشتراک به صورت نامحدود مشاوره بگیرید.
+            </Text>
+            <Button
+              onPress={() => dispatch({ type: "initialize/setIsFirstModalShow", payload: true })}
+              className="bg-primary-500"
+            >
+              <ButtonText className="text-white">خرید اشتراک</ButtonText>
+            </Button>
+          </VStack>
+        )}
+
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.textInput}
+            value={input}
+            onChangeText={setInput}
+            placeholder="احساسات و افکار خود را اینجا بنویسید..."
+            placeholderTextColor="#888"
+            multiline
+            returnKeyType="send"
+            onSubmitEditing={handleSend}
+            blurOnSubmit={false}
+          />
+          <TouchableOpacity style={styles.sendButton} onPress={handleSend} disabled={isLoading || !input.trim()}>
+            {isLoading ? <ButtonSpinner color="#fff" /> : <Text style={styles.sendButtonText}>ارسال</Text>}
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
