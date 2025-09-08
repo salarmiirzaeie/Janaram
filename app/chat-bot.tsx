@@ -4,9 +4,10 @@ import { resetNotificationCount } from "@/redux/notifications/notifications-slic
 import { useGetChatHistoryQuery, useStartConversationMutation } from "@/services/ai/ai-adapter";
 import React, { useEffect, useRef, useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
+
+// 👇 from @good-react-native/keyboard-avoider
 
 export interface MessageType {
   role: "user" | "assistant";
@@ -126,7 +127,11 @@ const ChatScreen: React.FC = () => {
 
   const handleSend = async () => {
     if (!input.trim()) return;
-    const userMessage: MessageType = { role: "user", content: input.trim(), timestamp: new Date() };
+    const userMessage: MessageType = {
+      role: "user",
+      content: input.trim(),
+      timestamp: new Date(),
+    };
     setMessages((prev) => [userMessage, ...prev]);
     setInput("");
     try {
@@ -139,10 +144,8 @@ const ChatScreen: React.FC = () => {
 
   return (
     <SafeAreaProvider style={{ flex: 1, backgroundColor: "#fff" }}>
-      <KeyboardAwareFlatList
-        innerRef={(ref) => {
-          flatListRef.current = ref;
-        }}
+      <FlatList
+        ref={flatListRef}
         data={messages}
         keyExtractor={(_, idx) => idx.toString()}
         renderItem={renderItem}
@@ -157,9 +160,6 @@ const ChatScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
         inverted
         keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="interactive"
-        initialNumToRender={20}
-        windowSize={5}
       />
 
       {showPremium && (
@@ -181,7 +181,9 @@ const ChatScreen: React.FC = () => {
         </VStack>
       )}
 
-      <View style={[styles.inputContainer, { paddingBottom: insets.bottom + 10 }]}>
+      {/* 👇 Input bar inside KeyboardAvoiderView */}
+      {/* <KeyboardAvoiderView> */}
+      <View style={[styles.inputContainer]}>
         <TextInput
           style={styles.textInput}
           value={input}
@@ -192,12 +194,15 @@ const ChatScreen: React.FC = () => {
           returnKeyType="send"
           onSubmitEditing={handleSend}
           blurOnSubmit={false}
-          autoFocus
         />
         <TouchableOpacity style={styles.sendButton} onPress={handleSend} disabled={isLoading || !input.trim()}>
           {isLoading ? <ButtonSpinner color="#fff" /> : <Text style={styles.sendButtonText}>ارسال</Text>}
         </TouchableOpacity>
       </View>
+
+      {/* 👇 Adds safe spacing above keyboard */}
+      {/* <KeyboardAvoiderInsets /> */}
+      {/* </KeyboardAvoiderView> */}
     </SafeAreaProvider>
   );
 };
@@ -216,7 +221,8 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: "#A5D6A7",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#fff",
+    paddingBottom: 10,
   },
   textInput: {
     flex: 1,
@@ -237,7 +243,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  sendButtonText: { color: "#FFFFFF", fontSize: 16, fontWeight: "600", fontFamily: "vazirBold" },
+  sendButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+    fontFamily: "vazirBold",
+  },
 });
 
 export default ChatScreen;

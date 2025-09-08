@@ -7,7 +7,7 @@ import { usePlansQuery, useUpgradePlanMutation } from "@/services/upgrade/upgrad
 import { useBazaar } from "@cafebazaar/react-native-poolakey";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect } from "react";
-import { Image, Modal, Pressable, StatusBar, StyleSheet, View } from "react-native";
+import { Dimensions, Image, Modal, Pressable, StatusBar, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export type ProPlanModalProps = {
@@ -16,6 +16,16 @@ export type ProPlanModalProps = {
 };
 
 export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModalProps) {
+  const screenHeight = Dimensions.get("window").height;
+
+  // Decide layout sizes
+  const isSmall = screenHeight < 700;
+  const heroSize = isSmall ? 160 : 240;
+  const titleFont = isSmall ? "text-2xl" : "text-3xl";
+  const descFont = isSmall ? "text-sm" : "text-base";
+  const priceFont = isSmall ? "text-base" : "text-lg";
+  const paddingX = isSmall ? "px-4" : "px-6";
+
   useEffect(() => {
     if (visible) StatusBar.setBarStyle("dark-content");
   }, [visible]);
@@ -63,14 +73,14 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
 
         {isLoading ? (
           // ---------------------- LOADING STATE ----------------------
-          <VStack space="md" className="px-6">
+          <VStack space="md" className={`${paddingX}`}>
             <View style={styles.skeletonTitle} />
             <View style={styles.skeletonDesc} />
             <View className="items-center">
-              <View style={styles.skeletonHero} />
+              <View style={[styles.skeletonHero, { width: heroSize, height: heroSize }]} />
             </View>
             <View style={styles.skeletonPrice} />
-            <VStack className="mt-8" space="lg">
+            <VStack className="mt-4" space="md">
               {[...Array(3)].map((_, i) => (
                 <HStack key={i} space="md" className="items-start">
                   <View style={styles.skeletonIcon} />
@@ -83,35 +93,37 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
           // ---------------------- REAL CONTENT ----------------------
           <>
             {/* Hero */}
-            <VStack space="md" className="px-6">
-              <Text className="text-3xl font-vazirBold text-right text-indigo-800">آرامش عمیق‌تر با Pro</Text>
-              <Text className="text-gray-600 text-right font-vazir leading-6">
+            <VStack space="sm" className={`${paddingX}`}>
+              <Text className={`${titleFont} font-vazirBold text-right text-indigo-800`}>آرامش عمیق‌تر با Pro</Text>
+              <Text className={`text-gray-600 text-right font-vazir leading-6 ${descFont}`}>
                 به همه تمرین‌ها، راهنمای صوتی و ابزارهای حرفه‌ای دسترسی پیدا کن و سفرت به سمت آرامش رو جدی‌تر ادامه بده.
               </Text>
 
-              <View className="items-center ">
+              <View className="items-center mt-2">
                 <Image
                   source={require("@/assets/illustrations/Upgrading.png")}
                   resizeMode="contain"
-                  className="w-64 h-64"
+                  style={{ width: heroSize, height: heroSize }}
                 />
               </View>
 
-              <View className="self-start mt-2 bg-indigo-100 rounded-full px-5 py-2 flex-row items-center space-x-2">
-                <Text className="text-indigo-700 text-lg font-vazirBold">{proPlan?.price} هزار تومان / ماهانه</Text>
-                <Text className="text-indigo-400 text-lg font-vazir line-through ml-2">
+              <View className="self-start mt-2 bg-indigo-100 rounded-full px-4 py-1.5 flex-row items-center space-x-2">
+                <Text className={`text-indigo-700 font-vazirBold ${priceFont}`}>
+                  {proPlan?.price} هزار تومان / ماهانه
+                </Text>
+                <Text className={`text-indigo-400 font-vazir line-through ml-2 ${priceFont}`}>
                   {proPlan?.oldPrice} هزار تومان
                 </Text>
               </View>
             </VStack>
 
             {/* Benefits */}
-            <VStack className="px-6 mt-8" space="lg">
+            <VStack className={`${paddingX} mt-4`} space="md">
               {features?.map((b, idx) => (
-                <HStack key={idx} space="md" className="items-start">
-                  <AntDesign name="checkcircle" size={20} color="#22c55e" />
+                <HStack key={idx} space="sm" className="items-start">
+                  <AntDesign name="checkcircle" size={isSmall ? 16 : 20} color="#22c55e" />
                   <VStack space="xs" className="flex-1">
-                    <Text className="text-right font-vazirBold text-base text-gray-800">{b}</Text>
+                    <Text className={`text-right font-vazirBold ${descFont} text-gray-800`}>{b}</Text>
                   </VStack>
                 </HStack>
               ))}
@@ -120,7 +132,7 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
         )}
 
         {/* Bottom CTA */}
-        <View className="absolute left-0 right-0 bottom-0 bg-white/95 border-t border-gray-200 p-4">
+        <View className="mt-auto bg-white/95 border-t border-gray-200 p-4">
           <VStack space="md">
             <Button onPress={() => handleSubscribe(proPlan?.id || "0")} isDisabled={isUpgrading || isLoading}>
               <ButtonText className="text-white">ارتقا به Pro</ButtonText>
@@ -138,45 +150,10 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
 }
 
 const styles = StyleSheet.create({
-  // Skeleton styles
-  skeletonTitle: {
-    width: "70%",
-    height: 28,
-    borderRadius: 6,
-    backgroundColor: "#e0e0e0",
-    marginBottom: 8,
-  },
-  skeletonDesc: {
-    width: "90%",
-    height: 16,
-    borderRadius: 6,
-    backgroundColor: "#e0e0e0",
-    marginBottom: 20,
-  },
-  skeletonHero: {
-    width: 240,
-    height: 240,
-    borderRadius: 16,
-    backgroundColor: "#e0e0e0",
-    marginBottom: 20,
-  },
-  skeletonPrice: {
-    width: "60%",
-    height: 22,
-    borderRadius: 12,
-    backgroundColor: "#e0e0e0",
-    marginBottom: 20,
-  },
-  skeletonIcon: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: "#e0e0e0",
-  },
-  skeletonFeature: {
-    flex: 1,
-    height: 16,
-    borderRadius: 6,
-    backgroundColor: "#e0e0e0",
-  },
+  skeletonTitle: { width: "70%", height: 24, borderRadius: 6, backgroundColor: "#e0e0e0", marginBottom: 8 },
+  skeletonDesc: { width: "90%", height: 14, borderRadius: 6, backgroundColor: "#e0e0e0", marginBottom: 16 },
+  skeletonHero: { borderRadius: 16, backgroundColor: "#e0e0e0", marginBottom: 16 },
+  skeletonPrice: { width: "60%", height: 20, borderRadius: 12, backgroundColor: "#e0e0e0", marginBottom: 16 },
+  skeletonIcon: { width: 16, height: 16, borderRadius: 8, backgroundColor: "#e0e0e0" },
+  skeletonFeature: { flex: 1, height: 14, borderRadius: 6, backgroundColor: "#e0e0e0" },
 });

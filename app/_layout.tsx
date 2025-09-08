@@ -4,13 +4,18 @@ import "@/global.css";
 import { persistor, store } from "@/redux/store";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { StatusBar } from "react-native";
+import { I18nManager, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
+// Force app direction to always LTR
+if (I18nManager.isRTL) {
+  I18nManager.allowRTL(false);
+  I18nManager.forceRTL(false);
+}
 // Trigger a layout animation
 
 export default function RootLayout() {

@@ -1,14 +1,11 @@
+import CustomHeader from "@/components/home/header";
 import Logo from "@/components/ui/logo";
-import { Text } from "@/components/ui/text";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { useCustomToast } from "@/hooks/useToast";
 import { useGetMoodQuery } from "@/services/mood/mood-adapter";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
-import { toPersianDigits } from "@/utils/persian";
-import { FontAwesome6 } from "@expo/vector-icons";
-import { Redirect, router, Stack } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 import React from "react";
-import { Pressable } from "react-native";
 import { useDispatch } from "react-redux";
 
 const _layout = () => {
@@ -32,39 +29,8 @@ const _layout = () => {
           headerTitleAlign: "center",
           headerTitle: () => <Logo className="h-10 w-16" />,
           headerShadowVisible: false,
-
-          headerLeft() {
-            return (
-              <Pressable className="items-center flex-row pl-1 pr-4" onPress={() => router.navigate("/streak")}>
-                <Text className="text-lg">🌱 </Text>
-                <Text className="text-lg font-vazirBold mt-1">{toPersianDigits(data?.data.totalMoodDays || 0)}</Text>
-              </Pressable>
-            );
-          },
-
-          headerRight() {
-            const isActive = proPlan?.isActive;
-
-            return (
-              <Pressable
-                className="items-center flex-row mr-1"
-                onPress={() =>
-                  !isActive
-                    ? dispatch({
-                        type: "initialize/setIsFirstModalShow",
-                        payload: true,
-                      })
-                    : toast.show({ msg: "پلن Pro شما فعال است", type: "success" })
-                }
-              >
-                <Text className={`text-lg font-vazirBold ${isActive ? "text-green-500" : "text-accent-400"}`}>Pro</Text>
-                <FontAwesome6
-                  size={24}
-                  name="crown"
-                  color={isActive ? "#4ade80" : "#FFB74D"} // اگه فعال بود سبز بشه
-                />
-              </Pressable>
-            );
+          header(props) {
+            return <CustomHeader data={data} proPlan={proPlan} />;
           },
         }}
       />

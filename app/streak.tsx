@@ -43,7 +43,7 @@ const Streak = () => {
   }
 
   return (
-    <VStack space="lg" className="flex-1 justify-center items-center bg-white">
+    <VStack space="4xl" className="flex-1 justify-center items-center bg-white">
       <LottieView
         ref={animationRef}
         source={require("@/assets/animations/Seedling.json")}
@@ -52,7 +52,7 @@ const Streak = () => {
         style={styles.animation}
       />
 
-      <Text className="text-6xl font-vazirBold text-primary-600 mt-48 mb-6">
+      <Text className="text-6xl font-vazirBold text-primary-600 ">
         {toPersianDigits(data?.data.totalMoodDays || 0)}
       </Text>
 
@@ -86,9 +86,5 @@ const styles = StyleSheet.create({
   animation: {
     width: 200,
     height: 200,
-    position: "absolute",
-    top: "10%",
-    left: "50%",
-    transform: [{ translateX: -100 }],
   },
 });

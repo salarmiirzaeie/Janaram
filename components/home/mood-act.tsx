@@ -40,7 +40,7 @@ const MoodAct: React.FC<Props> = ({ isOpen, onClose, handleStreakModal }) => {
         className="w-full"
         keyboardVerticalOffset={0}
       >
-        <ActionsheetContent className="py-12 px-5">
+        <ActionsheetContent className="py-12  px-5">
           <VStack space="lg" className="w-full flex-grow justify-between items-center">
             {/* Title */}
             <Text className="text-2xl font-vazirBold text-primary-800 text-center">
