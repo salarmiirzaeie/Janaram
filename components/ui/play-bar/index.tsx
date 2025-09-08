@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HStack } from "../hstack";
 
 export default function NowPlayingBar() {
-  const { track, isPlaying, position, duration, loadTrack, togglePlay, seek, stop } = useAudioPlayer();
+  const { track, isPlaying, position, trackType, loadTrack, togglePlay, seek, stop } = useAudioPlayer();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   if (!track) return null;
@@ -29,8 +29,8 @@ export default function NowPlayingBar() {
       <Pressable
         onPress={() =>
           router.push({
-            pathname: "/player",
-            params: { id: track.id, title: track.title, artist: track.description, image: track.image },
+            pathname: trackType === "meditation" ? "/player" : "/breathingPlayer",
+            params: { id: track.id },
           })
         }
         style={{ flex: 1, marginLeft: 10 }}

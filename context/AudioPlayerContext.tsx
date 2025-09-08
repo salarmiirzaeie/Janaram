@@ -18,6 +18,7 @@ type AudioPlayerContextType = {
   showPlayingBar: boolean;
   stop: () => void;
   isLoading: boolean;
+  trackType: "meditation" | "breathing";
 };
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | null>(null);
@@ -31,6 +32,7 @@ export const useAudioPlayer = () => {
 export const AudioPlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [getMeditation, { data, isLoading: isApiLoading }] = useLazyGetMeditationQuery();
   const [getBreathing, { data: breathing, isLoading: isBreathingLoading }] = useLazyGetBreathingQuery();
+  const [trackType, setTrackType] = useState<"meditation" | "breathing">("meditation");
   const [track, setTrack] = useState<Meditation | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0);
@@ -66,12 +68,13 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
   }, []);
   const loadTrack = async (id: string, type?: "meditation" | "breathing") => {
     if (!id) return;
+    setIsLoading(true);
     if (type === "breathing") {
+      setTrackType("breathing");
       await getBreathing({ id })
         .unwrap()
         .then(async (res) => {
           try {
-            setIsLoading(true);
             if (soundRef.current) {
               await soundRef.current.unloadAsync();
               soundRef.current.setOnPlaybackStatusUpdate(null);
@@ -115,11 +118,11 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
           }
         });
     } else {
+      setTrackType("meditation");
       await getMeditation({ id })
         .unwrap()
         .then(async (res) => {
           try {
-            setIsLoading(true);
             if (soundRef.current) {
               await soundRef.current.unloadAsync();
               soundRef.current.setOnPlaybackStatusUpdate(null);
@@ -209,6 +212,7 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
         stop,
         showPlayingBar,
         isLoading: isApiLoading || isLoading || isBreathingLoading,
+        trackType,
       }}
     >
       {children}

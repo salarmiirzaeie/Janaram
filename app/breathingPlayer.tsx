@@ -48,7 +48,12 @@ export default function BreathingPlayerScreen() {
   // React state to show on UI
   const [phaseText, setPhaseText] = useState<"inhale" | "hold_after_inhale" | "exhale" | "hold_after_exhale">("inhale");
   const [phaseSeconds, setPhaseSeconds] = useState(INHALE_DURATION / 1000);
-
+  const [initialLoading, setInitialLoading] = useState(true);
+  useEffect(() => {
+    if (!isLoading && id === track?.id) {
+      setInitialLoading(false);
+    }
+  }, [track, isLoading]);
   // Sync UI from Reanimated shared values
   useAnimatedReaction(
     () => phaseShared.value,
@@ -147,7 +152,7 @@ export default function BreathingPlayerScreen() {
   }, [isPlaying, INHALE_DURATION, EXHALE_DURATION, HOLD_DURATION, scale, phaseShared, secondsShared]);
 
   useEffect(() => {
-    if (id) {
+    if (id && id !== track?.id) {
       loadTrack(id, "breathing");
     }
   }, [id]);
@@ -242,7 +247,7 @@ export default function BreathingPlayerScreen() {
             <ActionsheetDragIndicator />
           </ActionsheetDragIndicatorWrapper>
 
-          {isLoading || !track ? (
+          {initialLoading ? (
             <VStack space="lg" className="p-4 items-center justify-center w-full">
               <View style={styles.skeletonTitle} />
               <View style={styles.skeletonDesc} />

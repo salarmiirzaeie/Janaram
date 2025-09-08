@@ -13,7 +13,14 @@ export default function PlayerScreen() {
 
   const [progressBarWidth, setProgressBarWidth] = useState(0);
   const progress = useSharedValue(0);
+  const [initialLoading, setInitialLoading] = useState(true);
+  useEffect(() => {
+    if (!isLoading && id === track?.id) {
+      setInitialLoading(false);
 
+      // once we have the track, stop showing skeleton
+    }
+  }, [track, isLoading]);
   useEffect(() => {
     if (id && id !== track?.id) loadTrack(id);
   }, [id]);
@@ -52,8 +59,8 @@ export default function PlayerScreen() {
 
   return (
     <View className="p-safe flex-1 bg-white p-8 justify-center items-center">
-      {!track ? (
-        <>
+      {initialLoading ? (
+        <View className="w-full items-center">
           <View style={styles.skeletonCover} />
           <View style={styles.skeletonTitle} />
           <View style={styles.skeletonDesc} />
@@ -63,9 +70,9 @@ export default function PlayerScreen() {
             <View style={styles.skeletonTime} />
           </View>
           <View style={styles.skeletonControls} />
-        </>
+        </View>
       ) : (
-        <>
+        <View className="w-full items-center">
           <Image source={{ uri: BASE_URL_IMAGES + track?.image }} style={styles.cover} />
           <Text style={styles.title}>{track?.title}</Text>
           <Text style={styles.artist}>{track?.description}</Text>
@@ -97,7 +104,7 @@ export default function PlayerScreen() {
             />
             <Ionicons name="play-skip-forward" size={32} color="#666" onPress={() => seek(position + 10000)} />
           </View>
-        </>
+        </View>
       )}
     </View>
   );
