@@ -4,9 +4,9 @@ import { resetNotificationCount } from "@/redux/notifications/notifications-slic
 import { useGetChatHistoryQuery, useStartConversationMutation } from "@/services/ai/ai-adapter";
 import React, { useEffect, useRef, useState } from "react";
 import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 
 export interface MessageType {
   role: "user" | "assistant";
@@ -50,7 +50,7 @@ const ChatScreen: React.FC = () => {
 
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [input, setInput] = useState<string>("");
-  const flatListRef = useRef<KeyboardAwareFlatList<MessageType> | null>(null);
+  const flatListRef = useRef<KeyboardAwareFlatList | null>(null);
   const [showPremium, setShowPremium] = useState(false);
   const [startConversation, { isLoading, error, data }] = useStartConversationMutation();
   const [page, setPage] = useState(1);
@@ -71,7 +71,7 @@ const ChatScreen: React.FC = () => {
     ]);
 
   const scrollToBottom = () => {
-    if (messages.length > 0) flatListRef.current?.scrollToEnd(true);
+    if (messages.length > 0) flatListRef.current?.scrollToFocusedInput;
   };
 
   useEffect(() => {
