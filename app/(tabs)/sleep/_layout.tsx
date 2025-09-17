@@ -4,7 +4,7 @@ import React from "react";
 const _layout = () => {
   return (
     <>
-      <Stack>
+      <Stack screenOptions={{ headerBackTitle: "بازگشت" }}>
         <Stack.Screen
           name="index"
           options={{

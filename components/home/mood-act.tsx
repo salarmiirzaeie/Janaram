@@ -61,7 +61,7 @@ const MoodAct: React.FC<Props> = ({ isOpen, onClose, handleStreakModal }) => {
               renderItem={({ item }) => (
                 <Pressable
                   onPress={() => setMoodState(item.value)}
-                  className={`flex-1 m-2 h-28 rounded-3xl items-center justify-between py-3 shadow-md border-2
+                  className={`flex-1 m-2 h-28 rounded-3xl items-center justify-between py-3  border-2
                     ${
                       item.value === moodState ? "border-primary-500 bg-white" : "border-transparent bg-background-100"
                     }`}

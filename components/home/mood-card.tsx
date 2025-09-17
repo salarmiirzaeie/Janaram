@@ -24,17 +24,17 @@ const MoodCard = () => {
       {isLoading ? (
         <Skeleton className="w-full h-60 rounded-3xl px-5 py-4 " />
       ) : data?.data?.status === "no-mood" ? (
-        <View className="shadow-2xl rounded-full p-2 bg-primary-100">
+        <View className="shadow-sm rounded-full p-2 bg-primary-100">
           <Pressable
             onPress={() => setMoodSheet(true)}
-            className="w-60 h-60 shadow-xl py-4 rounded-full bg-primary-400 items-center justify-center"
+            className="w-60 h-60 shadow-sm py-4 rounded-full bg-primary-400 items-center justify-center"
           >
             <Image resizeMode="contain" source={require("@/assets/emojis/hi.png")} className="w-16 h-16" />
             <Text className="text-white mt-4 text-lg font-vazirBold">امروز چه حسی داری؟</Text>
           </Pressable>
         </View>
       ) : (
-        <View className="w-full h-60 rounded-3xl px-5 py-4 bg-primary-300 shadow-md">
+        <View className="w-full h-60 rounded-3xl px-5 py-4 bg-primary-300 shadow-sm">
           <HStack className="justify-between items-center">
             <HStack space="md" className="items-center">
               <Text className="text-xl font-vazirBold text-primary-800">

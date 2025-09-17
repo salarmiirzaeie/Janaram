@@ -44,7 +44,7 @@ const Train = () => {
           router.push({ pathname: "/text-activity", params: { subType: item.exerciseId, title: item.title } });
         }
       }}
-      className="bg-white flex-row shadow-md mb-2 items-center justify-between rounded-2xl p-4"
+      className="bg-white flex-row shadow-sm mb-2 items-center justify-between rounded-2xl p-4"
     >
       <Button
         onPress={() => {
@@ -110,7 +110,7 @@ const Train = () => {
   return (
     <View className="flex-1 p-4 bg-background-50">
       {/* Mood Progress */}
-      <View className="bg-white shadow-md rounded-2xl p-4 mb-6">
+      <View className="bg-white shadow-sm rounded-2xl p-4 mb-6">
         <HStack className="justify-between items-center">
           <Text className="text-xl text-primary-800">
             {toPersianDigits(mood?.data.completedExercises || 0)} / {toPersianDigits(mood?.data.totalExercises || 0)}

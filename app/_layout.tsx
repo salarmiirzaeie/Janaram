@@ -41,7 +41,13 @@ export default function RootLayout() {
               }}
             >
               <GestureHandlerRootView>
-                <Stack>
+                <Stack
+                  screenOptions={{
+                    headerBackTitle: "بازگشت",
+                    headerBackTitleStyle: { fontFamily: "vazirBold" },
+                    headerTitleStyle: { fontFamily: "vazirBold" },
+                  }}
+                >
                   <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                   <Stack.Screen
                     name="player"

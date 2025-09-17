@@ -6,32 +6,32 @@ import { VStack } from "@/components/ui/vstack";
 import { useCustomToast } from "@/hooks/useToast";
 import { usePlansQuery, useUpgradePlanMutation } from "@/services/upgrade/upgrade-adapter";
 import { toPersianDigits } from "@/utils/persian";
-import { useBazaar } from "@cafebazaar/react-native-poolakey";
+// import { useBazaar } from "@cafebazaar/react-native-poolakey";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { ScrollView, View } from "react-native";
 
 export default function SubscriptionsScreen() {
-  const bazaar = useBazaar(process.env.EXPO_PUBLIC_BAZAR_RSA_KEY || "");
+  // const bazaar = useBazaar(process.env.EXPO_PUBLIC_BAZAR_RSA_KEY || "");
   const [upgradePlan, { isLoading: isUpgrading }] = useUpgradePlanMutation();
   const { data: plans, isLoading } = usePlansQuery(null);
   const toast = useCustomToast();
   const handleSubscribe = async (id: string) => {
     if (id !== "0") {
-      await bazaar
-        .subscribeProduct(id)
-        .then(() => {
-          upgradePlan({ id })
-            .unwrap()
-            .then((res) => {
-              if (res.success) {
-                toast.show({ msg: res.message, type: "success" });
-              }
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      // await bazaar
+      //   .subscribeProduct(id)
+      //   .then(() => {
+      //     upgradePlan({ id })
+      //       .unwrap()
+      //       .then((res) => {
+      //         if (res.success) {
+      //           toast.show({ msg: res.message, type: "success" });
+      //         }
+      //       });
+      //   })
+      //   .catch((e) => {
+      //     console.log(e);
+      //   });
     } else {
       toast.show({ msg: "پلن رایگان برای شما فعال شد", type: "success" });
     }

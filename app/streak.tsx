@@ -52,7 +52,7 @@ const Streak = () => {
         style={styles.animation}
       />
 
-      <Text className="text-6xl font-vazirBold text-primary-600 ">
+      <Text style={{ lineHeight: 80 }} className="text-6xl   font-vazirBold text-primary-600 ">
         {toPersianDigits(data?.data.totalMoodDays || 0)}
       </Text>
 

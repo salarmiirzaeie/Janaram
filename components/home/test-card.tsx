@@ -14,7 +14,7 @@ const TestCard: React.FC = (props) => {
   const notificationCount = useAppSelector((state) => state.notification.unReadNotifications);
   return (
     <Pressable
-      className="shadow-md bg-white rounded-full"
+      className="shadow-sm bg-white rounded-full"
       onPress={() => {
         router.navigate("/chat-bot");
       }}

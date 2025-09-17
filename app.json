@@ -3,11 +3,13 @@
     "name": "جانارام",
     "slug": "Janaram",
     "version": "1.0.9",
+    "runtimeVersion": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "janaram",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.salarmiirzapour.Janaram"
@@ -65,9 +67,6 @@
       "eas": {
         "projectId": "debb88c7-8a40-450b-8578-7a14c9bb202a"
       }
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
     },
     "updates": {
       "url": "https://u.expo.dev/debb88c7-8a40-450b-8578-7a14c9bb202a"

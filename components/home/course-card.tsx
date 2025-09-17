@@ -45,7 +45,7 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item }) => {
         })
       }
     >
-      <VStack className={`rounded-3xl shadow-md h-52 w-48 justify-between p-5 mx-2 ${colorSet.bg}`}>
+      <VStack className={`rounded-3xl shadow-sm h-52 w-48 justify-between p-5 mx-2 ${colorSet.bg}`}>
         <Image
           source={require("@/assets/images/log-vector.png")}
           className="absolute -left-16 right-0 bottom-0 h-[112px] w-52 opacity-40 rounded-3xl"

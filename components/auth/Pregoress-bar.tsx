@@ -2,7 +2,9 @@ import { Center } from "@/components/ui/center";
 import { Pressable } from "@/components/ui/pressable";
 import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { AntDesign } from "@expo/vector-icons";
+import { usePathname } from "expo-router";
 import React from "react";
+import { Platform } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { HStack } from "../ui/hstack";
 import { VStack } from "../ui/vstack";
@@ -18,13 +20,13 @@ const ProgressOnboarding: React.FC<ProgressOnboardingProps> = ({ currentStep, to
   const insets = useSafeAreaInsets();
   // محاسبه درصد پیشرفت
   const progress = (currentStep / totalSteps) * 100;
-
+  const pathName = usePathname();
   return (
-    <SafeAreaView edges={["top"]} className="bg-white">
+    <SafeAreaView edges={Platform.OS === "ios" ? ["left", "right"] : ["top"]} className="bg-white">
       <VStack className="justify-center w-full">
         <HStack className="justify-between items-center w-full">
           <Pressable onPress={onBack} className="p-2">
-            <AntDesign name="left" size={24} color="black" />
+            {pathName !== "/auth/login" && <AntDesign name="left" size={24} color="black" />}
           </Pressable>
           <Center className="flex-1">
             <Progress value={progress} size="md" orientation="horizontal" className="w-full bg-gray-200 rounded-full">

@@ -3,7 +3,7 @@ import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { useLazyGetBreathingQuery } from "@/services/breathing/breathing-adapter";
 import { useLazyGetMeditationQuery } from "@/services/meditations/meditation-adapter";
 import { Meditation } from "@/types";
-import { Audio, AVPlaybackStatus, InterruptionModeAndroid } from "expo-av";
+import { Audio, AVPlaybackStatus, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
 import { useSegments } from "expo-router";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
@@ -50,6 +50,8 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
           shouldDuckAndroid: false, // Lower other apps' audio when playing
           playThroughEarpieceAndroid: false, // Use speaker by default
           interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+          interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+          playsInSilentModeIOS: true,
         });
       } catch (error) {
         console.error("Error configuring audio mode:", error);

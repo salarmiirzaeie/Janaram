@@ -24,7 +24,7 @@ const MusicCard = ({ item }: { item: Meditation }) => {
   return (
     <Pressable
       key={item.id}
-      className="rounded-2xl bg-white shadow-md px-4 h-20 items-center mb-3 active:opacity-70"
+      className="rounded-2xl bg-white shadow-sm px-4 h-20 items-center mb-3 active:opacity-70"
       onPress={() => {
         router.push({
           pathname: "/player",

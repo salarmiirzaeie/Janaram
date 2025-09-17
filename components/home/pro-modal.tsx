@@ -4,7 +4,7 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useCustomToast } from "@/hooks/useToast";
 import { usePlansQuery, useUpgradePlanMutation } from "@/services/upgrade/upgrade-adapter";
-import { useBazaar } from "@cafebazaar/react-native-poolakey";
+// import { useBazaar } from "@cafebazaar/react-native-poolakey";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect } from "react";
 import { Dimensions, Image, Modal, Pressable, StatusBar, StyleSheet, View } from "react-native";
@@ -31,7 +31,7 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
   }, [visible]);
 
   const { data: plans, isLoading } = usePlansQuery(null);
-  const bazaar = useBazaar(process.env.EXPO_PUBLIC_BAZAR_RSA_KEY || "");
+  // const bazaar = useBazaar(process.env.EXPO_PUBLIC_BAZAR_RSA_KEY || "");
   const [upgradePlan, { isLoading: isUpgrading }] = useUpgradePlanMutation();
   const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
   const features = proPlan?.features;
@@ -39,33 +39,39 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
 
   const handleSubscribe = async (id: string) => {
     if (id !== "0") {
-      await bazaar
-        .subscribeProduct(id)
-        .then(() => {
-          upgradePlan({ id })
-            .unwrap()
-            .then((res) => {
-              if (res.success) {
-                toast.show({ msg: res.message, type: "success" });
-                onClose();
-              }
-            });
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      // await bazaar
+      //   .subscribeProduct(id)
+      //   .then(() => {
+      //     upgradePlan({ id })
+      //       .unwrap()
+      //       .then((res) => {
+      //         if (res.success) {
+      //           toast.show({ msg: res.message, type: "success" });
+      //           onClose();
+      //         }
+      //       });
+      //   })
+      //   .catch((e) => {
+      //     console.log(e);
+      //   });
     } else {
       toast.show({ msg: "پلن رایگان برای شما فعال شد", type: "success" });
     }
   };
 
   return (
-    <Modal visible={visible} animationType="slide" presentationStyle="fullScreen" onRequestClose={onClose}>
-      <SafeAreaView className="flex-1 bg-white">
+    <Modal
+      statusBarTranslucent={false}
+      visible={visible}
+      animationType="slide"
+      presentationStyle="fullScreen"
+      onRequestClose={onClose}
+    >
+      <SafeAreaView edges={["top", "bottom"]} className="flex-1 bg-white">
         {/* Header */}
-        <View className="pt-4 pb-6 px-5">
+        <View className="pb-6 px-5">
           <HStack className="items-center justify-start">
-            <Pressable onPress={onClose} hitSlop={10} className="rounded-full ">
+            <Pressable onPress={onClose} hitSlop={10} className="rounded-full">
               <AntDesign name="close" size={24} color="black" />
             </Pressable>
           </HStack>

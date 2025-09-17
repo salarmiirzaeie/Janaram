@@ -103,6 +103,7 @@ const Login: React.FC = () => {
                     }`}
                   >
                     <InputField
+                      textContentType="oneTimeCode"
                       autoFocus
                       placeholder="شماره موبایل را وارد کنید"
                       value={value}
