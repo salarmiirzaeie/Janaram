@@ -2,13 +2,15 @@ import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import useCustomBazar from "@/hooks/useCustomBazar";
 import { useCustomToast } from "@/hooks/useToast";
+import { apiSlice } from "@/redux/api-slice";
 import { usePlansQuery, useUpgradePlanMutation } from "@/services/upgrade/upgrade-adapter";
-// import { useBazaar } from "@cafebazaar/react-native-poolakey";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect } from "react";
-import { Dimensions, Image, Modal, Pressable, StatusBar, StyleSheet, View } from "react-native";
+import { Dimensions, Image, Linking, Modal, Platform, Pressable, StatusBar, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
 
 export type ProPlanModalProps = {
   visible: boolean;
@@ -17,7 +19,7 @@ export type ProPlanModalProps = {
 
 export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModalProps) {
   const screenHeight = Dimensions.get("window").height;
-
+  const bazaar = useCustomBazar(process.env.EXPO_PUBLIC_BAZAR_RSA_KEY);
   // Decide layout sizes
   const isSmall = screenHeight < 700;
   const heroSize = isSmall ? 160 : 240;
@@ -25,7 +27,7 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
   const descFont = isSmall ? "text-sm" : "text-base";
   const priceFont = isSmall ? "text-base" : "text-lg";
   const paddingX = isSmall ? "px-4" : "px-6";
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (visible) StatusBar.setBarStyle("dark-content");
   }, [visible]);
@@ -36,24 +38,40 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
   const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
   const features = proPlan?.features;
   const toast = useCustomToast();
-
   const handleSubscribe = async (id: string) => {
     if (id !== "0") {
-      // await bazaar
-      //   .subscribeProduct(id)
-      //   .then(() => {
-      //     upgradePlan({ id })
-      //       .unwrap()
-      //       .then((res) => {
-      //         if (res.success) {
-      //           toast.show({ msg: res.message, type: "success" });
-      //           onClose();
-      //         }
-      //       });
-      //   })
-      //   .catch((e) => {
-      //     console.log(e);
-      //   });
+      if (Platform.OS === "android") {
+        await bazaar
+          .subscribeProduct(id)
+          .then(() => {
+            upgradePlan({ id })
+              .unwrap()
+              .then((res) => {
+                if (res.success) {
+                  toast.show({ msg: res.message, type: "success" });
+                  onClose();
+                }
+              });
+          })
+          .catch((e: any) => {
+            console.log(e);
+          });
+      } else if (Platform.OS === "ios") {
+        const packageId = id; // یا هر شناسه بسته‌ی درون‌اپی
+        const url = `sibapp://package_purchase?package=${packageId}&developer_payload=`;
+
+        const supported = await Linking.canOpenURL(url);
+
+        if (!supported) {
+          console.log("لینک پرداخت سیب‌اپ پشتیبانی نمی‌شو");
+          throw new Error("لینک پرداخت سیب‌اپ پشتیبانی نمی‌شود");
+        }
+
+        await Linking.openURL(url);
+        setTimeout(() => {
+          dispatch(apiSlice.util.invalidateTags(["Plans"]));
+        }, 20000);
+      }
     } else {
       toast.show({ msg: "پلن رایگان برای شما فعال شد", type: "success" });
     }

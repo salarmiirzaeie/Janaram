@@ -7,29 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0D6B3911D57E9F6F902C1ABC /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B1CFE42C378B781C7D6E5A /* ExpoModulesProvider.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		3A6A41F2B779C3ED77F74C07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F261C49116D2CD20A4FB5F99 /* PrivacyInfo.xcprivacy */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		80DD146A706C66C69697C833 /* libPods-janaram.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2807B63C05E21987603E479 /* libPods-janaram.a */; };
-		B14588002F78B5A08DD6655D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9905F404E4AA4781B9827BB4 /* PrivacyInfo.xcprivacy */; };
+		487DC237CA7C12297504D9C0 /* libPods-janaram.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83C1485CCB85D8308421AB9A /* libPods-janaram.a */; };
+		5BBDE93017B67E1901C5B893 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C90B50B31E70EDBD2161E1C /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		06A887C24CD7156D7C7905C0 /* Pods-janaram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-janaram.debug.xcconfig"; path = "Target Support Files/Pods-janaram/Pods-janaram.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* janaram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = janaram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = janaram/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = janaram/Info.plist; sourceTree = "<group>"; };
-		63B1CFE42C378B781C7D6E5A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-janaram/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		9905F404E4AA4781B9827BB4 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = janaram/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		50B449E97048002734FFD8AE /* Pods-janaram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-janaram.debug.xcconfig"; path = "Target Support Files/Pods-janaram/Pods-janaram.debug.xcconfig"; sourceTree = "<group>"; };
+		83C1485CCB85D8308421AB9A /* libPods-janaram.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-janaram.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C90B50B31E70EDBD2161E1C /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-janaram/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = janaram/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		E2807B63C05E21987603E479 /* libPods-janaram.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-janaram.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E883A036C8811DD7CED99571 /* Pods-janaram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-janaram.release.xcconfig"; path = "Target Support Files/Pods-janaram/Pods-janaram.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = janaram/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* janaram-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "janaram-Bridging-Header.h"; path = "janaram/janaram-Bridging-Header.h"; sourceTree = "<group>"; };
+		F261C49116D2CD20A4FB5F99 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = janaram/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		FC2CF2AE61470954B6A82CA8 /* Pods-janaram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-janaram.release.xcconfig"; path = "Target Support Files/Pods-janaram/Pods-janaram.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				80DD146A706C66C69697C833 /* libPods-janaram.a in Frameworks */,
+				487DC237CA7C12297504D9C0 /* libPods-janaram.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,7 +53,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				9905F404E4AA4781B9827BB4 /* PrivacyInfo.xcprivacy */,
+				F261C49116D2CD20A4FB5F99 /* PrivacyInfo.xcprivacy */,
 			);
 			name = janaram;
 			sourceTree = "<group>";
@@ -62,27 +62,25 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				E2807B63C05E21987603E479 /* libPods-janaram.a */,
+				83C1485CCB85D8308421AB9A /* libPods-janaram.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		51D9DE3834BDA5C08AD0BD0C /* ExpoModulesProviders */ = {
+		47A68696C53188F055914833 /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				A6FA104FA132D246E2EB08E1 /* janaram */,
+				5659B9E0B6729620021CE08D /* janaram */,
 			);
 			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
-		60C0997EBBAC089432D5BC1B /* Pods */ = {
+		5659B9E0B6729620021CE08D /* janaram */ = {
 			isa = PBXGroup;
 			children = (
-				06A887C24CD7156D7C7905C0 /* Pods-janaram.debug.xcconfig */,
-				E883A036C8811DD7CED99571 /* Pods-janaram.release.xcconfig */,
+				8C90B50B31E70EDBD2161E1C /* ExpoModulesProvider.swift */,
 			);
-			name = Pods;
-			path = Pods;
+			name = janaram;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -99,8 +97,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				60C0997EBBAC089432D5BC1B /* Pods */,
-				51D9DE3834BDA5C08AD0BD0C /* ExpoModulesProviders */,
+				9692463561222759CF4BDD52 /* Pods */,
+				47A68696C53188F055914833 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -115,12 +113,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A6FA104FA132D246E2EB08E1 /* janaram */ = {
+		9692463561222759CF4BDD52 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				63B1CFE42C378B781C7D6E5A /* ExpoModulesProvider.swift */,
+				50B449E97048002734FFD8AE /* Pods-janaram.debug.xcconfig */,
+				FC2CF2AE61470954B6A82CA8 /* Pods-janaram.release.xcconfig */,
 			);
-			name = janaram;
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -140,13 +140,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "janaram" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				D41913E1EA24EB6BF296E7B6 /* [Expo] Configure project */,
+				46A0A8F0A0E17AF56FB8D1EB /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				3CF7ED33EC08290DC448B082 /* [CP] Embed Pods Frameworks */,
+				4E65DABF90478D946DA0DF66 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,7 +196,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				B14588002F78B5A08DD6655D /* PrivacyInfo.xcprivacy in Resources */,
+				3A6A41F2B779C3ED77F74C07 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,7 +240,26 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3CF7ED33EC08290DC448B082 /* [CP] Embed Pods Frameworks */ = {
+		46A0A8F0A0E17AF56FB8D1EB /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-janaram/expo-configure-project.sh\"\n";
+		};
+		4E65DABF90478D946DA0DF66 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -312,25 +331,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-janaram/Pods-janaram-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D41913E1EA24EB6BF296E7B6 /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-janaram/expo-configure-project.sh\"\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -339,7 +339,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				0D6B3911D57E9F6F902C1ABC /* ExpoModulesProvider.swift in Sources */,
+				5BBDE93017B67E1901C5B893 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,7 +348,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 06A887C24CD7156D7C7905C0 /* Pods-janaram.debug.xcconfig */;
+			baseConfigurationReference = 50B449E97048002734FFD8AE /* Pods-janaram.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -373,18 +373,18 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.salarmiirzapour.Janaram;
-				PRODUCT_NAME = janaram;
+				PRODUCT_NAME = "janaram";
 				SWIFT_OBJC_BRIDGING_HEADER = "janaram/janaram-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E883A036C8811DD7CED99571 /* Pods-janaram.release.xcconfig */;
+			baseConfigurationReference = FC2CF2AE61470954B6A82CA8 /* Pods-janaram.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -404,10 +404,10 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.salarmiirzapour.Janaram;
-				PRODUCT_NAME = janaram;
+				PRODUCT_NAME = "janaram";
 				SWIFT_OBJC_BRIDGING_HEADER = "janaram/janaram-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

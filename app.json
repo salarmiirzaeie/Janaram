@@ -11,8 +11,9 @@
     "newArchEnabled": true,
 
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.salarmiirzapour.Janaram"
+      "supportsTablet": false,
+      "bundleIdentifier": "com.salarmiirzapour.Janaram",
+      "buildNumber": "1.0.9"
     },
     "android": {
       "adaptiveIcon": {

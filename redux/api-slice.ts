@@ -1,11 +1,17 @@
-import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
+import {
+  BaseQueryFn,
+  createApi,
+  FetchArgs,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+} from "@reduxjs/toolkit/query/react";
 import { Alert } from "react-native";
 import { logout } from "./auth/auth-slice";
 import { RootState } from "./store";
 // const BASE_URL = process.env.EXPO_PUBLIC_JANARAM_API_URL;
 // const BASE_URL = "http://192.168.39.130:3000/api/";
 const BASE_URL = "https://janaram.ir/api/";
-// const BASE_URL = "http://10.141.39.248:3000/api/";
+// const BASE_URL = "http://192.168.5.38:3000/api/";
 export const BASE_URL_IMAGES = "https://janaram.storage.c2.liara.space";
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
@@ -18,11 +24,11 @@ const baseQuery = fetchBaseQuery({
     }
   },
 });
-const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
-  args,
-  api,
-  extraOptions
-) => {
+const baseQueryWithReauth: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
   if (result.error && !result.error.data) {
     if ("error" in result.error) {

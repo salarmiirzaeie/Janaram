@@ -3,7 +3,7 @@ import { IPlansResponse } from "@/types";
 
 const upgradeAdapter = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    upgradePlan: builder.mutation<any, { id: string }>({
+    upgradePlan: builder.mutation<any, { id: string; platform?: string }>({
       query: (data) => ({
         url: "upgrade-plan/unlimit",
         method: "POST",
