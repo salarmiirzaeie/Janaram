@@ -3,14 +3,26 @@ import { ChatHistoryResponse } from "@/types";
 
 const aiAdapter = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    startConversation: builder.mutation<any, { message: string; conversationId?: string }>({
+    startConversation: builder.mutation<
+      any,
+      { message: string; conversationId?: string }
+    >({
       query: (data) => ({
         url: "conversation/start",
         method: "POST",
         body: data,
       }),
     }),
-    getChatHistory: builder.query<ChatHistoryResponse, { page: number; limit: number }>({
+    analyzePersonality: builder.mutation<any, any>({
+      query: () => ({
+        url: "conversation/analyze-user",
+        method: "POST",
+      }),
+    }),
+    getChatHistory: builder.query<
+      ChatHistoryResponse,
+      { page: number; limit: number }
+    >({
       query: ({ page = 1, limit = 10 }) => ({
         url: `conversation/chat-history`,
         method: "GET",
@@ -25,7 +37,10 @@ const aiAdapter = apiSlice.injectEndpoints({
           ...newItems,
           data: {
             ...newItems.data,
-            messages: [...newItems.data.messages, ...currentCache.data.messages],
+            messages: [
+              ...newItems.data.messages,
+              ...currentCache.data.messages,
+            ],
           },
         };
       },
@@ -37,4 +52,8 @@ const aiAdapter = apiSlice.injectEndpoints({
 });
 
 // Export hooks
-export const { useStartConversationMutation, useGetChatHistoryQuery } = aiAdapter;
+export const {
+  useStartConversationMutation,
+  useGetChatHistoryQuery,
+  useAnalyzePersonalityMutation,
+} = aiAdapter;

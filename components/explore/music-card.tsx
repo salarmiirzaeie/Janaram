@@ -1,10 +1,13 @@
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
+import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Image, Text } from "react-native";
+import { useDispatch } from "react-redux";
+import { Badge, BadgeText } from "../ui/badge";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
 import { Spinner } from "../ui/spinner";
@@ -13,10 +16,27 @@ import { VStack } from "../ui/vstack";
 const MusicCard = ({ item }: { item: Meditation }) => {
   const { track, loadTrack } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
-
+  const { data: plans } = usePlansQuery(null);
+  const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
+  const dispatch = useDispatch();
+  const handleOpenNotProModal = () => {
+    dispatch({
+      type: "pro/setShowNotProModal",
+      payload: {
+        message: "🌙 این مدیتیشن مخصوص کاربران Pro است",
+        showNotProModal: true,
+      },
+    });
+  };
   const handlePlay = async () => {
     setLoading(true);
     if (item.id) {
+      if (item.isPro && !proPlan?.isActive) {
+        handleOpenNotProModal();
+        setLoading(false);
+
+        return;
+      }
       await loadTrack(item.id);
     }
     setLoading(false);
@@ -26,6 +46,10 @@ const MusicCard = ({ item }: { item: Meditation }) => {
       key={item.id}
       className="rounded-2xl bg-white shadow-sm px-4 h-20 items-center mb-3 active:opacity-70"
       onPress={() => {
+        if (item.isPro && !proPlan?.isActive) {
+          handleOpenNotProModal();
+          return;
+        }
         router.push({
           pathname: "/player",
           params: {
@@ -34,6 +58,11 @@ const MusicCard = ({ item }: { item: Meditation }) => {
         });
       }}
     >
+      {item?.isPro && (
+        <Badge className={`absolute right-10 bg-black z-50 rounded-b-xl top-0`}>
+          <BadgeText className="font-vazir text-white">{"Pro"}</BadgeText>
+        </Badge>
+      )}
       <HStack space="md" className="items-center justify-between flex-1">
         {/* Optional thumbnail if available */}
         {item.image && (
@@ -43,8 +72,10 @@ const MusicCard = ({ item }: { item: Meditation }) => {
             resizeMode="cover"
           />
         )}
-        <VStack className="flex-1 ml-3">
-          <Text className="font-vazirBold text-right text-base">{item.title}</Text>
+        <VStack className="flex-1  ml-3">
+          <Text className="font-vazirBold text-right text-base">
+            {item.title}
+          </Text>
         </VStack>
         <HStack space="md" className="items-center space-x-2">
           <Text className="text-xs text-muted-foreground">{item.duration}</Text>

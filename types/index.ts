@@ -90,7 +90,15 @@ export interface User {
 export interface Meditation {
   id: string;
   title: string;
-  type: "calm" | "love" | "instrumental" | "sleep" | "sleep-music" | "nature" | "story";
+  type:
+    | "calm"
+    | "love"
+    | "instrumental"
+    | "sleep"
+    | "sleep-music"
+    | "nature"
+    | "story"
+    | "self";
   file: string;
   image: string; // اضافه کردن فیلد URL تصویر
   duration: number;
@@ -98,4 +106,6 @@ export interface Meditation {
   exhaleDuration?: number;
   inhaleDuration?: number;
   holdDuration?: number;
+  isPro?: boolean;
+  createdAt?: Date;
 }

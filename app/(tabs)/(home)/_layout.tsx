@@ -1,21 +1,17 @@
 import CustomHeader from "@/components/home/header";
 import Logo from "@/components/ui/logo";
 import { useAppSelector } from "@/hooks/useAppSelector";
-import { useCustomToast } from "@/hooks/useToast";
 import { useGetMoodQuery } from "@/services/mood/mood-adapter";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Redirect, Stack } from "expo-router";
 import React from "react";
-import { useDispatch } from "react-redux";
 
 const _layout = () => {
   const { authorized } = useAppSelector((state) => state.auth);
   const { data } = useGetMoodQuery({ page: 1, limit: 30 });
-  const { data: plans, isLoading } = usePlansQuery(null);
-  const toast = useCustomToast();
+  const { data: plans } = usePlansQuery(null);
   const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
 
-  const dispatch = useDispatch();
   if (!authorized) {
     return <Redirect href="/auth/login" />;
   }

@@ -5,10 +5,23 @@ import { VStack } from "@/components/ui/vstack";
 import useCustomBazar from "@/hooks/useCustomBazar";
 import { useCustomToast } from "@/hooks/useToast";
 import { apiSlice } from "@/redux/api-slice";
-import { usePlansQuery, useUpgradePlanMutation } from "@/services/upgrade/upgrade-adapter";
+import {
+  usePlansQuery,
+  useUpgradePlanMutation,
+} from "@/services/upgrade/upgrade-adapter";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect } from "react";
-import { Dimensions, Image, Linking, Modal, Platform, Pressable, StatusBar, StyleSheet, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  Linking,
+  Modal,
+  Platform,
+  Pressable,
+  StatusBar,
+  StyleSheet,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 
@@ -17,7 +30,10 @@ export type ProPlanModalProps = {
   onClose: () => void;
 };
 
-export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModalProps) {
+export default function ProPlanFullScreenModal({
+  visible,
+  onClose,
+}: ProPlanModalProps) {
   const screenHeight = Dimensions.get("window").height;
   const bazaar = useCustomBazar(process.env.EXPO_PUBLIC_BAZAR_RSA_KEY);
   // Decide layout sizes
@@ -101,7 +117,12 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
             <View style={styles.skeletonTitle} />
             <View style={styles.skeletonDesc} />
             <View className="items-center">
-              <View style={[styles.skeletonHero, { width: heroSize, height: heroSize }]} />
+              <View
+                style={[
+                  styles.skeletonHero,
+                  { width: heroSize, height: heroSize },
+                ]}
+              />
             </View>
             <View style={styles.skeletonPrice} />
             <VStack className="mt-4" space="md">
@@ -118,9 +139,16 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
           <>
             {/* Hero */}
             <VStack space="sm" className={`${paddingX}`}>
-              <Text className={`${titleFont} font-vazirBold text-right text-indigo-800`}>آرامش عمیق‌تر با Pro</Text>
-              <Text className={`text-gray-600 text-right font-vazir leading-6 ${descFont}`}>
-                به همه تمرین‌ها، راهنمای صوتی و ابزارهای حرفه‌ای دسترسی پیدا کن و سفرت به سمت آرامش رو جدی‌تر ادامه بده.
+              <Text
+                className={`${titleFont} font-vazirBold text-right text-indigo-800`}
+              >
+                آرامش عمیق‌تر با Pro
+              </Text>
+              <Text
+                className={`text-gray-600 text-right font-vazir leading-6 ${descFont}`}
+              >
+                به همه تمرین‌ها، راهنمای صوتی و ابزارهای حرفه‌ای دسترسی پیدا کن
+                و سفرت به سمت آرامش رو جدی‌تر ادامه بده.
               </Text>
 
               <View className="items-center mt-2">
@@ -135,7 +163,9 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
                 <Text className={`text-indigo-700 font-vazirBold ${priceFont}`}>
                   {proPlan?.price} هزار تومان / ماهانه
                 </Text>
-                <Text className={`text-indigo-400 font-vazir line-through ml-2 ${priceFont}`}>
+                <Text
+                  className={`text-indigo-400 font-vazir line-through ml-2 ${priceFont}`}
+                >
                   {proPlan?.oldPrice} هزار تومان
                 </Text>
               </View>
@@ -145,9 +175,17 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
             <VStack className={`${paddingX} mt-4`} space="md">
               {features?.map((b, idx) => (
                 <HStack key={idx} space="sm" className="items-start">
-                  <AntDesign name="checkcircle" size={isSmall ? 16 : 20} color="#22c55e" />
+                  <AntDesign
+                    name="check-circle"
+                    size={isSmall ? 16 : 20}
+                    color="#22c55e"
+                  />
                   <VStack space="xs" className="flex-1">
-                    <Text className={`text-right font-vazirBold ${descFont} text-gray-800`}>{b}</Text>
+                    <Text
+                      className={`text-right font-vazirBold ${descFont} text-gray-800`}
+                    >
+                      {b}
+                    </Text>
                   </VStack>
                 </HStack>
               ))}
@@ -158,14 +196,25 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
         {/* Bottom CTA */}
         <View className="mt-auto bg-white/95 border-t border-gray-200 p-4">
           <VStack space="md">
-            <Button onPress={() => handleSubscribe(proPlan?.id || "0")} isDisabled={isUpgrading || isLoading}>
+            <Button
+              onPress={() => handleSubscribe(proPlan?.id || "0")}
+              isDisabled={isUpgrading || isLoading}
+            >
               <ButtonText className="text-white">ارتقا به Pro</ButtonText>
               {isUpgrading && <ButtonSpinner color="white" />}
             </Button>
-            <Button variant="outline" onPress={onClose} className="border-gray-300">
-              <ButtonText className="text-gray-700">ادامه با نسخه رایگان</ButtonText>
+            <Button
+              variant="outline"
+              onPress={onClose}
+              className="border-gray-300"
+            >
+              <ButtonText className="text-gray-700">
+                ادامه با نسخه رایگان
+              </ButtonText>
             </Button>
-            <Text className="text-center text-gray-500 text-xs">با ادامه، با قوانین و حریم خصوصی موافقم</Text>
+            <Text className="text-center text-gray-500 text-xs">
+              با ادامه، با قوانین و حریم خصوصی موافقم
+            </Text>
           </VStack>
         </View>
       </SafeAreaView>
@@ -174,10 +223,42 @@ export default function ProPlanFullScreenModal({ visible, onClose }: ProPlanModa
 }
 
 const styles = StyleSheet.create({
-  skeletonTitle: { width: "70%", height: 24, borderRadius: 6, backgroundColor: "#e0e0e0", marginBottom: 8 },
-  skeletonDesc: { width: "90%", height: 14, borderRadius: 6, backgroundColor: "#e0e0e0", marginBottom: 16 },
-  skeletonHero: { borderRadius: 16, backgroundColor: "#e0e0e0", marginBottom: 16 },
-  skeletonPrice: { width: "60%", height: 20, borderRadius: 12, backgroundColor: "#e0e0e0", marginBottom: 16 },
-  skeletonIcon: { width: 16, height: 16, borderRadius: 8, backgroundColor: "#e0e0e0" },
-  skeletonFeature: { flex: 1, height: 14, borderRadius: 6, backgroundColor: "#e0e0e0" },
+  skeletonTitle: {
+    width: "70%",
+    height: 24,
+    borderRadius: 6,
+    backgroundColor: "#e0e0e0",
+    marginBottom: 8,
+  },
+  skeletonDesc: {
+    width: "90%",
+    height: 14,
+    borderRadius: 6,
+    backgroundColor: "#e0e0e0",
+    marginBottom: 16,
+  },
+  skeletonHero: {
+    borderRadius: 16,
+    backgroundColor: "#e0e0e0",
+    marginBottom: 16,
+  },
+  skeletonPrice: {
+    width: "60%",
+    height: 20,
+    borderRadius: 12,
+    backgroundColor: "#e0e0e0",
+    marginBottom: 16,
+  },
+  skeletonIcon: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: "#e0e0e0",
+  },
+  skeletonFeature: {
+    flex: 1,
+    height: 14,
+    borderRadius: 6,
+    backgroundColor: "#e0e0e0",
+  },
 });

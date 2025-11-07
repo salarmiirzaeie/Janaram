@@ -3,7 +3,12 @@ import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { useLazyGetBreathingQuery } from "@/services/breathing/breathing-adapter";
 import { useLazyGetMeditationQuery } from "@/services/meditations/meditation-adapter";
 import { Meditation } from "@/types";
-import { Audio, AVPlaybackStatus, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
+import {
+  Audio,
+  AVPlaybackStatus,
+  InterruptionModeAndroid,
+  InterruptionModeIOS,
+} from "expo-av";
 import { useSegments } from "expo-router";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
@@ -25,14 +30,23 @@ const AudioPlayerContext = createContext<AudioPlayerContextType | null>(null);
 
 export const useAudioPlayer = () => {
   const ctx = useContext(AudioPlayerContext);
-  if (!ctx) throw new Error("useAudioPlayer must be inside AudioPlayerProvider");
+  if (!ctx)
+    throw new Error("useAudioPlayer must be inside AudioPlayerProvider");
   return ctx;
 };
 
-export const AudioPlayerProvider = ({ children }: { children: React.ReactNode }) => {
-  const [getMeditation, { data, isLoading: isApiLoading }] = useLazyGetMeditationQuery();
-  const [getBreathing, { data: breathing, isLoading: isBreathingLoading }] = useLazyGetBreathingQuery();
-  const [trackType, setTrackType] = useState<"meditation" | "breathing">("meditation");
+export const AudioPlayerProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [getMeditation, { data, isLoading: isApiLoading }] =
+    useLazyGetMeditationQuery();
+  const [getBreathing, { data: breathing, isLoading: isBreathingLoading }] =
+    useLazyGetBreathingQuery();
+  const [trackType, setTrackType] = useState<"meditation" | "breathing">(
+    "meditation"
+  );
   const [track, setTrack] = useState<Meditation | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0);
@@ -41,7 +55,8 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
   const [showPlayingBar, setShowPlayingBar] = useState(true);
   const soundRef = useRef<Audio.Sound | null>(null);
   const segments = useSegments();
-  const isPlayerScreen = segments[0] === "player" || segments[0] === "breathingPlayer";
+  const isPlayerScreen =
+    segments[0] === "player" || segments[0] === "breathingPlayer";
   useEffect(() => {
     const configureAudioMode = async () => {
       try {
@@ -88,7 +103,9 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
             };
 
             // 👇 only load, don't auto-play
-            const { sound } = await Audio.Sound.createAsync(source, { shouldPlay: false });
+            const { sound } = await Audio.Sound.createAsync(source, {
+              shouldPlay: false,
+            });
 
             soundRef.current = sound;
             setTrack(res.meditation);
@@ -135,7 +152,9 @@ export const AudioPlayerProvider = ({ children }: { children: React.ReactNode })
               uri: BASE_URL_IMAGES + res.meditation.file,
             };
 
-            const { sound } = await Audio.Sound.createAsync(source, { shouldPlay: true });
+            const { sound } = await Audio.Sound.createAsync(source, {
+              shouldPlay: true,
+            });
 
             soundRef.current = sound;
             setTrack(res.meditation);

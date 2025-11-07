@@ -1,10 +1,12 @@
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
+import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Image, View } from "react-native";
+import { useDispatch } from "react-redux";
 import { Badge, BadgeText } from "../ui/badge";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
@@ -25,23 +27,49 @@ interface IVStackProps extends React.ComponentProps<typeof VStack> {
 const SleepCourseCard: React.FC<IVStackProps> = ({ item }) => {
   const { loadTrack } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
-
+  const { data: plans } = usePlansQuery(null);
+  const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
+  const dispatch = useDispatch();
+  const handleOpenNotProModal = () => {
+    dispatch({
+      type: "pro/setShowNotProModal",
+      payload: {
+        message: "🌙 این مدیتیشن مخصوص کاربران Pro است",
+        showNotProModal: true,
+      },
+    });
+  };
   const handlePlay = async () => {
     setLoading(true);
     if (item.id) {
+      if (item.isPro && !proPlan?.isActive) {
+        handleOpenNotProModal();
+        setLoading(false);
+
+        return;
+      }
       await loadTrack(item.id);
     }
     setLoading(false);
   };
   return (
     <Pressable
-      onPress={() =>
+      onPress={() => {
+        if (item.isPro && !proPlan?.isActive) {
+          handleOpenNotProModal();
+          return;
+        }
         router.push({
           pathname: "/player",
           params: { id: item.id },
-        })
-      }
+        });
+      }}
     >
+      {item?.isPro && (
+        <Badge className={`absolute left-2 bg-white z-50 rounded-r-xl top-1/4`}>
+          <BadgeText className="font-vazir text-black">{"Pro"}</BadgeText>
+        </Badge>
+      )}
       <VStack
         className={`rounded-3xl h-52 w-48 justify-between p-5  mx-2 bg-background-800
         `}
@@ -53,8 +81,11 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item }) => {
           className="absolute top-0 left-0 right-0 bottom-0 h-52 w-48 opacity-50 rounded-3xl"
           resizeMode="cover"
         />
+
         <Text className="color-white text-2xl z-40 text-right font-vazirBold">
-          {item.title.length > 25 ? item.title.slice(0, 25) + "..." : item.title}
+          {item.title.length > 25
+            ? item.title.slice(0, 25) + "..."
+            : item.title}
         </Text>
         <HStack className="items-center justify-between">
           <Badge className="rounded-full">

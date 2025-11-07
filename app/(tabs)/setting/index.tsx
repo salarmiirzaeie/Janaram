@@ -11,7 +11,14 @@ import { useAppSelector } from "@/hooks/useAppSelector";
 import useAuth from "@/hooks/useAuth";
 import { AntDesign, Ionicons, Octicons } from "@expo/vector-icons";
 import React from "react";
-import { Linking, Pressable, SafeAreaView, ScrollView, Share, Switch } from "react-native";
+import {
+  Linking,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  Share,
+  Switch,
+} from "react-native";
 import { useDispatch } from "react-redux";
 
 const SettingsScreen = () => {
@@ -19,8 +26,12 @@ const SettingsScreen = () => {
   const [logoutModalVisible, setLogoutModalVisible] = React.useState(false);
   const [rulesModalVisible, setRulesModalVisible] = React.useState(false);
   const [showMeditationSheet, setShowMeditationSheet] = React.useState(false);
-  const meditationHour = useAppSelector((state) => state.initialize.meditationTimer);
-  const { moodNotification, newMeditationsNotification } = useAppSelector((state) => state.settings);
+  const meditationHour = useAppSelector(
+    (state) => state.initialize.meditationTimer
+  );
+  const { moodNotification, newMeditationsNotification } = useAppSelector(
+    (state) => state.settings
+  );
   const dispatch = useDispatch();
   const { logOutUser } = useAuth();
 
@@ -31,9 +42,11 @@ const SettingsScreen = () => {
 
         {/* بخش عمومی */}
         <VStack className="mb-6 p-4">
-          <Text className="text-primary-500 mb-2 text-right font-vazir">عمومی</Text>
+          <Text className="text-primary-500 mb-2 text-right font-vazir">
+            عمومی
+          </Text>
           <SettingItem
-            icon={<AntDesign name="infocirlceo" size={24} color="black" />}
+            icon={<AntDesign name="info-circle" size={24} color="black" />}
             label="درباره اپلیکیشن"
             onPress={() => setAboutModalVisible(true)}
           />
@@ -67,8 +80,10 @@ const SettingsScreen = () => {
             }}
           />
           <SettingItem
-            icon={<AntDesign name="clockcircleo" size={24} color="black" />}
-            label={`ساعت مدیتیشن: ${meditationHour ? `${meditationHour}:00` : "انتخاب نشده"}`}
+            icon={<AntDesign name="clock-circle" size={24} color="black" />}
+            label={`ساعت مدیتیشن: ${
+              meditationHour ? `${meditationHour}:00` : "انتخاب نشده"
+            }`}
             onPress={() => setShowMeditationSheet(true)}
           />
           <SettingItem
@@ -88,28 +103,49 @@ const SettingsScreen = () => {
 
         {/* بخش اعلان‌ها */}
         <VStack className="my-6 p-4">
-          <Text className="text-primary-500 mb-2 text-right font-vazir">اعلان‌ها</Text>
+          <Text className="text-primary-500 mb-2 text-right font-vazir">
+            اعلان‌ها
+          </Text>
           <SettingSwitch
             icon={<AntDesign name="notification" size={24} color="black" />}
             label="یادآوری حال روزانه"
             value={moodNotification}
-            setValue={(value) => dispatch({ type: "settings/setMoodNotification", payload: value })}
+            setValue={(value) =>
+              dispatch({ type: "settings/setMoodNotification", payload: value })
+            }
           />
 
           <SettingSwitch
             icon={<AntDesign name="notification" size={24} color="black" />}
             label="اطلاع از مدیتیشن های جدید"
             value={newMeditationsNotification}
-            setValue={(value) => dispatch({ type: "settings/setNewMeditationsNotification", payload: value })}
+            setValue={(value) =>
+              dispatch({
+                type: "settings/setNewMeditationsNotification",
+                payload: value,
+              })
+            }
           />
         </VStack>
 
         <Divider />
 
-        <AboutModal visible={aboutModalVisible} onClose={() => setAboutModalVisible(false)} />
-        <RulesModal visible={rulesModalVisible} onClose={() => setRulesModalVisible(false)} />
-        <LogoutModal visible={logoutModalVisible} onClose={() => setLogoutModalVisible(false)} />
-        <MeditationHourActionsheet isOpen={showMeditationSheet} onClose={() => setShowMeditationSheet(false)} />
+        <AboutModal
+          visible={aboutModalVisible}
+          onClose={() => setAboutModalVisible(false)}
+        />
+        <RulesModal
+          visible={rulesModalVisible}
+          onClose={() => setRulesModalVisible(false)}
+        />
+        <LogoutModal
+          visible={logoutModalVisible}
+          onClose={() => setLogoutModalVisible(false)}
+        />
+        <MeditationHourActionsheet
+          isOpen={showMeditationSheet}
+          onClose={() => setShowMeditationSheet(false)}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -131,7 +167,13 @@ const SettingItem = ({
   <Pressable onPress={onPress}>
     <HStack space="md" className="py-3 items-center flex-row-reverse">
       {icon}
-      <Text className={`text-base ${isDanger ? "text-red-500" : "text-gray-800"} font-vazir`}>{label}</Text>
+      <Text
+        className={`text-base ${
+          isDanger ? "text-red-500" : "text-gray-800"
+        } font-vazir`}
+      >
+        {label}
+      </Text>
     </HStack>
   </Pressable>
 );

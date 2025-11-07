@@ -37,8 +37,10 @@ const Explore = () => {
                 })
               }
             >
-              <VStack className="bg-calm-300 flex-1 justify-center items-center rounded-lg h-14">
-                <Text className="text-white text-xl font-vazirBold">آرامش 🌿</Text>
+              <VStack className="bg-calm-300 flex-1 justify-center items-center rounded-2xl h-14">
+                <Text className="text-white text-xl font-vazirBold">
+                  آرامش 🌿
+                </Text>
               </VStack>
             </Pressable>
             <Pressable
@@ -46,12 +48,14 @@ const Explore = () => {
               onPress={() =>
                 router.push({
                   pathname: "/explore/all-files",
-                  params: { type: "love", title: "عشق" },
+                  params: { type: "self", title: "خودسازی" },
                 })
               }
             >
-              <VStack className="bg-primary-300 flex-1 justify-center items-center rounded-lg h-14">
-                <Text className="text-white text-xl font-vazirBold">عشق 💗</Text>
+              <VStack className="bg-primary-300 rounded-2xl justify-center items-center h-14">
+                <Text className="text-white text-xl font-vazirBold">
+                  خودسازی 🧠
+                </Text>
               </VStack>
             </Pressable>
           </HStack>
@@ -66,13 +70,17 @@ const Explore = () => {
                 })
               }
             >
-              <VStack className="bg-primary-300 rounded-lg justify-center items-center h-14">
-                <Text className="text-white text-xl font-vazirBold"> بی کلام 🤫 </Text>
+              <VStack className="bg-primary-300 rounded-2xl justify-center items-center h-14">
+                <Text className="text-white text-xl font-vazirBold">
+                  بی کلام 🎸
+                </Text>
               </VStack>
             </Pressable>
             <Pressable className="flex-1" onPress={() => router.push("/sleep")}>
-              <VStack className="bg-secondary-300  rounded-lg justify-center items-center h-14">
-                <Text className="text-white text-xl font-vazirBold">خواب خوب 🌙</Text>
+              <VStack className="bg-secondary-300  rounded-2xl justify-center items-center h-14">
+                <Text className="text-white text-xl font-vazirBold">
+                  خواب خوب 🌙
+                </Text>
               </VStack>
             </Pressable>
           </HStack>
@@ -80,11 +88,31 @@ const Explore = () => {
             <Pressable
               className="flex-1"
               onPress={() =>
-                router.push({ pathname: "/explore/all-files", params: { type: "nature", title: "طبیعت" } })
+                router.push({
+                  pathname: "/explore/all-files",
+                  params: { type: "love", title: "عشق" },
+                })
               }
             >
-              <VStack className="bg-accent-300  rounded-lg justify-center items-center h-14">
-                <Text className="text-white text-xl font-vazirBold"> طبیعت 🌳</Text>
+              <VStack className="bg-secondary-300 flex-1 justify-center items-center rounded-2xl h-14">
+                <Text className="text-white text-xl font-vazirBold">
+                  عشق 💗
+                </Text>
+              </VStack>
+            </Pressable>
+            <Pressable
+              className="flex-1"
+              onPress={() =>
+                router.push({
+                  pathname: "/explore/all-files",
+                  params: { type: "nature", title: "طبیعت" },
+                })
+              }
+            >
+              <VStack className="bg-calm-300  rounded-2xl justify-center items-center h-14">
+                <Text className="text-white text-xl font-vazirBold">
+                  طبیعت 🌳
+                </Text>
               </VStack>
             </Pressable>
           </HStack>
@@ -105,8 +133,12 @@ const Explore = () => {
             horizontal
           >
             {isLoading
-              ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
-              : calmMedias?.map((item, index) => <CourseCard item={item} index={index} key={item.id} />)}
+              ? [1, 2, 3, 4].map((item, index) => (
+                  <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />
+                ))
+              : calmMedias?.map((item, index) => (
+                  <CourseCard item={item} index={index} key={item.id} />
+                ))}
           </ScrollView>
         </VStack>
         <VStack space="lg" className="mt-4 ">
@@ -124,8 +156,12 @@ const Explore = () => {
             horizontal
           >
             {isLoading
-              ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
-              : loveMedias?.map((item, index) => <CourseCard item={item} index={index + 1} key={item.id} />)}
+              ? [1, 2, 3, 4].map((item, index) => (
+                  <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />
+                ))
+              : loveMedias?.map((item, index) => (
+                  <CourseCard item={item} index={index + 1} key={item.id} />
+                ))}
           </ScrollView>
         </VStack>
         <VStack space="lg" className="mt-4 ">
@@ -143,8 +179,12 @@ const Explore = () => {
             horizontal
           >
             {isLoading
-              ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
-              : instrumentalMedias?.map((item, index) => <CourseCard item={item} index={index + 2} key={item.id} />)}
+              ? [1, 2, 3, 4].map((item, index) => (
+                  <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />
+                ))
+              : instrumentalMedias?.map((item, index) => (
+                  <CourseCard item={item} index={index + 2} key={item.id} />
+                ))}
           </ScrollView>
         </VStack>
         <VStack space="lg" className="mt-4 ">
@@ -162,8 +202,14 @@ const Explore = () => {
             horizontal
           >
             {isLoading
-              ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
-              : nature?.slice(0, 5).map((item, index) => <CourseCard item={item} index={index} key={item.id} />)}
+              ? [1, 2, 3, 4].map((item, index) => (
+                  <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />
+                ))
+              : nature
+                  ?.slice(0, 5)
+                  .map((item, index) => (
+                    <CourseCard item={item} index={index} key={item.id} />
+                  ))}
           </ScrollView>
         </VStack>
       </VStack>

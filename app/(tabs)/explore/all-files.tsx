@@ -1,17 +1,20 @@
 import MusicCard from "@/components/explore/music-card";
-import { IMusic } from "@/components/sleep/course-card-sleep";
 import { Spinner } from "@/components/ui/spinner";
 import { VStack } from "@/components/ui/vstack";
 import { useMeditationsWithCategoryQuery } from "@/services/meditations/meditation-adapter";
+import { Meditation } from "@/types";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { FlatList } from "react-native";
 
 const AllMusics = () => {
   const params = useLocalSearchParams<{ type: string }>();
-  const { data, isLoading } = useMeditationsWithCategoryQuery({ category: params.type });
-  const renderMusicCard = (item: IMusic) => {
-    return <MusicCard type={Number(params.type)} item={item} />;
+  const { data, isLoading } = useMeditationsWithCategoryQuery({
+    category: params.type,
+  });
+  const meditations = data?.meditations;
+  const renderMusicCard = (item: Meditation) => {
+    return <MusicCard item={item} />;
   };
   if (isLoading) {
     return (

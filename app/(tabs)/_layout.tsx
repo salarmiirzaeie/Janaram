@@ -1,6 +1,7 @@
 import { Redirect, router, Tabs } from "expo-router";
 import React, { useEffect } from "react";
 
+import NotProModal from "@/components/home/not-pro-modal";
 import ProPlanFullScreenModal from "@/components/home/pro-modal";
 import UpdateModal from "@/components/settings/update-modal";
 import { useAppSelector } from "@/hooks/useAppSelector";
@@ -30,16 +31,30 @@ Notifications.setNotificationHandler({
 });
 export default function TabLayout() {
   const { isFirstModalShow } = useAppSelector((state) => state.initialize);
+  const { showNotProModal } = useAppSelector((state) => state.pro);
   const { isSleepMode } = useAppSelector((state) => state.sleepMode);
-  const { isInitialized, meditationTimer } = useAppSelector((state) => state.initialize);
+  const { isInitialized, meditationTimer } = useAppSelector(
+    (state) => state.initialize
+  );
   const moods = useAppSelector((state) => state.mood);
-  const isNotificationEnabled = useAppSelector((state) => state.settings.moodNotification);
+  const isNotificationEnabled = useAppSelector(
+    (state) => state.settings.moodNotification
+  );
   const [showUpdateModal, setShowUpdateModal] = React.useState(false);
-  const { data } = useCheckVersionQuery({ version: "1.0.9" });
+  const { data } = useCheckVersionQuery({ version: "1.1.0" });
   const [initialNotification] = useInitializeNotificationsMutation();
   const { authorized } = useAuth();
   const [sendOldMoods] = useSendPrevMoodsMutation();
   const dispatch = useDispatch();
+  const handleDismissNotProModal = () => {
+    dispatch({
+      type: "pro/setShowNotProModal",
+      payload: {
+        message: "",
+        showNotProModal: false,
+      },
+    });
+  };
   const handleDismissProModal = () => {
     dispatch({
       type: "initialize/setIsFirstModalShow",
@@ -72,23 +87,26 @@ export default function TabLayout() {
       }
     }
     setup();
-    const notificationListener = Notifications.addNotificationReceivedListener((notification) => {
-      dispatch(addNotificationCount(1));
-    });
+    const notificationListener = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        dispatch(addNotificationCount(1));
+      }
+    );
 
-    const responseListener = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log("Notification response:", response);
-      const { action } = response.notification.request.content.data;
-      if (action === "mood") {
-        router.push("/chat-bot"); // هدایت به صفحه چت‌بات
-      }
-      if (action === "pro") {
-        dispatch({
-          type: "initialize/setIsFirstModalShow",
-          payload: true,
-        });
-      }
-    });
+    const responseListener =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log("Notification response:", response);
+        const { action } = response.notification.request.content.data;
+        if (action === "mood") {
+          router.push("/chat-bot"); // هدایت به صفحه چت‌بات
+        }
+        if (action === "pro") {
+          dispatch({
+            type: "initialize/setIsFirstModalShow",
+            payload: true,
+          });
+        }
+      });
 
     return () => {
       notificationListener.remove();
@@ -122,21 +140,27 @@ export default function TabLayout() {
           name="(home)"
           options={{
             title: "خانه",
-            tabBarIcon: ({ color }) => <AntDesign size={24} name="home" color={color} />,
+            tabBarIcon: ({ color }) => (
+              <AntDesign size={24} name="home" color={color} />
+            ),
           }}
         />
         <Tabs.Screen
           name="explore"
           options={{
             title: "مدیتیشن",
-            tabBarIcon: ({ color }) => <Ionicons size={24} name="leaf-outline" color={color} />,
+            tabBarIcon: ({ color }) => (
+              <Ionicons size={24} name="leaf-outline" color={color} />
+            ),
           }}
         />
         <Tabs.Screen
           name="sleep"
           options={{
             title: "خواب خوب",
-            tabBarIcon: ({ color }) => <Feather size={24} name="moon" color={color} />,
+            tabBarIcon: ({ color }) => (
+              <Feather size={24} name="moon" color={color} />
+            ),
           }}
           listeners={{
             focus: () => {
@@ -151,7 +175,9 @@ export default function TabLayout() {
           name="reports"
           options={{
             title: "حال من",
-            tabBarIcon: ({ color }) => <AntDesign size={24} name="linechart" color={color} />,
+            tabBarIcon: ({ color }) => (
+              <AntDesign size={24} name="bar-chart" color={color} />
+            ),
           }}
         />
 
@@ -159,12 +185,24 @@ export default function TabLayout() {
           name="setting"
           options={{
             title: "پروفایل",
-            tabBarIcon: ({ color }) => <AntDesign size={24} name="user" color={color} />,
+            tabBarIcon: ({ color }) => (
+              <Feather size={24} name="user" color={color} />
+            ),
           }}
         />
       </Tabs>
-      <ProPlanFullScreenModal visible={isFirstModalShow} onClose={handleDismissProModal} />
-      <UpdateModal showActionsheet={showUpdateModal} handleClose={() => setShowUpdateModal(false)} />
+      <ProPlanFullScreenModal
+        visible={isFirstModalShow}
+        onClose={handleDismissProModal}
+      />
+      <UpdateModal
+        showActionsheet={showUpdateModal}
+        handleClose={() => setShowUpdateModal(false)}
+      />
+      <NotProModal
+        showStreakModal={showNotProModal}
+        onClose={handleDismissNotProModal}
+      />
     </>
   );
 }
