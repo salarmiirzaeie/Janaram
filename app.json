@@ -39,7 +39,6 @@
     },
     "plugins": [
       "expo-router",
-      "./plugins/withPoolakey.js",
       "expo-notifications",
       [
         "expo-splash-screen",

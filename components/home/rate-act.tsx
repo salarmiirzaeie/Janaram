@@ -9,26 +9,27 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
 }
-const PACKAGE_NAME = "com.salarmiirzapour.Janaram"; // <-- جایگزین کن
+const PACKAGE_NAME = "com.salarmiirzapour.Janaram"; // <-- اینو با پکیج خودت جایگزین کن
 
 const RateAppSheet: React.FC<Props> = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
-  const openCafeBazaar = async () => {
-    // تلاش برای باز کردن deep link کافه‌بازار؛ fallback به وب در صورت failure
-    const bazaarDeepLink = `bazaar://details?id=${PACKAGE_NAME}`;
-    const bazaarWeb = `https://cafebazaar.ir/app/?id=${PACKAGE_NAME}`;
+
+  const openMyket = async () => {
+    // تلاش برای باز کردن deep link مایکت؛ fallback به وب در صورت failure
+    const myketDeepLink = `myket://comment?id=${PACKAGE_NAME}`;
+    const myketWeb = `https://myket.ir/app/${PACKAGE_NAME}`;
 
     try {
-      const supported = await Linking.canOpenURL(bazaarDeepLink);
+      const supported = await Linking.canOpenURL(myketDeepLink);
       if (supported) {
-        await Linking.openURL(bazaarDeepLink);
+        await Linking.openURL(myketDeepLink);
       } else {
-        await Linking.openURL(bazaarWeb);
+        await Linking.openURL(myketWeb);
       }
     } catch (err) {
       // fallback web
       try {
-        await Linking.openURL(bazaarWeb);
+        await Linking.openURL(myketWeb);
       } catch (e) {
         console.warn("cannot open market link", e);
       }
@@ -43,16 +44,17 @@ const RateAppSheet: React.FC<Props> = ({ isOpen, onClose }) => {
     onClose();
     setTimeout(() => {
       BackHandler.exitApp(); // بعد از بستن، اپ بسته بشه
-    }, 300); // یه تاخیر کوچیک برای انیمیشن مودال
+    }, 300);
   };
 
   const dontAskAgain = async () => {
     dispatch({ type: "initialize/setIsCommented", payload: true });
     onClose();
     setTimeout(() => {
-      BackHandler.exitApp(); // بعد از بستن، اپ بسته بشه
-    }, 300); // یه تاخیر کوچیک برای انیمیشن مودال
+      BackHandler.exitApp();
+    }, 300);
   };
+
   return (
     <Actionsheet isOpen={isOpen} closeOnOverlayClick onClose={onClose}>
       <ActionsheetBackdrop />
@@ -63,12 +65,12 @@ const RateAppSheet: React.FC<Props> = ({ isOpen, onClose }) => {
 
           {/* Subtitle */}
           <Text className="text-center text-primary-600 font-vazir leading-6">
-            خیلی خوشحال می‌شیم اگر چند لحظه وقت بذاری و تو کافه‌بازار بهمون امتیاز بدی و نظرتو بنویسی.
+            خیلی خوشحال می‌شیم اگر چند لحظه وقت بذاری و تو مایکت بهمون امتیاز بدی و نظرتو بنویسی.
           </Text>
 
           {/* Buttons */}
           <VStack space="md" className="w-full mt-4">
-            <Button onPress={openCafeBazaar} className="w-full bg-primary-500 rounded-xl">
+            <Button onPress={openMyket} className="w-full bg-primary-500 rounded-xl">
               <ButtonText className="text-white text-center font-vazirBold">الان امتیاز می‌دم</ButtonText>
             </Button>
 

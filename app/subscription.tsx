@@ -4,7 +4,10 @@ import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useCustomToast } from "@/hooks/useToast";
-import { usePlansQuery, useUpgradePlanMutation } from "@/services/upgrade/upgrade-adapter";
+import {
+  usePlansQuery,
+  useUpgradePlanMutation,
+} from "@/services/upgrade/upgrade-adapter";
 import { toPersianDigits } from "@/utils/persian";
 // import { useBazaar } from "@cafebazaar/react-native-poolakey";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
@@ -12,7 +15,6 @@ import React from "react";
 import { ScrollView, View } from "react-native";
 
 export default function SubscriptionsScreen() {
-  // const bazaar = useBazaar(process.env.EXPO_PUBLIC_BAZAR_RSA_KEY || "");
   const [upgradePlan, { isLoading: isUpgrading }] = useUpgradePlanMutation();
   const { data: plans, isLoading } = usePlansQuery(null);
   const toast = useCustomToast();
@@ -52,11 +54,15 @@ export default function SubscriptionsScreen() {
                   <VStack
                     key={plan.id}
                     className={`bg-white rounded-3xl p-4 mx-4 shadow-md w-full sm:w-96 ${
-                      plan.isActive ? `border-4 border-${color}` : "border-2 border-gray-300"
+                      plan.isActive
+                        ? `border-4 border-${color}`
+                        : "border-2 border-gray-300"
                     }`}
                     style={{ direction: "rtl" }}
                   >
-                    {plan.isActive && <FontAwesome name="star" size={24} color="#facc15" />}
+                    {plan.isActive && (
+                      <FontAwesome name="star" size={24} color="#facc15" />
+                    )}
 
                     <Text className="text-gray-600 text-xl mb-6 font-vazirBold leading-relaxed">
                       {plan.description}
@@ -64,25 +70,37 @@ export default function SubscriptionsScreen() {
 
                     <VStack>
                       {plan.features.map((feature, i) => (
-                        <HStack key={i} className="items-center mb-2 justify-between flex-row-reverse">
+                        <HStack
+                          key={i}
+                          className="items-center mb-2 justify-between flex-row-reverse"
+                        >
                           <Ionicons
                             name="checkmark-circle"
                             size={24}
-                            color={color === "primary-500" ? "#1E88E5" : "#ad46ff"}
+                            color={
+                              color === "primary-500" ? "#1E88E5" : "#ad46ff"
+                            }
                           />
-                          <Text className="text-gray-800 text-right text-sm mr-3 font-vazir">{feature}</Text>
+                          <Text className="text-gray-800 text-right text-sm mr-3 font-vazir">
+                            {feature}
+                          </Text>
                         </HStack>
                       ))}
                     </VStack>
 
                     {plan.price !== 0 && (
-                      <Text className={`text-lg self-end font-vazirBold my-2 text-${color}`}>
+                      <Text
+                        className={`text-lg self-end font-vazirBold my-2 text-${color}`}
+                      >
                         {toPersianDigits(plan.price)} هزار تومان
                       </Text>
                     )}
 
                     {plan.price !== 0 && (
-                      <Button className={`bg-${color} rounded-2xl`} onPress={() => handleSubscribe(plan.id)}>
+                      <Button
+                        className={`bg-${color} rounded-2xl`}
+                        onPress={() => handleSubscribe(plan.id)}
+                      >
                         <ButtonText className="text-white text-lg font-vazirBold">
                           {!plan.price ? "شروع رایگان" : "خرید اشتراک"}
                         </ButtonText>

@@ -2,28 +2,25 @@ import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import useCustomBazar from "@/hooks/useCustomBazar";
 import { useCustomToast } from "@/hooks/useToast";
-import { apiSlice } from "@/redux/api-slice";
 import {
   usePlansQuery,
   useUpgradePlanMutation,
 } from "@/services/upgrade/upgrade-adapter";
 import { AntDesign } from "@expo/vector-icons";
+import { useMyket } from "iab-myket-reactnative/src/index";
 import React, { useEffect } from "react";
+
 import {
   Dimensions,
   Image,
-  Linking,
   Modal,
-  Platform,
   Pressable,
   StatusBar,
   StyleSheet,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
 
 export type ProPlanModalProps = {
   visible: boolean;
@@ -35,7 +32,6 @@ export default function ProPlanFullScreenModal({
   onClose,
 }: ProPlanModalProps) {
   const screenHeight = Dimensions.get("window").height;
-  const bazaar = useCustomBazar(process.env.EXPO_PUBLIC_BAZAR_RSA_KEY);
   // Decide layout sizes
   const isSmall = screenHeight < 700;
   const heroSize = isSmall ? 160 : 240;
@@ -43,50 +39,33 @@ export default function ProPlanFullScreenModal({
   const descFont = isSmall ? "text-sm" : "text-base";
   const priceFont = isSmall ? "text-base" : "text-lg";
   const paddingX = isSmall ? "px-4" : "px-6";
-  const dispatch = useDispatch();
   useEffect(() => {
     if (visible) StatusBar.setBarStyle("dark-content");
   }, [visible]);
 
   const { data: plans, isLoading } = usePlansQuery(null);
-  // const bazaar = useBazaar(process.env.EXPO_PUBLIC_BAZAR_RSA_KEY || "");
   const [upgradePlan, { isLoading: isUpgrading }] = useUpgradePlanMutation();
   const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
   const features = proPlan?.features;
   const toast = useCustomToast();
+  const myketInstance = useMyket(process.env.EXPO_PUBLIC_MYKET_BILING_KEY);
+
   const handleSubscribe = async (id: string) => {
     if (id !== "0") {
-      if (Platform.OS === "android") {
-        await bazaar
-          .subscribeProduct(id)
-          .then(() => {
-            upgradePlan({ id })
-              .unwrap()
-              .then((res) => {
-                if (res.success) {
-                  toast.show({ msg: res.message, type: "success" });
-                  onClose();
-                }
-              });
-          })
-          .catch((e: any) => {
-            console.log(e);
-          });
-      } else if (Platform.OS === "ios") {
-        const packageId = id; // یا هر شناسه بسته‌ی درون‌اپی
-        const url = `sibapp://package_purchase?package=${packageId}&developer_payload=`;
+      try {
+        await myketInstance.connect(process.env.EXPO_PUBLIC_MYKET_BILING_KEY);
 
-        const supported = await Linking.canOpenURL(url);
+        const inventory = await myketInstance.queryPurchaseProduct(true, [id]);
+        console.log("Inventory: ", JSON.stringify(inventory));
 
-        if (!supported) {
-          console.log("لینک پرداخت سیب‌اپ پشتیبانی نمی‌شو");
-          throw new Error("لینک پرداخت سیب‌اپ پشتیبانی نمی‌شود");
+        const purchase = await myketInstance.purchaseProduct(id, null);
+        const res = await upgradePlan({ id }).unwrap();
+        if (res.success) {
+          toast.show({ msg: res.message, type: "success" });
+          onClose();
         }
-
-        await Linking.openURL(url);
-        setTimeout(() => {
-          dispatch(apiSlice.util.invalidateTags(["Plans"]));
-        }, 20000);
+      } catch (error: any) {
+        toast.show({ msg: error.data.message, type: "error" });
       }
     } else {
       toast.show({ msg: "پلن رایگان برای شما فعال شد", type: "success" });
