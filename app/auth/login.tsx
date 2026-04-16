@@ -5,19 +5,21 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import useAuth from "@/hooks/useAuth";
 import { useCustomToast } from "@/hooks/useToast";
-import { useGoogleLoginMutation, useSendOTPMutation } from "@/services/auth/auth-adapter";
+import {
+  useGoogleLoginMutation,
+  useSendOTPMutation,
+} from "@/services/auth/auth-adapter";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { router } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Image, KeyboardAvoidingView, Platform, SafeAreaView } from "react-native";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+} from "react-native";
 import * as yup from "yup";
-
-// فقط روی اندروید اوتی‌پی‌وریفای رو ایمپورت می‌کنیم
-let OtpVerify: any;
-if (Platform.OS === "android") {
-  OtpVerify = require("react-native-otp-verify").default;
-}
 
 const schema = yup.object().shape({
   phoneNumber: yup
@@ -53,41 +55,50 @@ const Login: React.FC = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      let appHash = null;
-      if (Platform.OS === "android" && OtpVerify) {
-        const hash = await OtpVerify.getHash();
-        appHash = hash[0]; // 11-character hash
-      }
-
       const normalizedPhoneNumber = normalizePhoneNumber(data.phoneNumber);
       const result = await sendOTP({
         phoneNumber: normalizedPhoneNumber,
-        appHash: appHash || "",
       }).unwrap();
-
       if (result.success) {
         router.push({
           pathname: "/auth/verifyOTP",
           params: {
             phoneNumber: data.phoneNumber,
+            otp: result.data.otp,
           },
         });
       }
     } catch (err: any) {
       console.error("Error sending OTP:", err);
-      toast.show({ type: "error", msg: err.data?.message || "خطا در درخواست کد" });
+      toast.show({
+        type: "error",
+        msg: err.data?.message || "خطا در درخواست کد",
+      });
     }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 p-4">
-        <ProgressOnboarding onBack={() => router.back()} currentStep={1} totalSteps={8} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1 p-4"
+      >
+        <ProgressOnboarding
+          onBack={() => router.back()}
+          currentStep={1}
+          totalSteps={8}
+        />
         <VStack className="w-full p-4">
-          <Image source={require("@/assets/images/logo.png")} className="w-32 h-32 mx-auto mb-6" resizeMode="contain" />
+          <Image
+            source={require("@/assets/images/logo.png")}
+            className="w-32 h-32 mx-auto mb-6"
+            resizeMode="contain"
+          />
 
           <VStack className="w-full">
-            <Text className="text-3xl font-vazirBold text-primary-800 text-center mb-2">خوش آمدید</Text>
+            <Text className="text-3xl font-vazirBold text-primary-800 text-center mb-2">
+              خوش آمدید
+            </Text>
             <Text className="text-base font-vazir text-primary-600 text-center mb-8">
               برای ورود شماره موبایل خود را وارد کنید
             </Text>
@@ -122,11 +133,16 @@ const Login: React.FC = () => {
               )}
             />
 
-            <Button className="rounded-lg p-3 bg-primary-500 mt-4" onPress={handleSubmit(onSubmit)}>
+            <Button
+              className="rounded-lg p-3 bg-primary-500 mt-4"
+              onPress={handleSubmit(onSubmit)}
+            >
               {isLoadingOTP ? (
                 <ButtonSpinner color="white" />
               ) : (
-                <ButtonText className="text-white text-base font-vazirBold">دریافت کد تایید</ButtonText>
+                <ButtonText className="text-white text-base font-vazirBold">
+                  دریافت کد تایید
+                </ButtonText>
               )}
             </Button>
           </VStack>

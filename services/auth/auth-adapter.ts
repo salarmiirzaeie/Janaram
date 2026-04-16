@@ -10,21 +10,24 @@ const authAdapter = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    sendOTP: builder.mutation<any, { phoneNumber: string; appHash: string }>({
+    sendOTP: builder.mutation<any, { phoneNumber: string }>({
       query: (data) => ({
-        url: "auth/otp/request",
+        url: "auth/otp/request2",
         method: "POST",
         body: data,
       }),
     }),
-    verifyOTP: builder.mutation<IVerifyOtpRes, { code: string; phoneNumber: string }>({
+    verifyOTP: builder.mutation<IVerifyOtpRes, { phoneNumber: string }>({
       query: (data) => ({
-        url: "auth/otp/verify",
+        url: "auth/otp/verify2",
         method: "POST",
         body: data,
       }),
     }),
-    personalize: builder.mutation<IVerifyOtpRes, { goals: string[]; meditationTime: number }>({
+    personalize: builder.mutation<
+      IVerifyOtpRes,
+      { goals: string[]; meditationTime: number }
+    >({
       query: (data) => ({
         url: "auth/personalize",
         method: "PUT",
@@ -39,7 +42,10 @@ const authAdapter = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Profile"],
     }),
-    profile: builder.query<{ data: { name: string; phoneNumber: string; profilePhoto?: string } }, any>({
+    profile: builder.query<
+      { data: { name: string; phoneNumber: string; profilePhoto?: string } },
+      any
+    >({
       query: () => ({
         url: "auth/profile",
         method: "GET",
