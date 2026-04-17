@@ -1,9 +1,12 @@
+import NetworkAct from "@/components/home/network-act";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { AudioPlayerProvider } from "@/context/AudioPlayerContext";
 import "@/global.css";
 import { persistor, store } from "@/redux/store";
+import { useNetInfo } from "@react-native-community/netinfo";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import { useState } from "react";
 import { I18nManager, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
@@ -24,7 +27,8 @@ export default function RootLayout() {
     vazirBold: require("@/assets/fonts/vazir-bold.ttf"),
     iranSans: require("@/assets/fonts/Iranian-sans.ttf"),
   });
-
+  const [showNetworkAct, setShowNetworkAct] = useState(false);
+  const netInfo = useNetInfo();
   if (!loaded) {
     // Async font loading only occurs in development.
     return null;
@@ -48,7 +52,10 @@ export default function RootLayout() {
                     headerTitleStyle: { fontFamily: "vazirBold" },
                   }}
                 >
-                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
                   <Stack.Screen
                     name="player"
                     options={{
@@ -140,6 +147,7 @@ export default function RootLayout() {
                   />
                 </Stack>
                 <StatusBar barStyle="dark-content" backgroundColor={"#fff"} />
+                {!netInfo.isConnected && <NetworkAct />}
               </GestureHandlerRootView>
             </SafeAreaProvider>
           </AudioPlayerProvider>

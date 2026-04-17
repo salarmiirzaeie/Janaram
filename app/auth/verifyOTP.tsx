@@ -69,14 +69,6 @@ const OTPForm = () => {
     return () => clearInterval(interval);
   }, [timeLeft]);
 
-  // ⌨️ Auto focus first input on mount
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      inputRefs.current[0]?.focus();
-    }, 300);
-    return () => clearTimeout(timeout);
-  }, []);
-
   // 📬 Start SMS OTP Verification for Android
   useEffect(() => {
     const newOtp = otp.split("");
@@ -86,7 +78,7 @@ const OTPForm = () => {
         setValue(`otp.${index}`, digit);
       });
       handleSubmit(onSubmit)();
-    }, 2000);
+    }, 1000);
   }, []);
 
   const normalizePhoneNumber = (phoneNumber: string): string => {

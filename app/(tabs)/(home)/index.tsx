@@ -26,7 +26,10 @@ const Index = () => {
         return true; // مانع خروج بشه
       };
 
-      const sub = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      const sub = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress
+      );
 
       return () => sub.remove();
     }, [asked])
@@ -55,8 +58,10 @@ const Index = () => {
           <Recommends />
         </VStack>
       </VStack>
-
-      <RateAppSheet isOpen={showRateModal} onClose={() => setShowRateModal(false)} />
+      <RateAppSheet
+        isOpen={showRateModal}
+        onClose={() => setShowRateModal(false)}
+      />
     </ScrollView>
   );
 };

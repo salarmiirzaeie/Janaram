@@ -1,85 +1,86 @@
 {
-  "expo": {
-    "name": "جانارام",
-    "slug": "Janaram",
-    "version": "1.1.0",
-    "runtimeVersion": "1.1.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "janaram",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-
-    "ios": {
-      "supportsTablet": false,
-      "bundleIdentifier": "com.salarmiirzapour.Janaram",
-      "buildNumber": "1.1.0"
+  "name": "جانارام",
+  "slug": "Janaram",
+  "version": "1.1.0",
+  "runtimeVersion": "1.1.0",
+  "orientation": "portrait",
+  "icon": "./assets/images/icon.png",
+  "scheme": "janaram",
+  "userInterfaceStyle": "automatic",
+  "newArchEnabled": true,
+  "ios": {
+    "supportsTablet": false,
+    "bundleIdentifier": "com.salarmiirzapour.Janaram",
+    "buildNumber": "1.1.0"
+  },
+  "android": {
+    "adaptiveIcon": {
+      "foregroundImage": "./assets/images/adaptive-icon.png",
+      "backgroundColor": "#ffffff"
     },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "googleServicesFile": "./google-services.json",
-      "edgeToEdgeEnabled": true,
-      "package": "com.salarmiirzapour.Janaram",
-      "permissions": [
-        "android.permission.FOREGROUND_SERVICE",
-        "android.permission.MODIFY_AUDIO_SETTINGS"
-      ],
-      "blockedPermissions": [
-        "android.permission.SYSTEM_ALERT_WINDOW",
-        "android.permission.RECORD_AUDIO"
-      ]
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [
-      "expo-router",
-      "./plugins/withPoolakey.js",
-      "expo-notifications",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "dark": {
-            "image": "./assets/images/splash-icon.png",
-            "backgroundColor": "#000000"
-          },
-          "backgroundColor": "#ffffff"
-        }
-      ],
-      [
-        "expo-av",
-        {
-          "microphonePermission": false
-        }
-      ],
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "removePermissions": [
-              "android.permission.SYSTEM_ALERT_WINDOW",
-              "android.permission.RECORD_AUDIO"
-            ]
-          }
-        }
-      ]
+    "googleServicesFile": "./google-services.json",
+    "edgeToEdgeEnabled": true,
+    "package": "com.salarmiirzapour.Janaram",
+    "permissions": [
+      "android.permission.FOREGROUND_SERVICE",
+      "android.permission.MODIFY_AUDIO_SETTINGS",
+      "com.google.android.gms.permission.AD_ID"
     ],
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "debb88c7-8a40-450b-8578-7a14c9bb202a"
+    "blockedPermissions": [
+      "android.permission.SYSTEM_ALERT_WINDOW",
+      "android.permission.RECORD_AUDIO"
+    ]
+  },
+  "web": {
+    "bundler": "metro",
+    "output": "static",
+    "favicon": "./assets/images/favicon.png"
+  },
+  "plugins": [
+    "expo-router",
+    "./plugins/withPoolakey.js",
+    "expo-notifications",
+    [
+      "expo-splash-screen",
+      {
+        "image": "./assets/images/splash-icon.png",
+        "imageWidth": 200,
+        "resizeMode": "contain",
+        "dark": {
+          "image": "./assets/images/splash-icon.png",
+          "backgroundColor": "#000000"
+        },
+        "backgroundColor": "#ffffff"
       }
-    },
-    "updates": {
-      "url": "https://u.expo.dev/debb88c7-8a40-450b-8578-7a14c9bb202a"
+    ],
+    [
+      "expo-av",
+      {
+        "microphonePermission": false
+      }
+    ],
+    [
+      "expo-build-properties",
+      {
+        "android": {
+          "removePermissions": [
+            "android.permission.SYSTEM_ALERT_WINDOW",
+            "android.permission.RECORD_AUDIO"
+          ]
+        }
+      }
+    ]
+  ],
+  "extra": {
+    "router": {},
+    "eas": {
+      "projectId": "debb88c7-8a40-450b-8578-7a14c9bb202a"
     }
+  },
+  "updates": {
+    "url": "https://u.expo.dev/debb88c7-8a40-450b-8578-7a14c9bb202a"
+  },
+  "react-native-tapsell-mediation": {
+    "TapsellMediationAppKey": "enmkrgbbeiapkbbnplatntsibjtqferbrihnmtdiiocgsjqjhojqscaphrlhlrnhelckjo"
   }
 }

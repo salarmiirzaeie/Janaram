@@ -5,12 +5,11 @@ import {
   fetchBaseQuery,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-import { Alert } from "react-native";
 import { logout } from "./auth/auth-slice";
 import { RootState } from "./store";
 
 // const BASE_URL = "https://janaram.ir/api/";
-const BASE_URL = "http://10.194.37.61:3000/api/";
+const BASE_URL = "http://10.213.178.162:3000/api/";
 export const BASE_URL_IMAGES = "https://janaram.storage.c2.liara.space";
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
@@ -31,11 +30,10 @@ const baseQueryWithReauth: BaseQueryFn<
   let result = await baseQuery(args, api, extraOptions);
   if (result.error && !result.error.data) {
     if ("error" in result.error) {
-      Alert.alert(
-        result?.error?.status.toString(),
-
-        result?.error?.error.split(":")[1]
-      );
+      // Alert.alert(
+      //   result?.error?.status.toString(),
+      //   result?.error?.error.split(":")[1]
+      // );
     }
   }
 

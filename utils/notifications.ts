@@ -11,12 +11,14 @@ export const getNotificationsPermissions = async () => {
     finalStatus = status;
   }
   if (finalStatus !== "granted") {
-    console.warn("Permission Denied: User needs to enable notification permissions.");
+    console.warn(
+      "Permission Denied: User needs to enable notification permissions."
+    );
     return;
   }
 };
 function handleRegistrationError(errorMessage: string) {
-  alert(errorMessage);
+  // alert(errorMessage);
   throw new Error(errorMessage);
 }
 export async function registerForPushNotificationsAsync() {
@@ -30,22 +32,28 @@ export async function registerForPushNotificationsAsync() {
   }
 
   if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
     if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
-      handleRegistrationError("Permission not granted to get push token for push notification!");
+      handleRegistrationError(
+        "Permission not granted to get push token for push notification!"
+      );
       return;
     }
-    const projectId = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
+    const projectId =
+      Constants?.expoConfig?.extra?.eas?.projectId ??
+      Constants?.easConfig?.projectId;
     if (!projectId) {
       handleRegistrationError("Project ID not found");
     }
     try {
-      const pushTokenString = (await Notifications.getDevicePushTokenAsync()).data;
+      const pushTokenString = (await Notifications.getDevicePushTokenAsync())
+        .data;
       return pushTokenString;
     } catch (e: unknown) {
       handleRegistrationError(`${e}`);
