@@ -1,4 +1,3 @@
-import AnalyzeModal from "@/components/chat/analyze-modal";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { resetNotificationCount } from "@/redux/notifications/notifications-slice";
@@ -6,8 +5,7 @@ import {
   useGetChatHistoryQuery,
   useStartConversationMutation,
 } from "@/services/ai/ai-adapter";
-import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -74,7 +72,6 @@ const ChatScreen: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const flatListRef = useRef<KeyboardAwareFlatList | null>(null);
   const [showPremium, setShowPremium] = useState(false);
-  const [analyze, showAnalyze] = useState(false);
   const [startConversation, { isLoading, error, data }] =
     useStartConversationMutation();
   const [page, setPage] = useState(1);
@@ -97,20 +94,7 @@ const ChatScreen: React.FC = () => {
   const scrollToBottom = () => {
     if (messages.length > 0) flatListRef.current?.scrollToFocusedInput;
   };
-  const { data: plans } = usePlansQuery(null);
-  const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
-  const handleOpenNotProModal = () => {
-    dispatch({
-      type: "pro/setShowNotProModal",
-      payload: {
-        message: "ابزار تحلیل شخصیت من مخصوص کاربران Pro می‌باشد.",
-        showNotProModal: true,
-      },
-    });
-  };
-  const handleAnalyzeMyPersonality = () => {
-    showAnalyze(true);
-  };
+
   useEffect(() => {
     dispatch(resetNotificationCount());
   }, []);
@@ -269,22 +253,6 @@ const ChatScreen: React.FC = () => {
           />
 
           <TouchableOpacity
-            onPress={() => {
-              if (!proPlan?.isActive) {
-                handleOpenNotProModal();
-              } else {
-                handleAnalyzeMyPersonality();
-              }
-            }}
-            // disabled={isLoading || !input.trim()}
-          >
-            {isLoading ? (
-              <ButtonSpinner color="#fff" />
-            ) : (
-              <AntDesign name="thunderbolt" size={22} color={"#47A9DA"} />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
             style={styles.sendButton}
             onPress={handleSend}
             disabled={isLoading || !input.trim()}
@@ -301,9 +269,6 @@ const ChatScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-      {analyze && (
-        <AnalyzeModal visible={analyze} onClose={() => showAnalyze(false)} />
-      )}
     </SafeAreaView>
   );
 };

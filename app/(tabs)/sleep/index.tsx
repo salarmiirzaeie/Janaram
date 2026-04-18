@@ -18,7 +18,11 @@ const Tests = () => {
   return (
     <ScrollView className="flex-1 bg-background-900">
       <VStack space="md" className="bg-background-900 py-4 pb-20 flex-1">
-        <ScrollView contentContainerStyle={{ paddingHorizontal: 10 }} horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={{ paddingHorizontal: 10 }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
           {isLoading
             ? [1, 2, 3, 4].map((item, index) => (
                 <Skeleton
@@ -48,11 +52,17 @@ const Tests = () => {
                       className="absolute top-0 left-0 right-0 bottom-0 h-56 w-full opacity-50 rounded-3xl"
                       resizeMode="cover"
                     />
-                    <Text className=" text-white font-vazirBold text-2xl text-right m-6">{item.title}</Text>
+                    <Text className=" text-white font-vazirBold text-2xl text-right m-6">
+                      {item.title}
+                    </Text>
                     <HStack className="flex-1 my-2 mx-6">
-                      <Text className=" text-white  font-vazir text-sm text-right  self-end">{item.duration}</Text>
+                      <Text className=" text-white  font-vazir text-sm text-right  self-end">
+                        {item.duration}
+                      </Text>
 
-                      <Text className=" text-white font-vazir text-md text-right flex-1">{item.description}</Text>
+                      <Text className=" text-white font-vazir text-md text-right flex-1">
+                        {item.description}
+                      </Text>
                     </HStack>
                   </VStack>
                 </Pressable>
@@ -60,9 +70,21 @@ const Tests = () => {
         </ScrollView>
         <VStack space="lg" className="mt-4 ">
           <HStack className="items-center justify-between  mx-5">
-            <Text className="text-typography-400 text-md"> </Text>
-
-            <Text className="font-vazirBold text-white text-xl">مدیتیشن‌های خواب</Text>
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: "/(tabs)/sleep/all-musics",
+                  params: {
+                    type: "sleep",
+                  },
+                })
+              }
+            >
+              <Text className="text-typography-400 text-md">مشاهده همه</Text>
+            </Pressable>
+            <Text className="font-vazirBold text-white text-xl">
+              مدیتیشن‌های خواب
+            </Text>
           </HStack>
           <ScrollView
             contentContainerStyle={{
@@ -73,8 +95,12 @@ const Tests = () => {
             horizontal
           >
             {isLoading
-              ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
-              : sleepMedias?.map((item, index) => <SleepCourseCard index={index} item={item} key={item.id} />)}
+              ? [1, 2, 3, 4].map((item, index) => (
+                  <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />
+                ))
+              : sleepMedias?.map((item, index) => (
+                  <SleepCourseCard index={index} item={item} key={item.id} />
+                ))}
           </ScrollView>
         </VStack>
         <VStack space="lg" className="mt-4 ">
@@ -92,7 +118,9 @@ const Tests = () => {
               <Text className="text-typography-400 text-md">مشاهده همه</Text>
             </Pressable>
 
-            <Text className="font-vazirBold text-white text-xl">آهنگ‌های خواب</Text>
+            <Text className="font-vazirBold text-white text-xl">
+              آهنگ‌های خواب
+            </Text>
           </HStack>
           <ScrollView
             contentContainerStyle={{
@@ -103,8 +131,12 @@ const Tests = () => {
             horizontal
           >
             {isLoading
-              ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
-              : sleepMusics?.map((item, index) => <SleepCourseCard index={index} item={item} key={item.id} />)}
+              ? [1, 2, 3, 4].map((item, index) => (
+                  <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />
+                ))
+              : sleepMusics?.map((item, index) => (
+                  <SleepCourseCard index={index} item={item} key={item.id} />
+                ))}
           </ScrollView>
         </VStack>
       </VStack>

@@ -74,9 +74,9 @@ const MusicCard = ({ item }: { item: Meditation }) => {
           <Text className="font-vazirBold text-white  text-base">
             {item.title}
           </Text>
-          <Text className="text-muted-foreground text-white font-thin text-sm">
-            {item.description}
-          </Text>
+          {/* <Text className="text-muted-foreground text-white font-thin text-sm">
+            {item.description.slice(0, 60)}
+          </Text> */}
         </VStack>
         <HStack space="md" className="items-center space-x-2">
           <Text className="text-xs text-muted-foreground text-white">

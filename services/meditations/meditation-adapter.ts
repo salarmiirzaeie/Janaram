@@ -38,6 +38,7 @@ const meditationAdapter = apiSlice.injectEndpoints({
           sleepMusic: Meditation[];
           nature: Meditation[];
           story: Meditation[];
+          self: Meditation[];
         };
       },
       null

@@ -1,4 +1,8 @@
 {
+  "react-native-tapsell-mediation": {
+    "TapsellMediationAppKey": "76798342-99a7-4a5f-bf5a-60a088d5dcfb",
+    "TapsellMediationAdmobAdapterSignature": "ca-app-pub-3940256099942544~3347511713"
+  },
   "name": "جانارام",
   "slug": "Janaram",
   "version": "1.1.0",
@@ -79,8 +83,5 @@
   },
   "updates": {
     "url": "https://u.expo.dev/debb88c7-8a40-450b-8578-7a14c9bb202a"
-  },
-  "react-native-tapsell-mediation": {
-    "TapsellMediationAppKey": "enmkrgbbeiapkbbnplatntsibjtqferbrihnmtdiiocgsjqjhojqscaphrlhlrnhelckjo"
   }
 }

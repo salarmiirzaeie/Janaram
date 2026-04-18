@@ -4,12 +4,30 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { TapGestureHandler, TapGestureHandlerGestureEvent } from "react-native-gesture-handler";
-import Animated, { interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import {
+  TapGestureHandler,
+  TapGestureHandlerGestureEvent,
+} from "react-native-gesture-handler";
+import Animated, {
+  interpolate,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 export default function PlayerScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { track, isPlaying, position, duration, loadTrack, togglePlay, seek, isLoading } = useAudioPlayer();
+  const {
+    track,
+    isPlaying,
+    position,
+    duration,
+    loadTrack,
+    togglePlay,
+    seek,
+    isLoading,
+  } = useAudioPlayer();
 
   const [progressBarWidth, setProgressBarWidth] = useState(0);
   const progress = useSharedValue(0);
@@ -27,7 +45,9 @@ export default function PlayerScreen() {
 
   // Update progress smoothly when position changes
   useEffect(() => {
-    progress.value = withTiming(duration ? (position / duration) * 100 : 0, { duration: 100 });
+    progress.value = withTiming(duration ? (position / duration) * 100 : 0, {
+      duration: 100,
+    });
   }, [position, duration]);
 
   const formatMillis = (millis: number) => {
@@ -43,7 +63,11 @@ export default function PlayerScreen() {
 
   // Animated style for the thumb
   const thumbStyle = useAnimatedStyle(() => {
-    const translateX = interpolate(progress.value, [0, 100], [0, progressBarWidth - 20]); // thumb width 20
+    const translateX = interpolate(
+      progress.value,
+      [0, 100],
+      [0, progressBarWidth - 20]
+    ); // thumb width 20
     return { transform: [{ translateX }] };
   });
 
@@ -73,7 +97,10 @@ export default function PlayerScreen() {
         </View>
       ) : (
         <View className="w-full items-center">
-          <Image source={{ uri: BASE_URL_IMAGES + track?.image }} style={styles.cover} />
+          <Image
+            source={{ uri: BASE_URL_IMAGES + track?.image }}
+            style={styles.cover}
+          />
           <Text style={styles.title}>{track?.title}</Text>
           <Text style={styles.artist}>{track?.description}</Text>
 
@@ -95,14 +122,24 @@ export default function PlayerScreen() {
           </View>
 
           <View style={styles.controls}>
-            <Ionicons name="play-skip-back" size={32} color="#666" onPress={() => seek(position - 10000)} />
+            <Ionicons
+              name="play-skip-back"
+              size={32}
+              color="#666"
+              onPress={() => seek(position - 10000)}
+            />
             <Ionicons
               name={isPlaying ? "pause-circle" : "play-circle"}
               size={68}
               color="#47A9DA"
               onPress={togglePlay}
             />
-            <Ionicons name="play-skip-forward" size={32} color="#666" onPress={() => seek(position + 10000)} />
+            <Ionicons
+              name="play-skip-forward"
+              size={32}
+              color="#666"
+              onPress={() => seek(position + 10000)}
+            />
           </View>
         </View>
       )}

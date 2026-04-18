@@ -66,10 +66,13 @@ export default function TextActivityScreen() {
       case "gratitude_exercise":
         return (
           <VStack space="lg">
-            <Text className="text-xl font-vazirBold text-right">🌸 شکرگزاری</Text>
+            <Text className="text-xl font-vazirBold text-right">
+              🌸 شکرگزاری
+            </Text>
             <Text className="text-base font-vazir text-gray-600 text-right leading-6">
-              نوشتن چیزهایی که بابت آن‌ها شکرگزار هستی باعث افزایش حس مثبت و آرامش درونی می‌شود. هر مورد را جداگانه
-              بنویس، حتی چیزهای کوچک مثل یک لبخند یا یک فنجان چای گرم.
+              نوشتن چیزهایی که بابت آن‌ها شکرگزار هستی باعث افزایش حس مثبت و
+              آرامش درونی می‌شود. هر مورد را جداگانه بنویس، حتی چیزهای کوچک مثل
+              یک لبخند یا یک فنجان چای گرم.
             </Text>
 
             <HStack space="md" className="items-center">
@@ -111,12 +114,15 @@ export default function TextActivityScreen() {
       case "daily_tip":
         return (
           <Card className="p-6 bg-primary-100">
-            <Text className="text-lg font-vazirBold text-right">💡 نکته امروز</Text>
+            <Text className="text-lg font-vazirBold text-right">
+              💡 نکته امروز
+            </Text>
             <Text className="text-base font-vazir mt-2 text-right text-gray-700 leading-6">
               {randomTip}
               <Text className="block mt-3 text-sm text-gray-500">
-                این جمله‌های انگیزشی می‌تونن بهت انرژی بدن. چند بار در روز بخون و یادت باشه عمل کردن به همین نکات کوچیک
-                می‌تونه تغییر بزرگی بسازه.
+                این جمله‌های انگیزشی می‌تونن بهت انرژی بدن. چند بار در روز بخون
+                و یادت باشه عمل کردن به همین نکات کوچیک می‌تونه تغییر بزرگی
+                بسازه.
               </Text>
             </Text>
           </Card>
@@ -125,12 +131,15 @@ export default function TextActivityScreen() {
       case "journaling":
         return (
           <VStack space="lg">
-            <Text className="text-xl font-vazirBold text-right">📝 ژورنال روزانه</Text>
-            <Text className="text-base text-gray-600 font-vazir text-right leading-6">
-              ژورنال نوشتن یعنی تخلیه‌ی ذهنی. می‌تونی احساساتت، نگرانی‌ها یا حتی ایده‌های خلاقانه‌ات رو روی کاغذ (اینجا)
-              بیاری. این تمرین باعث می‌شه ذهن سبک‌تر بشه و دید بهتری به روزت پیدا کنی.
+            <Text className="text-xl font-vazirBold text-right">
+              📝 ژورنال روزانه
             </Text>
-            <Textarea className="border border-gray-300 rounded-2xl p-4 text-right">
+            <Text className="text-base text-gray-600 font-vazir text-right leading-6">
+              ژورنال نوشتن یعنی تخلیه‌ی ذهنی. می‌تونی احساساتت، نگرانی‌ها یا حتی
+              ایده‌های خلاقانه‌ات رو روی کاغذ (اینجا) بیاری. این تمرین باعث
+              می‌شه ذهن سبک‌تر بشه و دید بهتری به روزت پیدا کنی.
+            </Text>
+            <Textarea className="border border-gray-300 h-40 rounded-2xl p-4 text-right">
               <TextareaInput
                 className="text-right"
                 value={text}

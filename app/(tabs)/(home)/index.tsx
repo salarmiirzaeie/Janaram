@@ -1,4 +1,5 @@
 import MoodCard from "@/components/home/mood-card";
+import PsychoCard from "@/components/home/psycho-card";
 import RateAppSheet from "@/components/home/rate-act";
 import Recommends from "@/components/home/recommends";
 import TestCard from "@/components/home/test-card";
@@ -47,15 +48,22 @@ const Index = () => {
             <Text className="text-typography-400 text-sm"> </Text>
             <Text className="font-vazirBold text-xl">روانشناس من</Text>
           </HStack>
-          <TestCard />
+          <PsychoCard />
         </VStack>
 
         <VStack space="lg" className="mt-2">
           <HStack className="items-center justify-between mx-5">
             <Text className="text-typography-400 text-sm"> </Text>
-            <Text className="font-vazirBold text-xl">پیشنهادها برای شما</Text>
+            <Text className="font-vazirBold text-xl">مدیتیشن های پیشنهادی</Text>
           </HStack>
           <Recommends />
+        </VStack>
+        <VStack space="md" className="mb-5 px-5">
+          <HStack className="items-center justify-between">
+            <Text className="text-typography-400 text-sm"> </Text>
+            <Text className="font-vazirBold text-xl"> تست خود شناسی</Text>
+          </HStack>
+          <TestCard />
         </VStack>
       </VStack>
       <RateAppSheet

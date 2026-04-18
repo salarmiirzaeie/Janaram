@@ -16,6 +16,7 @@ const Explore = () => {
   const loveMedias = exploreData?.meditations.love;
   const instrumentalMedias = exploreData?.meditations.instrumental;
   const nature = exploreData?.meditations.nature;
+  const self = exploreData?.meditations.self;
 
   return (
     <ScrollView className="flex-1">
@@ -145,6 +146,29 @@ const Explore = () => {
           <HStack className="items-center justify-between  mx-5">
             <Text className="text-typography-400 text-md"> </Text>
 
+            <Text className="font-vazirBold text-xl">خودسازی</Text>
+          </HStack>
+          <ScrollView
+            contentContainerStyle={{
+              paddingHorizontal: 10,
+              flexDirection: "row-reverse",
+            }}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+          >
+            {isLoading
+              ? [1, 2, 3, 4].map((item, index) => (
+                  <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />
+                ))
+              : self?.map((item, index) => (
+                  <CourseCard item={item} index={index + 1} key={item.id} />
+                ))}
+          </ScrollView>
+        </VStack>
+        <VStack space="lg" className="mt-4 ">
+          <HStack className="items-center justify-between  mx-5">
+            <Text className="text-typography-400 text-md"> </Text>
+
             <Text className="font-vazirBold text-xl">عشق</Text>
           </HStack>
           <ScrollView
@@ -164,6 +188,7 @@ const Explore = () => {
                 ))}
           </ScrollView>
         </VStack>
+
         <VStack space="lg" className="mt-4 ">
           <HStack className="items-center justify-between  mx-5">
             <Text className="text-typography-400 text-md"> </Text>
