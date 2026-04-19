@@ -59,7 +59,7 @@ export default function RootLayout() {
                   <Stack.Screen
                     name="player"
                     options={{
-                      headerShown: true,
+                      headerShown: false,
                       headerTitleAlign: "center",
                       headerTitleStyle: { fontFamily: "vazirBold" },
                       headerTitle: "",
@@ -69,7 +69,7 @@ export default function RootLayout() {
                   <Stack.Screen
                     name="breathingPlayer"
                     options={{
-                      headerShown: true,
+                      headerShown: false,
                       headerTitleAlign: "center",
                       headerTitleStyle: { fontFamily: "vazirBold" },
                       headerTitle: "",

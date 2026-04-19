@@ -8,8 +8,8 @@ import {
 import { logout } from "./auth/auth-slice";
 import { RootState } from "./store";
 
-const BASE_URL = "https://janaram.ir/api/";
-// const BASE_URL = "http://10.213.178.162:3000/api/";
+// const BASE_URL = "https://janaram.ir/api/";
+const BASE_URL = "http://10.213.178.162:3000/api/";
 export const BASE_URL_IMAGES = "https://janaram.storage.c2.liara.space";
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,

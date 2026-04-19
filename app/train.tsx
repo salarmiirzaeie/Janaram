@@ -1,154 +1,319 @@
-import { Badge, BadgeText } from "@/components/ui/badge";
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
-import Logo from "@/components/ui/logo";
-import { Pressable } from "@/components/ui/pressable";
 import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { VStack } from "@/components/ui/vstack";
-import { useCompleteExerciseMutation, useGetExerciseQuery, UserExercise } from "@/services/exercise/exercise-adapter";
+import {
+  useCompleteExerciseMutation,
+  useGetExerciseQuery,
+  UserExercise,
+} from "@/services/exercise/exercise-adapter";
 import { useGetMoodQuery } from "@/services/mood/mood-adapter";
 import { toPersianDigits } from "@/utils/persian";
-import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import {
+  Feather,
+  FontAwesome,
+  FontAwesome6,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
 import React, { useEffect } from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { LinearGradient } from "react-native-linear-gradient";
+import Animated, { FadeIn, FadeInUp } from "react-native-reanimated";
 
 const Train = () => {
   const animationRef = React.useRef(null);
   const { data, isLoading } = useGetExerciseQuery(null);
   const { data: mood, isLoading: moodLoading } = useGetMoodQuery(null);
   const [fakeLoading, setFakeLoading] = React.useState(true);
-  const [completeExercise, { isLoading: completeLoading }] = useCompleteExerciseMutation();
+  const [completeExercise, { isLoading: completeLoading }] =
+    useCompleteExerciseMutation();
+
   useEffect(() => {
     setTimeout(() => {
       setFakeLoading(false);
     }, 6000);
   }, []);
 
-  const renderItem = ({ item }: { item: UserExercise }) => (
-    <Pressable
-      onPress={() => {
-        if (!item.done) completeExercise({ exerciseId: item._id });
-        if (item.type === "meditation") {
-          router.push({ pathname: "/player", params: { id: item.exerciseId } });
-        }
-        if (item.type === "chatbot") {
-          router.push({ pathname: "/chat-bot", params: { id: item.exerciseId } });
-        }
-        if (item.type === "breathing") {
-          router.push({ pathname: "/breathingPlayer", params: { id: item.exerciseId } });
-        }
-        if (item.type === "text-activity") {
-          // if (item.done) return;
-          router.push({ pathname: "/text-activity", params: { subType: item.exerciseId, title: item.title } });
-        }
-      }}
-      className="bg-white flex-row shadow-sm mb-2 items-center justify-between rounded-2xl p-4"
-    >
-      <Button
-        onPress={() => {
-          if (!item.done) completeExercise({ exerciseId: item._id });
-          if (item.type === "meditation") {
-            router.push({ pathname: "/player", params: { id: item.exerciseId } });
-          }
-          if (item.type === "chatbot") {
-            router.push({ pathname: "/chat-bot", params: { id: item.exerciseId } });
-          }
-          if (item.type === "breathing") {
-            router.push({ pathname: "/breathingPlayer", params: { id: item.exerciseId } });
-          }
-          if (item.type === "text-activity") {
-            // if (item.done) return;
-            router.push({ pathname: "/text-activity", params: { subType: item.exerciseId, title: item.title } });
-          }
-        }}
-        className={item.done ? "bg-calm-500" : "bg-primary-500"}
-        size="sm"
-      >
-        <ButtonIcon
-          size="xl"
-          as={(props) => <FontAwesome {...props} size={12} color="white" name={item.done ? "check" : "play"} />}
-        />
-        <ButtonText className="text-white font-vazirBold">{item.done ? "انجام شد" : "شروع"}</ButtonText>
-      </Button>
+  const getTypeIcon = (type: string, done: boolean) => {
+    const color = done ? "#66BB6A" : "#79AED6";
+    switch (type) {
+      case "meditation":
+        return <Feather name="wind" size={24} color={color} />;
+      case "chatbot":
+        return <Ionicons name="chatbubble-ellipses" size={24} color={color} />;
+      case "breathing":
+        return <MaterialIcons name="air" size={24} color={color} />;
+      case "text-activity":
+        return <FontAwesome6 name="book-open" size={22} color={color} />;
+      default:
+        return <FontAwesome6 name="clipboard-list" size={24} color={color} />;
+    }
+  };
 
-      <VStack className="flex-1 mx-4 items-end">
-        <Text className="text-right font-vazirBold text-md text-primary-800">{item.title}</Text>
-        {item.description && (
-          <Text className="text-right font-vazir text-sm text-primary-700">
-            {item.description.length > 50 ? item.description.slice(0, 50) + "..." : item.description}
-          </Text>
-        )}
-        <Badge className="mt-2 flex-grow-0">
-          <BadgeText className="text-right font-vazir text-xs text-gray-600">{item.duration} دقیقه</BadgeText>
-        </Badge>
-      </VStack>
+  const getTypeBadge = (type: string) => {
+    switch (type) {
+      case "meditation":
+        return { text: "مدیتیشن", color: "bg-primary-100" };
+      case "chatbot":
+        return { text: "چت بات", color: "bg-secondary-100" };
+      case "breathing":
+        return { text: "تنفس", color: "bg-accent-100" };
+      case "text-activity":
+        return { text: "متن", color: "bg-tertiary-100" };
+      default:
+        return { text: "تمرین", color: "bg-gray-100" };
+    }
+  };
 
-      {item.type !== "meditation" ? (
-        <FontAwesome6
-          name={
-            item.type === "text-activity"
-              ? "book-open"
-              : item.type === "step-activity"
-              ? "list-check"
-              : item.type === "chatbot"
-              ? "message"
-              : item.type === "breathing"
-              ? "wind"
-              : "book-open"
-          }
-          size={24}
-          color="#47A9DA" // primary-500
-        />
-      ) : (
-        <Logo className="h-8 w-8" />
-      )}
-    </Pressable>
-  );
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: UserExercise;
+    index: number;
+  }) => {
+    const typeBadge = getTypeBadge(item.type);
+    const isDone = item.done;
+
+    return (
+      <Animated.View entering={FadeInUp.duration(400).delay(index * 100)}>
+        <TouchableOpacity
+          onPress={() => {
+            if (!item.done) completeExercise({ exerciseId: item._id });
+            if (item.type === "meditation") {
+              router.push({
+                pathname: "/player",
+                params: { id: item.exerciseId },
+              });
+            }
+            if (item.type === "chatbot") {
+              router.push({
+                pathname: "/chat-bot",
+                params: { id: item.exerciseId },
+              });
+            }
+            if (item.type === "breathing") {
+              router.push({
+                pathname: "/breathingPlayer",
+                params: { id: item.exerciseId },
+              });
+            }
+            if (item.type === "text-activity") {
+              router.push({
+                pathname: "/text-activity",
+                params: { subType: item.exerciseId, title: item.title },
+              });
+            }
+          }}
+          activeOpacity={0.8}
+        >
+          <LinearGradient
+            colors={isDone ? ["#F0F6FA", "#FFFFFF"] : ["#FFFFFF", "#F9F9FF"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{
+              borderRadius: 20,
+              marginBottom: 12,
+              padding: 16,
+              borderWidth: 1,
+              borderColor: isDone ? "#E9EDF2" : "#E9EDF2",
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.04,
+              shadowRadius: 4,
+              elevation: 2,
+            }}
+          >
+            <HStack className="items-center justify-between">
+              {/* Icon */}
+              <View
+                className={`rounded-full p-3 ${
+                  isDone ? "bg-success-100" : "bg-primary-100"
+                }`}
+              >
+                {getTypeIcon(item.type, isDone)}
+              </View>
+
+              {/* Content */}
+              <VStack className="flex-1 mx-3">
+                <HStack className="items-center gap-2 mb-1">
+                  <View
+                    className={`px-2 py-0.5 rounded-full ${typeBadge.color}`}
+                  >
+                    <Text className="font-vazir text-xs text-primary-600">
+                      {typeBadge.text}
+                    </Text>
+                  </View>
+                </HStack>
+
+                <Text className="text-right font-vazirBold text-base text-gray-800">
+                  {item.title}
+                </Text>
+
+                {item.description && (
+                  <Text
+                    className="text-right font-vazir text-sm text-gray-500 mt-1"
+                    numberOfLines={2}
+                  >
+                    {item.description.length > 60
+                      ? item.description.slice(0, 60) + "..."
+                      : item.description}
+                  </Text>
+                )}
+
+                <HStack className="items-center mt-2 gap-2">
+                  <View className="flex-row items-center gap-1">
+                    <Feather name="clock" size={12} color="#999" />
+                    <Text className="font-vazir text-xs text-gray-400">
+                      {toPersianDigits(item.duration || 0)} دقیقه
+                    </Text>
+                  </View>
+                </HStack>
+              </VStack>
+
+              {/* Start Button */}
+              <LinearGradient
+                colors={
+                  isDone ? ["#66BB6A", "#4CAF50"] : ["#79AED6", "#9966CC"]
+                }
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  borderRadius: 12,
+                  paddingHorizontal: 16,
+                  paddingVertical: 10,
+                }}
+              >
+                <HStack space="sm" className="items-center">
+                  <FontAwesome
+                    name={isDone ? "check" : "play"}
+                    size={12}
+                    color="white"
+                  />
+                  <Text className="text-white font-vazirBold text-sm">
+                    {isDone ? "انجام شد" : "شروع"}
+                  </Text>
+                </HStack>
+              </LinearGradient>
+            </HStack>
+          </LinearGradient>
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  };
 
   return (
-    <View className="flex-1 p-4 bg-background-50">
-      {/* Mood Progress */}
-      <View className="bg-white shadow-sm rounded-2xl p-4 mb-6">
-        <HStack className="justify-between items-center">
-          <Text className="text-xl text-primary-800">
-            {toPersianDigits(mood?.data.completedExercises || 0)} / {toPersianDigits(mood?.data.totalExercises || 0)}
-          </Text>
-          <Text className="text-xl font-vazirBold text-primary-800">پیشرفت امروز</Text>
-        </HStack>
-        <Progress
-          value={mood?.data.progressPercent}
-          size="md"
-          orientation="horizontal"
-          className="w-full my-4 bg-primary-100 rounded-full"
-        >
-          <ProgressFilledTrack className="bg-primary-500" />
-        </Progress>
-      </View>
-      {/* Exercises List */}
-      <Text className="text-right font-vazirBold text-xl text-primary-800 mb-4">تمرینات امروز</Text>
-      {isLoading || fakeLoading ? (
-        <VStack className="flex-1 justify-center items-center">
-          <LottieView
-            style={{ width: 260, height: 260 }}
-            ref={animationRef}
-            source={require("@/assets/animations/robot-meditation.json")}
-            autoPlay
-            loop
+    <LinearGradient colors={["#F0F6FA", "#FFFFFF"]} style={{ flex: 1 }}>
+      <View className="flex-1 p-4">
+        {/* Mood Progress Card */}
+        <Animated.View entering={FadeInUp.duration(600).springify()}>
+          <LinearGradient
+            colors={["#FFFFFF", "#F5F0FA"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{
+              borderRadius: 24,
+              padding: 20,
+              marginBottom: 24,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.06,
+              shadowRadius: 8,
+              elevation: 4,
+            }}
+          >
+            <HStack className="justify-between items-center mb-3">
+              <HStack space="md" className="items-center">
+                <Text className="text-3xl font-vazirBold text-primary-600">
+                  {toPersianDigits(mood?.data.completedExercises || 0)}
+                </Text>
+                <Text className="text-xl font-vazir text-primary-400">/</Text>
+                <Text className="text-xl font-vazir text-primary-400">
+                  {toPersianDigits(mood?.data.totalExercises || 0)}
+                </Text>
+              </HStack>
+              <HStack space="sm" className="items-center">
+                <Text className="font-vazirBold text-primary-800 text-base">
+                  پیشرفت امروز
+                </Text>
+                <Feather name="trending-up" size={20} color="#79AED6" />
+              </HStack>
+            </HStack>
+
+            <Progress
+              value={mood?.data.progressPercent}
+              size="md"
+              orientation="horizontal"
+              className="w-full rounded-full bg-primary-100"
+            >
+              <LinearGradient
+                colors={["#79AED6", "#9966CC"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={{ borderRadius: 999, overflow: "hidden" }}
+              >
+                <ProgressFilledTrack className="bg-transparent" />
+              </LinearGradient>
+            </Progress>
+
+            <Text className="text-right text-primary-500 text-xs font-vazir mt-2">
+              {toPersianDigits(Math.round(mood?.data.progressPercent || 0))}%
+              تکمیل
+            </Text>
+          </LinearGradient>
+        </Animated.View>
+
+        {/* Exercises Header */}
+        <Animated.View entering={FadeInUp.duration(600).delay(100)}>
+          <HStack className="items-center justify-between mb-4">
+            <View className="bg-primary-100 rounded-full px-3 py-1">
+              <Text className="text-primary-600 font-vazir text-xs">
+                {toPersianDigits(data?.data?.length || 0)} تمرین
+              </Text>
+            </View>
+            <HStack space="sm" className="items-center">
+              <Text className="font-vazirBold text-primary-800 text-xl">
+                تمرینات امروز
+              </Text>
+              <Feather name="calendar" size={20} color="#79AED6" />
+            </HStack>
+          </HStack>
+        </Animated.View>
+
+        {/* Exercises List */}
+        {isLoading || fakeLoading ? (
+          <Animated.View
+            entering={FadeIn.duration(400)}
+            className="flex-1 justify-center items-center"
+          >
+            <LottieView
+              style={{ width: 260, height: 260 }}
+              ref={animationRef}
+              source={require("@/assets/animations/robot-meditation.json")}
+              autoPlay
+              loop
+            />
+            <Text className="text-right font-vazirBold text-primary-700 text-lg mt-4">
+              در حال آماده سازی با هوش مصنوعی...
+            </Text>
+            <Text className="text-gray-500 font-vazir text-center text-sm mt-2 px-8">
+              اینجا تمرین‌های متناسب با حالت رو می‌بینی. برای دریافت تمرینات
+              پیشرفته‌تر و تخصصی‌تر، می‌تونی به نسخه Pro ارتقا بدی.
+            </Text>
+          </Animated.View>
+        ) : (
+          <FlatList
+            data={data?.data}
+            renderItem={renderItem}
+            keyExtractor={(item) => item._id}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 20 }}
           />
-          <Text className="text-right font-vazir text-md text-primary-700 mt-4">
-            در حال آماده سازی با هوش مصنوعی...
-          </Text>
-          <Text className="text-typography-400 font-vazir text-center text-md px-4">
-            اینجا تمرین‌های متناسب با حالت رو می‌بینی. برای دریافت تمرینات پیشرفته‌تر و تخصصی تر، می‌تونی به{" "}
-            <Text className="font-bold">نسخه Pro</Text> ارتقا بدی.
-          </Text>
-        </VStack>
-      ) : (
-        <FlatList data={data?.data} renderItem={renderItem} keyExtractor={(item) => item._id} />
-      )}
-    </View>
+        )}
+      </View>
+    </LinearGradient>
   );
 };
 

@@ -8,7 +8,7 @@ const _layout = () => {
         <Stack.Screen
           name="index"
           options={{
-            headerShown: true,
+            headerShown: false,
             title: " 🌙 خواب خوب",
             headerTitleAlign: "center",
             headerTitleStyle: { fontFamily: "vazirBold", color: "#fff" },

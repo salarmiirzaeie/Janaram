@@ -2,34 +2,35 @@ import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
-import { Entypo } from "@expo/vector-icons";
+import { toPersianDigits } from "@/utils/persian";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Image, View } from "react-native";
+import { Dimensions, Image, View } from "react-native";
+import { LinearGradient } from "react-native-linear-gradient";
 import { useDispatch } from "react-redux";
-import { Badge, BadgeText } from "../ui/badge";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
 import { Spinner } from "../ui/spinner";
 import { Text } from "../ui/text";
 import { VStack } from "../ui/vstack";
-export interface IMusic {
-  id: number;
-  title: string;
-  artist: string;
-  image: string;
-  duration: string;
-}
+
+const { width } = Dimensions.get("window");
+const CARD_WIDTH = width * 0.44;
+const CARD_HEIGHT = CARD_WIDTH * 1.3;
+
 interface IVStackProps extends React.ComponentProps<typeof VStack> {
   index: number;
   item: Meditation;
 }
-const SleepCourseCard: React.FC<IVStackProps> = ({ item }) => {
-  const { loadTrack } = useAudioPlayer();
+
+const SleepCourseCard: React.FC<IVStackProps> = ({ item, index }) => {
+  const { loadTrack, track } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
   const { data: plans } = usePlansQuery(null);
   const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
   const dispatch = useDispatch();
+
   const handleOpenNotProModal = () => {
     dispatch({
       type: "pro/setShowNotProModal",
@@ -39,19 +40,22 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item }) => {
       },
     });
   };
+
   const handlePlay = async () => {
     setLoading(true);
     if (item.id) {
       if (item.isPro && !proPlan?.isActive) {
         handleOpenNotProModal();
         setLoading(false);
-
         return;
       }
       await loadTrack(item.id);
     }
     setLoading(false);
   };
+
+  const isCurrentlyPlaying = track?.id === item.id;
+
   return (
     <Pressable
       onPress={() => {
@@ -61,59 +65,186 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item }) => {
         }
         router.push({
           pathname: "/player",
-          params: { id: item.id },
+          params: { id: item?.id },
         });
       }}
     >
-      {item?.isPro && (
-        <Badge className={`absolute left-2 bg-white z-50 rounded-r-xl top-1/4`}>
-          <BadgeText className="font-vazir text-black">{"Pro"}</BadgeText>
-        </Badge>
-      )}
-      <VStack
-        className={`rounded-3xl h-52 w-48 justify-between p-5  mx-2 bg-background-800
-        `}
+      <View
+        style={{ width: CARD_WIDTH, height: CARD_HEIGHT, marginHorizontal: 8 }}
       >
+        {/* Background Image */}
         <Image
-          source={{
-            uri: BASE_URL_IMAGES + item.image,
+          source={{ uri: BASE_URL_IMAGES + item.image }}
+          style={{
+            position: "absolute",
+            width: CARD_WIDTH,
+            height: CARD_HEIGHT,
+            borderRadius: 24,
           }}
-          className="absolute top-0 left-0 right-0 bottom-0 h-52 w-48 opacity-50 rounded-3xl"
           resizeMode="cover"
         />
 
-        <Text className="color-white text-2xl z-40 text-right font-vazirBold">
-          {item.title.length > 25
-            ? item.title.slice(0, 25) + "..."
-            : item.title}
-        </Text>
-        <HStack className="items-center justify-between">
-          <Badge className="rounded-full">
-            <BadgeText className="font-vazir">{item.duration}</BadgeText>
-          </Badge>
-          {isLoading ? (
-            <View
-              style={{
-                width: 48,
-                height: 48,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "gray",
-                borderRadius: 34,
-              }}
+        {/* Dark Gradient Overlay for Sleep Mode */}
+        <LinearGradient
+          colors={["rgba(0,0,0,0.3)", "rgba(0,0,0,0.6)", "rgba(0,0,0,0.85)"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            position: "absolute",
+            width: CARD_WIDTH,
+            height: CARD_HEIGHT,
+            borderRadius: 24,
+          }}
+        />
+
+        {/* Pro Badge - Dark Mode Style */}
+        {item?.isPro && (
+          <View
+            style={{
+              position: "absolute",
+              top: 12,
+              right: 12,
+              backgroundColor: "rgba(0,0,0,0.6)",
+              borderRadius: 12,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              flexDirection: "row",
+              alignItems: "center",
+              zIndex: 10,
+              borderWidth: 1,
+              borderColor: "rgba(255,215,0,0.3)",
+            }}
+          >
+            <MaterialIcons name="workspace-premium" size={12} color="#FFD700" />
+            <Text
+              className="font-vazirBold text-white text-xs"
+              style={{ marginRight: 4 }}
             >
-              <Spinner color={"#fff"} />
-            </View>
-          ) : (
-            <Pressable
-              onPress={() => handlePlay()}
-              className={`rounded-full h-14 w-14 justify-center items-center bg-background-600 `}
+              Pro
+            </Text>
+          </View>
+        )}
+
+        {/* Duration Badge - Bottom Left */}
+        <View
+          style={{
+            position: "absolute",
+            top: 12,
+            left: 12,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            borderRadius: 20,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            flexDirection: "row",
+            alignItems: "center",
+            zIndex: 10,
+          }}
+        >
+          <MaterialIcons
+            name="schedule"
+            size={12}
+            color="rgba(255,255,255,0.8)"
+          />
+          <Text
+            className="font-vazir text-white text-xs"
+            style={{ marginRight: 4 }}
+          >
+            {toPersianDigits(item?.duration)} دقیقه
+          </Text>
+        </View>
+
+        {/* Content Container */}
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "space-between",
+            padding: 16,
+            zIndex: 5,
+          }}
+        >
+          {/* Top Section - Empty for spacing */}
+          <View />
+
+          {/* Bottom Section */}
+          <VStack style={{ gap: 12 }}>
+            {/* Title */}
+            <Text
+              className="text-white font-vazirBold text-right text-base leading-6"
+              numberOfLines={2}
             >
-              <Entypo name="controller-play" size={24} color="white" />
-            </Pressable>
-          )}
-        </HStack>
-      </VStack>
+              {item?.title}
+            </Text>
+
+            {/* Play Button Row */}
+            <HStack className="items-center justify-between">
+              {/* Category label */}
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
+              >
+                <MaterialIcons
+                  name="nightlight"
+                  size={14}
+                  color="rgba(255,255,255,0.6)"
+                />
+                <Text className="text-white/60 font-vazir text-xs">خواب</Text>
+              </View>
+
+              {/* Play Button */}
+              {isLoading ? (
+                <View
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 24,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Spinner color={"#fff"} size="small" />
+                </View>
+              ) : (
+                <Pressable
+                  onPress={handlePlay}
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 24,
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {isCurrentlyPlaying ? (
+                    <Entypo name="controller-paus" size={22} color="white" />
+                  ) : (
+                    <Entypo
+                      name="controller-play"
+                      size={24}
+                      color="white"
+                      style={{ marginLeft: 2 }}
+                    />
+                  )}
+                </Pressable>
+              )}
+            </HStack>
+          </VStack>
+        </View>
+
+        {/* Subtle Border */}
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            borderRadius: 24,
+            borderWidth: 1,
+            borderColor: "rgba(255,255,255,0.1)",
+          }}
+          pointerEvents="none"
+        />
+      </View>
     </Pressable>
   );
 };

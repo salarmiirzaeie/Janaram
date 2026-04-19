@@ -2,6 +2,7 @@ import { useAppSelector } from "@/hooks/useAppSelector";
 import { router } from "expo-router";
 import React from "react";
 import { Image } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
 import { Button, ButtonText } from "../ui/button";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
@@ -14,7 +15,7 @@ const PsychoCard: React.FC = (props) => {
   );
   return (
     <Pressable
-      className="shadow-sm bg-white rounded-full"
+      className=" rounded-full"
       onPress={() => {
         router.navigate("/chat-bot");
       }}
@@ -29,36 +30,43 @@ const PsychoCard: React.FC = (props) => {
       )}
 
       {/* بدنه کارت */}
-      <HStack className="py-3 pr-5 rounded-3xl justify-between w-full bg-secondary-300 shadow">
-        <VStack className="flex-1 justify-center items-center">
-          <Image
-            source={require("@/assets/images/bot-vector.png")}
-            className="w-40 h-24"
-            alt="test"
-          />
-        </VStack>
-
-        <VStack space="md" className="flex-1 justify-between">
-          <VStack space="sm">
-            <Text className="font-vazirBold text-lg text-right text-white">
-              روانشناس هوش مصنوعی
-            </Text>
-            <Text className="font-vazir text-xs text-right text-white">
-              به راحتی احساسات خود را بیان کن و راهنمایی حرفه‌ای دریافت کن.
-            </Text>
+      <LinearGradient
+        colors={["#AD85D7", "#EBE0F5"]}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 0, y: 0 }}
+        style={{ borderRadius: 20 }}
+      >
+        <HStack className="py-3 pr-5 rounded-3xl justify-between w-full ">
+          <VStack className="flex-1 justify-center items-center">
+            <Image
+              source={require("@/assets/images/bot-vector.png")}
+              className="w-40 h-24"
+              alt="test"
+            />
           </VStack>
 
-          <Button
-            size="md"
-            className="bg-secondary-500"
-            onPress={() => {
-              router.navigate("/chat-bot");
-            }}
-          >
-            <ButtonText>شروع گفتگو</ButtonText>
-          </Button>
-        </VStack>
-      </HStack>
+          <VStack space="md" className="flex-1 justify-between">
+            <VStack space="sm">
+              <Text className="font-vazirBold text-lg text-right text-white">
+                روانشناس هوش مصنوعی
+              </Text>
+              <Text className="font-vazir text-xs text-right text-white">
+                به راحتی احساسات خود را بیان کن و راهنمایی حرفه‌ای دریافت کن.
+              </Text>
+            </VStack>
+
+            <Button
+              size="md"
+              className="bg-secondary-500"
+              onPress={() => {
+                router.navigate("/chat-bot");
+              }}
+            >
+              <ButtonText>شروع گفتگو</ButtonText>
+            </Button>
+          </VStack>
+        </HStack>
+      </LinearGradient>
     </Pressable>
   );
 };

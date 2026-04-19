@@ -2,33 +2,78 @@ import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
-import { Entypo } from "@expo/vector-icons";
+import { toPersianDigits } from "@/utils/persian";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Image, View } from "react-native";
+import { Dimensions, Image, TouchableOpacity, View } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
 import { useDispatch } from "react-redux";
-import { Badge, BadgeText } from "../ui/badge";
-import { HStack } from "../ui/hstack";
-import { Pressable } from "../ui/pressable";
 import { Spinner } from "../ui/spinner";
 import { Text } from "../ui/text";
-import { VStack } from "../ui/vstack";
-interface IVStackProps extends React.ComponentProps<typeof VStack> {
+
+const { width } = Dimensions.get("window");
+const CARD_WIDTH = width * 0.45;
+const CARD_HEIGHT = CARD_WIDTH * 1.25;
+
+interface CourseCardProps {
   index: number;
   item: Meditation;
 }
+
 const cardColors = [
-  { bg: "bg-secondary-300", btn: "bg-secondary-500" },
-  { bg: "bg-primary-300", btn: "bg-primary-500" },
-  { bg: "bg-calm-300", btn: "bg-calm-500" },
+  {
+    gradient: ["#79AED6", "#5E95BD"],
+    gradientStart: "#79AED6",
+    gradientEnd: "#5E95BD",
+    accent: "#A5C9E1",
+    textColor: "#FFFFFF",
+  },
+  {
+    gradient: ["#9966CC", "#804DB3"],
+    gradientStart: "#9966CC",
+    gradientEnd: "#804DB3",
+    accent: "#C2A3E1",
+    textColor: "#FFFFFF",
+  },
+  {
+    gradient: ["#FF9966", "#E6804D"],
+    gradientStart: "#FF9966",
+    gradientEnd: "#E6804D",
+    accent: "#FFC2A3",
+    textColor: "#FFFFFF",
+  },
+  {
+    gradient: ["#91A5BE", "#7A8BA8"],
+    gradientStart: "#91A5BE",
+    gradientEnd: "#7A8BA8",
+    accent: "#BDC9D8",
+    textColor: "#FFFFFF",
+  },
+  {
+    gradient: ["#79AED6", "#9966CC"],
+    gradientStart: "#79AED6",
+    gradientEnd: "#9966CC",
+    accent: "#D6C2EB",
+    textColor: "#FFFFFF",
+  },
+  {
+    gradient: ["#FF9966", "#9966CC"],
+    gradientStart: "#FF9966",
+    gradientEnd: "#9966CC",
+    accent: "#FFD6C2",
+    textColor: "#FFFFFF",
+  },
 ];
 
-const CourseCard: React.FC<IVStackProps> = ({ index, item }) => {
+const CourseCard: React.FC<CourseCardProps> = ({ index, item }) => {
   const { loadTrack, track } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
   const { data: plans } = usePlansQuery(null);
   const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
   const dispatch = useDispatch();
+
   const handleOpenNotProModal = () => {
     dispatch({
       type: "pro/setShowNotProModal",
@@ -38,13 +83,13 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item }) => {
       },
     });
   };
+
   const handlePlay = async () => {
     setLoading(true);
     if (item.id) {
       if (item.isPro && !proPlan?.isActive) {
         handleOpenNotProModal();
         setLoading(false);
-
         return;
       }
       await loadTrack(item.id);
@@ -53,9 +98,11 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item }) => {
   };
 
   const colorSet = cardColors[index % cardColors.length];
+  const isCurrentlyPlaying = track?.id === item.id;
 
   return (
-    <Pressable
+    <TouchableOpacity
+      activeOpacity={0.9}
       onPress={() => {
         if (item.isPro && !proPlan?.isActive) {
           handleOpenNotProModal();
@@ -63,67 +110,249 @@ const CourseCard: React.FC<IVStackProps> = ({ index, item }) => {
         }
         router.push({
           pathname: "/player",
-          params: {
-            id: `${item?.id}`,
-          },
+          params: { id: `${item?.id}` },
         });
       }}
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}
+      style={{
+        transform: [{ scale: isPressed ? 0.97 : 1 }],
+      }}
     >
-      {item?.isPro && (
-        <Badge
-          className={`absolute left-2 ${colorSet.btn} z-50 rounded-r-xl top-1/4`}
-        >
-          <BadgeText className="font-vazir text-white">{"Pro"}</BadgeText>
-        </Badge>
-      )}
-      <VStack
-        className={`rounded-3xl shadow-sm h-52 w-48 justify-between p-5 mx-2 ${colorSet.bg}`}
-      >
-        <Image
-          source={{
-            uri: BASE_URL_IMAGES + item.image,
+      <View style={{ width: CARD_WIDTH, marginHorizontal: 6 }}>
+        {/* Card Container */}
+        <LinearGradient
+          colors={colorSet.gradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            borderRadius: 24,
+            overflow: "hidden",
+            height: CARD_HEIGHT,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.1,
+            shadowRadius: 12,
+            elevation: 6,
           }}
-          className="absolute top-0 left-0 right-0 bottom-0 h-52 w-48 opacity-50 rounded-3xl"
-          resizeMode="cover"
-        />
-        {/* <Image
-          source={require("@/assets/images/log-vector.png")}
-          className="absolute -left-16 right-0 bottom-0 h-[112px] w-52 opacity-40 rounded-3xl"
-          resizeMode="cover"
-        /> */}
-        <Text className="text-xl z-40 text-right font-vazirBold text-white">
-          {item?.title?.length > 25
-            ? item?.title.slice(0, 25) + "..."
-            : item?.title}
-        </Text>
-        <HStack className="items-center justify-between">
-          <Badge className="rounded-full">
-            <BadgeText>{item?.duration} دقیقه</BadgeText>
-          </Badge>
-          {isLoading ? (
+        >
+          {/* Background Pattern / Image */}
+          <Image
+            source={{ uri: BASE_URL_IMAGES + item.image }}
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              opacity: 0.12,
+            }}
+            resizeMode="cover"
+          />
+
+          {/* Decorative Elements */}
+          <View
+            style={{
+              position: "absolute",
+              top: -20,
+              right: -20,
+              width: 80,
+              height: 80,
+              borderRadius: 40,
+              backgroundColor: "rgba(255,255,255,0.1)",
+            }}
+          />
+          <View
+            style={{
+              position: "absolute",
+              bottom: -30,
+              left: -30,
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              backgroundColor: "rgba(255,255,255,0.08)",
+            }}
+          />
+
+          {/* Pro Badge */}
+          {item?.isPro && (
             <View
               style={{
-                width: 48,
-                height: 48,
-                justifyContent: "center",
+                position: "absolute",
+                top: 12,
+                right: 12,
+                backgroundColor: "rgba(0,0,0,0.3)",
+                borderRadius: 12,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                flexDirection: "row",
                 alignItems: "center",
-                backgroundColor: "#999",
-                borderRadius: 34,
+                gap: 4,
+                zIndex: 10,
               }}
             >
-              <Spinner color={"#fff"} />
+              <Ionicons name="diamond" size={12} color="#FFD700" />
+              <Text
+                style={{
+                  color: "#FFD700",
+                  fontSize: 10,
+                  fontWeight: "bold",
+                  fontFamily: "vazir",
+                }}
+              >
+                PRO
+              </Text>
             </View>
-          ) : (
-            <Pressable
-              onPress={handlePlay}
-              className={`rounded-full h-14 w-14 justify-center items-center ${colorSet.btn}`}
-            >
-              <Entypo name="controller-play" size={24} color="white" />
-            </Pressable>
           )}
-        </HStack>
-      </VStack>
-    </Pressable>
+
+          {/* Content */}
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "space-between",
+              padding: 16,
+              paddingTop: 20,
+            }}
+          >
+            {/* Top Section - Duration */}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-start",
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  borderRadius: 20,
+                  paddingHorizontal: 10,
+                  paddingVertical: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                <Ionicons name="time-outline" size={12} color="white" />
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 11,
+                    fontWeight: "500",
+                    fontFamily: "vazir",
+                  }}
+                >
+                  {toPersianDigits(item?.duration)} دقیقه
+                </Text>
+              </View>
+            </View>
+
+            {/* Bottom Section */}
+            <View style={{ gap: 12 }}>
+              {/* Title */}
+              <Text
+                numberOfLines={2}
+                style={{
+                  color: "white",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  textAlign: "right",
+                  lineHeight: 22,
+                  textShadowColor: "rgba(0,0,0,0.15)",
+                  textShadowOffset: { width: 0, height: 1 },
+                  textShadowRadius: 2,
+                  fontFamily: "vazir",
+                }}
+              >
+                {item?.title}
+              </Text>
+
+              {/* Play Button and Category */}
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "flex-end",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 4,
+                    backgroundColor: "rgba(255,255,255,0.15)",
+                    paddingHorizontal: 8,
+                    paddingVertical: 4,
+                    borderRadius: 12,
+                  }}
+                >
+                  <Ionicons
+                    name="musical-notes"
+                    size={12}
+                    color="rgba(255,255,255,0.9)"
+                  />
+                  <Text
+                    style={{
+                      color: "rgba(255,255,255,0.9)",
+                      fontSize: 10,
+                      fontWeight: "500",
+                      fontFamily: "vazir",
+                    }}
+                  >
+                    {item.type}
+                  </Text>
+                </View>
+
+                {isLoading ? (
+                  <View
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 24,
+                      backgroundColor: "rgba(255,255,255,0.2)",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Spinner color={"#fff"} size="small" />
+                  </View>
+                ) : (
+                  <TouchableOpacity
+                    onPress={handlePlay}
+                    activeOpacity={0.8}
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 24,
+                      backgroundColor: "white",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      shadowColor: "#000",
+                      shadowOffset: { width: 0, height: 4 },
+                      shadowOpacity: 0.2,
+                      shadowRadius: 8,
+                      elevation: 5,
+                    }}
+                  >
+                    {isCurrentlyPlaying ? (
+                      <Entypo
+                        name="controller-paus"
+                        size={22}
+                        color={colorSet.gradientStart}
+                      />
+                    ) : (
+                      <Entypo
+                        name="controller-play"
+                        size={24}
+                        color={colorSet.gradientStart}
+                        style={{ marginLeft: 2 }}
+                      />
+                    )}
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+          </View>
+        </LinearGradient>
+      </View>
+    </TouchableOpacity>
   );
 };
 

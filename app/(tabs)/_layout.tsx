@@ -1,6 +1,7 @@
 import { Redirect, router, Tabs } from "expo-router";
 import React, { useEffect } from "react";
 
+import AnimatedTabBar from "@/components/home/custom-tab";
 import NotProModal from "@/components/home/not-pro-modal";
 import ProPlanFullScreenModal from "@/components/home/pro-modal";
 import UpdateModal from "@/components/settings/update-modal";
@@ -123,17 +124,24 @@ export default function TabLayout() {
   return (
     <>
       <Tabs
+        tabBar={(props) => (
+          <AnimatedTabBar {...props} isSleepMode={isSleepMode} />
+        )}
+        // screenOptions={{
+        //   tabBarLabelStyle: {
+        //     fontFamily: "vazirBold",
+        //   },
+        //   headerShown: false,
+        //   tabBarStyle: {
+        //     backgroundColor: isSleepMode ? "#1D1C1C" : "#ffff",
+        //   },
+        //   lazy: true,
+        //   freezeOnBlur: true,
+        //   tabBarActiveTintColor: "#47A9DA",
+        // }}
         screenOptions={{
-          tabBarLabelStyle: {
-            fontFamily: "vazirBold",
-          },
           headerShown: false,
-          tabBarStyle: {
-            backgroundColor: isSleepMode ? "#1D1C1C" : "#ffff",
-          },
-          lazy: true, // Keeps screens mounted after initial load
-          freezeOnBlur: true, // Prevents re-rendering of inactive screens
-          tabBarActiveTintColor: "#47A9DA",
+          tabBarStyle: { display: "none" }, // Hide default tab bar
         }}
       >
         <Tabs.Screen

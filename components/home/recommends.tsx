@@ -11,14 +11,18 @@ const Recommends = () => {
       contentContainerStyle={{
         paddingHorizontal: 10,
         flexDirection: "row-reverse",
-        paddingBottom: 24,
+        paddingBottom: 16,
       }}
       showsHorizontalScrollIndicator={false}
       horizontal
     >
       {isLoading
-        ? [1, 2, 3, 4].map((item, index) => <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />)
-        : data?.meditations?.map((item, index) => <CourseCard key={item.id} item={item} index={index} />)}
+        ? [1, 2, 3, 4].map((item, index) => (
+            <Skeleton key={item} className="h-52 w-48 mx-2 rounded-xl" />
+          ))
+        : data?.meditations?.map((item, index) => (
+            <CourseCard key={item.id} item={item} index={index} />
+          ))}
     </ScrollView>
   );
 };
