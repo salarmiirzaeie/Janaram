@@ -198,34 +198,6 @@ export default function PlayerScreen() {
           </Animated.View>
 
           {/* Action Buttons */}
-          <Animated.View
-            entering={FadeInUp.duration(600).delay(200)}
-            style={styles.actionRow}
-          >
-            <TouchableOpacity onPress={handleLike} style={styles.actionButton}>
-              <Animated.View style={likeAnimatedStyle}>
-                <Ionicons
-                  name={isLiked ? "heart" : "heart-outline"}
-                  size={26}
-                  color={isLiked ? "#FF6B6B" : "rgba(255,255,255,0.7)"}
-                />
-              </Animated.View>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
-              <Ionicons
-                name="add-circle-outline"
-                size={26}
-                color="rgba(255,255,255,0.7)"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
-              <Ionicons
-                name="share-social-outline"
-                size={22}
-                color="rgba(255,255,255,0.7)"
-              />
-            </TouchableOpacity>
-          </Animated.View>
 
           {/* Progress Section */}
           <Animated.View
@@ -293,7 +265,7 @@ export default function PlayerScreen() {
           </Animated.View>
 
           {/* Bottom Options */}
-          <Animated.View
+          {/* <Animated.View
             entering={FadeInUp.duration(600).delay(500)}
             style={styles.bottomOptions}
           >
@@ -321,7 +293,7 @@ export default function PlayerScreen() {
               />
               <Text style={styles.optionLabel}>کیفیت</Text>
             </TouchableOpacity>
-          </Animated.View>
+          </Animated.View> */}
         </View>
       )}
     </View>
@@ -378,6 +350,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: "space-between",
+    marginBottom: 150,
   },
   artworkContainer: {
     alignItems: "center",

@@ -1,7 +1,7 @@
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useSegments } from "expo-router";
 import React from "react";
 import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
@@ -15,26 +15,32 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HStack } from "../hstack";
 
 export default function NowPlayingBar() {
+  // ✅ ALL HOOKS CALLED FIRST, UNCONDITIONALLY
+  const audioPlayer = useAudioPlayer();
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const segments = useSegments();
+  const scalePlay = useSharedValue(1);
+  const scaleClose = useSharedValue(1);
+
+  // ✅ Destructure AFTER all hooks are called
   const {
     track,
     isPlaying,
     position,
     duration,
     trackType,
-    loadTrack,
     togglePlay,
-    seek,
     stop,
-  } = useAudioPlayer();
-  const router = useRouter();
-  const insets = useSafeAreaInsets();
-  const scalePlay = useSharedValue(1);
-  const scaleClose = useSharedValue(1);
+    showPlayingBar,
+  } = audioPlayer;
 
-  if (!track) return null;
+  // ✅ Determine visibility AFTER all hooks
+  const isPlayerScreen =
+    segments[0] === "player" || segments[0] === "breathingPlayer";
+  const shouldHide = !track || isPlayerScreen || !showPlayingBar;
 
-  const progressPercent = duration ? (position / duration) * 100 : 0;
-
+  // ✅ Animation handlers (not hooks, so they can be conditional)
   const handlePressInPlay = () => {
     scalePlay.value = withTiming(0.9, { duration: 100 });
   };
@@ -58,6 +64,13 @@ export default function NowPlayingBar() {
   const closeAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scaleClose.value }],
   }));
+
+  // ✅ Conditional return AFTER all hooks
+  if (shouldHide) {
+    return null;
+  }
+
+  const progressPercent = duration ? (position / duration) * 100 : 0;
 
   return (
     <Animated.View

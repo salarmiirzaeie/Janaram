@@ -149,7 +149,7 @@ const Explore = () => {
 
           {/* Categories Grid */}
           <Animated.View entering={FadeInUp.duration(600).delay(100)}>
-            <View className="mx-5 mb-8">
+            <View className="mx-5 mb-0">
               <HStack className="flex-wrap gap-3">
                 {categories.map((cat, idx) => (
                   <TouchableOpacity

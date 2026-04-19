@@ -41,14 +41,17 @@ const MoodCard = () => {
   const isComplete = data?.data.progressPercent === 100;
   const isZero = data?.data.progressPercent === 0;
 
+  // Fixed height container to prevent layout shift
   return (
-    <VStack className="mt-4 w-full items-center flex-1">
+    <VStack className="mt-4 w-full items-center">
       {isLoading ? (
-        <Skeleton className="w-full h-56 rounded-3xl" />
+        <View className="w-full h-56">
+          <Skeleton className="w-full h-full rounded-3xl" />
+        </View>
       ) : data?.data?.status === "no-mood" ? (
         <Animated.View
           entering={FadeInUp.duration(600).springify()}
-          className="items-center justify-center"
+          className="items-center justify-center h-56"
         >
           <TouchableOpacity
             onPress={() => setMoodSheet(true)}
@@ -103,7 +106,7 @@ const MoodCard = () => {
             }}
           >
             {/* Header Section */}
-            <HStack className="justify-between items-center ">
+            <HStack className="justify-between items-center">
               <HStack space="md" className="items-center">
                 <View className="flex-row items-center gap-2">
                   <Text className="text-3xl font-vazirBold text-primary-600">
@@ -131,7 +134,7 @@ const MoodCard = () => {
             </HStack>
 
             {/* Progress Bar */}
-            <View className="mb-6">
+            <View className="my-4">
               <Progress
                 value={data?.data.progressPercent}
                 size="md"
@@ -156,7 +159,6 @@ const MoodCard = () => {
                   />
                 </LinearGradient>
               </Progress>
-              {/* Percentage indicator */}
               <Text className="text-right text-primary-500 text-md font-vazir mt-1">
                 {toPersianDigits(Math.round(data?.data.progressPercent || 0))}%
               </Text>
@@ -220,8 +222,6 @@ const MoodCard = () => {
                 </LinearGradient>
               </Animated.View>
             </TouchableOpacity>
-
-            {/* Streak Indicator */}
           </LinearGradient>
         </Animated.View>
       )}

@@ -37,7 +37,7 @@ const Train = () => {
   }, []);
 
   const getTypeIcon = (type: string, done: boolean) => {
-    const color = done ? "#66BB6A" : "#79AED6";
+    const color = done ? "#4D1A80" : "#79AED6";
     switch (type) {
       case "meditation":
         return <Feather name="wind" size={24} color={color} />;
@@ -130,7 +130,7 @@ const Train = () => {
               {/* Icon */}
               <View
                 className={`rounded-full p-3 ${
-                  isDone ? "bg-success-100" : "bg-primary-100"
+                  isDone ? "bg-secondary-300" : "bg-primary-100"
                 }`}
               >
                 {getTypeIcon(item.type, isDone)}
@@ -176,7 +176,7 @@ const Train = () => {
               {/* Start Button */}
               <LinearGradient
                 colors={
-                  isDone ? ["#66BB6A", "#4CAF50"] : ["#79AED6", "#9966CC"]
+                  isDone ? ["#330D66", "#804DB3"] : ["#79AED6", "#9966CC"]
                 }
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}

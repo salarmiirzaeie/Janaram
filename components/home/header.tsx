@@ -93,7 +93,7 @@ export default function CustomHeader({ data, proPlan }: CustomHeaderProps) {
           <View className="w-24 items-end">
             <AnimatedPressable
               style={proAnimatedStyle}
-              className="items-center flex-row px-3 py-2 rounded-full active:opacity-70"
+              className="items-center flex-row  py-2 rounded-full active:opacity-70"
               onPress={handleProPress}
             >
               <View className="flex-row items-center gap-1.5 bg-primary-50/50 px-3 py-1.5 rounded-full">

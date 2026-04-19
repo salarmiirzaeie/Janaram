@@ -10,7 +10,14 @@ import {
   InterruptionModeIOS,
 } from "expo-av";
 import { useSegments } from "expo-router";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"; // ✅ Add useMemo
 
 type AudioPlayerContextType = {
   track: Meditation | null;
@@ -55,15 +62,20 @@ export const AudioPlayerProvider = ({
   const [showPlayingBar, setShowPlayingBar] = useState(true);
   const soundRef = useRef<Audio.Sound | null>(null);
   const segments = useSegments();
-  const isPlayerScreen =
-    segments[0] === "player" || segments[0] === "breathingPlayer";
+
+  // ✅ Move isPlayerScreen to a useMemo to prevent unnecessary recalculations
+  const isPlayerScreen = useMemo(
+    () => segments[0] === "player" || segments[0] === "breathingPlayer",
+    [segments]
+  );
+
   useEffect(() => {
     const configureAudioMode = async () => {
       try {
         await Audio.setAudioModeAsync({
-          staysActiveInBackground: true, // Continue playing in the background
-          shouldDuckAndroid: false, // Lower other apps' audio when playing
-          playThroughEarpieceAndroid: false, // Use speaker by default
+          staysActiveInBackground: true,
+          shouldDuckAndroid: false,
+          playThroughEarpieceAndroid: false,
           interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
           interruptionModeIOS: InterruptionModeIOS.DoNotMix,
           playsInSilentModeIOS: true,
@@ -75,7 +87,6 @@ export const AudioPlayerProvider = ({
 
     configureAudioMode();
 
-    // Cleanup on unmount
     return () => {
       if (soundRef.current) {
         soundRef.current.unloadAsync();
@@ -83,9 +94,11 @@ export const AudioPlayerProvider = ({
       }
     };
   }, []);
+
   const loadTrack = async (id: string, type?: "meditation" | "breathing") => {
     if (!id) return;
     setIsLoading(true);
+
     if (type === "breathing") {
       setTrackType("breathing");
       await getBreathing({ id })
@@ -102,14 +115,13 @@ export const AudioPlayerProvider = ({
               uri: BASE_URL_IMAGES + res.meditation.file,
             };
 
-            // 👇 only load, don't auto-play
             const { sound } = await Audio.Sound.createAsync(source, {
               shouldPlay: false,
             });
 
             soundRef.current = sound;
             setTrack(res.meditation);
-            setIsPlaying(false); // not playing yet
+            setIsPlaying(false);
             setShowPlayingBar(true);
 
             sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
@@ -161,8 +173,6 @@ export const AudioPlayerProvider = ({
             setIsPlaying(true);
             setShowPlayingBar(true);
 
-            // 🔊 Configure lock screen
-
             sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
               if (!status.isLoaded) return;
 
@@ -170,8 +180,6 @@ export const AudioPlayerProvider = ({
                 setPosition(status.positionMillis);
                 setDuration(status.durationMillis || 1);
                 setIsPlaying(status.isPlaying);
-
-                // 🔁 Update current playback position on lock screen
               }
 
               if ("didJustFinish" in status && status.didJustFinish) {
@@ -212,6 +220,7 @@ export const AudioPlayerProvider = ({
       await soundRef.current.setPositionAsync(ms);
     }
   };
+
   const stop = async () => {
     if (soundRef.current) {
       await soundRef.current.stopAsync();
@@ -220,24 +229,43 @@ export const AudioPlayerProvider = ({
     }
   };
 
+  // ✅ Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({
+      track,
+      isPlaying,
+      position,
+      duration,
+      loadTrack,
+      togglePlay,
+      seek,
+      stop,
+      showPlayingBar,
+      isLoading: isApiLoading || isLoading || isBreathingLoading,
+      trackType,
+    }),
+    [
+      track,
+      isPlaying,
+      position,
+      duration,
+      loadTrack,
+      togglePlay,
+      seek,
+      stop,
+      showPlayingBar,
+      isApiLoading,
+      isLoading,
+      isBreathingLoading,
+      trackType,
+    ]
+  );
+
   return (
-    <AudioPlayerContext.Provider
-      value={{
-        track,
-        isPlaying,
-        position,
-        duration,
-        loadTrack,
-        togglePlay,
-        seek,
-        stop,
-        showPlayingBar,
-        isLoading: isApiLoading || isLoading || isBreathingLoading,
-        trackType,
-      }}
-    >
+    <AudioPlayerContext.Provider value={contextValue}>
       {children}
-      {!isPlayerScreen && showPlayingBar && <NowPlayingBar />}
+      {/* Always render NowPlayingBar - it will handle its own visibility */}
+      <NowPlayingBar />
     </AudioPlayerContext.Provider>
   );
 };
