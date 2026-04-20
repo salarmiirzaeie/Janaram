@@ -311,4 +311,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AnimatedTabBar;
+export default React.memo(AnimatedTabBar);

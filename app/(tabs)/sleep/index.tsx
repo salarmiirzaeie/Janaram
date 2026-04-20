@@ -14,44 +14,76 @@ import {
 import { router } from "expo-router";
 import React, { useCallback, useMemo } from "react";
 import {
-  Dimensions,
   FlatList,
   Image,
+  StyleSheet,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const CARD_WIDTH = SCREEN_WIDTH - 60;
-const SMALL_CARD_WIDTH = 192;
+// ========== استایل‌های استاتیک با StyleSheet ==========
+const createStyles = (CARD_WIDTH: number, SMALL_CARD_WIDTH: number) =>
+  StyleSheet.create({
+    storyCardGradient: {
+      width: CARD_WIDTH,
+      height: 220,
+      borderRadius: 24,
+      marginHorizontal: 8,
+      overflow: "hidden",
+      borderWidth: 1,
+      borderColor: "rgba(255,255,255,0.1)",
+    },
+    mainHeaderGradient: {
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: "rgba(255,255,255,0.1)",
+    },
+    tipsGradient: {
+      borderRadius: 24,
+      padding: 20,
+      borderWidth: 1,
+      borderColor: "rgba(255,255,255,0.1)",
+    },
+    skeletonStory: {
+      width: CARD_WIDTH,
+      height: 224,
+      marginHorizontal: 8,
+      borderRadius: 24,
+      backgroundColor: "rgba(255,255,255,0.05)",
+    },
+    skeletonSmall: {
+      width: SMALL_CARD_WIDTH,
+      height: 208,
+      marginHorizontal: 8,
+      borderRadius: 24,
+      backgroundColor: "rgba(255,255,255,0.05)",
+    },
+  });
 
 // ========== کامپوننت مجزا برای کارت قصه ==========
 const StoryCard = React.memo(({ item }: { item: any; index: number }) => {
+  const { width: SCREEN_WIDTH } = useWindowDimensions();
+  const CARD_WIDTH = SCREEN_WIDTH - 60;
+  const styles = useMemo(() => createStyles(CARD_WIDTH, 0), [CARD_WIDTH]);
+
+  const handlePress = useCallback(() => {
+    router.push({
+      pathname: "/player",
+      params: { id: item.id },
+    });
+  }, [item.id]);
+
   return (
-    <TouchableOpacity
-      onPress={() => {
-        router.push({
-          pathname: "/player",
-          params: { id: item.id },
-        });
-      }}
-      activeOpacity={0.9}
-    >
+    <TouchableOpacity onPress={handlePress} activeOpacity={0.9}>
       <LinearGradient
         colors={["#1a1a2e", "#16213e"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={{
-          width: CARD_WIDTH,
-          height: 220,
-          borderRadius: 24,
-          marginHorizontal: 8,
-          overflow: "hidden",
-          borderWidth: 1,
-          borderColor: "rgba(255,255,255,0.1)",
-        }}
+        style={styles.storyCardGradient}
       >
         <Image
           source={{ uri: BASE_URL_IMAGES + item.image }}
@@ -134,17 +166,15 @@ const SectionHeader = React.memo(
 // ========== کامپوننت مجزا برای هدر اصلی ==========
 const MainHeader = React.memo(
   ({ onSearch, onBack }: { onSearch: () => void; onBack: () => void }) => {
+    const { width } = useWindowDimensions();
+    const styles = useMemo(() => createStyles(width, 0), [width]);
+
     return (
       <LinearGradient
         colors={["#1a1a2e", "#16213e"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
-        style={{
-          paddingHorizontal: 20,
-          paddingVertical: 16,
-          borderBottomWidth: 1,
-          borderBottomColor: "rgba(255,255,255,0.1)",
-        }}
+        style={styles.mainHeaderGradient}
       >
         <HStack className="items-center justify-between">
           <TouchableOpacity
@@ -171,18 +201,16 @@ const MainHeader = React.memo(
 
 // ========== کامپوننت مجزا برای بخش نکات ==========
 const TipsSection = React.memo(() => {
+  const { width } = useWindowDimensions();
+  const styles = useMemo(() => createStyles(width, 0), [width]);
+
   return (
     <View className="mx-5 mt-8 mb-40">
       <LinearGradient
         colors={["#1a1a2e", "#16213e"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={{
-          borderRadius: 24,
-          padding: 20,
-          borderWidth: 1,
-          borderColor: "rgba(255,255,255,0.1)",
-        }}
+        style={styles.tipsGradient}
       >
         <HStack className="items-center gap-3">
           <View className="bg-primary-500/20 rounded-full p-3">
@@ -214,6 +242,22 @@ const StoriesSection = React.memo(
     isLoading: boolean;
     onSeeAll: () => void;
   }) => {
+    const { width: SCREEN_WIDTH } = useWindowDimensions();
+    const CARD_WIDTH = SCREEN_WIDTH - 60;
+    const styles = useMemo(() => createStyles(CARD_WIDTH, 0), [CARD_WIDTH]);
+
+    const skeletonData = useMemo(() => [1, 2], []);
+    const renderSkeleton = useCallback(
+      () => (
+        <HStack space="md" className="px-3">
+          {skeletonData.map((item) => (
+            <Skeleton key={item} style={styles.skeletonStory} />
+          ))}
+        </HStack>
+      ),
+      [styles.skeletonStory]
+    );
+
     if (data.length === 0 && !isLoading) return null;
 
     return (
@@ -241,19 +285,7 @@ const StoriesSection = React.memo(
             offset: (CARD_WIDTH + 16) * index,
             index,
           })}
-          ListEmptyComponent={
-            isLoading ? (
-              <HStack space="md" className="px-3">
-                {[1, 2].map((item) => (
-                  <Skeleton
-                    key={item}
-                    style={{ width: CARD_WIDTH }}
-                    className="h-56 mx-2 rounded-2xl bg-gray-800"
-                  />
-                ))}
-              </HStack>
-            ) : null
-          }
+          ListEmptyComponent={isLoading ? renderSkeleton : null}
         />
       </VStack>
     );
@@ -271,6 +303,25 @@ const SleepMeditationsSection = React.memo(
     isLoading: boolean;
     onSeeAll: () => void;
   }) => {
+    const { width: SCREEN_WIDTH } = useWindowDimensions();
+    const SMALL_CARD_WIDTH = 192;
+    const styles = useMemo(
+      () => createStyles(0, SMALL_CARD_WIDTH),
+      [SMALL_CARD_WIDTH]
+    );
+
+    const skeletonData = useMemo(() => [1, 2, 3], []);
+    const renderSkeleton = useCallback(
+      () => (
+        <HStack space="md" className="px-3">
+          {skeletonData.map((item) => (
+            <Skeleton key={item} style={styles.skeletonSmall} />
+          ))}
+        </HStack>
+      ),
+      [styles.skeletonSmall]
+    );
+
     if (data.length === 0 && !isLoading) return null;
 
     return (
@@ -298,18 +349,7 @@ const SleepMeditationsSection = React.memo(
             offset: (SMALL_CARD_WIDTH + 16) * index,
             index,
           })}
-          ListEmptyComponent={
-            isLoading ? (
-              <HStack space="md" className="px-3">
-                {[1, 2, 3].map((item) => (
-                  <Skeleton
-                    key={item}
-                    className="h-52 w-48 mx-2 rounded-2xl bg-gray-800"
-                  />
-                ))}
-              </HStack>
-            ) : null
-          }
+          ListEmptyComponent={isLoading ? renderSkeleton : null}
         />
       </VStack>
     );
@@ -327,6 +367,25 @@ const SleepMusicSection = React.memo(
     isLoading: boolean;
     onSeeAll: () => void;
   }) => {
+    const { width: SCREEN_WIDTH } = useWindowDimensions();
+    const SMALL_CARD_WIDTH = 192;
+    const styles = useMemo(
+      () => createStyles(0, SMALL_CARD_WIDTH),
+      [SMALL_CARD_WIDTH]
+    );
+
+    const skeletonData = useMemo(() => [1, 2, 3], []);
+    const renderSkeleton = useCallback(
+      () => (
+        <HStack space="md" className="px-3">
+          {skeletonData.map((item) => (
+            <Skeleton key={item} style={styles.skeletonSmall} />
+          ))}
+        </HStack>
+      ),
+      [styles.skeletonSmall]
+    );
+
     if (data.length === 0 && !isLoading) return null;
 
     return (
@@ -354,18 +413,7 @@ const SleepMusicSection = React.memo(
             offset: (SMALL_CARD_WIDTH + 16) * index,
             index,
           })}
-          ListEmptyComponent={
-            isLoading ? (
-              <HStack space="md" className="px-3">
-                {[1, 2, 3].map((item) => (
-                  <Skeleton
-                    key={item}
-                    className="h-52 w-48 mx-2 rounded-2xl bg-gray-800"
-                  />
-                ))}
-              </HStack>
-            ) : null
-          }
+          ListEmptyComponent={isLoading ? renderSkeleton : null}
         />
       </VStack>
     );
@@ -376,7 +424,7 @@ const SleepMusicSection = React.memo(
 const Sleep = () => {
   const { data: exploreData, isLoading } = useGetExploreQuery(null);
 
-  // ========== استخراج دیتا با useMemo ==========
+  // استخراج دیتا با useMemo
   const sleepMusics = useMemo(
     () => exploreData?.meditations?.sleepMusic || [],
     [exploreData?.meditations?.sleepMusic]
@@ -390,7 +438,7 @@ const Sleep = () => {
     [exploreData?.meditations?.story]
   );
 
-  // ========== هندلرهای نویگیشن با useCallback ==========
+  // هندلرهای نویگیشن با useCallback
   const handleBack = useCallback(() => {
     router.back();
   }, []);
@@ -420,7 +468,10 @@ const Sleep = () => {
     });
   }, []);
 
-  // ========== آرایه داده برای FlatList اصلی ==========
+  // رفرنس ثابت برای بخش نکات (برای جلوگیری از unmount/remount)
+  const tipsElement = useMemo(() => <TipsSection />, []);
+
+  // آرایه داده برای FlatList اصلی
   const sectionsData = useMemo(() => {
     const result: { id: string; component: React.ReactElement }[] = [];
 
@@ -465,7 +516,7 @@ const Sleep = () => {
 
     result.push({
       id: "tips",
-      component: <TipsSection />,
+      component: tipsElement,
     });
 
     return result;
@@ -477,6 +528,7 @@ const Sleep = () => {
     handleSeeAllStories,
     handleSeeAllSleep,
     handleSeeAllMusic,
+    tipsElement,
   ]);
 
   return (
