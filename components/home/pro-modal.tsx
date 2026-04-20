@@ -5,10 +5,7 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useCustomToast } from "@/hooks/useToast";
 import { useZarinpalPayment } from "@/hooks/useZarinpalPayment";
-import {
-  usePlansQuery,
-  useUpgradePlanMutation,
-} from "@/services/upgrade/upgrade-adapter";
+import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useRef } from "react";
 import {
@@ -56,13 +53,13 @@ export default function ProPlanFullScreenModal({
   }, [visible]);
 
   const { data: plans, isLoading: isLoadingPlans } = usePlansQuery(null);
-  const [upgradePlan, { isLoading: isUpgradingApi }] = useUpgradePlanMutation();
   const { startPayment, isLoading: isPaymentLoading } = useZarinpalPayment();
   const proPlan = plans?.data?.plans?.find((plan) => plan.name === "unlimited");
   const features = proPlan?.features;
   const toast = useCustomToast();
 
-  const isLoading = isLoadingPlans || isPaymentLoading || isUpgradingApi;
+  const isActive = proPlan?.isActive;
+  const isLoading = isLoadingPlans || isPaymentLoading;
 
   const scaleValue = useSharedValue(1);
 
@@ -85,37 +82,21 @@ export default function ProPlanFullScreenModal({
       onClose();
       return;
     }
+    if (isActive) {
+      toast.show({ msg: "پلن Pro برای شما فعال است", type: "success" });
+      onClose();
+      return;
+    }
 
     // پلن پولی با زرین‌پال
     if (proPlan) {
       const amountInRials = proPlan.price * 1000;
 
-      const result = await startPayment(
+      await startPayment(
         proPlan.id,
         amountInRials,
         `فعال‌سازی اشتراک ${proPlan.name} - ${proPlan.price} هزار تومان`
       );
-
-      if (result?.success) {
-        try {
-          const upgradeResult = await upgradePlan({ id }).unwrap();
-          if (upgradeResult.success) {
-            toast.show({ msg: upgradeResult.message, type: "success" });
-            onClose();
-          } else {
-            toast.show({
-              msg: upgradeResult.message || "خطا در فعال‌سازی اشتراک",
-              type: "error",
-            });
-          }
-        } catch (error: any) {
-          console.error("Upgrade error:", error);
-          toast.show({
-            msg: "پرداخت انجام شد اما فعال‌سازی اشتراک با خطا مواجه شد. لطفاً با پشتیبانی تماس بگیرید.",
-            type: "error",
-          });
-        }
-      }
     }
   };
 

@@ -6,7 +6,6 @@ import { Text, TouchableOpacity, View } from "react-native";
 function PaymentSuccess() {
   const router = useRouter();
   const { refId } = useLocalSearchParams();
-
   return (
     <View
       style={{

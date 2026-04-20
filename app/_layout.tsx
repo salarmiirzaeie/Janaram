@@ -117,6 +117,24 @@ export default function RootLayout() {
                       headerShown: false,
                     }}
                   />
+                  <Stack.Screen
+                    name="tests"
+                    options={{
+                      headerShown: true,
+                      headerTitleAlign: "center",
+                      headerTitleStyle: { fontFamily: "vazirBold" },
+                      headerTitle: " تست های روانشناسی",
+                    }}
+                  />
+                  <Stack.Screen
+                    name="single-test"
+                    options={{
+                      headerShown: true,
+                      headerTitleAlign: "center",
+                      headerTitleStyle: { fontFamily: "vazirBold" },
+                      headerTitle: " تست های روانشناسی",
+                    }}
+                  />
 
                   <Stack.Screen
                     name="chat-bot"

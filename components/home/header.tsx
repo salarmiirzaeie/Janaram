@@ -1,4 +1,6 @@
 import { useCustomToast } from "@/hooks/useToast";
+import { useGetMoodQuery } from "@/services/mood/mood-adapter";
+import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { toPersianDigits } from "@/utils/persian";
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -15,17 +17,18 @@ import { useDispatch } from "react-redux";
 import { HStack } from "../ui/hstack";
 import Logo from "../ui/logo";
 
-type CustomHeaderProps = {
-  data: any;
-  proPlan: any;
-};
-
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export default function CustomHeader({ data, proPlan }: CustomHeaderProps) {
+export default function CustomHeader() {
   const router = useRouter();
+  const { data } = useGetMoodQuery({ page: 1, limit: 30 });
+
   const dispatch = useDispatch();
   const toast = useCustomToast();
+  const { data: plans } = usePlansQuery(null);
+
+  const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
+
   const isActive = proPlan?.isActive;
 
   const scalePro = useSharedValue(1);

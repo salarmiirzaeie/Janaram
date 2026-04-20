@@ -12,10 +12,13 @@ const upgradeAdapter = apiSlice.injectEndpoints({
       invalidatesTags: ["Plans"],
     }),
     plans: builder.query<IPlansResponse, any>({
-      query: (data) => ({
-        url: "upgrade-plan/plans",
-        method: "GET",
-      }),
+      query: (data) => {
+        console.log("called unlimit");
+        return {
+          url: "upgrade-plan/plans",
+          method: "GET",
+        };
+      },
       providesTags: ["Plans"],
     }),
   }),

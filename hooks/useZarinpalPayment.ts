@@ -1,8 +1,8 @@
 // hooks/useZarinpalPayment.ts
-import { apiSlice } from "@/redux/api-slice";
 import { useRequestPaymentMutation } from "@/services/payment/payment-adapter";
 import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useCustomToast } from "./useToast";
 
@@ -11,6 +11,7 @@ WebBrowser.maybeCompleteAuthSession();
 export const useZarinpalPayment = () => {
   const toast = useCustomToast();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const [requestPayment, { isLoading }] = useRequestPaymentMutation();
   const startPayment = async (
     planId: string,
@@ -25,45 +26,22 @@ export const useZarinpalPayment = () => {
       })
         .unwrap()
         .then(async (data) => {
-          console.log(data, "ssa");
           if (data.success) {
+            setLoading(true);
             // 2. باز کردن درگاه پرداخت زرین‌پال
-            const result = await WebBrowser.openAuthSessionAsync(
+            const redirectUrl = Linking.createURL("janaram://"); // همان اسمی که قبلاً داشتی
+
+            await WebBrowser.openAuthSessionAsync(
               data.paymentUrl,
-              Linking.createURL("payment-result")
+              redirectUrl // ⬅️ این را اضافه کن
             );
-            console.log(result, "res");
-            // 3. بررسی نتیجه پرداخت
-            if (result.type === "success" && result.url) {
-              const urlParams = new URL(result.url);
-              const status = urlParams.searchParams.get("status");
-              const refId = urlParams.searchParams.get("ref_id");
-
-              if (status === "success") {
-                toast.show({
-                  msg: `پرداخت با موفقیت انجام شد!\nشماره پیگیری: ${refId}`,
-                  type: "success",
-                });
-
-                // اینولید کردن کش پلن‌ها برای آپدیت وضعیت کاربر
-                dispatch(apiSlice.util.invalidateTags(["Plans"]));
-
-                return { success: true, refId };
-              } else {
-                const errorMsg =
-                  urlParams.searchParams.get("message") || "پرداخت ناموفق بود";
-                toast.show({ msg: errorMsg, type: "error" });
-                return { success: false, error: errorMsg };
-              }
-            } else if ((result.type as any) === "canceled") {
-              toast.show({ msg: "پرداخت توسط کاربر لغو شد", type: "error" });
-              return { success: false, error: "cancelled" };
-            }
+            setLoading(false);
           } else {
             toast.show({
               msg: data.message || "خطا در ایجاد درخواست پرداخت",
               type: "error",
             });
+            setLoading(false);
             return { success: false, error: data.message };
           }
         });
@@ -74,5 +52,5 @@ export const useZarinpalPayment = () => {
     }
   };
 
-  return { startPayment, isLoading };
+  return { startPayment, isLoading: loading || isLoading };
 };

@@ -10,9 +10,9 @@ import { Text } from "../ui/text";
 
 const NetworkAct = () => {
   return (
-    <Actionsheet snapPoints={[50]} isOpen={true}>
+    <Actionsheet className="" snapPoints={[50]} isOpen={true}>
       <ActionsheetBackdrop />
-      <ActionsheetContent className="py-10 px-6 justify-between rounded-t-3xl">
+      <ActionsheetContent className="py-10 px-6 justify-around rounded-t-3xl">
         <Text className="font-vazirBold text-xl"> متصل نبودن به اینترنت </Text>
         <Image
           className="w-56 h-52"

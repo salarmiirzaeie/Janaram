@@ -1,3 +1,4 @@
+import { Badge, BadgeText } from "@/components/ui/badge";
 import { HStack } from "@/components/ui/hstack";
 import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { VStack } from "@/components/ui/vstack";
@@ -7,6 +8,7 @@ import {
   UserExercise,
 } from "@/services/exercise/exercise-adapter";
 import { useGetMoodQuery } from "@/services/mood/mood-adapter";
+import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { toPersianDigits } from "@/utils/persian";
 import {
   Feather,
@@ -17,18 +19,26 @@ import {
 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
 import Animated, { FadeIn, FadeInUp } from "react-native-reanimated";
+import { useDispatch } from "react-redux";
 
 const Train = () => {
   const animationRef = React.useRef(null);
   const { data, isLoading } = useGetExerciseQuery(null);
+  console.log(data?.data);
   const { data: mood, isLoading: moodLoading } = useGetMoodQuery(null);
   const [fakeLoading, setFakeLoading] = React.useState(true);
   const [completeExercise, { isLoading: completeLoading }] =
     useCompleteExerciseMutation();
+  const { data: plans } = usePlansQuery(null);
+  const dispatch = useDispatch();
+  const proPlan = useMemo(
+    () => plans?.data.plans?.find((plan) => plan.name === "unlimited"),
+    [plans?.data.plans]
+  );
 
   useEffect(() => {
     setTimeout(() => {
@@ -76,11 +86,24 @@ const Train = () => {
   }) => {
     const typeBadge = getTypeBadge(item.type);
     const isDone = item.done;
-
+    const isProAndNotActive = item.isPro && !proPlan?.isActive;
+    const handleOpenNotProModal = () => {
+      dispatch({
+        type: "pro/setShowNotProModal",
+        payload: {
+          message: "🌙 این مدیتیشن مخصوص کاربران Pro است",
+          showNotProModal: true,
+        },
+      });
+    };
     return (
       <Animated.View entering={FadeInUp.duration(400).delay(index * 100)}>
         <TouchableOpacity
           onPress={() => {
+            if (isProAndNotActive) {
+              handleOpenNotProModal();
+              return;
+            }
             if (!item.done) completeExercise({ exerciseId: item._id });
             if (item.type === "meditation") {
               router.push({
@@ -109,6 +132,11 @@ const Train = () => {
           }}
           activeOpacity={0.8}
         >
+          {item.isPro && (
+            <Badge className="absolute right-10 bg-black z-50 rounded-b-xl top-0">
+              <BadgeText className="font-vazir text-white">Pro</BadgeText>
+            </Badge>
+          )}
           <LinearGradient
             colors={isDone ? ["#F0F6FA", "#FFFFFF"] : ["#FFFFFF", "#F9F9FF"]}
             start={{ x: 0, y: 0 }}

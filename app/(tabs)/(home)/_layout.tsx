@@ -2,8 +2,6 @@ import CustomHeader from "@/components/home/header";
 import Logo from "@/components/ui/logo";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { apiSlice } from "@/redux/api-slice";
-import { useGetMoodQuery } from "@/services/mood/mood-adapter";
-import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Redirect, router, Stack } from "expo-router";
 import React, { useEffect } from "react";
 import { Linking } from "react-native";
@@ -11,10 +9,7 @@ import { useDispatch } from "react-redux";
 
 const _layout = () => {
   const { authorized } = useAppSelector((state) => state.auth);
-  const { data } = useGetMoodQuery({ page: 1, limit: 30 });
-  const { data: plans } = usePlansQuery(null);
   const dispatch = useDispatch();
-  const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
   useEffect(() => {
     // هندل کردن لینک当她 اپ باز است
     const handleDeepLink = (event: { url: string }) => {
@@ -22,10 +17,10 @@ const _layout = () => {
       const params = new URL(url).searchParams;
       const status = params.get("status");
       const refId = params.get("ref_id");
-      dispatch(apiSlice.util.invalidateTags(["Plans"]));
-
       if (status === "success") {
         // پرداخت موفق - رفتن به صفحه موفقیت
+        dispatch(apiSlice.util.invalidateTags(["Plans"]));
+
         dispatch({
           type: "initialize/setIsFirstModalShow",
           payload: false,
@@ -65,7 +60,7 @@ const _layout = () => {
           headerTitle: () => <Logo className="h-10 w-16" />,
           headerShadowVisible: false,
           header(props) {
-            return <CustomHeader data={data} proPlan={proPlan} />;
+            return <CustomHeader />;
           },
         }}
       />

@@ -11,7 +11,12 @@ interface CompleteExerciseResponse {
 }
 export interface UserExercise {
   _id: string;
-  type: "meditation" | "text-activity" | "breathing" | "chatbot" | "step-activity";
+  type:
+    | "meditation"
+    | "text-activity"
+    | "breathing"
+    | "chatbot"
+    | "step-activity";
   exerciseId: string; // اگر meditation، ObjectId رشته‌ای مدیتیشن
   title: string;
   description?: string;
@@ -19,17 +24,23 @@ export interface UserExercise {
   done: boolean;
   url?: string; // برای مدیتیشن
   imageUrl?: string; // برای مدیتیشن
+  isPro?: boolean;
 }
 const exerciseAdapter = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getExercise: builder.query<{ success: boolean; data: UserExercise[] }, any>({
-      query: () => ({
-        url: `exercise`,
-        method: "GET",
-      }),
-      providesTags: ["Exercises"],
-    }),
-    completeExercise: builder.mutation<CompleteExerciseResponse, { exerciseId: string }>({
+    getExercise: builder.query<{ success: boolean; data: UserExercise[] }, any>(
+      {
+        query: () => ({
+          url: `exercise`,
+          method: "GET",
+        }),
+        providesTags: ["Exercises"],
+      }
+    ),
+    completeExercise: builder.mutation<
+      CompleteExerciseResponse,
+      { exerciseId: string }
+    >({
       query: ({ exerciseId }) => ({
         url: `exercise/complete`,
         method: "POST",
@@ -41,4 +52,5 @@ const exerciseAdapter = apiSlice.injectEndpoints({
 });
 
 // Export hooks
-export const { useGetExerciseQuery, useCompleteExerciseMutation } = exerciseAdapter;
+export const { useGetExerciseQuery, useCompleteExerciseMutation } =
+  exerciseAdapter;

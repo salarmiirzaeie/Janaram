@@ -19,7 +19,7 @@ const TestCard: React.FC = (props) => {
     <Pressable
       className=" rounded-full"
       onPress={() => {
-        router.navigate("/reports/tests");
+        router.navigate("/tests");
       }}
     >
       {/* شماره بالای کارت */}
@@ -61,7 +61,7 @@ const TestCard: React.FC = (props) => {
               size="md"
               className="bg-primary-500"
               onPress={() => {
-                router.navigate("/chat-bot");
+                router.navigate("/tests");
               }}
             >
               <ButtonText>شروع گفتگو</ButtonText>

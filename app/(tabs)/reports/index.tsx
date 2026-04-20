@@ -284,7 +284,7 @@ const Reports = () => {
   }, [isProActive, handleOpenNotProModal, handleAnalyzeMyPersonality]);
 
   const handleTestsPress = useCallback(() => {
-    router.push("/reports/tests");
+    router.push("/tests");
   }, []);
 
   const handleCloseAnalyze = useCallback(() => {
