@@ -13,7 +13,13 @@ import { Pressable } from "../ui/pressable";
 import { Spinner } from "../ui/spinner";
 import { VStack } from "../ui/vstack";
 
-const MusicCard = ({ item }: { item: Meditation }) => {
+const MusicCard = ({
+  item,
+  isBreathing,
+}: {
+  item: Meditation;
+  isBreathing?: boolean;
+}) => {
   const { track, loadTrack } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
   const { data: plans } = usePlansQuery(null);
@@ -51,7 +57,7 @@ const MusicCard = ({ item }: { item: Meditation }) => {
           return;
         }
         router.push({
-          pathname: "/player",
+          pathname: `${isBreathing ? "/breathingPlayer" : "/player"}`,
           params: {
             id: `${item.id}`,
           },
