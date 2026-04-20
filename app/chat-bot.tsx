@@ -378,6 +378,7 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 15,
     lineHeight: 22,
+    fontFamily: "vazirBold",
   },
   currentUserText: {
     color: "#FFFFFF",
@@ -385,7 +386,7 @@ const styles = StyleSheet.create({
   },
   otherUserText: {
     color: "#336180",
-    fontFamily: "vazir",
+    fontFamily: "vazirBold",
   },
   inputContainer: {
     flexDirection: "row",

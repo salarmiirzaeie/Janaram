@@ -143,7 +143,6 @@ export default function TabLayout() {
           headerShown: false,
           tabBarStyle: { display: "none" }, // Hide default tab bar
           lazy: true,
-          freezeOnBlur: true,
         }}
       >
         <Tabs.Screen

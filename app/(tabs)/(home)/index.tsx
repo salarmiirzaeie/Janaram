@@ -36,6 +36,13 @@ const QuickAccessItem = React.memo(
             Linking.openURL("http://10.213.178.162:3000/psychologist");
             return;
           }
+          if (item.route?.pathname) {
+            router.push({
+              pathname: item.route?.pathname,
+              params: item.route?.params,
+            });
+            return;
+          }
 
           router.push(item.route as any);
         }}
@@ -133,7 +140,7 @@ const Home = () => {
         title: "تست",
         icon: <FontAwesome5 name="clipboard-list" size={24} color="white" />,
         color: ["#FF9966", "#E6804D"],
-        route: "/reports/tests",
+        route: "/tests",
       },
       {
         id: 4,
@@ -144,10 +151,13 @@ const Home = () => {
       },
       {
         id: 5,
-        title: "خواب",
-        icon: <Feather name="moon" size={28} color="white" />,
+        title: "خودسازی",
+        icon: <MaterialIcons name="self-improvement" size={28} color="white" />,
         color: ["#79AED6", "#9966CC"],
-        route: "/sleep",
+        route: {
+          pathname: "/explore/all-files",
+          params: { type: "self", title: "خودسازی" },
+        },
       },
       {
         id: 2,

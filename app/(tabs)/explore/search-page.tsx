@@ -99,27 +99,6 @@ const SearchPage = () => {
                     </TouchableOpacity>
                   ))}
                 </View>
-
-                {/* Popular Categories */}
-                <View className="mt-4">
-                  <Text className="text-primary-800 font-vazirBold text-base mb-3">
-                    دسته‌بندی‌های محبوب
-                  </Text>
-                  <View className="flex-row flex-wrap gap-2">
-                    {["🧘‍♂️ مدیتیشن", "🎵 موسیقی", "🌙 خواب", "❤️ عشق"].map(
-                      (cat, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          className="bg-primary-50 px-4 py-2 rounded-full"
-                        >
-                          <Text className="text-primary-700 font-vazir text-sm">
-                            {cat}
-                          </Text>
-                        </TouchableOpacity>
-                      )
-                    )}
-                  </View>
-                </View>
               </VStack>
             </Animated.View>
           ) : query.length > 0 && filteredData?.length === 0 ? (

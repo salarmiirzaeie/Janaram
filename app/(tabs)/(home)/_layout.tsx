@@ -30,14 +30,14 @@ const _layout = () => {
           type: "initialize/setIsFirstModalShow",
           payload: false,
         });
-        router.push(`/payment/success?refId=${refId}`);
+        router.push(`/success?refId=${refId}`);
       } else if (status === "failed") {
         // پرداخت ناموفق
         dispatch({
           type: "initialize/setIsFirstModalShow",
           payload: false,
         });
-        router.push("/payment/failed");
+        router.push("/failed");
       }
     };
 
@@ -67,6 +67,34 @@ const _layout = () => {
           header(props) {
             return <CustomHeader data={data} proPlan={proPlan} />;
           },
+        }}
+      />
+      <Stack.Screen
+        name="breathings"
+        options={{
+          headerShown: true,
+          headerTitleAlign: "center",
+          headerTitle: "تنفس",
+          headerShadowVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="success"
+        options={{
+          headerShown: true,
+          headerTitleAlign: "center",
+          headerTitle: "پرداخت",
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="failed"
+        options={{
+          headerShown: true,
+          headerTitleAlign: "center",
+          headerTitle: "پرداخت",
+          headerShadowVisible: false,
         }}
       />
     </Stack>
