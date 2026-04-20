@@ -12,23 +12,7 @@ const _layout = () => {
             headerShown: false,
           }}
         />
-        <Stack.Screen
-          name="all-files"
-          options={({ route }: any) => {
-            const titleFromParams = route.params?.title || "";
-            return {
-              headerShown: true,
-              title: titleFromParams,
-              headerTitleAlign: "center",
-              headerTitleStyle: {
-                fontFamily: "vazirBold",
-                color: "#000",
-              },
-              headerShadowVisible: false,
-              headerTintColor: "#000",
-            };
-          }}
-        />
+
         <Stack.Screen
           name="search-page"
           options={({ route }: any) => {

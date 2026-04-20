@@ -12,35 +12,100 @@ import {
 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useCallback, useMemo } from "react";
-import { Dimensions, FlatList, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const CARD_WIDTH = (SCREEN_WIDTH - 60) / 2;
+// ========== استایل‌های استاتیک ==========
+const STATIC_STYLES = StyleSheet.create({
+  categoryGradient: {
+    borderRadius: 20,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  searchGradient: {
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    borderWidth: 1,
+    borderColor: "#E9EDF2",
+  },
+  skeletonHorizontal: {
+    height: 208,
+    width: 176,
+    marginHorizontal: 8,
+    borderRadius: 16,
+  },
+});
+
+// ========== آرایه دسته‌بندی (خارج از کامپوننت) ==========
+const CATEGORIES = [
+  {
+    id: "calm",
+    title: "آرامش",
+    icon: <Feather name="wind" size={24} color="white" />,
+    colors: ["#79AED6", "#5E95BD"],
+  },
+  {
+    id: "self",
+    title: "خودسازی",
+    icon: <MaterialIcons name="self-improvement" size={24} color="white" />,
+    colors: ["#9966CC", "#804DB3"],
+  },
+  {
+    id: "instrumental",
+    title: "بی کلام",
+    icon: <FontAwesome5 name="guitar" size={22} color="white" />,
+    colors: ["#FF9966", "#E6804D"],
+  },
+  {
+    id: "sleep",
+    title: "خواب خوب",
+    icon: <Feather name="moon" size={24} color="white" />,
+    colors: ["#91A5BE", "#7A8BA8"],
+  },
+  {
+    id: "love",
+    title: "عشق",
+    icon: <Ionicons name="heart" size={24} color="white" />,
+    colors: ["#FF9966", "#FFAD85"],
+  },
+  {
+    id: "nature",
+    title: "طبیعت",
+    icon: <MaterialIcons name="nature-people" size={24} color="white" />,
+    colors: ["#79AED6", "#9966CC"],
+  },
+];
 
 // ========== کامپوننت مجزا برای آیتم دسته‌بندی ==========
 const CategoryItem = React.memo(
-  ({ cat, onPress }: { cat: any; onPress: () => void }) => (
+  ({ cat, onPress }: { cat: (typeof CATEGORIES)[0]; onPress: () => void }) => (
     <TouchableOpacity
       className="flex-1 min-w-[30%]"
       onPress={onPress}
       activeOpacity={0.7}
     >
       <LinearGradient
-        colors={cat.color}
+        colors={cat.colors}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={{
-          borderRadius: 20,
-          paddingVertical: 16,
-          alignItems: "center",
-          justifyContent: "center",
-          shadowColor: cat.color[0],
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.2,
-          shadowRadius: 8,
-          elevation: 4,
-        }}
+        style={STATIC_STYLES.categoryGradient}
+        // @ts-ignore – shadowColor supports string but TS may complain
+        shadowColor={cat.colors[0]}
       >
         <View className="mb-1">{cat.icon}</View>
         <Text className="text-white font-vazirBold text-sm">{cat.title}</Text>
@@ -85,21 +150,36 @@ const HorizontalSection = React.memo(
     title,
     icon,
     onSeeAll,
+    cardWidth,
   }: {
     data: any[];
     isLoading: boolean;
     title: string;
     icon: React.ReactNode;
     onSeeAll: () => void;
+    cardWidth: number;
   }) => {
     if ((!data || data.length === 0) && !isLoading) return null;
+
+    // Memoize skeleton component
+    const skeletonData = useMemo(() => [1, 2, 3], []);
+    const renderSkeleton = useCallback(
+      () => (
+        <HStack space="md" className="px-3">
+          {skeletonData.map((item) => (
+            <Skeleton key={item} style={STATIC_STYLES.skeletonHorizontal} />
+          ))}
+        </HStack>
+      ),
+      [skeletonData]
+    );
 
     return (
       <VStack space="lg" className="mt-6">
         <SectionHeader title={title} icon={icon} onSeeAll={onSeeAll} />
 
         <FlatList
-          data={data || []}
+          data={data}
           keyExtractor={(item, index) =>
             item?.id?.toString() || `item-${title}-${index}`
           }
@@ -114,19 +194,11 @@ const HorizontalSection = React.memo(
           windowSize={3}
           removeClippedSubviews={true}
           getItemLayout={(_, index) => ({
-            length: CARD_WIDTH + 16,
-            offset: (CARD_WIDTH + 16) * index,
+            length: cardWidth + 16,
+            offset: (cardWidth + 16) * index,
             index,
           })}
-          ListEmptyComponent={
-            isLoading ? (
-              <HStack space="md" className="px-3">
-                {[1, 2, 3].map((item) => (
-                  <Skeleton key={item} className="h-52 w-48 mx-2 rounded-2xl" />
-                ))}
-              </HStack>
-            ) : null
-          }
+          ListEmptyComponent={isLoading ? renderSkeleton : null}
         />
       </VStack>
     );
@@ -135,60 +207,37 @@ const HorizontalSection = React.memo(
 
 // ========== کامپوننت اصلی ==========
 const Explore = () => {
+  const { width: SCREEN_WIDTH } = useWindowDimensions();
+  const CARD_WIDTH = (SCREEN_WIDTH - 60) / 2; // responsive
+
   const { data: exploreData, isLoading } = useGetExploreQuery(null, {
     refetchOnMountOrArgChange: false,
   });
 
-  // ========== استخراج دیتا با useMemo ==========
-  const categories = useMemo(
-    () => [
-      {
-        id: "calm",
-        title: "آرامش",
-        icon: <Feather name="wind" size={24} color="white" />,
-        color: ["#79AED6", "#5E95BD"],
-        route: "calm",
-      },
-      {
-        id: "self",
-        title: "خودسازی",
-        icon: <MaterialIcons name="self-improvement" size={24} color="white" />,
-        color: ["#9966CC", "#804DB3"],
-        route: "self",
-      },
-      {
-        id: "instrumental",
-        title: "بی کلام",
-        icon: <FontAwesome5 name="guitar" size={22} color="white" />,
-        color: ["#FF9966", "#E6804D"],
-        route: "instrumental",
-      },
-      {
-        id: "sleep",
-        title: "خواب خوب",
-        icon: <Feather name="moon" size={24} color="white" />,
-        color: ["#91A5BE", "#7A8BA8"],
-        route: "sleep",
-      },
-      {
-        id: "love",
-        title: "عشق",
-        icon: <Ionicons name="heart" size={24} color="white" />,
-        color: ["#FF9966", "#FFAD85"],
-        route: "love",
-      },
-      {
-        id: "nature",
-        title: "طبیعت",
-        icon: <MaterialIcons name="nature-people" size={24} color="white" />,
-        color: ["#79AED6", "#9966CC"],
-        route: "nature",
-      },
-    ],
-    []
-  );
+  // ========== هندلرها (تعریف قبل از استفاده) ==========
+  const handleCategoryPress = useCallback((catId: string, title: string) => {
+    if (catId === "sleep") {
+      router.push("/sleep");
+    } else {
+      router.push({
+        pathname: "/all-files",
+        params: { type: catId, title },
+      });
+    }
+  }, []);
 
-  // ========== دیتای سکشن‌ها ==========
+  const handleSeeAllPress = useCallback((sectionId: string, title: string) => {
+    router.push({
+      pathname: "/all-files",
+      params: { type: sectionId, title },
+    });
+  }, []);
+
+  const handleSearchPress = useCallback(() => {
+    router.navigate("/explore/search-page");
+  }, []);
+
+  // ========== دیتای سکشن‌ها (با دسترسی به handleSeeAllPress) ==========
   const sectionsData = useMemo(() => {
     if (!exploreData?.meditations) return [];
 
@@ -248,32 +297,9 @@ const Explore = () => {
     }
 
     return sections;
-  }, [exploreData]);
+  }, [exploreData, handleSeeAllPress]);
 
-  // ========== هندلرها با useCallback ==========
-  const handleCategoryPress = useCallback((catId: string, title: string) => {
-    if (catId === "sleep") {
-      router.push("/sleep");
-    } else {
-      router.push({
-        pathname: "/explore/all-files",
-        params: { type: catId, title },
-      });
-    }
-  }, []);
-
-  const handleSeeAllPress = useCallback((sectionId: string, title: string) => {
-    router.push({
-      pathname: "/explore/all-files",
-      params: { type: sectionId, title },
-    });
-  }, []);
-
-  const handleSearchPress = useCallback(() => {
-    router.navigate("/explore/search-page");
-  }, []);
-
-  // ========== هدر ==========
+  // ========== هدر و دسته‌بندی‌ها ==========
   const renderHeader = useCallback(
     () => (
       <HStack className="mx-5 items-center justify-between mb-6">
@@ -282,16 +308,7 @@ const Explore = () => {
             colors={["#F5F0FA", "#FFFFFF"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            style={{
-              borderRadius: 16,
-              paddingHorizontal: 16,
-              paddingVertical: 12,
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 12,
-              borderWidth: 1,
-              borderColor: "#E9EDF2",
-            }}
+            style={STATIC_STYLES.searchGradient}
           >
             <Feather name="search" size={20} color="#79AED6" />
             <Text className="text-gray-400 font-vazir flex-1 text-right">
@@ -305,12 +322,11 @@ const Explore = () => {
     [handleSearchPress]
   );
 
-  // ========== رندر دسته‌بندی‌ها ==========
   const renderCategories = useCallback(
     () => (
       <View className="mx-5 mb-0">
         <View className="flex-row flex-wrap gap-3">
-          {categories.map((cat) => (
+          {CATEGORIES.map((cat) => (
             <CategoryItem
               key={cat.id}
               cat={cat}
@@ -320,16 +336,17 @@ const Explore = () => {
         </View>
       </View>
     ),
-    [categories, handleCategoryPress]
+    [handleCategoryPress]
   );
 
-  // اگر در حال لود هستیم و دیتا نداریم
+  // ========== حالت لودینگ اولیه ==========
   if (isLoading && !exploreData) {
     return (
       <LinearGradient colors={["#F0F6FA", "#FFFFFF"]} style={{ flex: 1 }}>
         {renderHeader()}
         {renderCategories()}
         <View className="flex-1 items-center justify-center">
+          {/* می‌توانید اسکلتون بهتری قرار دهید */}
           <Text>در حال بارگذاری...</Text>
         </View>
       </LinearGradient>
@@ -353,6 +370,7 @@ const Explore = () => {
             title={item.title}
             icon={item.icon}
             onSeeAll={item.onSeeAll}
+            cardWidth={CARD_WIDTH}
           />
         )}
         ListHeaderComponent={

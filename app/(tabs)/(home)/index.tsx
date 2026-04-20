@@ -130,7 +130,7 @@ const Home = () => {
         icon: <Feather name="wind" size={28} color="white" />,
         color: ["#79AED6", "#5E95BD"],
         route: {
-          pathname: "/explore/all-files",
+          pathname: "/all-files",
           params: { type: "calm", title: "آرامش" },
         },
       },
@@ -155,7 +155,7 @@ const Home = () => {
         icon: <MaterialIcons name="self-improvement" size={28} color="white" />,
         color: ["#79AED6", "#9966CC"],
         route: {
-          pathname: "/explore/all-files",
+          pathname: "/all-files",
           params: { type: "self", title: "خودسازی" },
         },
       },
@@ -172,7 +172,7 @@ const Home = () => {
         icon: <Ionicons name="musical-notes" size={26} color="white" />,
         color: ["#9966CC", "#FF9966"],
         route: {
-          pathname: "/explore/all-files",
+          pathname: "/all-files",
           params: { type: "instrumental", title: "بی کلام" },
         },
       },

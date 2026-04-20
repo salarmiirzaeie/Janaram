@@ -143,6 +143,23 @@ export default function RootLayout() {
                       headerTitleStyle: { fontFamily: "vazirBold" },
                     }}
                   />
+                  <Stack.Screen
+                    name="all-files"
+                    options={({ route }: any) => {
+                      const titleFromParams = route.params?.title || "";
+                      return {
+                        headerShown: true,
+                        title: titleFromParams,
+                        headerTitleAlign: "center",
+                        headerTitleStyle: {
+                          fontFamily: "vazirBold",
+                          color: "#000",
+                        },
+                        headerShadowVisible: false,
+                        headerTintColor: "#000",
+                      };
+                    }}
+                  />
                 </Stack>
                 <StatusBar barStyle="dark-content" backgroundColor={"#fff"} />
                 {!netInfo.isConnected && <NetworkAct />}
