@@ -126,10 +126,6 @@ export default function PlayerScreen() {
         >
           <Ionicons name="chevron-down" size={28} color="white" />
         </TouchableOpacity>
-        {/* <Text style={styles.headerTitle}>در حال پخش</Text> */}
-        <TouchableOpacity style={styles.menuButton}>
-          <Ionicons name="ellipsis-horizontal" size={24} color="white" />
-        </TouchableOpacity>
       </Animated.View>
 
       {initialLoading ? (

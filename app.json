@@ -33,6 +33,15 @@
     "blockedPermissions": [
       "android.permission.SYSTEM_ALERT_WINDOW",
       "android.permission.RECORD_AUDIO"
+    ],
+    "intentFilters": [
+      {
+        "action": "VIEW",
+        "data": {
+          "scheme": "janaram"
+        },
+        "category": ["BROWSABLE", "DEFAULT"]
+      }
     ]
   },
   "web": {

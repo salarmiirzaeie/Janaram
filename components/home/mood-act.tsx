@@ -14,8 +14,6 @@ import {
   Actionsheet,
   ActionsheetBackdrop,
   ActionsheetContent,
-  ActionsheetDragIndicator,
-  ActionsheetDragIndicatorWrapper,
 } from "../ui/actionsheet";
 import { Badge, BadgeText } from "../ui/badge";
 import { Button, ButtonSpinner, ButtonText } from "../ui/button";
@@ -56,10 +54,6 @@ const MoodAct: React.FC<Props> = ({ isOpen, onClose, handleStreakModal }) => {
         keyboardVerticalOffset={0}
       >
         <ActionsheetContent className="px-5 pb-8 pt-4">
-          <ActionsheetDragIndicatorWrapper>
-            <ActionsheetDragIndicator />
-          </ActionsheetDragIndicatorWrapper>
-
           <VStack
             space="lg"
             className="w-full flex-grow justify-between items-center"

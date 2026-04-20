@@ -142,6 +142,8 @@ export default function TabLayout() {
         screenOptions={{
           headerShown: false,
           tabBarStyle: { display: "none" }, // Hide default tab bar
+          lazy: true,
+          freezeOnBlur: true,
         }}
       >
         <Tabs.Screen
