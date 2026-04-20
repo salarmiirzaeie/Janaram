@@ -1,7 +1,11 @@
 import React from "react";
 import { BackHandler, Linking, Text } from "react-native";
 import { useDispatch } from "react-redux";
-import { Actionsheet, ActionsheetBackdrop, ActionsheetContent } from "../ui/actionsheet";
+import {
+  Actionsheet,
+  ActionsheetBackdrop,
+  ActionsheetContent,
+} from "../ui/actionsheet";
 import { Button, ButtonText } from "../ui/button";
 import { VStack } from "../ui/vstack";
 
@@ -59,24 +63,40 @@ const RateAppSheet: React.FC<Props> = ({ isOpen, onClose }) => {
       <ActionsheetContent className="py-10 px-6 rounded-t-3xl">
         <VStack space="lg" className="items-center">
           {/* Title */}
-          <Text className="text-2xl font-vazirBold text-primary-800 text-center">از ما راضی بودی؟ ❤️</Text>
+          <Text className="text-2xl font-vazirBold text-primary-800 text-center">
+            از ما راضی بودی؟ ❤️
+          </Text>
 
           {/* Subtitle */}
           <Text className="text-center text-primary-600 font-vazir leading-6">
-            خیلی خوشحال می‌شیم اگر چند لحظه وقت بذاری و تو کافه‌بازار بهمون امتیاز بدی و نظرتو بنویسی.
+            خیلی خوشحال می‌شیم اگر چند لحظه وقت بذاری و تو کافه‌بازار بهمون
+            امتیاز بدی و نظرتو بنویسی.
           </Text>
 
           {/* Buttons */}
           <VStack space="md" className="w-full mt-4">
-            <Button onPress={openCafeBazaar} className="w-full bg-primary-500 rounded-xl">
-              <ButtonText className="text-white text-center font-vazirBold">الان امتیاز می‌دم</ButtonText>
+            <Button
+              onPress={openCafeBazaar}
+              className="w-full bg-primary-500 rounded-xl"
+            >
+              <ButtonText className="text-white text-center font-vazirBold">
+                الان امتیاز می‌دم
+              </ButtonText>
             </Button>
 
-            <Button onPress={remindLater} className="w-full bg-background-100 rounded-xl">
-              <ButtonText className="text-primary-800 text-center font-vazirBold">بعداً یادآوری کن</ButtonText>
+            <Button
+              onPress={remindLater}
+              className="w-full bg-background-100 rounded-xl"
+            >
+              <ButtonText className="text-primary-800 text-center font-vazirBold">
+                بعداً یادآوری کن
+              </ButtonText>
             </Button>
 
-            <Text onPress={dontAskAgain} className="text-center text-primary-400 font-vazir mt-2">
+            <Text
+              onPress={dontAskAgain}
+              className="text-center text-primary-400 font-vazir mt-2"
+            >
               نه، ممنون
             </Text>
           </VStack>

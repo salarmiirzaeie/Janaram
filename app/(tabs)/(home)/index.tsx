@@ -14,9 +14,15 @@ import {
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
-import { FlatList, Linking, TouchableOpacity, View } from "react-native";
+import {
+  BackHandler,
+  FlatList,
+  Linking,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
 import Animated, { FadeInUp } from "react-native-reanimated";
 
@@ -81,33 +87,32 @@ const Home = () => {
   const [showRateModal, setShowRateModal] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  // ========== هندلر بک هندلر ==========
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const onBackPress = () => {
-  //       if (asked) {
-  //         return false;
-  //       }
-  //       setShowRateModal(true);
-  //       return true;
-  //     };
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (asked) {
+          return false;
+        }
+        setShowRateModal(true);
+        return true;
+      };
 
-  //     const sub = BackHandler.addEventListener(
-  //       "hardwareBackPress",
-  //       onBackPress
-  //     );
+      const sub = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress
+      );
 
-  //     // فقط یک بار انیمیشن اجرا شود
-  //     const timer = setTimeout(() => {
-  //       setIsFirstLoad(false);
-  //     }, 500);
+      // فقط یک بار انیمیشن اجرا شود
+      const timer = setTimeout(() => {
+        setIsFirstLoad(false);
+      }, 500);
 
-  //     return () => {
-  //       sub.remove();
-  //       clearTimeout(timer);
-  //     };
-  //   }, [asked])
-  // );
+      return () => {
+        sub.remove();
+        clearTimeout(timer);
+      };
+    }, [asked])
+  );
 
   // ========== useMemo برای آیتم‌های دسترسی سریع ==========
   const quickAccessItems = useMemo(
