@@ -16,7 +16,7 @@ import {
 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { FlatList, Linking, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
 import Animated, { FadeInUp } from "react-native-reanimated";
 
@@ -26,15 +26,12 @@ const QuickAccessItem = React.memo(
     return (
       <TouchableOpacity
         onPress={() => {
-          if (item.route.pathname) {
-            // For routes with params, use replace
-            router.dismissTo({
-              pathname: item.route.pathname,
-              params: item.route.params,
-            });
-          } else {
-            router.dismissTo(item.route as any);
+          if (item.route === "/psychologist") {
+            Linking.openURL("http://10.213.178.162:3000/psychologist");
+            return;
           }
+
+          router.push(item.route as any);
         }}
         activeOpacity={0.8}
         style={{ flex: 1 }}

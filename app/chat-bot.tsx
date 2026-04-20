@@ -6,7 +6,13 @@ import {
   useStartConversationMutation,
 } from "@/services/ai/ai-adapter";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -17,12 +23,14 @@ import {
   View,
 } from "react-native";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
+import LinearGradient from "react-native-linear-gradient";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 
+// ========== Types ==========
 export interface MessageType {
   role: "user" | "assistant";
   content: string;
@@ -35,12 +43,20 @@ export interface ApiMessageType {
   timestamp: Date;
 }
 
-interface MessageProps {
-  item: MessageType;
-}
+// ========== Constants ==========
+const INITIAL_MESSAGE: MessageType = {
+  role: "assistant",
+  content:
+    "سلام! من یک دستیار روانشناس هوش مصنوعی هستم. می‌تونم به شما در بیان و درک احساساتتون کمک کنم. امروز چه حسی دارید؟",
+  timestamp: new Date(),
+};
 
-const Message: React.FC<MessageProps> = ({ item }) => {
+const LIMIT = 10;
+
+// ========== Message Component ==========
+const Message = React.memo(({ item }: { item: MessageType }) => {
   const isCurrentUser = item.role === "user";
+
   return (
     <View
       style={[
@@ -50,15 +66,79 @@ const Message: React.FC<MessageProps> = ({ item }) => {
     >
       <Text
         style={[
+          styles.messageText,
           isCurrentUser ? styles.currentUserText : styles.otherUserText,
-          { fontFamily: isCurrentUser ? "vazirBold" : "vazir" },
         ]}
       >
         {item.content}
       </Text>
     </View>
   );
-};
+});
+
+Message.displayName = "Message";
+
+// ========== Premium Banner Component ==========
+const PremiumBanner = React.memo(({ onPress }: { onPress: () => void }) => (
+  <LinearGradient
+    colors={["#FFF3E0", "#FFE0B2"]}
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 1 }}
+    style={styles.premiumBanner}
+  >
+    <VStack space="sm">
+      <Text className="text-right font-vazirBold text-base text-accent-600">
+        ⚡ محدودیت روزانه به پایان رسید
+      </Text>
+      <Text className="text-right font-vazir text-sm text-accent-500">
+        شما محدودیت روزانه ۱۰ گفت‌وگو را استفاده کردید. با خرید اشتراک به صورت
+        نامحدود مشاوره بگیرید.
+      </Text>
+      <Button onPress={onPress} className="bg-primary-500 mt-2 rounded-full">
+        <ButtonText className="text-white font-vazirBold">
+          🚀 خرید اشتراک Pro
+        </ButtonText>
+      </Button>
+    </VStack>
+  </LinearGradient>
+));
+
+PremiumBanner.displayName = "PremiumBanner";
+
+// ========== Send Button Component ==========
+const SendButton = React.memo(
+  ({
+    onPress,
+    isLoading,
+    disabled,
+  }: {
+    onPress: () => void;
+    isLoading: boolean;
+    disabled: boolean;
+  }) => (
+    <TouchableOpacity
+      style={[styles.sendButton, disabled && styles.sendButtonDisabled]}
+      onPress={onPress}
+      disabled={disabled}
+      activeOpacity={0.7}
+    >
+      {isLoading ? (
+        <ButtonSpinner color="#79AED6" />
+      ) : (
+        <LinearGradient
+          colors={disabled ? ["#D3DBE5", "#BDC9D8"] : ["#79AED6", "#9966CC"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.sendGradient}
+        >
+          <Ionicons name="send" size={20} color="white" />
+        </LinearGradient>
+      )}
+    </TouchableOpacity>
+  )
+);
+
+SendButton.displayName = "SendButton";
 
 const ChatScreen: React.FC = () => {
   const initialMessage: MessageType = {
@@ -171,6 +251,21 @@ const ChatScreen: React.FC = () => {
     if (!isFetchingHistory && hasMore) setPage((prev) => prev + 1);
   };
 
+  const isSendDisabled = useMemo(() => {
+    return isLoading || !input.trim();
+  }, [isLoading, input]);
+
+  const keyExtractor = useCallback(
+    (_: MessageType, idx: number) => idx.toString(),
+    []
+  );
+  const handleUpgradePress = useCallback(() => {
+    dispatch({
+      type: "initialize/setIsFirstModalShow",
+      payload: true,
+    });
+  }, [dispatch]);
+
   const handleSend = async () => {
     if (!input.trim()) return;
     const userMessage: MessageType = {
@@ -191,134 +286,159 @@ const ChatScreen: React.FC = () => {
   );
 
   return (
-    <SafeAreaView
-      edges={["bottom"]}
-      style={{ flex: 1, backgroundColor: "white" }}
-    >
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 80} // adjust if needed
+    <SafeAreaView edges={["bottom"]} style={styles.container}>
+      <LinearGradient
+        colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.gradient}
       >
-        <KeyboardAwareFlatList
-          ref={flatListRef}
-          data={messages}
-          keyExtractor={(_, idx) => idx.toString()}
-          renderItem={renderItem}
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: "flex-start",
-            paddingHorizontal: 15,
-            paddingBottom: insets.bottom + 80,
-          }}
-          extraScrollHeight={120} // ensures input moves above keyboard on Samsung
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.1}
-          showsVerticalScrollIndicator={false}
-          inverted
-          keyboardShouldPersistTaps="handled"
-        />
-
-        {showPremium && (
-          <VStack className="p-4 m-4 bg-accent-200 rounded-2xl">
-            <Text className="text-lg font-vazirBold text-right text-accent-500 mb-4">
-              شما محدودیت روزانه ۱۰ گفت‌وگو را استفاده کردید. با خرید اشتراک به
-              صورت نامحدود مشاوره بگیرید.
-            </Text>
-            <Button
-              onPress={() =>
-                dispatch({
-                  type: "initialize/setIsFirstModalShow",
-                  payload: true,
-                })
-              }
-              className="bg-primary-500"
-            >
-              <ButtonText className="text-white">خرید اشتراک</ButtonText>
-            </Button>
-          </VStack>
-        )}
-
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.textInput}
-            value={input}
-            onChangeText={setInput}
-            placeholder="احساسات و افکار خود را اینجا بنویسید..."
-            placeholderTextColor="#888"
-            multiline
-            returnKeyType="send"
-            onSubmitEditing={handleSend}
-            blurOnSubmit={false}
+        <KeyboardAvoidingView
+          style={styles.flex}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 80}
+        >
+          <KeyboardAwareFlatList
+            ref={flatListRef}
+            data={messages}
+            keyExtractor={keyExtractor}
+            renderItem={renderItem}
+            contentContainerStyle={[
+              styles.listContent,
+              { paddingBottom: insets.bottom + 80 },
+            ]}
+            extraScrollHeight={120}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.1}
+            showsVerticalScrollIndicator={false}
+            inverted
+            keyboardShouldPersistTaps="handled"
           />
 
-          <TouchableOpacity
-            style={styles.sendButton}
-            onPress={handleSend}
-            disabled={isLoading || !input.trim()}
-          >
-            {isLoading ? (
-              <ButtonSpinner />
-            ) : (
-              <Ionicons
-                name="send"
-                size={24}
-                color={isLoading || !input.trim() ? "#888" : "#47A9DA"}
-              />
-            )}
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+          {showPremium && <PremiumBanner onPress={handleUpgradePress} />}
+
+          {/* Input Section */}
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.textInput}
+              value={input}
+              onChangeText={setInput}
+              placeholder="احساسات و افکار خود را اینجا بنویسید..."
+              placeholderTextColor="#91A5BE"
+              multiline
+              returnKeyType="send"
+              onSubmitEditing={handleSend}
+              blurOnSubmit={false}
+            />
+
+            <SendButton
+              onPress={handleSend}
+              isLoading={isLoading}
+              disabled={isSendDisabled}
+            />
+          </View>
+        </KeyboardAvoidingView>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  messagesContainer: {
-    paddingVertical: 10,
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  gradient: {
+    flex: 1,
+  },
+  flex: {
+    flex: 1,
+  },
+  listContent: {
     flexGrow: 1,
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
+    paddingHorizontal: 15,
   },
   messageBubble: {
     maxWidth: "80%",
-    padding: 10,
-    borderRadius: 15,
-    marginBottom: 8,
+    padding: 12,
+    borderRadius: 20,
+    marginBottom: 12,
   },
-  currentUserMessage: { alignSelf: "flex-end", backgroundColor: "#47A9DA" },
-  otherUserMessage: { alignSelf: "flex-start", backgroundColor: "#C8E6C9" },
-  currentUserText: { color: "#FFFFFF" },
-  otherUserText: { color: "#388E3C" },
+  currentUserMessage: {
+    alignSelf: "flex-end",
+    backgroundColor: "#79AED6",
+    borderBottomRightRadius: 4,
+  },
+  otherUserMessage: {
+    alignSelf: "flex-start",
+    backgroundColor: "#E9EDF2",
+    borderBottomLeftRadius: 4,
+  },
+  messageText: {
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  currentUserText: {
+    color: "#FFFFFF",
+    fontFamily: "vazirBold",
+  },
+  otherUserText: {
+    color: "#336180",
+    fontFamily: "vazir",
+  },
   inputContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
     paddingHorizontal: 15,
-    paddingTop: 10,
+    paddingVertical: 12,
     borderTopWidth: 1,
-    borderTopColor: "#A5D6A7",
-    backgroundColor: "#fff",
-    paddingBottom: 10,
+    borderTopColor: "#E9EDF2",
+    backgroundColor: "#FFFFFF",
+    gap: 12,
   },
   textInput: {
     flex: 1,
-    minHeight: 40,
+    minHeight: 44,
     maxHeight: 120,
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginRight: 10,
-    fontSize: 16,
-    color: "#000000",
+    borderRadius: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 15,
+    color: "#214760",
+    backgroundColor: "#F5F7FA",
+    textAlignVertical: "top",
+    fontFamily: "vazir",
   },
   sendButton: {
-    marginLeft: 15,
-    marginRight: 5,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    overflow: "hidden",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  sendButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "600",
-    fontFamily: "vazirBold",
+  sendButtonDisabled: {
+    opacity: 0.6,
+  },
+  sendGradient: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  premiumBanner: {
+    margin: 16,
+    padding: 16,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: "#FFE0B2",
+    shadowColor: "#FF9966",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
 });
 
