@@ -234,7 +234,7 @@ const Explore = () => {
   }, []);
 
   const handleSearchPress = useCallback(() => {
-    router.navigate("/explore/search-page");
+    router.navigate("/search-page");
   }, []);
 
   // ========== دیتای سکشن‌ها (با دسترسی به handleSeeAllPress) ==========

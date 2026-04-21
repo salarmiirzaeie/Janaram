@@ -1,7 +1,6 @@
 // app/(app)/tests/result.tsx
 import { router, useLocalSearchParams } from "expo-router";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TestResult() {
   const { result, testName } = useLocalSearchParams();
@@ -9,14 +8,14 @@ export default function TestResult() {
 
   if (!data) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center">
+      <View className="flex-1 justify-center items-center">
         <Text>نتیجه‌ای یافت نشد</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       <ScrollView className="px-5 py-6">
         <Text className="text-2xl font-bold text-center text-indigo-700 mb-4">
           {testName}
@@ -51,6 +50,6 @@ export default function TestResult() {
           </Text>
         </TouchableOpacity>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

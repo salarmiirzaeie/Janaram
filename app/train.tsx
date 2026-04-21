@@ -254,11 +254,11 @@ const Train = () => {
             <HStack className="justify-between items-center mb-3">
               <HStack space="md" className="items-center">
                 <Text className="text-3xl font-vazirBold text-primary-600">
-                  {toPersianDigits(mood?.data.completedExercises || 0)}
+                  {mood?.data.completedExercises || 0}
                 </Text>
                 <Text className="text-xl font-vazir text-primary-400">/</Text>
                 <Text className="text-xl font-vazir text-primary-400">
-                  {toPersianDigits(mood?.data.totalExercises || 0)}
+                  {mood?.data.totalExercises || 0}
                 </Text>
               </HStack>
               <HStack space="sm" className="items-center">
@@ -286,8 +286,7 @@ const Train = () => {
             </Progress>
 
             <Text className="text-right text-primary-500 text-xs font-vazir mt-2">
-              {toPersianDigits(Math.round(mood?.data.progressPercent || 0))}%
-              تکمیل
+              {Math.round(mood?.data.progressPercent || 0)}% تکمیل
             </Text>
           </LinearGradient>
         </Animated.View>

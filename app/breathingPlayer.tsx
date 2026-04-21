@@ -39,7 +39,6 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function BreathingPlayerScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -247,7 +246,7 @@ export default function BreathingPlayerScreen() {
       colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]}
       style={{ flex: 1 }}
     >
-      <SafeAreaView className="flex-1">
+      <View className="flex-1">
         {/* Header */}
         <View className="flex-row justify-between items-center px-5 pt-4">
           <TouchableOpacity
@@ -461,7 +460,7 @@ export default function BreathingPlayerScreen() {
             )}
           </ActionsheetContent>
         </Actionsheet>
-      </SafeAreaView>
+      </View>
     </LinearGradient>
   );
 }

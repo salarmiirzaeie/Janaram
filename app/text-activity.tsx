@@ -30,10 +30,6 @@ export default function TextActivityScreen() {
   };
 
   const handleSubmit = () => {
-    console.log("User input:", {
-      gratitudeList,
-      journaling: text,
-    });
     toast.show({ msg: "با موفقیت ذخیره شد", type: "success" });
     router.back();
   };

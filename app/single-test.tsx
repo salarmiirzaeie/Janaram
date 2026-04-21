@@ -8,7 +8,6 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
-  SafeAreaView,
   Text,
   TouchableOpacity,
   View,
@@ -113,26 +112,26 @@ const SingleTest = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-white">
+      <View className="flex-1 justify-center items-center bg-white">
         <ActivityIndicator size="large" color="#6366f1" />
-      </SafeAreaView>
+      </View>
     );
   }
 
   if (error || !data?.data) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-white">
+      <View className="flex-1 justify-center items-center bg-white">
         <Text className="text-red-500 font-vazir text-lg">
           خطا در دریافت تست
         </Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       {/* Header with progress */}
       <View className="px-5 pt-4 pb-2">
         <Text className="text-lg font-vazirBold text-gray-800 text-right">
@@ -225,7 +224,7 @@ const SingleTest = () => {
           </TouchableOpacity>
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -16,7 +16,6 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   Text,
   TextInput,
 } from "react-native";
@@ -158,151 +157,149 @@ const OTPForm = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1 p-4"
-      >
-        <ProgressOnboarding
-          onBack={() => router.back()}
-          currentStep={2}
-          totalSteps={8}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1 p-4"
+    >
+      <ProgressOnboarding
+        onBack={() => router.back()}
+        currentStep={2}
+        totalSteps={8}
+      />
+
+      <VStack className="w-full p-4">
+        <Image
+          source={require("@/assets/images/logo.png")}
+          className="w-32 h-32 mx-auto mb-6"
+          resizeMode="contain"
         />
 
-        <VStack className="w-full p-4">
-          <Image
-            source={require("@/assets/images/logo.png")}
-            className="w-32 h-32 mx-auto mb-6"
-            resizeMode="contain"
-          />
+        <VStack className="w-full">
+          <Text
+            className="text-3xl font-vazirBold text-primary-800 text-center mb-2"
+            style={{ fontFamily: "vazirBold" }}
+          >
+            تایید شماره موبایل
+          </Text>
+          <Text
+            className="text-base text-primary-600 text-center mb-2"
+            style={{ fontFamily: "vazir" }}
+          >
+            کد برای شماره {phoneNumber} ارسال شده است
+          </Text>
+          <Text
+            className="text-base text-primary-600 text-center mb-6"
+            style={{ fontFamily: "vazir" }}
+          >
+            لطفا کدی که برای شما پیامک شده را وارد کنید
+          </Text>
 
-          <VStack className="w-full">
-            <Text
-              className="text-3xl font-vazirBold text-primary-800 text-center mb-2"
-              style={{ fontFamily: "vazirBold" }}
-            >
-              تایید شماره موبایل
-            </Text>
-            <Text
-              className="text-base text-primary-600 text-center mb-2"
-              style={{ fontFamily: "vazir" }}
-            >
-              کد برای شماره {phoneNumber} ارسال شده است
-            </Text>
-            <Text
-              className="text-base text-primary-600 text-center mb-6"
-              style={{ fontFamily: "vazir" }}
-            >
-              لطفا کدی که برای شما پیامک شده را وارد کنید
-            </Text>
+          {/* OTP Inputs */}
+          <VStack className="mt-4 w-full">
+            <HStack className="justify-between">
+              {otpValues.map((_, index) => (
+                <Controller
+                  key={index}
+                  control={control}
+                  name={`otp.${index}` as const}
+                  render={({ field: { onChange, value } }) => (
+                    <TextInput
+                      ref={(ref) => {
+                        if (ref) inputRefs.current[index] = ref;
+                      }}
+                      className={`border w-14 h-14 text-center text-lg rounded-lg ${
+                        errors.otp
+                          ? "border-accent-500 bg-accent-100 text-accent-500"
+                          : "border-primary-300 bg-white text-primary-500"
+                      }`}
+                      style={{ fontFamily: "vazir" }}
+                      value={value || ""}
+                      onChangeText={(text) => {
+                        const newOtpValues = [...otpValues];
+                        newOtpValues[index] = text.slice(0, 1);
+                        setOtpValues(newOtpValues);
+                        onChange(text.slice(0, 1));
 
-            {/* OTP Inputs */}
-            <VStack className="mt-4 w-full">
-              <HStack className="justify-between">
-                {otpValues.map((_, index) => (
-                  <Controller
-                    key={index}
-                    control={control}
-                    name={`otp.${index}` as const}
-                    render={({ field: { onChange, value } }) => (
-                      <TextInput
-                        ref={(ref) => {
-                          if (ref) inputRefs.current[index] = ref;
-                        }}
-                        className={`border w-14 h-14 text-center text-lg rounded-lg ${
-                          errors.otp
-                            ? "border-accent-500 bg-accent-100 text-accent-500"
-                            : "border-primary-300 bg-white text-primary-500"
-                        }`}
-                        style={{ fontFamily: "vazir" }}
-                        value={value || ""}
-                        onChangeText={(text) => {
-                          const newOtpValues = [...otpValues];
-                          newOtpValues[index] = text.slice(0, 1);
-                          setOtpValues(newOtpValues);
-                          onChange(text.slice(0, 1));
+                        if (text && index < otpValues.length - 1) {
+                          inputRefs.current[index + 1]?.focus();
+                        } else if (!text && index > 0) {
+                          inputRefs.current[index - 1]?.focus();
+                        }
+                      }}
+                      onChange={(e) => handlePaste(e.nativeEvent.text, index)}
+                      keyboardType="numeric"
+                      maxLength={1}
+                      autoComplete="sms-otp"
+                      textContentType="oneTimeCode"
+                    />
+                  )}
+                />
+              ))}
+            </HStack>
 
-                          if (text && index < otpValues.length - 1) {
-                            inputRefs.current[index + 1]?.focus();
-                          } else if (!text && index > 0) {
-                            inputRefs.current[index - 1]?.focus();
-                          }
-                        }}
-                        onChange={(e) => handlePaste(e.nativeEvent.text, index)}
-                        keyboardType="numeric"
-                        maxLength={1}
-                        autoComplete="sms-otp"
-                        textContentType="oneTimeCode"
-                      />
-                    )}
-                  />
-                ))}
-              </HStack>
-
-              {errors.otp && (
-                <Text
-                  className="text-accent-500 text-sm mt-1 text-right"
-                  style={{ fontFamily: "vazir" }}
-                >
-                  {(errors.otp as any)?.message || "کد نامعتبر است"}
-                </Text>
-              )}
-
+            {errors.otp && (
               <Text
-                className="text-sm text-center mt-4 text-primary-600"
+                className="text-accent-500 text-sm mt-1 text-right"
                 style={{ fontFamily: "vazir" }}
               >
-                {timeLeft > 0
-                  ? `زمان باقی‌مانده: ${formatTime(timeLeft)}`
-                  : "مهلت وارد کردن کد به پایان رسید"}
+                {(errors.otp as any)?.message || "کد نامعتبر است"}
               </Text>
+            )}
 
-              <HStack className="mt-4 justify-between">
-                <Button onPress={onChangeNumber} variant="link">
+            <Text
+              className="text-sm text-center mt-4 text-primary-600"
+              style={{ fontFamily: "vazir" }}
+            >
+              {timeLeft > 0
+                ? `زمان باقی‌مانده: ${formatTime(timeLeft)}`
+                : "مهلت وارد کردن کد به پایان رسید"}
+            </Text>
+
+            <HStack className="mt-4 justify-between">
+              <Button onPress={onChangeNumber} variant="link">
+                <ButtonText
+                  className="text-secondary-500 text-sm underline"
+                  style={{ fontFamily: "vazirBold" }}
+                >
+                  تغییر شماره موبایل
+                </ButtonText>
+              </Button>
+              {timeLeft === 0 && (
+                <Button
+                  onPress={onResendOTP}
+                  variant="link"
+                  disabled={isLoadingOTP}
+                >
                   <ButtonText
                     className="text-secondary-500 text-sm underline"
                     style={{ fontFamily: "vazirBold" }}
                   >
-                    تغییر شماره موبایل
+                    {isLoadingOTP ? (
+                      <ButtonSpinner color={"white"} />
+                    ) : (
+                      "ارسال مجدد کد"
+                    )}
                   </ButtonText>
                 </Button>
-                {timeLeft === 0 && (
-                  <Button
-                    onPress={onResendOTP}
-                    variant="link"
-                    disabled={isLoadingOTP}
-                  >
-                    <ButtonText
-                      className="text-secondary-500 text-sm underline"
-                      style={{ fontFamily: "vazirBold" }}
-                    >
-                      {isLoadingOTP ? (
-                        <ButtonSpinner color={"white"} />
-                      ) : (
-                        "ارسال مجدد کد"
-                      )}
-                    </ButtonText>
-                  </Button>
-                )}
-              </HStack>
-            </VStack>
-
-            {/* Submit Button */}
-            <Button
-              className="rounded-lg bg-primary-500 p-3 mt-4"
-              onPress={handleSubmit(onSubmit)}
-            >
-              <ButtonText
-                className="text-white text-base font-vazirBold"
-                style={{ fontFamily: "vazirBold" }}
-              >
-                {isLoading ? <ButtonSpinner color={"white"} /> : "تایید کد"}
-              </ButtonText>
-            </Button>
+              )}
+            </HStack>
           </VStack>
+
+          {/* Submit Button */}
+          <Button
+            className="rounded-lg bg-primary-500 p-3 mt-4"
+            onPress={handleSubmit(onSubmit)}
+          >
+            <ButtonText
+              className="text-white text-base font-vazirBold"
+              style={{ fontFamily: "vazirBold" }}
+            >
+              {isLoading ? <ButtonSpinner color={"white"} /> : "تایید کد"}
+            </ButtonText>
+          </Button>
         </VStack>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </VStack>
+    </KeyboardAvoidingView>
   );
 };
 

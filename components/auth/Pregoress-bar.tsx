@@ -4,8 +4,7 @@ import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { AntDesign } from "@expo/vector-icons";
 import { usePathname } from "expo-router";
 import React from "react";
-import { Platform } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HStack } from "../ui/hstack";
 import { VStack } from "../ui/vstack";
 
@@ -16,27 +15,37 @@ interface ProgressOnboardingProps {
   className?: string;
 }
 
-const ProgressOnboarding: React.FC<ProgressOnboardingProps> = ({ currentStep, totalSteps, onBack, className }) => {
+const ProgressOnboarding: React.FC<ProgressOnboardingProps> = ({
+  currentStep,
+  totalSteps,
+  onBack,
+  className,
+}) => {
   const insets = useSafeAreaInsets();
   // محاسبه درصد پیشرفت
   const progress = (currentStep / totalSteps) * 100;
   const pathName = usePathname();
   return (
-    <SafeAreaView edges={Platform.OS === "ios" ? ["left", "right"] : ["top"]} className="bg-white">
-      <VStack className="justify-center w-full">
-        <HStack className="justify-between items-center w-full">
-          <Pressable onPress={onBack} className="p-2">
-            {pathName !== "/auth/login" && <AntDesign name="left" size={24} color="black" />}
-          </Pressable>
-          <Center className="flex-1">
-            <Progress value={progress} size="md" orientation="horizontal" className="w-full bg-gray-200 rounded-full">
-              <ProgressFilledTrack className={className} />
-            </Progress>
-          </Center>
-          <Pressable className="p-2" onPress={onBack} />
-        </HStack>
-      </VStack>
-    </SafeAreaView>
+    <VStack className="justify-center w-full">
+      <HStack className="justify-between items-center w-full">
+        <Pressable onPress={onBack} className="p-2">
+          {pathName !== "/auth/login" && (
+            <AntDesign name="left" size={24} color="black" />
+          )}
+        </Pressable>
+        <Center className="flex-1">
+          <Progress
+            value={progress}
+            size="md"
+            orientation="horizontal"
+            className="w-full bg-gray-200 rounded-full"
+          >
+            <ProgressFilledTrack className={className} />
+          </Progress>
+        </Center>
+        <Pressable className="p-2" onPress={onBack} />
+      </HStack>
+    </VStack>
   );
 };
 

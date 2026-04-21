@@ -26,7 +26,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 
 export type ProPlanModalProps = {
@@ -112,203 +111,197 @@ export default function ProPlanFullScreenModal({
         colors={["#FFFFFF", "#FFFFFF", "#F0F6FA", "#F5F0FA"]}
         style={{ flex: 1 }}
       >
-        <SafeAreaView edges={["top"]} className="flex-1">
-          {/* Header */}
-          <View className="pb-2 px-5 pt-3">
-            <HStack className="items-center justify-between">
-              <Pressable
-                onPress={onClose}
-                hitSlop={10}
-                className="rounded-full"
-              >
-                <View className="w-10 h-10 rounded-full bg-white shadow-sm justify-center items-center">
-                  <AntDesign name="close" size={22} color="#666" />
-                </View>
-              </Pressable>
-              <View className="bg-primary-500/10 px-3 py-1.5 rounded-full">
-                <Text className="text-primary-600 font-vazirBold text-xs">
-                  پیشنهاد ویژه
-                </Text>
+        {/* Header */}
+        <View className="pb-2 px-5 pt-3">
+          <HStack className="items-center justify-between">
+            <Pressable onPress={onClose} hitSlop={10} className="rounded-full">
+              <View className="w-10 h-10 rounded-full bg-white shadow-sm justify-center items-center">
+                <AntDesign name="close" size={22} color="#666" />
               </View>
-            </HStack>
-          </View>
+            </Pressable>
+            <View className="bg-primary-500/10 px-3 py-1.5 rounded-full">
+              <Text className="text-primary-600 font-vazirBold text-xs">
+                پیشنهاد ویژه
+              </Text>
+            </View>
+          </HStack>
+        </View>
 
-          <ScrollView
-            ref={scrollViewRef}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 20 }}
-            bounces={false}
-          >
-            {isLoadingPlans ? (
-              <VStack space="md" className={`${paddingX} py-4`}>
-                <View style={styles.skeletonTitle} />
-                <View style={styles.skeletonDesc} />
-                <View className="items-center">
-                  <View
-                    style={[
-                      styles.skeletonHero,
-                      { width: heroSize, height: heroSize },
-                    ]}
-                  />
-                </View>
-                <View style={styles.skeletonPrice} />
-                <VStack className="mt-4" space="md">
-                  {[...Array(3)].map((_, i) => (
-                    <HStack key={i} space="md" className="items-start">
-                      <View style={styles.skeletonIcon} />
-                      <View style={styles.skeletonFeature} />
-                    </HStack>
+        <ScrollView
+          ref={scrollViewRef}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 20 }}
+          bounces={false}
+        >
+          {isLoadingPlans ? (
+            <VStack space="md" className={`${paddingX} py-4`}>
+              <View style={styles.skeletonTitle} />
+              <View style={styles.skeletonDesc} />
+              <View className="items-center">
+                <View
+                  style={[
+                    styles.skeletonHero,
+                    { width: heroSize, height: heroSize },
+                  ]}
+                />
+              </View>
+              <View style={styles.skeletonPrice} />
+              <VStack className="mt-4" space="md">
+                {[...Array(3)].map((_, i) => (
+                  <HStack key={i} space="md" className="items-start">
+                    <View style={styles.skeletonIcon} />
+                    <View style={styles.skeletonFeature} />
+                  </HStack>
+                ))}
+              </VStack>
+            </VStack>
+          ) : (
+            <>
+              {/* Hero Section */}
+              <View className={`${paddingX} py-2`}>
+                <VStack space="md">
+                  <View className="items-center">
+                    <Image
+                      source={require("@/assets/illustrations/Upgrading.png")}
+                      resizeMode="contain"
+                      style={{ width: heroSize, height: heroSize }}
+                    />
+                  </View>
+
+                  <Text
+                    className={`${titleFont} font-vazirBold text-right text-primary-800`}
+                  >
+                    به جمع کاربران Pro بپیوندید ✨
+                  </Text>
+                  <Text
+                    className={`text-gray-600 text-right font-vazir leading-5 ${descFont}`}
+                  >
+                    به همه تمرین‌ها، مدیتیشن‌های حرفه‌ای و ابزارهای پیشرفته
+                    دسترسی پیدا کن و سفر آرامش رو با قدرت بیشتری ادامه بده.
+                  </Text>
+
+                  {/* Price Tag */}
+                  <View className="self-start mt-1">
+                    <LinearGradient
+                      colors={["#FF9966", "#E6804D"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
+                      style={{
+                        borderRadius: 16,
+                        paddingHorizontal: 16,
+                        paddingVertical: 8,
+                      }}
+                    >
+                      <HStack space="sm" className="items-center">
+                        <Text
+                          className={`text-white font-vazirBold ${priceFont}`}
+                        >
+                          {proPlan?.price?.toLocaleString()} هزار تومان
+                        </Text>
+                        {proPlan?.oldPrice && (
+                          <Text
+                            className={`text-white/70 font-vazir line-through text-xs`}
+                          >
+                            {proPlan.oldPrice.toLocaleString()} هزار تومان
+                          </Text>
+                        )}
+                        <View className="bg-white/20 px-2 py-0.5 rounded-full">
+                          <Text className="text-white font-vazirBold text-xs">
+                            ماهانه
+                          </Text>
+                        </View>
+                      </HStack>
+                    </LinearGradient>
+                  </View>
+                </VStack>
+              </View>
+
+              {/* Benefits Section */}
+              <View className={`${paddingX} mt-4 mb-4`}>
+                <VStack space="md">
+                  <Text className="text-primary-700 font-vazirBold text-right text-base">
+                    🎁 مزایای ویژه Pro
+                  </Text>
+                  {features?.map((b: string, idx: number) => (
+                    <Animated.View
+                      key={idx}
+                      entering={FadeInUp.duration(500)
+                        .delay(idx * 100)
+                        .springify()}
+                    >
+                      <HStack space="md" className="items-start">
+                        <View className="bg-accent-500/20 rounded-full p-1">
+                          <AntDesign name="check" size={16} color="#FF9966" />
+                        </View>
+                        <VStack space="xs" className="flex-1">
+                          <Text
+                            className={`text-right font-vazirBold ${descFont} text-gray-700`}
+                          >
+                            {b}
+                          </Text>
+                        </VStack>
+                      </HStack>
+                    </Animated.View>
                   ))}
                 </VStack>
-              </VStack>
-            ) : (
-              <>
-                {/* Hero Section */}
-                <View className={`${paddingX} py-2`}>
-                  <VStack space="md">
-                    <View className="items-center">
-                      <Image
-                        source={require("@/assets/illustrations/Upgrading.png")}
-                        resizeMode="contain"
-                        style={{ width: heroSize, height: heroSize }}
-                      />
-                    </View>
+              </View>
+            </>
+          )}
+        </ScrollView>
 
-                    <Text
-                      className={`${titleFont} font-vazirBold text-right text-primary-800`}
-                    >
-                      به جمع کاربران Pro بپیوندید ✨
-                    </Text>
-                    <Text
-                      className={`text-gray-600 text-right font-vazir leading-5 ${descFont}`}
-                    >
-                      به همه تمرین‌ها، مدیتیشن‌های حرفه‌ای و ابزارهای پیشرفته
-                      دسترسی پیدا کن و سفر آرامش رو با قدرت بیشتری ادامه بده.
-                    </Text>
+        {/* Bottom CTA - Fixed at bottom */}
+        <View className="border-t border-gray-100 bg-white/95 p-4 pb-6">
+          <VStack space="md">
+            <TouchableOpacity
+              onPress={() => handleSubscribe(proPlan?.id || "0")}
+              onPressIn={handlePressIn}
+              onPressOut={handlePressOut}
+              activeOpacity={0.9}
+              disabled={isLoading}
+            >
+              <Animated.View style={buttonAnimatedStyle}>
+                <LinearGradient
+                  colors={["#79AED6", "#9966CC"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={{
+                    borderRadius: 16,
+                    paddingVertical: 14,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "row",
+                    gap: 8,
+                  }}
+                >
+                  {isLoading ? (
+                    <ButtonSpinner color="white" />
+                  ) : (
+                    <>
+                      <Ionicons name="diamond" size={20} color="white" />
+                      <Text className="text-white font-vazirBold text-base">
+                        خرید اشتراک Pro
+                      </Text>
+                    </>
+                  )}
+                </LinearGradient>
+              </Animated.View>
+            </TouchableOpacity>
 
-                    {/* Price Tag */}
-                    <View className="self-start mt-1">
-                      <LinearGradient
-                        colors={["#FF9966", "#E6804D"]}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={{
-                          borderRadius: 16,
-                          paddingHorizontal: 16,
-                          paddingVertical: 8,
-                        }}
-                      >
-                        <HStack space="sm" className="items-center">
-                          <Text
-                            className={`text-white font-vazirBold ${priceFont}`}
-                          >
-                            {proPlan?.price?.toLocaleString()} هزار تومان
-                          </Text>
-                          {proPlan?.oldPrice && (
-                            <Text
-                              className={`text-white/70 font-vazir line-through text-xs`}
-                            >
-                              {proPlan.oldPrice.toLocaleString()} هزار تومان
-                            </Text>
-                          )}
-                          <View className="bg-white/20 px-2 py-0.5 rounded-full">
-                            <Text className="text-white font-vazirBold text-xs">
-                              ماهانه
-                            </Text>
-                          </View>
-                        </HStack>
-                      </LinearGradient>
-                    </View>
-                  </VStack>
-                </View>
+            <Button
+              variant="outline"
+              onPress={onClose}
+              className="border-gray-200 rounded-full h-12"
+            >
+              <ButtonText className="text-gray-600 font-vazir">
+                ادامه با نسخه رایگان
+              </ButtonText>
+            </Button>
 
-                {/* Benefits Section */}
-                <View className={`${paddingX} mt-4 mb-4`}>
-                  <VStack space="md">
-                    <Text className="text-primary-700 font-vazirBold text-right text-base">
-                      🎁 مزایای ویژه Pro
-                    </Text>
-                    {features?.map((b: string, idx: number) => (
-                      <Animated.View
-                        key={idx}
-                        entering={FadeInUp.duration(500)
-                          .delay(idx * 100)
-                          .springify()}
-                      >
-                        <HStack space="md" className="items-start">
-                          <View className="bg-accent-500/20 rounded-full p-1">
-                            <AntDesign name="check" size={16} color="#FF9966" />
-                          </View>
-                          <VStack space="xs" className="flex-1">
-                            <Text
-                              className={`text-right font-vazirBold ${descFont} text-gray-700`}
-                            >
-                              {b}
-                            </Text>
-                          </VStack>
-                        </HStack>
-                      </Animated.View>
-                    ))}
-                  </VStack>
-                </View>
-              </>
-            )}
-          </ScrollView>
-
-          {/* Bottom CTA - Fixed at bottom */}
-          <View className="border-t border-gray-100 bg-white/95 p-4 pb-6">
-            <VStack space="md">
-              <TouchableOpacity
-                onPress={() => handleSubscribe(proPlan?.id || "0")}
-                onPressIn={handlePressIn}
-                onPressOut={handlePressOut}
-                activeOpacity={0.9}
-                disabled={isLoading}
-              >
-                <Animated.View style={buttonAnimatedStyle}>
-                  <LinearGradient
-                    colors={["#79AED6", "#9966CC"]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    style={{
-                      borderRadius: 16,
-                      paddingVertical: 14,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexDirection: "row",
-                      gap: 8,
-                    }}
-                  >
-                    {isLoading ? (
-                      <ButtonSpinner color="white" />
-                    ) : (
-                      <>
-                        <Ionicons name="diamond" size={20} color="white" />
-                        <Text className="text-white font-vazirBold text-base">
-                          خرید اشتراک Pro
-                        </Text>
-                      </>
-                    )}
-                  </LinearGradient>
-                </Animated.View>
-              </TouchableOpacity>
-
-              <Button
-                variant="outline"
-                onPress={onClose}
-                className="border-gray-200 rounded-full h-12"
-              >
-                <ButtonText className="text-gray-600 font-vazir">
-                  ادامه با نسخه رایگان
-                </ButtonText>
-              </Button>
-
-              <Text className="text-center text-gray-400 text-xs font-vazir">
-                با ادامه، با قوانین و حریم خصوصی موافقم
-              </Text>
-            </VStack>
-          </View>
-        </SafeAreaView>
+            <Text className="text-center text-gray-400 text-xs font-vazir">
+              با ادامه، با قوانین و حریم خصوصی موافقم
+            </Text>
+          </VStack>
+        </View>
       </LinearGradient>
     </Modal>
   );

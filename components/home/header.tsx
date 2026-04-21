@@ -12,7 +12,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { HStack } from "../ui/hstack";
 import Logo from "../ui/logo";
@@ -65,63 +64,61 @@ export default function CustomHeader() {
   };
 
   return (
-    <SafeAreaView edges={["top"]} className="bg-white">
-      <Animated.View entering={FadeIn.duration(500)}>
-        <HStack
-          space="md"
-          className="items-center bg-white/95 backdrop-blur-sm py-3 px-4 justify-between border-b border-gray-100 shadow-sm"
-        >
-          {/* Left - Streak Section with fixed width */}
-          <View className="w-24">
-            <AnimatedPressable
-              style={streakAnimatedStyle}
-              className="items-center flex-row py-2 rounded-full active:opacity-70"
-              onPress={handleStreakPress}
-            >
-              <View className="flex-row items-center gap-1.5 bg-primary-50 px-3 py-1.5 rounded-full">
-                <MaterialIcons name="whatshot" size={18} color="#FF9966" />
-                <Text className="text-base font-vazirBold text-primary-700">
-                  {toPersianDigits(data?.data.totalMoodDays || 0)}
-                </Text>
-              </View>
-            </AnimatedPressable>
-          </View>
+    <Animated.View entering={FadeIn.duration(500)}>
+      <HStack
+        space="md"
+        className="items-center bg-white/95 backdrop-blur-sm py-3 px-4 justify-between border-b border-gray-100 shadow-sm"
+      >
+        {/* Left - Streak Section with fixed width */}
+        <View className="w-24">
+          <AnimatedPressable
+            style={streakAnimatedStyle}
+            className="items-center flex-row py-2 rounded-full active:opacity-70"
+            onPress={handleStreakPress}
+          >
+            <View className="flex-row items-center gap-1.5 bg-primary-50 px-3 py-1.5 rounded-full">
+              <MaterialIcons name="whatshot" size={18} color="#FF9966" />
+              <Text className="text-base font-vazirBold text-primary-700">
+                {toPersianDigits(data?.data.totalMoodDays || 0)}
+              </Text>
+            </View>
+          </AnimatedPressable>
+        </View>
 
-          {/* Middle - Logo - Now truly centered */}
-          <View className="items-center justify-center flex-1">
-            <Logo className="h-12 w-20" />
-          </View>
+        {/* Middle - Logo - Now truly centered */}
+        <View className="items-center justify-center flex-1">
+          <Logo className="h-12 w-20" />
+        </View>
 
-          {/* Right - Pro Section with fixed width */}
-          <View className="w-24 items-end">
-            <AnimatedPressable
-              style={proAnimatedStyle}
-              className="items-center flex-row  py-2 rounded-full active:opacity-70"
-              onPress={handleProPress}
-            >
-              <View className="flex-row items-center gap-1.5 bg-primary-50/50 px-3 py-1.5 rounded-full">
-                <FontAwesome6
-                  size={16}
-                  name="crown"
-                  color={isActive ? "#FF9966" : "#91A5BE"}
-                />
-                <Text
-                  className={`text-sm font-vazirBold ${
-                    isActive ? "text-accent-600" : "text-tertiary-500"
-                  }`}
-                >
-                  Pro
-                </Text>
-                {isActive && (
-                  <View className="absolute -top-1 -right-1">
-                    <View className="w-2 h-2 bg-green-500 rounded-full" />
-                  </View>
-                )}
-              </View>
-            </AnimatedPressable>
-          </View>
-        </HStack>
-      </Animated.View>
-    </SafeAreaView>
+        {/* Right - Pro Section with fixed width */}
+        <View className="w-24 items-end">
+          <AnimatedPressable
+            style={proAnimatedStyle}
+            className="items-center flex-row  py-2 rounded-full active:opacity-70"
+            onPress={handleProPress}
+          >
+            <View className="flex-row items-center gap-1.5 bg-primary-50/50 px-3 py-1.5 rounded-full">
+              <FontAwesome6
+                size={16}
+                name="crown"
+                color={isActive ? "#FF9966" : "#91A5BE"}
+              />
+              <Text
+                className={`text-sm font-vazirBold ${
+                  isActive ? "text-accent-600" : "text-tertiary-500"
+                }`}
+              >
+                Pro
+              </Text>
+              {isActive && (
+                <View className="absolute -top-1 -right-1">
+                  <View className="w-2 h-2 bg-green-500 rounded-full" />
+                </View>
+              )}
+            </View>
+          </AnimatedPressable>
+        </View>
+      </HStack>
+    </Animated.View>
   );
 }

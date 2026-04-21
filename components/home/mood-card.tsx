@@ -1,5 +1,4 @@
 import { useGetMoodQuery } from "@/services/mood/mood-adapter";
-import { toPersianDigits } from "@/utils/persian";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
@@ -160,7 +159,7 @@ const MoodCard = () => {
                 </LinearGradient>
               </Progress>
               <Text className="text-right text-primary-500 text-md font-vazir mt-1">
-                {toPersianDigits(Math.round(data?.data.progressPercent || 0))}%
+                {Math.round(data?.data.progressPercent || 0)}%
               </Text>
             </View>
 

@@ -88,9 +88,7 @@ export const scheduleDailyNotification = async (hour: number) => {
         sound: true, // Use default notification sound
       },
       trigger,
-    }).then(() => {
-      console.log("Notification scheduled successfully");
-    });
+    }).then(() => {});
   } catch (error) {
     console.error("Error scheduling notification:", error);
   }

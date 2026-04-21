@@ -9,7 +9,6 @@ import { FlatList } from "react-native";
 const AllMusics = () => {
   const { data, isLoading } = useGetBreathingsQuery(null);
   const meditations = data?.data;
-  console.log(meditations?.[0]);
   const renderMusicCard = (item: Meditation) => {
     return (
       <MusicCard

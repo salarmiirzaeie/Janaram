@@ -76,7 +76,6 @@ export default function TabLayout() {
         getNotificationsPermissions().then(async () => {
           const pusToken = await registerForPushNotificationsAsync();
           initialNotification({ pushToken: pusToken });
-          console.log(moods, "moods");
           if (moods.length > 0) {
             sendOldMoods(moods);
           }
@@ -96,7 +95,6 @@ export default function TabLayout() {
 
     const responseListener =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log("Notification response:", response);
         const { action } = response.notification.request.content.data;
         if (action === "mood") {
           router.push("/chat-bot"); // هدایت به صفحه چت‌بات

@@ -13,12 +13,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { router } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-} from "react-native";
+import { Image, KeyboardAvoidingView, Platform } from "react-native";
 import * as yup from "yup";
 
 const schema = yup.object().shape({
@@ -78,77 +73,75 @@ const Login: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1 p-4"
-      >
-        <ProgressOnboarding
-          onBack={() => router.back()}
-          currentStep={1}
-          totalSteps={8}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1 p-4"
+    >
+      <ProgressOnboarding
+        onBack={() => router.back()}
+        currentStep={1}
+        totalSteps={8}
+      />
+      <VStack className="w-full p-4">
+        <Image
+          source={require("@/assets/images/logo.png")}
+          className="w-32 h-32 mx-auto mb-6"
+          resizeMode="contain"
         />
-        <VStack className="w-full p-4">
-          <Image
-            source={require("@/assets/images/logo.png")}
-            className="w-32 h-32 mx-auto mb-6"
-            resizeMode="contain"
+
+        <VStack className="w-full">
+          <Text className="text-3xl font-vazirBold text-primary-800 text-center mb-2">
+            خوش آمدید
+          </Text>
+          <Text className="text-base font-vazir text-primary-600 text-center mb-8">
+            برای ورود شماره موبایل خود را وارد کنید
+          </Text>
+
+          <Controller
+            control={control}
+            name="phoneNumber"
+            render={({ field: { onChange, value } }) => (
+              <VStack className="mb-4">
+                <Input
+                  className={`border h-12 rounded-lg bg-white text-base text-primary-800 ${
+                    errors.phoneNumber ? "border-red-500" : "border-gray-300"
+                  }`}
+                >
+                  <InputField
+                    textContentType="oneTimeCode"
+                    autoFocus
+                    placeholder="شماره موبایل را وارد کنید"
+                    value={value}
+                    onChangeText={onChange}
+                    keyboardType="phone-pad"
+                    autoCapitalize="none"
+                    className="text-right font-vazir"
+                  />
+                </Input>
+                {errors.phoneNumber && (
+                  <Text className="text-red-500 text-sm mt-1 text-right font-vazir">
+                    {errors.phoneNumber.message}
+                  </Text>
+                )}
+              </VStack>
+            )}
           />
 
-          <VStack className="w-full">
-            <Text className="text-3xl font-vazirBold text-primary-800 text-center mb-2">
-              خوش آمدید
-            </Text>
-            <Text className="text-base font-vazir text-primary-600 text-center mb-8">
-              برای ورود شماره موبایل خود را وارد کنید
-            </Text>
-
-            <Controller
-              control={control}
-              name="phoneNumber"
-              render={({ field: { onChange, value } }) => (
-                <VStack className="mb-4">
-                  <Input
-                    className={`border h-12 rounded-lg bg-white text-base text-primary-800 ${
-                      errors.phoneNumber ? "border-red-500" : "border-gray-300"
-                    }`}
-                  >
-                    <InputField
-                      textContentType="oneTimeCode"
-                      autoFocus
-                      placeholder="شماره موبایل را وارد کنید"
-                      value={value}
-                      onChangeText={onChange}
-                      keyboardType="phone-pad"
-                      autoCapitalize="none"
-                      className="text-right font-vazir"
-                    />
-                  </Input>
-                  {errors.phoneNumber && (
-                    <Text className="text-red-500 text-sm mt-1 text-right font-vazir">
-                      {errors.phoneNumber.message}
-                    </Text>
-                  )}
-                </VStack>
-              )}
-            />
-
-            <Button
-              className="rounded-lg p-3 bg-primary-500 mt-4"
-              onPress={handleSubmit(onSubmit)}
-            >
-              {isLoadingOTP ? (
-                <ButtonSpinner color="white" />
-              ) : (
-                <ButtonText className="text-white text-base font-vazirBold">
-                  دریافت کد تایید
-                </ButtonText>
-              )}
-            </Button>
-          </VStack>
+          <Button
+            className="rounded-lg p-3 bg-primary-500 mt-4"
+            onPress={handleSubmit(onSubmit)}
+          >
+            {isLoadingOTP ? (
+              <ButtonSpinner color="white" />
+            ) : (
+              <ButtonText className="text-white text-base font-vazirBold">
+                دریافت کد تایید
+              </ButtonText>
+            )}
+          </Button>
         </VStack>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </VStack>
+    </KeyboardAvoidingView>
   );
 };
 

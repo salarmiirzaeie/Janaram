@@ -1,4 +1,5 @@
 import SleepCourseCard from "@/components/sleep/course-card-sleep";
+import { MainHeader } from "@/components/sleep/main-header";
 import { HStack } from "@/components/ui/hstack";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/text";
@@ -22,7 +23,6 @@ import {
   View,
 } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 // ========== استایل‌های استاتیک با StyleSheet ==========
 const createStyles = (CARD_WIDTH: number, SMALL_CARD_WIDTH: number) =>
@@ -161,42 +161,6 @@ const SectionHeader = React.memo(
       </HStack>
     </HStack>
   )
-);
-
-// ========== کامپوننت مجزا برای هدر اصلی ==========
-const MainHeader = React.memo(
-  ({ onSearch, onBack }: { onSearch: () => void; onBack: () => void }) => {
-    const { width } = useWindowDimensions();
-    const styles = useMemo(() => createStyles(width, 0), [width]);
-
-    return (
-      <LinearGradient
-        colors={["#1a1a2e", "#16213e"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={styles.mainHeaderGradient}
-      >
-        <HStack className="items-center justify-between">
-          <TouchableOpacity
-            onPress={onSearch}
-            className="w-10 h-10 rounded-full bg-white/10 justify-center items-center"
-          >
-            <Feather name="search" size={20} color="white" />
-          </TouchableOpacity>
-          <HStack space="sm" className="items-center">
-            <Feather name="moon" size={20} color="#79AED6" />
-            <Text className="text-white font-vazirBold text-lg">خواب آرام</Text>
-          </HStack>
-          <TouchableOpacity
-            onPress={onBack}
-            className="w-10 h-10 rounded-full bg-transparent justify-center items-center"
-          >
-            <View className="w-6 h-6" />
-          </TouchableOpacity>
-        </HStack>
-      </LinearGradient>
-    );
-  }
 );
 
 // ========== کامپوننت مجزا برای بخش نکات ==========
@@ -444,7 +408,7 @@ const Sleep = () => {
   }, []);
 
   const handleSearch = useCallback(() => {
-    router.push("/explore/search-page");
+    router.push("/search-page");
   }, []);
 
   const handleSeeAllStories = useCallback(() => {
@@ -536,13 +500,13 @@ const Sleep = () => {
       colors={["#16213e", "#0a0a0f", "#1a1a2e"]}
       style={{ flex: 1 }}
     >
-      <SafeAreaView edges={["top"]} className="flex-1 mb-16 bg-transparent">
+      <View className="flex-1 mb-16 bg-transparent">
         <FlatList
           data={sectionsData}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => item.component}
           ListHeaderComponent={
-            <MainHeader onSearch={handleSearch} onBack={handleBack} />
+            <MainHeader showIcons onSearch={handleSearch} onBack={handleBack} />
           }
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 30 }}
@@ -551,7 +515,7 @@ const Sleep = () => {
           windowSize={5}
           removeClippedSubviews={true}
         />
-      </SafeAreaView>
+      </View>
     </LinearGradient>
   );
 };
