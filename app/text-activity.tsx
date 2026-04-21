@@ -293,7 +293,7 @@ export default function TextActivityScreen() {
                   backgroundColor: "#FFFFFF",
                 }}
               >
-                <Textarea className="border-0 bg-transparent h-48 p-4">
+                <Textarea className="border-0 bg-transparent h-80 p-4">
                   <TextareaInput
                     className="text-right font-vazir text-base"
                     value={text}

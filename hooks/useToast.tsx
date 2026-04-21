@@ -1,4 +1,9 @@
-import { Toast, ToastDescription, ToastTitle, useToast } from "@/components/ui/toast";
+import {
+  Toast,
+  ToastDescription,
+  ToastTitle,
+  useToast,
+} from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 
 export const useCustomToast = () => {
@@ -21,7 +26,7 @@ export const useCustomToast = () => {
         const uniqueToastId = "toast-" + id;
         return (
           <Toast
-            style={{ width: "95%", alignSelf: "center", marginBottom: 76 }}
+            style={{ alignSelf: "center", marginBottom: 76 }}
             className={
               type === "success"
                 ? "bg-white border border-success-300 flex-row  items-center"
@@ -32,8 +37,12 @@ export const useCustomToast = () => {
             variant="outline"
           >
             <VStack>
-              {title && <ToastTitle>{title}</ToastTitle>}
-              <ToastDescription>{msg}</ToastDescription>
+              {title && (
+                <ToastTitle className="font-vazirBold">{title}</ToastTitle>
+              )}
+              <ToastDescription className="font-vazir text-right flex-1">
+                {msg}
+              </ToastDescription>
             </VStack>
           </Toast>
         );

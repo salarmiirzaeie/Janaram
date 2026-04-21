@@ -30,47 +30,50 @@ import Animated, { FadeInUp } from "react-native-reanimated";
 const QuickAccessItem = React.memo(
   ({ item, index }: { item: any; index: number }) => {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          if (item.route === "/psychologist") {
-            Linking.openURL("http://10.213.178.162:3000/psychologist");
-            return;
-          }
-          if (item.route?.pathname) {
-            router.push({
-              pathname: item.route?.pathname,
-              params: item.route?.params,
-            });
-            return;
-          }
+      <VStack>
+        <TouchableOpacity
+          className="aspect-square"
+          onPress={() => {
+            if (item.route === "/psychologist") {
+              Linking.openURL("https://janaram.ir/psychologist");
+              return;
+            }
+            if (item.route?.pathname) {
+              router.push({
+                pathname: item.route?.pathname,
+                params: item.route?.params,
+              });
+              return;
+            }
 
-          router.push(item.route as any);
-        }}
-        activeOpacity={0.8}
-        style={{ flex: 1 }}
-      >
-        <LinearGradient
-          colors={item.color}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={{
-            borderRadius: 16,
-            paddingVertical: 12,
-            alignItems: "center",
-            justifyContent: "center",
-            shadowColor: item.color[0],
-            shadowOffset: { width: 0, height: 3 },
-            shadowOpacity: 0.2,
-            shadowRadius: 6,
-            elevation: 4,
+            router.push(item.route as any);
           }}
+          activeOpacity={0.8}
+          style={{ flex: 1 }}
         >
-          <View className="mb-1.5">{item.icon}</View>
-          <Text className="text-white font-vazirBold text-[11px] text-center">
-            {item.title}
-          </Text>
-        </LinearGradient>
-      </TouchableOpacity>
+          <LinearGradient
+            colors={item.color}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{
+              borderRadius: 16,
+              alignItems: "center",
+              justifyContent: "center",
+              shadowColor: item.color[0],
+              shadowOffset: { width: 0, height: 3 },
+              shadowOpacity: 0.2,
+              shadowRadius: 6,
+              elevation: 4,
+              flex: 1,
+            }}
+          >
+            <View>{item.icon}</View>
+          </LinearGradient>
+        </TouchableOpacity>
+        <Text className="font-vazirBold mt-2 text-sm text-center">
+          {item.title}
+        </Text>
+      </VStack>
     );
   }
 );
@@ -318,8 +321,9 @@ const Home = () => {
         windowSize={5}
         removeClippedSubviews={true}
       />
-
-      <RateAppSheet isOpen={showRateModal} onClose={handleCloseRateModal} />
+      {showRateModal && (
+        <RateAppSheet isOpen={showRateModal} onClose={handleCloseRateModal} />
+      )}
     </LinearGradient>
   );
 };

@@ -110,11 +110,11 @@ const MoodCard = () => {
               <HStack space="md" className="items-center">
                 <View className="flex-row items-center gap-2">
                   <Text className="text-3xl font-vazirBold text-primary-600">
-                    {toPersianDigits(data?.data.completedExercises || 0)}
+                    {data?.data.completedExercises || 0}
                   </Text>
                   <Text className="text-xl font-vazir text-primary-400">/</Text>
                   <Text className="text-xl font-vazir text-primary-400">
-                    {toPersianDigits(data?.data.totalExercises || 0)}
+                    {data?.data.totalExercises || 0}
                   </Text>
                 </View>
                 {isComplete && (
@@ -198,10 +198,10 @@ const MoodCard = () => {
                       </Text>
                       <Text className="font-vazir text-sm text-white/90 text-right">
                         {!isComplete
-                          ? `${toPersianDigits(
+                          ? `${
                               (data?.data.totalExercises || 0) -
-                                (data?.data.completedExercises || 0)
-                            )} تمرین برای تکمیل روز باقی مانده`
+                              (data?.data.completedExercises || 0)
+                            } تمرین برای تکمیل روز باقی مانده`
                           : "همه تمرین های امروز تکمیل شد"}
                       </Text>
                     </View>
@@ -226,16 +226,20 @@ const MoodCard = () => {
         </Animated.View>
       )}
 
-      <MoodAct
-        handleStreakModal={handleStreakModal}
-        isOpen={moodSheet}
-        onClose={() => setMoodSheet(false)}
-      />
-      <StreakModal
-        streakCount={data?.data.totalMoodDays || 0}
-        showStreakModal={showStreakModal}
-        onClose={() => setShowStreakModal(false)}
-      />
+      {moodSheet && (
+        <MoodAct
+          handleStreakModal={handleStreakModal}
+          isOpen={moodSheet}
+          onClose={() => setMoodSheet(false)}
+        />
+      )}
+      {showStreakModal && (
+        <StreakModal
+          streakCount={data?.data.totalMoodDays || 0}
+          showStreakModal={showStreakModal}
+          onClose={() => setShowStreakModal(false)}
+        />
+      )}
     </VStack>
   );
 };

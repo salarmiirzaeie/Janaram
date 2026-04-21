@@ -375,7 +375,11 @@ export default function BreathingPlayerScreen() {
         </View>
 
         {/* Info Sheet */}
-        <Actionsheet isOpen={isSheetOpen} onClose={() => setIsSheetOpen(false)}>
+        <Actionsheet
+          isOpen={isSheetOpen}
+          closeOnOverlayClick={false}
+          onClose={() => setIsSheetOpen(false)}
+        >
           <ActionsheetBackdrop />
           <ActionsheetContent className="bg-white rounded-t-3xl">
             <ActionsheetDragIndicatorWrapper>

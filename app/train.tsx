@@ -28,7 +28,6 @@ import { useDispatch } from "react-redux";
 const Train = () => {
   const animationRef = React.useRef(null);
   const { data, isLoading } = useGetExerciseQuery(null);
-  console.log(data?.data);
   const { data: mood, isLoading: moodLoading } = useGetMoodQuery(null);
   const [fakeLoading, setFakeLoading] = React.useState(true);
   const [completeExercise, { isLoading: completeLoading }] =

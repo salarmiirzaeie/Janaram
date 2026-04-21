@@ -76,7 +76,7 @@ const ActionButtons = React.memo(
           >
             <AntDesign name="thunderbolt" size={20} color="white" />
             <Text className="text-white font-vazirBold text-base">
-              تحلیل شخصیت من
+              تحلیل شخصیت من با AI
             </Text>
           </LinearGradient>
         </TouchableOpacity>

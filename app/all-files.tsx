@@ -23,7 +23,9 @@ const AllMusics = () => {
   );
 
   const renderMusicCard = useCallback(({ item }: { item: Meditation }) => {
-    return <MusicCard item={item} />;
+    return (
+      <MusicCard isPro={item.isPro || item.isPremium || false} item={item} />
+    );
   }, []);
 
   const keyExtractor = useCallback(

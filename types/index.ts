@@ -108,4 +108,5 @@ export interface Meditation {
   holdDuration?: number;
   isPro?: boolean;
   createdAt?: Date;
+  isPremium?: boolean;
 }

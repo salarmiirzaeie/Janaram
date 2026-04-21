@@ -16,10 +16,11 @@ import { VStack } from "../ui/vstack";
 interface MusicCardProps {
   item: Meditation;
   isBreathing?: boolean;
+  isPro: boolean;
 }
 
 const MusicCard = React.memo(
-  ({ item, isBreathing = false }: MusicCardProps) => {
+  ({ item, isBreathing = false, isPro }: MusicCardProps) => {
     // ✅ Defensive check: if item is undefined/null, render nothing
     if (!item) return null;
 
@@ -33,7 +34,7 @@ const MusicCard = React.memo(
       [plans?.data.plans]
     );
 
-    const isProAndNotActive = item.isPro && !proPlan?.isActive;
+    const isProAndNotActive = isPro && !proPlan?.isActive;
 
     const handleOpenNotProModal = useCallback(() => {
       dispatch({
@@ -84,7 +85,7 @@ const MusicCard = React.memo(
         className="rounded-2xl bg-white shadow-sm px-4 h-20 items-center mb-3 active:opacity-70"
         onPress={handleCardPress}
       >
-        {item.isPro && (
+        {isPro && (
           <Badge className="absolute right-10 bg-black z-50 rounded-b-xl top-0">
             <BadgeText className="font-vazir text-white">Pro</BadgeText>
           </Badge>
@@ -106,13 +107,14 @@ const MusicCard = React.memo(
             <Text className="text-xs text-muted-foreground">
               {item.duration}
             </Text>
-            {isLoading ? (
-              <Spinner />
-            ) : (
-              <Pressable onPress={handlePlay}>
-                <Entypo name="controller-play" size={24} color="black" />
-              </Pressable>
-            )}
+            {!isBreathing &&
+              (isLoading ? (
+                <Spinner />
+              ) : (
+                <Pressable onPress={handlePlay}>
+                  <Entypo name="controller-play" size={24} color="black" />
+                </Pressable>
+              ))}
           </HStack>
         </HStack>
       </Pressable>
