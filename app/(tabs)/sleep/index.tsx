@@ -29,7 +29,7 @@ const createStyles = (CARD_WIDTH: number, SMALL_CARD_WIDTH: number) =>
   StyleSheet.create({
     storyCardGradient: {
       width: CARD_WIDTH,
-      height: 220,
+      height: 190,
       borderRadius: 24,
       marginHorizontal: 8,
       overflow: "hidden",
@@ -106,7 +106,7 @@ const StoryCard = React.memo(({ item }: { item: any; index: number }) => {
 
         <View className="flex-1 justify-between p-6">
           <View>
-            <Text className="text-white font-vazirBold text-2xl text-right mb-2">
+            <Text className="text-white font-vazirBold  text-xl text-right mb-2">
               {item.title}
             </Text>
             <Text className="text-white/70 font-vazir text-sm text-right line-clamp-2">
@@ -169,7 +169,7 @@ const TipsSection = React.memo(() => {
   const styles = useMemo(() => createStyles(width, 0), [width]);
 
   return (
-    <View className="mx-5 mt-8 mb-40">
+    <View className="mx-5 mt-8 mb-4">
       <LinearGradient
         colors={["#1a1a2e", "#16213e"]}
         start={{ x: 0, y: 0 }}
@@ -353,7 +353,7 @@ const SleepMusicSection = React.memo(
     if (data.length === 0 && !isLoading) return null;
 
     return (
-      <VStack space="lg" className="mt-6">
+      <VStack space="lg" className="mt-6 mb-36">
         <SectionHeader
           title="آهنگ‌های خواب"
           icon={<Ionicons name="musical-notes" size={22} color="#79AED6" />}
@@ -438,7 +438,10 @@ const Sleep = () => {
   // آرایه داده برای FlatList اصلی
   const sectionsData = useMemo(() => {
     const result: { id: string; component: React.ReactElement }[] = [];
-
+    result.push({
+      id: "tips",
+      component: tipsElement,
+    });
     if (sleepStories.length > 0 || isLoading) {
       result.push({
         id: "stories",
@@ -478,11 +481,6 @@ const Sleep = () => {
       });
     }
 
-    result.push({
-      id: "tips",
-      component: tipsElement,
-    });
-
     return result;
   }, [
     sleepStories,
@@ -500,7 +498,7 @@ const Sleep = () => {
       colors={["#16213e", "#0a0a0f", "#1a1a2e"]}
       style={{ flex: 1 }}
     >
-      <View className="flex-1 mb-16 bg-transparent">
+      <View className="flex-1 mb-16  bg-transparent">
         <FlatList
           data={sectionsData}
           keyExtractor={(item) => item.id}

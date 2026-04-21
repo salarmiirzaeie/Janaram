@@ -20,6 +20,7 @@ import {
   BackHandler,
   FlatList,
   Linking,
+  ScrollView,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -32,7 +33,7 @@ const QuickAccessItem = React.memo(
     return (
       <VStack>
         <TouchableOpacity
-          className="aspect-square"
+          className="aspect-square  h-14"
           onPress={() => {
             if (item.route === "/psychologist") {
               Linking.openURL("https://janaram.ir/psychologist");
@@ -81,13 +82,15 @@ const QuickAccessItem = React.memo(
 // ========== کامپوننت مجزا برای بخش دسترسی سریع ==========
 const QuickAccessGrid = React.memo(({ items }: { items: any[] }) => {
   return (
-    <View className="px-5 mt-6">
-      <View className="flex-row justify-between gap-2">
-        {items.map((item, index) => (
-          <QuickAccessItem key={item.id} item={item} index={index} />
-        ))}
+    <ScrollView showsHorizontalScrollIndicator={false} horizontal>
+      <View className="px-5 mt-6">
+        <View className="flex-row justify-between gap-2">
+          {items.map((item, index) => (
+            <QuickAccessItem key={item.id} item={item} index={index} />
+          ))}
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 });
 

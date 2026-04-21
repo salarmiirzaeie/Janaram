@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 import Animated, { SlideInRight, SlideOutLeft } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -131,100 +132,103 @@ const SingleTest = () => {
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
   return (
-    <View className="flex-1 bg-white">
-      {/* Header with progress */}
-      <View className="px-5 pt-4 pb-2">
-        <Text className="text-lg font-vazirBold text-gray-800 text-right">
-          {data.data.test_name}
-        </Text>
-        <View className="h-2 bg-gray-200 rounded-full mt-2">
-          <View
-            className="h-2 bg-indigo-500 rounded-full"
-            style={{ width: `${progress}%` }}
-          />
-        </View>
-        <Text className="text-sm text-gray-500 font-vazir text-right mt-1">
-          سوال {currentIndex + 1} از {totalQuestions}
-        </Text>
-      </View>
+    <SafeAreaView edges={["bottom"]} className="flex-1">
+      <View className="flex-1 bg-white">
+        {/* Header with progress */}
 
-      {/* Question card with animation */}
-      <View className="flex-1 px-5">
-        <Animated.View
-          key={currentIndex}
-          entering={SlideInRight.duration(300)}
-          exiting={SlideOutLeft.duration(300)}
-          className="flex-1"
-        >
-          <View className="bg-gray-50 rounded-2xl p-6 shadow-sm mb-6">
-            <Text className="text-xl font-vazirBold text-gray-800 text-right leading-8">
-              {currentQuestion.text}
-            </Text>
+        <View className="px-5 pt-4 pb-2">
+          <Text className="text-lg font-vazirBold text-gray-800 text-right">
+            {data.data.test_name}
+          </Text>
+          <View className="h-2 bg-gray-200 rounded-full mt-2">
+            <View
+              className="h-2 bg-indigo-500 rounded-full"
+              style={{ width: `${progress}%` }}
+            />
           </View>
+          <Text className="text-sm text-gray-500 font-vazir text-right mt-1">
+            سوال {currentIndex + 1} از {totalQuestions}
+          </Text>
+        </View>
 
-          {/* Options */}
-          <View className="space-y-3">
-            {currentQuestion.options.map((option, idx) => {
-              const isSelected = currentAnswer === option.score;
-              return (
-                <TouchableOpacity
-                  key={idx}
-                  onPress={() => handleAnswer(option.score)}
-                  className={`p-4 mb-2 rounded-xl border ${
-                    isSelected
-                      ? "bg-indigo-100 border-indigo-500"
-                      : "bg-white border-gray-200"
-                  }`}
-                >
-                  <Text
-                    className={`text-right font-vazir  ${
-                      isSelected ? "text-indigo-700 " : "text-gray-700"
+        {/* Question card with animation */}
+        <View className="flex-1 px-5">
+          <Animated.View
+            key={currentIndex}
+            entering={SlideInRight.duration(300)}
+            exiting={SlideOutLeft.duration(300)}
+            className="flex-1"
+          >
+            <View className="bg-gray-50 rounded-2xl p-6 shadow-sm mb-6">
+              <Text className="text-xl font-vazirBold text-gray-800 text-right leading-8">
+                {currentQuestion.text}
+              </Text>
+            </View>
+
+            {/* Options */}
+            <View className="space-y-3">
+              {currentQuestion.options.map((option, idx) => {
+                const isSelected = currentAnswer === option.score;
+                return (
+                  <TouchableOpacity
+                    key={idx}
+                    onPress={() => handleAnswer(option.score)}
+                    className={`p-4 mb-2 rounded-xl border ${
+                      isSelected
+                        ? "bg-indigo-100 border-indigo-500"
+                        : "bg-white border-gray-200"
                     }`}
                   >
-                    {option.text}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </Animated.View>
-      </View>
+                    <Text
+                      className={`text-right font-vazir  ${
+                        isSelected ? "text-indigo-700 " : "text-gray-700"
+                      }`}
+                    >
+                      {option.text}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </Animated.View>
+        </View>
 
-      {/* Navigation buttons */}
-      <View className="flex-row justify-between px-5 py-4 border-t border-gray-100">
-        {currentIndex > 0 ? (
-          <TouchableOpacity
-            onPress={goToPrev}
-            disabled={isTransitioning}
-            className="px-6 py-3 rounded-xl bg-gray-200"
-          >
-            <Text className="text-gray-700 font-vazir  ">قبلی</Text>
-          </TouchableOpacity>
-        ) : (
-          <View />
-        )}
+        {/* Navigation buttons */}
+        <View className="flex-row justify-between px-5 py-4 border-t border-gray-100">
+          {currentIndex > 0 ? (
+            <TouchableOpacity
+              onPress={goToPrev}
+              disabled={isTransitioning}
+              className="px-6 py-3 rounded-xl bg-gray-200"
+            >
+              <Text className="text-gray-700 font-vazir  ">قبلی</Text>
+            </TouchableOpacity>
+          ) : (
+            <View />
+          )}
 
-        {currentIndex === totalQuestions - 1 ? (
-          <TouchableOpacity
-            onPress={handleSubmit}
-            disabled={isSubmitting || isTransitioning}
-            className="px-6 py-3  rounded-xl bg-indigo-600"
-          >
-            <Text className="text-white  font-vazir">
-              {isSubmitting ? "در حال ارسال..." : "دریافت نتیجه"}
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            onPress={goToNext}
-            disabled={isTransitioning}
-            className="px-6 py-3 rounded-xl bg-indigo-600"
-          >
-            <Text className="text-white text-base font-vazir">بعدی</Text>
-          </TouchableOpacity>
-        )}
+          {currentIndex === totalQuestions - 1 ? (
+            <TouchableOpacity
+              onPress={handleSubmit}
+              disabled={isSubmitting || isTransitioning}
+              className="px-6 py-3  rounded-xl bg-indigo-600"
+            >
+              <Text className="text-white  font-vazir">
+                {isSubmitting ? "در حال ارسال..." : "دریافت نتیجه"}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={goToNext}
+              disabled={isTransitioning}
+              className="px-6 py-3 rounded-xl bg-indigo-600"
+            >
+              <Text className="text-white text-base font-vazir">بعدی</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

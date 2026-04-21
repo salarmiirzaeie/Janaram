@@ -276,16 +276,6 @@ const Explore = () => {
       });
     }
 
-    if (m.instrumental?.length) {
-      sections.push({
-        id: "instrumental",
-        title: "بی کلام",
-        icon: <FontAwesome5 name="guitar" size={22} color="#91A5BE" />,
-        data: m.instrumental,
-        onSeeAll: () => handleSeeAllPress("instrumental", "بی کلام"),
-      });
-    }
-
     if (m.nature?.length) {
       sections.push({
         id: "nature",
@@ -380,7 +370,7 @@ const Explore = () => {
           </>
         }
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 100, paddingTop: 32 }}
+        contentContainerStyle={{ paddingBottom: 200, paddingTop: 16 }}
         initialNumToRender={2}
         maxToRenderPerBatch={2}
         windowSize={3}

@@ -82,7 +82,7 @@ const AnimatedTabBar: React.FC<TabBarProps> = ({
     const labels: Record<string, string> = {
       "(home)": "خانه",
       explore: "مدیتیشن",
-      sleep: "خواب خوب",
+      sleep: "خواب آرام",
       reports: "حال من",
       setting: "پروفایل",
     };
@@ -201,14 +201,6 @@ const AnimatedTabBar: React.FC<TabBarProps> = ({
                 </Animated.Text>
 
                 {/* Active indicator dot */}
-                {isFocused && (
-                  <Animated.View style={styles.activeDot}>
-                    <LinearGradient
-                      colors={["#47A9DA", "#3D8FB8"]}
-                      style={styles.activeDotGradient}
-                    />
-                  </Animated.View>
-                )}
               </TouchableOpacity>
             );
           })}

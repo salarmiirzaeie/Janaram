@@ -1,10 +1,10 @@
 import { Stack } from "expo-router";
 import React from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const _layout = () => {
   return (
-    <SafeAreaProvider>
+    <SafeAreaView className="flex-1">
       <Stack>
         <Stack.Screen
           name="login"
@@ -12,6 +12,7 @@ const _layout = () => {
             headerShown: false,
           }}
         />
+
         <Stack.Screen
           name="verifyOTP"
           options={{
@@ -61,7 +62,7 @@ const _layout = () => {
           }}
         />
       </Stack>
-    </SafeAreaProvider>
+    </SafeAreaView>
   );
 };
 

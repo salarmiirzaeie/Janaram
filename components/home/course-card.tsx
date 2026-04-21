@@ -2,7 +2,7 @@ import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
-import { toPersianDigits } from "@/utils/persian";
+import { toPersianDigits, typeTopPersian } from "@/utils/persian";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
@@ -79,7 +79,7 @@ const STATIC_STYLES = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     padding: 16,
-    paddingTop: 20,
+    paddingTop: 13,
   },
   durationBadge: {
     backgroundColor: "rgba(255,255,255,0.2)",
@@ -351,7 +351,9 @@ const CourseCard: React.FC<CourseCardProps> = React.memo(({ index, item }) => {
                     size={12}
                     color="rgba(255,255,255,0.9)"
                   />
-                  <Text style={STATIC_STYLES.categoryText}>{item.type}</Text>
+                  <Text style={STATIC_STYLES.categoryText}>
+                    {typeTopPersian(item.type)}
+                  </Text>
                 </View>
 
                 {isLoading ? (

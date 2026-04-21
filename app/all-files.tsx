@@ -42,13 +42,13 @@ const AllMusics = () => {
   }
 
   return (
-    <VStack className="flex-1 bg-background-50 p-4">
+    <VStack className="flex-1 bg-background-50  p-4">
       <FlatList
         data={meditations}
         keyExtractor={keyExtractor}
         renderItem={renderMusicCard}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 20 }}
+        contentContainerStyle={{ paddingBottom: 40 }}
         initialNumToRender={10}
         maxToRenderPerBatch={10}
         windowSize={5}

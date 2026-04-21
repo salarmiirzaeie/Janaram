@@ -6,7 +6,14 @@ import { useCustomToast } from "@/hooks/useToast";
 import { Feather } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
 import Animated, { FadeInUp } from "react-native-reanimated";
 
@@ -325,46 +332,52 @@ export default function TextActivityScreen() {
       colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]}
       style={{ flex: 1 }}
     >
-      <ScrollView
-        className="flex-1"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 30 }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
       >
-        <View className="p-6">
-          {/* Header */}
-          {/* Content */}
-          {renderContent()}
-          {/* Submit Button */}
-          {subType !== "daily_tip" && (
-            <Animated.View entering={FadeInUp.duration(600).delay(400)}>
-              <TouchableOpacity
-                onPress={handleSubmit}
-                activeOpacity={0.8}
-                className="mt-8"
-              >
-                <LinearGradient
-                  colors={["#79AED6", "#9966CC"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={{
-                    borderRadius: 24,
-                    paddingVertical: 16,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "row",
-                    gap: 8,
-                  }}
+        <ScrollView
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 30 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View className="p-6">
+            {/* Content */}
+            {renderContent()}
+            {/* Submit Button */}
+            {subType !== "daily_tip" && (
+              <Animated.View entering={FadeInUp.duration(600).delay(400)}>
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  activeOpacity={0.8}
+                  className="mt-8"
                 >
-                  <Feather name="check" size={20} color="white" />
-                  <Text className="text-white font-vazirBold text-lg">
-                    ثبت و ذخیره
-                  </Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </Animated.View>
-          )}
-        </View>
-      </ScrollView>
+                  <LinearGradient
+                    colors={["#79AED6", "#9966CC"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={{
+                      borderRadius: 24,
+                      paddingVertical: 16,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "row",
+                      gap: 8,
+                    }}
+                  >
+                    <Feather name="check" size={20} color="white" />
+                    <Text className="text-white font-vazirBold text-lg">
+                      ثبت و ذخیره
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </Animated.View>
+            )}
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 }

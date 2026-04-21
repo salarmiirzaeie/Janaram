@@ -9,7 +9,7 @@ import { Stack } from "expo-router";
 import { I18nManager, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
@@ -37,11 +37,11 @@ export default function RootLayout() {
       <PersistGate persistor={persistor}>
         <GluestackUIProvider mode="light">
           <AudioPlayerProvider>
-            <SafeAreaView
+            <SafeAreaProvider
               style={{
                 flex: 1,
+                backgroundColor: "white",
               }}
-              edges={["top", "bottom"]}
             >
               <GestureHandlerRootView>
                 <Stack
@@ -62,6 +62,15 @@ export default function RootLayout() {
                       headerTitleAlign: "center",
                       headerTitleStyle: { fontFamily: "vazirBold" },
                       headerTitle: "",
+                      headerShadowVisible: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="breathings"
+                    options={{
+                      headerShown: true,
+                      headerTitleAlign: "center",
+                      headerTitle: "تنفس",
                       headerShadowVisible: false,
                     }}
                   />
@@ -128,6 +137,15 @@ export default function RootLayout() {
                     }}
                   />
                   <Stack.Screen
+                    name="result"
+                    options={{
+                      headerShown: true,
+                      headerTitleAlign: "center",
+                      headerTitleStyle: { fontFamily: "vazirBold" },
+                      headerTitle: "نتیجه",
+                    }}
+                  />
+                  <Stack.Screen
                     name="single-test"
                     options={{
                       headerShown: true,
@@ -191,7 +209,7 @@ export default function RootLayout() {
                 <StatusBar barStyle="dark-content" backgroundColor={"#fff"} />
                 {!netInfo.isConnected && <NetworkAct />}
               </GestureHandlerRootView>
-            </SafeAreaView>
+            </SafeAreaProvider>
           </AudioPlayerProvider>
         </GluestackUIProvider>
       </PersistGate>

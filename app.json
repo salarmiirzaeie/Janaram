@@ -5,8 +5,8 @@
   },
   "name": "جانارام",
   "slug": "Janaram",
-  "version": "1.1.0",
-  "runtimeVersion": "1.1.0",
+  "version": "1.2.0",
+  "runtimeVersion": "1.2.0",
   "orientation": "portrait",
   "icon": "./assets/images/icon.png",
   "scheme": "janaram",
@@ -51,7 +51,6 @@
   },
   "plugins": [
     "expo-router",
-    "./plugins/withPoolakey.js",
     "expo-notifications",
     [
       "expo-splash-screen",

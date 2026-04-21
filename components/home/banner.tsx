@@ -52,7 +52,7 @@ const BannerScreen = () => {
   }, [ad]);
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", gap: 10, padding: 20 }}>
+    <View style={{ justifyContent: "center", gap: 10, padding: 20 }}>
       <Button title="Request Ad" onPress={requestBanner} />
       <Button title="Show Ad" onPress={showBannerAdCallBack} disabled={!ad} />
       <Button

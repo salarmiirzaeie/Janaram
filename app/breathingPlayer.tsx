@@ -39,6 +39,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function BreathingPlayerScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -246,221 +247,237 @@ export default function BreathingPlayerScreen() {
       colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]}
       style={{ flex: 1 }}
     >
-      <View className="flex-1">
-        {/* Header */}
-        <View className="flex-row justify-between items-center px-5 pt-4">
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="w-10 h-10 rounded-full bg-white/80 justify-center items-center shadow-sm"
-          >
-            <Ionicons name="chevron-down" size={24} color="#666" />
-          </TouchableOpacity>
-          <Text className="font-vazirBold text-primary-600 text-base">
-            تمرین تنفس
-          </Text>
-          <View className="w-10" />
-        </View>
-
-        <View className="flex-1 justify-center items-center px-6">
-          {/* Phase Indicator */}
-          <Animated.View
-            entering={FadeIn.duration(400)}
-            className="items-center mb-4"
-          >
-            <View className="bg-primary-100 px-4 py-2 rounded-full flex-row items-center gap-2">
-              <Text className="text-2xl">{phase.icon}</Text>
-              <Text className="text-primary-700 font-vazirBold text-lg">
-                {phase.text}
-              </Text>
-            </View>
-          </Animated.View>
-
-          {/* Countdown Timer */}
-          <Animated.View entering={FadeIn.duration(400).delay(50)}>
-            <Text className="text-7xl font-vazirBold text-primary-600 mb-2">
-              {phaseSeconds}
+      <SafeAreaView className="flex-1">
+        <View className="flex-1">
+          {/* Header */}
+          <View className="flex-row justify-between items-center px-5 pt-4">
+            <TouchableOpacity
+              onPress={() => router.back()}
+              className="w-10 h-10 rounded-full bg-white/80 justify-center items-center shadow-sm"
+            >
+              <Ionicons name="chevron-down" size={24} color="#666" />
+            </TouchableOpacity>
+            <Text className="font-vazirBold text-primary-600 text-base">
+              تمرین تنفس
             </Text>
-            <Text className="text-gray-400 font-vazir text-sm text-center">
-              ثانیه
-            </Text>
-          </Animated.View>
+            <View className="w-10" />
+          </View>
 
-          {/* Breathing Circle */}
-          <Animated.View
-            entering={FadeIn.duration(600).delay(100)}
-            style={styles.circleContainer}
-          >
-            <Animated.View style={[styles.circle, circleAnimatedStyle]}>
-              <LinearGradient
-                colors={["#79AED6", "#9966CC"]}
-                style={styles.circleGradient}
-              >
-                <Image
-                  source={{ uri: BASE_URL_IMAGES + track?.image }}
-                  style={styles.cover}
-                />
-              </LinearGradient>
-            </Animated.View>
-          </Animated.View>
-
-          {/* Track Title */}
-          <Text style={styles.title}>{track?.title}</Text>
-
-          {/* Progress Bar */}
-          <TapGestureHandler onHandlerStateChange={onTap}>
+          <View className="flex-1 justify-center items-center px-6">
+            {/* Phase Indicator */}
             <Animated.View
-              style={styles.progressBarContainer}
-              onLayout={(e) => setProgressBarWidth(e.nativeEvent.layout.width)}
+              entering={FadeIn.duration(400)}
+              className="items-center mb-4"
             >
-              <View style={styles.progressBarBackground} />
-              <LinearGradient
-                colors={["#79AED6", "#9966CC"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={[styles.progressBarFilled, filledStyle]}
-              />
-              <Animated.View style={[styles.thumb, thumbStyle]} />
+              <View className="bg-primary-100 px-4 py-2 rounded-full flex-row items-center gap-2">
+                <Text className="text-2xl">{phase.icon}</Text>
+                <Text className="text-primary-700 font-vazirBold text-lg">
+                  {phase.text}
+                </Text>
+              </View>
             </Animated.View>
-          </TapGestureHandler>
 
-          {/* Time Row */}
-          <View style={styles.timeRow}>
-            <Text style={styles.time}>{formatMillis(position)}</Text>
-            <Text style={styles.time}>{formatMillis(duration)}</Text>
-          </View>
+            {/* Countdown Timer */}
+            <Animated.View entering={FadeIn.duration(400).delay(50)}>
+              <Text className="text-7xl font-vazirBold text-primary-600 mb-2">
+                {phaseSeconds}
+              </Text>
+              <Text className="text-gray-400 font-vazir text-sm text-center">
+                ثانیه
+              </Text>
+            </Animated.View>
 
-          {/* Controls */}
-          <View style={styles.controls}>
-            <TouchableOpacity
-              onPress={() => seek(position - 10000)}
-              className="items-center gap-1"
+            {/* Breathing Circle */}
+            <Animated.View
+              entering={FadeIn.duration(600).delay(100)}
+              style={styles.circleContainer}
             >
-              <View className="bg-primary-100 rounded-full p-3">
-                <Ionicons name="play-skip-back" size={28} color="#79AED6" />
-              </View>
-              <Text className="text-gray-400 font-vazir text-xs">۱۰ ثانیه</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={togglePlay}>
-              <LinearGradient
-                colors={["#79AED6", "#9966CC"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.playButton}
-              >
-                {isLoading ? (
-                  <Spinner color="#fff" size="large" />
-                ) : (
-                  <Ionicons
-                    name={isPlaying ? "pause" : "play"}
-                    size={42}
-                    color="white"
-                    style={{ marginLeft: isPlaying ? 0 : 2 }}
-                  />
-                )}
-              </LinearGradient>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => seek(position + 10000)}
-              className="items-center gap-1"
-            >
-              <View className="bg-primary-100 rounded-full p-3">
-                <Ionicons name="play-skip-forward" size={28} color="#79AED6" />
-              </View>
-              <Text className="text-gray-400 font-vazir text-xs">۱۰ ثانیه</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Info Sheet */}
-        <Actionsheet
-          isOpen={isSheetOpen}
-          closeOnOverlayClick={false}
-          onClose={() => setIsSheetOpen(false)}
-        >
-          <ActionsheetBackdrop />
-          <ActionsheetContent className="bg-white rounded-t-3xl">
-            <ActionsheetDragIndicatorWrapper>
-              <ActionsheetDragIndicator />
-            </ActionsheetDragIndicatorWrapper>
-
-            {initialLoading ? (
-              <VStack
-                space="lg"
-                className="p-4 items-center justify-center w-full"
-              >
-                <View style={styles.skeletonTitle} />
-                <View style={styles.skeletonDesc} />
-                <View style={styles.skeletonDesc} />
-                <View style={styles.skeletonDesc} />
-                <View style={styles.skeletonButton} />
-              </VStack>
-            ) : (
-              <View className="w-full">
-                <VStack space="md" className="p-4 items-center">
-                  <LinearGradient
-                    colors={["#79AED6", "#9966CC"]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={{
-                      borderRadius: 60,
-                      padding: 16,
-                      marginBottom: 16,
-                    }}
-                  >
-                    <Feather name="wind" size={40} color="white" />
-                  </LinearGradient>
-                  <Text className="text-2xl font-vazirBold text-primary-800 text-center">
-                    {track?.title}
-                  </Text>
-                  <Text className="text-base text-gray-600 text-right font-vazir leading-6">
-                    {track?.description}
-                  </Text>
-
-                  <View className="flex-row justify-around w-full mt-4 pt-4 border-t border-gray-100">
-                    <View className="items-center">
-                      <Text className="text-primary-500 font-vazirBold text-lg">
-                        {(INHALE_DURATION / 1000).toFixed(0)}
-                      </Text>
-                      <Text className="text-gray-400 font-vazir text-xs">
-                        دم (ثانیه)
-                      </Text>
-                    </View>
-                    {HOLD_DURATION > 0 && (
-                      <View className="items-center">
-                        <Text className="text-primary-500 font-vazirBold text-lg">
-                          {(HOLD_DURATION / 1000).toFixed(0)}
-                        </Text>
-                        <Text className="text-gray-400 font-vazir text-xs">
-                          حبس (ثانیه)
-                        </Text>
-                      </View>
-                    )}
-                    <View className="items-center">
-                      <Text className="text-primary-500 font-vazirBold text-lg">
-                        {(EXHALE_DURATION / 1000).toFixed(0)}
-                      </Text>
-                      <Text className="text-gray-400 font-vazir text-xs">
-                        بازدم (ثانیه)
-                      </Text>
-                    </View>
-                  </View>
-                </VStack>
-                <Button
-                  className="w-full mb-4 bg-primary-500 rounded-2xl"
-                  onPress={() => {
-                    setIsSheetOpen(false);
-                    togglePlay();
-                  }}
+              <Animated.View style={[styles.circle, circleAnimatedStyle]}>
+                <LinearGradient
+                  colors={["#79AED6", "#9966CC"]}
+                  style={styles.circleGradient}
                 >
-                  <ButtonText className="font-vazirBold">شروع تمرین</ButtonText>
-                </Button>
-              </View>
-            )}
-          </ActionsheetContent>
-        </Actionsheet>
-      </View>
+                  <Image
+                    source={{ uri: BASE_URL_IMAGES + track?.image }}
+                    style={styles.cover}
+                  />
+                </LinearGradient>
+              </Animated.View>
+            </Animated.View>
+
+            {/* Track Title */}
+            <Text style={styles.title}>{track?.title}</Text>
+
+            {/* Progress Bar */}
+            <TapGestureHandler onHandlerStateChange={onTap}>
+              <Animated.View
+                style={styles.progressBarContainer}
+                onLayout={(e) =>
+                  setProgressBarWidth(e.nativeEvent.layout.width)
+                }
+              >
+                <View style={styles.progressBarBackground} />
+                <LinearGradient
+                  colors={["#79AED6", "#9966CC"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={[styles.progressBarFilled, filledStyle]}
+                />
+                <Animated.View style={[styles.thumb, thumbStyle]} />
+              </Animated.View>
+            </TapGestureHandler>
+
+            {/* Time Row */}
+            <View style={styles.timeRow}>
+              <Text style={styles.time}>{formatMillis(position)}</Text>
+              <Text style={styles.time}>{formatMillis(duration)}</Text>
+            </View>
+
+            {/* Controls */}
+            <View style={styles.controls}>
+              <TouchableOpacity
+                onPress={() => seek(position - 10000)}
+                className="items-center gap-1"
+              >
+                <View className="bg-primary-100 rounded-full p-3">
+                  <Ionicons name="play-skip-back" size={28} color="#79AED6" />
+                </View>
+                <Text className="text-gray-400 font-vazir text-xs">
+                  ۱۰ ثانیه
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={togglePlay}>
+                <LinearGradient
+                  colors={["#79AED6", "#9966CC"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.playButton}
+                >
+                  {isLoading ? (
+                    <Spinner color="#fff" size="large" />
+                  ) : (
+                    <Ionicons
+                      name={isPlaying ? "pause" : "play"}
+                      size={42}
+                      color="white"
+                      style={{ marginLeft: isPlaying ? 0 : 2 }}
+                    />
+                  )}
+                </LinearGradient>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => seek(position + 10000)}
+                className="items-center gap-1"
+              >
+                <View className="bg-primary-100 rounded-full p-3">
+                  <Ionicons
+                    name="play-skip-forward"
+                    size={28}
+                    color="#79AED6"
+                  />
+                </View>
+                <Text className="text-gray-400 font-vazir text-xs">
+                  ۱۰ ثانیه
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Info Sheet */}
+          <Actionsheet
+            isOpen={isSheetOpen}
+            closeOnOverlayClick={false}
+            onClose={() => setIsSheetOpen(false)}
+          >
+            <ActionsheetBackdrop />
+            <SafeAreaView className="flex-1">
+              <ActionsheetContent className="bg-white rounded-t-3xl">
+                <ActionsheetDragIndicatorWrapper>
+                  <ActionsheetDragIndicator />
+                </ActionsheetDragIndicatorWrapper>
+
+                {initialLoading ? (
+                  <VStack
+                    space="lg"
+                    className="p-4 items-center justify-center w-full"
+                  >
+                    <View style={styles.skeletonTitle} />
+                    <View style={styles.skeletonDesc} />
+                    <View style={styles.skeletonDesc} />
+                    <View style={styles.skeletonDesc} />
+                    <View style={styles.skeletonButton} />
+                  </VStack>
+                ) : (
+                  <View className="w-full">
+                    <VStack space="md" className="p-4 items-center">
+                      <LinearGradient
+                        colors={["#79AED6", "#9966CC"]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={{
+                          borderRadius: 60,
+                          padding: 16,
+                          marginBottom: 16,
+                        }}
+                      >
+                        <Feather name="wind" size={40} color="white" />
+                      </LinearGradient>
+                      <Text className="text-2xl font-vazirBold text-primary-800 text-center">
+                        {track?.title}
+                      </Text>
+                      <Text className="text-base text-gray-600 text-right font-vazir leading-6">
+                        {track?.description}
+                      </Text>
+
+                      <View className="flex-row justify-around w-full mt-4 pt-4 border-t border-gray-100">
+                        <View className="items-center">
+                          <Text className="text-primary-500 font-vazirBold text-lg">
+                            {(INHALE_DURATION / 1000).toFixed(0)}
+                          </Text>
+                          <Text className="text-gray-400 font-vazir text-xs">
+                            دم (ثانیه)
+                          </Text>
+                        </View>
+                        {HOLD_DURATION > 0 && (
+                          <View className="items-center">
+                            <Text className="text-primary-500 font-vazirBold text-lg">
+                              {(HOLD_DURATION / 1000).toFixed(0)}
+                            </Text>
+                            <Text className="text-gray-400 font-vazir text-xs">
+                              حبس (ثانیه)
+                            </Text>
+                          </View>
+                        )}
+                        <View className="items-center">
+                          <Text className="text-primary-500 font-vazirBold text-lg">
+                            {(EXHALE_DURATION / 1000).toFixed(0)}
+                          </Text>
+                          <Text className="text-gray-400 font-vazir text-xs">
+                            بازدم (ثانیه)
+                          </Text>
+                        </View>
+                      </View>
+                    </VStack>
+                    <Button
+                      className="w-full mb-4 bg-primary-500 rounded-2xl"
+                      onPress={() => {
+                        setIsSheetOpen(false);
+                        togglePlay();
+                      }}
+                    >
+                      <ButtonText className="font-vazirBold">
+                        شروع تمرین
+                      </ButtonText>
+                    </Button>
+                  </View>
+                )}
+              </ActionsheetContent>
+            </SafeAreaView>
+          </Actionsheet>
+        </View>
+      </SafeAreaView>
     </LinearGradient>
   );
 }

@@ -19,6 +19,7 @@ import {
 } from "@/utils/notifications";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 
 Notifications.setNotificationHandler({
@@ -120,7 +121,7 @@ export default function TabLayout() {
     return <Redirect href="/auth/login" />;
   }
   return (
-    <>
+    <SafeAreaView className="flex-1">
       <Tabs
         tabBar={(props) => (
           <AnimatedTabBar {...props} isSleepMode={isSleepMode} />
@@ -216,6 +217,6 @@ export default function TabLayout() {
           onClose={handleDismissNotProModal}
         />
       )}
-    </>
+    </SafeAreaView>
   );
 }

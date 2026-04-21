@@ -10,7 +10,6 @@ import { AntDesign, Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useRef } from "react";
 import {
   Dimensions,
-  Image,
   Modal,
   Pressable,
   ScrollView,
@@ -94,7 +93,7 @@ export default function ProPlanFullScreenModal({
       await startPayment(
         proPlan.id,
         amountInRials,
-        `فعال‌سازی اشتراک ${proPlan.name} - ${proPlan.price} هزار تومان`
+        `فعال‌سازی اشتراک Pro جانارام `
       );
     }
   };
@@ -160,14 +159,6 @@ export default function ProPlanFullScreenModal({
               {/* Hero Section */}
               <View className={`${paddingX} py-2`}>
                 <VStack space="md">
-                  <View className="items-center">
-                    <Image
-                      source={require("@/assets/illustrations/Upgrading.png")}
-                      resizeMode="contain"
-                      style={{ width: heroSize, height: heroSize }}
-                    />
-                  </View>
-
                   <Text
                     className={`${titleFont} font-vazirBold text-right text-primary-800`}
                   >

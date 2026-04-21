@@ -10,6 +10,7 @@ import {
   Pressable,
   Text,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Actionsheet,
   ActionsheetBackdrop,
@@ -46,104 +47,106 @@ const MoodAct: React.FC<Props> = ({ isOpen, onClose, handleStreakModal }) => {
   return (
     <Actionsheet isOpen={isOpen} closeOnOverlayClick onClose={onClose}>
       <ActionsheetBackdrop />
-      <KeyboardAvoidingView
-        behavior={
-          isOpen ? (Platform.OS === "ios" ? "padding" : "height") : undefined
-        }
-        className="w-full"
-        keyboardVerticalOffset={0}
-      >
-        <ActionsheetContent className="px-5 pb-8 pt-4">
-          <VStack
-            space="lg"
-            className="w-full flex-grow justify-between items-center"
-          >
-            {/* Title */}
-            <Text className="text-2xl font-vazirBold text-primary-800 text-center">
-              حس امروزتو با یه ایموجی نشون بده
-            </Text>
+      <SafeAreaView className="flex-1">
+        <KeyboardAvoidingView
+          behavior={
+            isOpen ? (Platform.OS === "ios" ? "padding" : "height") : undefined
+          }
+          className="w-full"
+          keyboardVerticalOffset={0}
+        >
+          <ActionsheetContent className="px-5 pb-8 pt-4">
+            <VStack
+              space="lg"
+              className="w-full flex-grow justify-between items-center"
+            >
+              {/* Title */}
+              <Text className="text-2xl font-vazirBold text-primary-800 text-center">
+                حس امروزتو با یه ایموجی نشون بده
+              </Text>
 
-            {/* Date Badge - Using your color palette */}
-            <Badge className="rounded-full bg-primary-100">
-              <BadgeText className="text-primary-600">
-                {formatJalali(new Date(), "yyyy/MM/dd")}
-              </BadgeText>
-            </Badge>
+              {/* Date Badge - Using your color palette */}
+              <Badge className="rounded-full bg-primary-100">
+                <BadgeText className="text-primary-600">
+                  {formatJalali(new Date(), "yyyy/MM/dd")}
+                </BadgeText>
+              </Badge>
 
-            {/* Mood Options */}
-            <FlatList
-              data={moods}
-              keyExtractor={(item) => item.value.toString()}
-              numColumns={3}
-              className="w-full flex-grow-0 mt-4"
-              renderItem={({ item }) => (
-                <Pressable
-                  onPress={() => setMoodState(item.value)}
-                  className={`flex-1 m-2 h-28 rounded-3xl items-center justify-between py-3 border-2
+              {/* Mood Options */}
+              <FlatList
+                data={moods}
+                keyExtractor={(item) => item.value.toString()}
+                numColumns={3}
+                className="w-full flex-grow-0 mt-4"
+                renderItem={({ item }) => (
+                  <Pressable
+                    onPress={() => setMoodState(item.value)}
+                    className={`flex-1 m-2 h-28 rounded-3xl items-center justify-between py-3 border-2
                     ${
                       item.value === moodState
                         ? "border-primary-500 bg-white"
                         : "border-primary-100 bg-primary-50"
                     }`}
-                >
-                  <Image
-                    source={item.emoji}
-                    resizeMode="contain"
-                    className="h-4/6 w-3/6"
-                  />
-                  <Text
-                    className={`font-vazirBold text-sm mt-1 ${
-                      item.value === moodState
-                        ? "text-primary-700"
-                        : "text-primary-500"
-                    }`}
                   >
-                    {item.label}
+                    <Image
+                      source={item.emoji}
+                      resizeMode="contain"
+                      className="h-4/6 w-3/6"
+                    />
+                    <Text
+                      className={`font-vazirBold text-sm mt-1 ${
+                        item.value === moodState
+                          ? "text-primary-700"
+                          : "text-primary-500"
+                      }`}
+                    >
+                      {item.label}
+                    </Text>
+                  </Pressable>
+                )}
+              />
+
+              {/* Note Input */}
+              <VStack space="md" className="w-full mt-4">
+                <HStack className="items-center justify-end mb-1">
+                  <Text className="text-sm font-vazir text-tertiary-500">
+                    (اختیاری)
                   </Text>
-                </Pressable>
-              )}
-            />
+                  <Text className="text-lg font-vazirBold text-primary-800 ml-2">
+                    یادداشت
+                  </Text>
+                </HStack>
+                <Textarea
+                  size="md"
+                  className="w-full bg-primary-50 rounded-3xl border-0 p-4"
+                >
+                  <TextareaInput
+                    value={note}
+                    className="text-right font-vazir text-primary-700"
+                    onChangeText={(text) => setNote(text)}
+                    placeholder="یادداشت امروزتو بنویس"
+                    placeholderTextColor="#91A5BE"
+                  />
+                </Textarea>
+              </VStack>
 
-            {/* Note Input */}
-            <VStack space="md" className="w-full mt-4">
-              <HStack className="items-center justify-end mb-1">
-                <Text className="text-sm font-vazir text-tertiary-500">
-                  (اختیاری)
-                </Text>
-                <Text className="text-lg font-vazirBold text-primary-800 ml-2">
-                  یادداشت
-                </Text>
-              </HStack>
-              <Textarea
-                size="md"
-                className="w-full bg-primary-50 rounded-3xl border-0 p-4"
+              {/* Save Button */}
+              <Button
+                onPress={handleSave}
+                disabled={isLoading || moodState === 0}
+                className={`w-full rounded-xl mt-4 ${
+                  moodState === 0 ? "bg-tertiary-400" : "bg-primary-500"
+                }`}
               >
-                <TextareaInput
-                  value={note}
-                  className="text-right font-vazir text-primary-700"
-                  onChangeText={(text) => setNote(text)}
-                  placeholder="یادداشت امروزتو بنویس"
-                  placeholderTextColor="#91A5BE"
-                />
-              </Textarea>
+                {isLoading && <ButtonSpinner color="white" />}
+                <ButtonText className="text-white font-vazirBold">
+                  {isLoading ? "در حال ذخیره..." : "ذخیره"}
+                </ButtonText>
+              </Button>
             </VStack>
-
-            {/* Save Button */}
-            <Button
-              onPress={handleSave}
-              disabled={isLoading || moodState === 0}
-              className={`w-full rounded-xl mt-4 ${
-                moodState === 0 ? "bg-tertiary-400" : "bg-primary-500"
-              }`}
-            >
-              {isLoading && <ButtonSpinner color="white" />}
-              <ButtonText className="text-white font-vazirBold">
-                {isLoading ? "در حال ذخیره..." : "ذخیره"}
-              </ButtonText>
-            </Button>
-          </VStack>
-        </ActionsheetContent>
-      </KeyboardAvoidingView>
+          </ActionsheetContent>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </Actionsheet>
   );
 };

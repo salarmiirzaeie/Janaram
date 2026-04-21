@@ -64,15 +64,6 @@ const _layout = () => {
           },
         }}
       />
-      <Stack.Screen
-        name="breathings"
-        options={{
-          headerShown: true,
-          headerTitleAlign: "center",
-          headerTitle: "تنفس",
-          headerShadowVisible: false,
-        }}
-      />
 
       <Stack.Screen
         name="success"

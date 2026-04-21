@@ -233,7 +233,7 @@ const Train = () => {
 
   return (
     <LinearGradient colors={["#F0F6FA", "#FFFFFF"]} style={{ flex: 1 }}>
-      <View className="flex-1 p-4">
+      <View className="flex-1  p-4">
         {/* Mood Progress Card */}
         <Animated.View entering={FadeInUp.duration(600).springify()}>
           <LinearGradient
@@ -335,7 +335,7 @@ const Train = () => {
             renderItem={renderItem}
             keyExtractor={(item) => item._id}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 20 }}
+            contentContainerStyle={{ paddingBottom: 40 }}
           />
         )}
       </View>

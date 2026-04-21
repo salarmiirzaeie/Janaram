@@ -77,7 +77,7 @@ export default function NowPlayingBar() {
       entering={FadeInUp.duration(400).springify()}
       style={{
         position: "absolute",
-        bottom: 70 + insets.bottom,
+        bottom: 95 + insets.bottom,
         left: 16,
         right: 16,
         zIndex: 100,

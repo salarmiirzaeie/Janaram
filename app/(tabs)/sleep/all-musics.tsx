@@ -15,11 +15,7 @@ const AllMusics = () => {
     category: params.type,
   });
   const renderMusicCard = (item: Meditation) => {
-    return (
-      <View className="mx-4">
-        <MusicCard item={item} />
-      </View>
-    );
+    return <MusicCard item={item} />;
   };
   if (isLoading) {
     return (
@@ -34,21 +30,19 @@ const AllMusics = () => {
       colors={["#16213e", "#0a0a0f", "#1a1a2e"]}
       style={{ flex: 1 }}
     >
-      <View className="flex-1  mb-16 bg-transparent">
+      <MainHeader
+        showIcons={false}
+        onSearch={() => {}}
+        onBack={() => {
+          router.back();
+        }}
+      />
+      <View className="flex-1  p-4 mb-16 bg-transparent">
         <FlatList
           data={data.meditations || []}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => renderMusicCard(item)}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={
-            <MainHeader
-              showIcons={false}
-              onSearch={() => {}}
-              onBack={() => {
-                router.back();
-              }}
-            />
-          }
           contentContainerStyle={{ paddingBottom: 30 }}
           initialNumToRender={3}
           maxToRenderPerBatch={2}
