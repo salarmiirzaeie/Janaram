@@ -25,7 +25,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { useDispatch } from "react-redux";
 
 export type ProPlanModalProps = {
   visible: boolean;
@@ -41,10 +40,9 @@ export default function ProPlanFullScreenModal({
   const isSmall = screenHeight < 700;
   const heroSize = isSmall ? 150 : 180;
   const titleFont = isSmall ? "text-xl" : "text-2xl";
-  const descFont = isSmall ? "text-xs" : "text-sm";
+  const descFont = isSmall ? "text-xs" : "text-md";
   const priceFont = isSmall ? "text-sm" : "text-base";
   const paddingX = isSmall ? "px-4" : "px-6";
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (visible) StatusBar.setBarStyle("light-content");

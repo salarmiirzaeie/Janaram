@@ -69,7 +69,7 @@ const CATEGORIES = [
     id: "instrumental",
     title: "بی کلام",
     icon: <FontAwesome5 name="guitar" size={22} color="white" />,
-    colors: ["#FF9966", "#E6804D"],
+    colors: ["#91A5BE", "#5E95BD"],
   },
   {
     id: "sleep",
@@ -238,6 +238,9 @@ const Explore = () => {
   }, []);
 
   // ========== دیتای سکشن‌ها (با دسترسی به handleSeeAllPress) ==========
+  // فقط این بخش از فایل explore.tsx تغییر می‌کند، بقیه کدها完全相同 می‌مانند
+
+  // ========== دیتای سکشن‌ها (با دسترسی به handleSeeAllPress) ==========
   const sectionsData = useMemo(() => {
     if (!exploreData?.meditations) return [];
 
@@ -249,7 +252,7 @@ const Explore = () => {
         id: "calm",
         title: "آرامش",
         icon: <Feather name="wind" size={24} color="#79AED6" />,
-        data: m.calm,
+        data: m.calm.map((item: any) => ({ ...item, type: "calm" })),
         onSeeAll: () => handleSeeAllPress("calm", "آرامش"),
       });
     }
@@ -261,7 +264,7 @@ const Explore = () => {
         icon: (
           <MaterialIcons name="self-improvement" size={24} color="#9966CC" />
         ),
-        data: m.self,
+        data: m.self.map((item: any) => ({ ...item, type: "self" })),
         onSeeAll: () => handleSeeAllPress("self", "خودسازی"),
       });
     }
@@ -271,7 +274,7 @@ const Explore = () => {
         id: "love",
         title: "عشق",
         icon: <Ionicons name="heart" size={24} color="#FF9966" />,
-        data: m.love,
+        data: m.love.map((item: any) => ({ ...item, type: "love" })),
         onSeeAll: () => handleSeeAllPress("love", "عشق"),
       });
     }
@@ -281,14 +284,13 @@ const Explore = () => {
         id: "nature",
         title: "طبیعت",
         icon: <MaterialIcons name="nature-people" size={24} color="#79AED6" />,
-        data: m.nature,
+        data: m.nature.map((item: any) => ({ ...item, type: "nature" })),
         onSeeAll: () => handleSeeAllPress("nature", "طبیعت"),
       });
     }
 
     return sections;
   }, [exploreData, handleSeeAllPress]);
-
   // ========== هدر و دسته‌بندی‌ها ==========
   const renderHeader = useCallback(
     () => (

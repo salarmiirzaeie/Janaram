@@ -25,15 +25,26 @@ const UpdateModal: React.FC<Props> = ({ showActionsheet, handleClose }) => {
         </ActionsheetDragIndicatorWrapper>
         <VStack space="lg" className="p-4 items-center justify-center">
           <VStack className="space-y-2">
-            <Text className="text-lg font-vazirBold text-center">بروزرسانی جدید موجود است </Text>
-            <Text className="text-sm text-gray-500">لطفا برای استفاده از اپلیکیشن جدید، بروزرسانی را انجام دهید</Text>
+            <Text className="text-lg font-vazirBold text-center">
+              بروزرسانی جدید موجود است{" "}
+            </Text>
+            <Text className="text-sm text-gray-500">
+              لطفا برای استفاده از اپلیکیشن جدید، بروزرسانی را انجام دهید
+            </Text>
           </VStack>
           <HStack className="space-x-2 justify-center">
-            <Button onPress={handleClose} className="px-4 py-2 bg-gray-200 rounded-lg">
+            <Button
+              onPress={handleClose}
+              className="px-4 py-2 bg-gray-200 rounded-lg"
+            >
               <Text>انصراف</Text>
             </Button>
             <Button
-              onPress={() => Linking.openURL("https://cafebazaar.ir/app/com.salarmiirzapour.Janaram")}
+              onPress={() =>
+                Linking.openURL(
+                  "https://myket.ir/app/com.salarmiirzapour.Janaram"
+                )
+              }
               className="px-4 py-2 bg-blue-500 rounded-lg"
             >
               <ButtonText> بروزرسانی</ButtonText>

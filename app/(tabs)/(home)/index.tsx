@@ -33,7 +33,7 @@ const QuickAccessItem = React.memo(
     return (
       <VStack>
         <TouchableOpacity
-          className="aspect-square  h-14"
+          className="aspect-square  h-16"
           onPress={() => {
             if (item.route === "/psychologist") {
               Linking.openURL("https://janaram.ir/psychologist");

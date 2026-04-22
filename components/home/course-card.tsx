@@ -36,7 +36,7 @@ const STATIC_STYLES = StyleSheet.create({
     position: "absolute",
     width: "100%",
     height: "100%",
-    opacity: 0.12,
+    opacity: 0.15,
   },
   decorativeTop: {
     position: "absolute",
@@ -153,8 +153,8 @@ const STATIC_STYLES = StyleSheet.create({
   },
 });
 
-// آرایه رنگ‌ها (استاتیک خارج از کامپوننت)
-const CARD_COLORS = [
+// آرایه رنگ‌های اصلی (همون که قبلاً بود)
+const BASE_COLORS = [
   {
     gradient: ["#79AED6", "#5E95BD"],
     gradientStart: "#79AED6",
@@ -199,6 +199,16 @@ const CARD_COLORS = [
   },
 ];
 
+// هر دسته‌بندی ترتیب متفاوتی از رنگ‌ها دارد
+const CATEGORY_COLORS_ORDER: Record<string, number[]> = {
+  calm: [0, 1, 2, 3, 4, 5], // آبی → بنفش → نارنجی → خاکستری → آبی-بنفش → نارنجی-بنفش
+  self: [5, 4, 0, 1, 2, 3], // نارنجی → آبی → بنفش → نارنجی-بنفش → خاکستری → آبی-بنفش
+  instrumental: [1, 2, 0, 4, 5, 3], // بنفش → نارنجی → آبی → آبی-بنفش → نارنجی-بنفش → خاکستری
+  sleep: [0, 2, 1, 3, 5, 4], // آبی → نارنجی → بنفش → خاکستری → نارنجی-بنفش → آبی-بنفش
+  love: [3, 1, 0, 5, 4, 2], // نارنجی → بنفش → آبی → نارنجی-بنفش → آبی-بنفش → خاکستری
+  nature: [2, 1, 4, 5, 0, 3], // بنفش → آبی → نارنجی → آبی-بنفش → خاکستری → نارنجی-بنفش
+};
+
 interface CourseCardProps {
   index: number;
   item: Meditation;
@@ -238,7 +248,16 @@ const CourseCard: React.FC<CourseCardProps> = React.memo(({ index, item }) => {
     [plans?.data.plans]
   );
 
-  const colorSet = CARD_COLORS[index % CARD_COLORS.length];
+  // انتخاب رنگ بر اساس دسته‌بندی و ایندکس کارت
+  const colorSet = useMemo(() => {
+    const order = CATEGORY_COLORS_ORDER[item.type];
+    if (order) {
+      const colorIndex = order[index % order.length];
+      return BASE_COLORS[colorIndex];
+    }
+    return BASE_COLORS[index % BASE_COLORS.length];
+  }, [item.type, index]);
+
   const isCurrentlyPlaying = track?.id === item.id;
 
   const handleOpenNotProModal = useCallback(() => {
