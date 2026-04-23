@@ -4,13 +4,6 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
-import Animated, {
-  FadeIn,
-  FadeInUp,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
 import { HStack } from "../ui/hstack";
 import { Progress, ProgressFilledTrack } from "../ui/progress";
 import { Skeleton } from "../ui/skeleton";
@@ -23,19 +16,6 @@ const MoodCard = () => {
   const { data, isLoading } = useGetMoodQuery(null, {});
   const [showStreakModal, setShowStreakModal] = useState(false);
   const handleStreakModal = () => setShowStreakModal(true);
-  const scale = useSharedValue(1);
-
-  const handlePressIn = () => {
-    scale.value = withTiming(0.97, { duration: 100 });
-  };
-
-  const handlePressOut = () => {
-    scale.value = withTiming(1, { duration: 100 });
-  };
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
 
   const isComplete = data?.data.progressPercent === 100;
   const isZero = data?.data.progressPercent === 0;
@@ -48,10 +28,7 @@ const MoodCard = () => {
           <Skeleton className="w-full h-full rounded-3xl" />
         </View>
       ) : data?.data?.status === "no-mood" ? (
-        <Animated.View
-          entering={FadeInUp.duration(600).springify()}
-          className="items-center justify-center h-56"
-        >
+        <View className="items-center justify-center h-56">
           <TouchableOpacity
             onPress={() => setMoodSheet(true)}
             activeOpacity={0.9}
@@ -84,12 +61,9 @@ const MoodCard = () => {
               </Text>
             </LinearGradient>
           </TouchableOpacity>
-        </Animated.View>
+        </View>
       ) : (
-        <Animated.View
-          entering={FadeInUp.duration(600).springify()}
-          className="w-full"
-        >
+        <View className="w-full">
           <LinearGradient
             colors={["#FFFFFF", "#F0F6FA"]}
             start={{ x: 0, y: 0 }}
@@ -117,11 +91,11 @@ const MoodCard = () => {
                   </Text>
                 </View>
                 {isComplete && (
-                  <Animated.View entering={FadeIn.duration(300)}>
+                  <View>
                     <View className="bg-secondary-800 rounded-full p-1">
                       <Feather name="check-circle" size={20} color="white" />
                     </View>
-                  </Animated.View>
+                  </View>
                 )}
               </HStack>
               <View className="flex-row items-center gap-2">
@@ -166,11 +140,9 @@ const MoodCard = () => {
             {/* Action Card */}
             <TouchableOpacity
               onPress={() => router.navigate({ pathname: "/train" })}
-              onPressIn={handlePressIn}
-              onPressOut={handlePressOut}
               activeOpacity={0.9}
             >
-              <Animated.View style={animatedStyle}>
+              <View>
                 <LinearGradient
                   colors={
                     isComplete
@@ -219,10 +191,10 @@ const MoodCard = () => {
                     </View>
                   </HStack>
                 </LinearGradient>
-              </Animated.View>
+              </View>
             </TouchableOpacity>
           </LinearGradient>
-        </Animated.View>
+        </View>
       )}
 
       {moodSheet && (

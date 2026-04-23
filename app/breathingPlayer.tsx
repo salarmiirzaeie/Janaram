@@ -1,3 +1,4 @@
+import BannerAd from "@/components/home/BannerAd";
 import {
   Actionsheet,
   ActionsheetBackdrop,
@@ -12,7 +13,7 @@ import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -27,6 +28,7 @@ import {
 } from "react-native-gesture-handler";
 import { LinearGradient } from "react-native-linear-gradient";
 import Animated, {
+  cancelAnimation,
   Easing,
   FadeIn,
   interpolate,
@@ -66,6 +68,7 @@ export default function BreathingPlayerScreen() {
   >("inhale");
   const secondsShared = useSharedValue(INHALE_DURATION / 1000);
   const progress = useSharedValue(0);
+  const animationRef = useRef<any>(null);
 
   const [phaseText, setPhaseText] = useState<
     "inhale" | "hold_after_inhale" | "exhale" | "hold_after_exhale"
@@ -100,90 +103,141 @@ export default function BreathingPlayerScreen() {
   }, [position, duration]);
 
   const startPhaseCountdown = (phaseDurationMs: number) => {
+    if (phaseDurationMs <= 0) return;
     secondsShared.value = phaseDurationMs / 1000;
-    secondsShared.value = withTiming(0, { duration: phaseDurationMs });
+    secondsShared.value = withTiming(0, {
+      duration: phaseDurationMs,
+      easing: Easing.linear,
+    });
+  };
+
+  const stopAnimation = () => {
+    cancelAnimation(scale);
+    scale.value = 1;
+    cancelAnimation(secondsShared);
+    phaseShared.value = "inhale";
+    secondsShared.value = INHALE_DURATION / 1000;
+  };
+
+  const startBreathingCycle = () => {
+    if (!isPlaying) return;
+
+    // Cancel any existing animation
+    cancelAnimation(scale);
+    cancelAnimation(secondsShared);
+
+    // Reset to inhale phase
+    phaseShared.value = "inhale";
+    startPhaseCountdown(INHALE_DURATION);
+
+    // Scale animation sequence
+    const animations: any[] = [];
+
+    // Inhale: scale from 1 to 1.3
+    animations.push(
+      withTiming(
+        1.3,
+        {
+          duration: INHALE_DURATION,
+          easing: Easing.bezier(0.4, 0, 0.2, 1),
+        },
+        (finished) => {
+          if (finished) {
+            runOnJS(Vibration.vibrate)(50);
+            // After inhale, either hold or go to exhale
+            if (HOLD_DURATION > 0) {
+              phaseShared.value = "hold_after_inhale";
+              runOnJS(startPhaseCountdown)(HOLD_DURATION);
+            } else {
+              phaseShared.value = "exhale";
+              runOnJS(startPhaseCountdown)(EXHALE_DURATION);
+            }
+          }
+        }
+      )
+    );
+
+    // Hold after inhale (if exists)
+    if (HOLD_DURATION > 0) {
+      animations.push(
+        withTiming(
+          1.3,
+          {
+            duration: HOLD_DURATION,
+            easing: Easing.linear,
+          },
+          (finished) => {
+            if (finished) {
+              runOnJS(Vibration.vibrate)(50);
+              phaseShared.value = "exhale";
+              runOnJS(startPhaseCountdown)(EXHALE_DURATION);
+            }
+          }
+        )
+      );
+    }
+
+    // Exhale: scale from 1.3 back to 1
+    animations.push(
+      withTiming(
+        1,
+        {
+          duration: EXHALE_DURATION,
+          easing: Easing.bezier(0.4, 0, 0.2, 1),
+        },
+        (finished) => {
+          if (finished) {
+            runOnJS(Vibration.vibrate)(50);
+            // After exhale, either hold or go to inhale
+            if (HOLD_DURATION > 0) {
+              phaseShared.value = "hold_after_exhale";
+              runOnJS(startPhaseCountdown)(HOLD_DURATION);
+            } else {
+              phaseShared.value = "inhale";
+              runOnJS(startPhaseCountdown)(INHALE_DURATION);
+            }
+          }
+        }
+      )
+    );
+
+    // Hold after exhale (if exists)
+    if (HOLD_DURATION > 0) {
+      animations.push(
+        withTiming(
+          1,
+          {
+            duration: HOLD_DURATION,
+            easing: Easing.linear,
+          },
+          (finished) => {
+            if (finished) {
+              runOnJS(Vibration.vibrate)(50);
+              phaseShared.value = "inhale";
+              runOnJS(startPhaseCountdown)(INHALE_DURATION);
+            }
+          }
+        )
+      );
+    }
+
+    // Run the animation sequence repeatedly
+    scale.value = withRepeat(withSequence(...animations), -1, false);
   };
 
   useEffect(() => {
     if (!isPlaying) {
-      scale.value = withTiming(1, {
-        duration: 250,
-        easing: Easing.out(Easing.ease),
-      });
-      phaseShared.value = "inhale";
-      secondsShared.value = INHALE_DURATION / 1000;
+      stopAnimation();
       return;
     }
 
-    phaseShared.value = "inhale";
-    startPhaseCountdown(INHALE_DURATION);
+    startBreathingCycle();
 
-    const seq: any[] = [];
-    seq.push(
-      withTiming(
-        1.3,
-        { duration: INHALE_DURATION, easing: Easing.inOut(Easing.ease) },
-        (finished) => {
-          if (!finished) return;
-          runOnJS(Vibration.vibrate)(50);
-          if (HOLD_DURATION > 0) {
-            phaseShared.value = "hold_after_inhale";
-            secondsShared.value = HOLD_DURATION / 1000;
-            secondsShared.value = withTiming(0, { duration: HOLD_DURATION });
-          } else {
-            phaseShared.value = "exhale";
-            secondsShared.value = EXHALE_DURATION / 1000;
-            secondsShared.value = withTiming(0, { duration: EXHALE_DURATION });
-          }
-        }
-      )
-    );
-
-    if (HOLD_DURATION > 0) {
-      seq.push(
-        withTiming(1.3, { duration: HOLD_DURATION }, (finished) => {
-          if (!finished) return;
-          runOnJS(Vibration.vibrate)(50);
-          phaseShared.value = "exhale";
-          secondsShared.value = EXHALE_DURATION / 1000;
-          secondsShared.value = withTiming(0, { duration: EXHALE_DURATION });
-        })
-      );
-    }
-
-    seq.push(
-      withTiming(
-        1,
-        { duration: EXHALE_DURATION, easing: Easing.inOut(Easing.ease) },
-        (finished) => {
-          if (!finished) return;
-          runOnJS(Vibration.vibrate)(50);
-          if (HOLD_DURATION > 0) {
-            phaseShared.value = "hold_after_exhale";
-            secondsShared.value = HOLD_DURATION / 1000;
-            secondsShared.value = withTiming(0, { duration: HOLD_DURATION });
-          } else {
-            phaseShared.value = "inhale";
-            secondsShared.value = INHALE_DURATION / 1000;
-            secondsShared.value = withTiming(0, { duration: INHALE_DURATION });
-          }
-        }
-      )
-    );
-
-    if (HOLD_DURATION > 0) {
-      seq.push(
-        withTiming(1, { duration: HOLD_DURATION }, (finished) => {
-          if (!finished) return;
-          runOnJS(Vibration.vibrate)(50);
-          phaseShared.value = "inhale";
-          secondsShared.value = INHALE_DURATION / 1000;
-          secondsShared.value = withTiming(0, { duration: INHALE_DURATION });
-        })
-      );
-    }
-
-    scale.value = withRepeat(withSequence(...seq), -1, false);
+    // Cleanup on unmount or when isPlaying changes
+    return () => {
+      cancelAnimation(scale);
+      cancelAnimation(secondsShared);
+    };
   }, [isPlaying, INHALE_DURATION, EXHALE_DURATION, HOLD_DURATION]);
 
   useEffect(() => {
@@ -223,8 +277,12 @@ export default function BreathingPlayerScreen() {
       transform: [{ scale: scale.value }],
       backgroundColor: interpolateColor(
         scale.value,
-        [1, 1.3],
-        ["rgba(121, 174, 214, 0.15)", "rgba(153, 102, 204, 0.15)"]
+        [1, 1.15, 1.3],
+        [
+          "rgba(121, 174, 214, 0.1)",
+          "rgba(137, 138, 224, 0.12)",
+          "rgba(153, 102, 204, 0.15)",
+        ]
       ),
     };
   });
@@ -258,28 +316,22 @@ export default function BreathingPlayerScreen() {
               <Ionicons name="chevron-down" size={24} color="#666" />
             </TouchableOpacity>
             <Text className="font-vazirBold text-primary-600 text-base">
-              تمرین تنفس
+              {""}
             </Text>
             <View className="w-10" />
           </View>
 
-          <View className="flex-1 justify-center items-center px-6">
-            {/* Phase Indicator */}
-            <Animated.View
-              entering={FadeIn.duration(400)}
-              className="items-center mb-4"
-            >
-              <View className="bg-primary-100 px-4 py-2 rounded-full flex-row items-center gap-2">
-                <Text className="text-2xl">{phase.icon}</Text>
-                <Text className="text-primary-700 font-vazirBold text-lg">
-                  {phase.text}
-                </Text>
-              </View>
-            </Animated.View>
+          {/* Phase indicator text */}
+          {/* <View className="items-center mt-2">
+            <Text style={[styles.phaseText, { color: phase.color }]}>
+              {phase.text}
+            </Text>
+          </View> */}
 
+          <View className="flex-1 items-center px-6">
             {/* Countdown Timer */}
             <Animated.View entering={FadeIn.duration(400).delay(50)}>
-              <Text className="text-7xl font-vazirBold text-primary-600 mb-2">
+              <Text className="text-7xl font-vazirBold text-primary-600 mb-0">
                 {phaseSeconds}
               </Text>
               <Text className="text-gray-400 font-vazir text-sm text-center">
@@ -398,86 +450,74 @@ export default function BreathingPlayerScreen() {
                   <ActionsheetDragIndicator />
                 </ActionsheetDragIndicatorWrapper>
 
-                {initialLoading ? (
-                  <VStack
-                    space="lg"
-                    className="p-4 items-center justify-center w-full"
-                  >
-                    <View style={styles.skeletonTitle} />
-                    <View style={styles.skeletonDesc} />
-                    <View style={styles.skeletonDesc} />
-                    <View style={styles.skeletonDesc} />
-                    <View style={styles.skeletonButton} />
-                  </VStack>
-                ) : (
-                  <View className="w-full">
-                    <VStack space="md" className="p-4 items-center">
-                      <LinearGradient
-                        colors={["#79AED6", "#9966CC"]}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 1 }}
-                        style={{
-                          borderRadius: 60,
-                          padding: 16,
-                          marginBottom: 16,
-                        }}
-                      >
-                        <Feather name="wind" size={40} color="white" />
-                      </LinearGradient>
-                      <Text className="text-2xl font-vazirBold text-primary-800 text-center">
-                        {track?.title}
-                      </Text>
-                      <Text className="text-base text-gray-600 text-right font-vazir leading-6">
-                        {track?.description}
-                      </Text>
-
-                      <View className="flex-row justify-around w-full mt-4 pt-4 border-t border-gray-100">
-                        <View className="items-center">
-                          <Text className="text-primary-500 font-vazirBold text-lg">
-                            {(INHALE_DURATION / 1000).toFixed(0)}
-                          </Text>
-                          <Text className="text-gray-400 font-vazir text-xs">
-                            دم (ثانیه)
-                          </Text>
-                        </View>
-                        {HOLD_DURATION > 0 && (
-                          <View className="items-center">
-                            <Text className="text-primary-500 font-vazirBold text-lg">
-                              {(HOLD_DURATION / 1000).toFixed(0)}
-                            </Text>
-                            <Text className="text-gray-400 font-vazir text-xs">
-                              حبس (ثانیه)
-                            </Text>
-                          </View>
-                        )}
-                        <View className="items-center">
-                          <Text className="text-primary-500 font-vazirBold text-lg">
-                            {(EXHALE_DURATION / 1000).toFixed(0)}
-                          </Text>
-                          <Text className="text-gray-400 font-vazir text-xs">
-                            بازدم (ثانیه)
-                          </Text>
-                        </View>
-                      </View>
-                    </VStack>
-                    <Button
-                      className="w-full mb-4 bg-primary-500 rounded-2xl"
-                      onPress={() => {
-                        setIsSheetOpen(false);
-                        togglePlay();
+                <View className="w-full">
+                  <VStack space="md" className="p-4 items-center">
+                    <LinearGradient
+                      colors={["#79AED6", "#9966CC"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                      style={{
+                        borderRadius: 60,
+                        padding: 16,
+                        marginBottom: 16,
                       }}
                     >
-                      <ButtonText className="font-vazirBold">
-                        شروع تمرین
-                      </ButtonText>
-                    </Button>
-                  </View>
-                )}
+                      <Feather name="wind" size={40} color="white" />
+                    </LinearGradient>
+                    <Text className="text-2xl font-vazirBold text-primary-800 text-center">
+                      {track?.title}
+                    </Text>
+                    <Text className="text-base text-gray-600 text-right font-vazir leading-6">
+                      {track?.description}
+                    </Text>
+
+                    <View className="flex-row justify-around w-full mt-4 pt-4 border-t border-gray-100">
+                      <View className="items-center">
+                        <Text className="text-primary-500 font-vazirBold text-lg">
+                          {(INHALE_DURATION / 1000).toFixed(0)}
+                        </Text>
+                        <Text className="text-gray-400 font-vazir text-xs">
+                          دم (ثانیه)
+                        </Text>
+                      </View>
+                      {HOLD_DURATION > 0 && (
+                        <View className="items-center">
+                          <Text className="text-primary-500 font-vazirBold text-lg">
+                            {(HOLD_DURATION / 1000).toFixed(0)}
+                          </Text>
+                          <Text className="text-gray-400 font-vazir text-xs">
+                            حبس (ثانیه)
+                          </Text>
+                        </View>
+                      )}
+                      <View className="items-center">
+                        <Text className="text-primary-500 font-vazirBold text-lg">
+                          {(EXHALE_DURATION / 1000).toFixed(0)}
+                        </Text>
+                        <Text className="text-gray-400 font-vazir text-xs">
+                          بازدم (ثانیه)
+                        </Text>
+                      </View>
+                    </View>
+                  </VStack>
+                  <Button
+                    className="w-full mb-4 bg-primary-500 rounded-2xl"
+                    onPress={() => {
+                      setIsSheetOpen(false);
+                      togglePlay();
+                    }}
+                  >
+                    <ButtonText className="font-vazirBold">
+                      شروع تمرین
+                    </ButtonText>
+                  </Button>
+                </View>
               </ActionsheetContent>
             </SafeAreaView>
           </Actionsheet>
         </View>
       </SafeAreaView>
+      <BannerAd bannerSize="BANNER" />
     </LinearGradient>
   );
 }
@@ -522,6 +562,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: "vazirBold",
     textAlign: "center",
+  },
+  phaseText: {
+    fontSize: 20,
+    fontWeight: "600",
+    fontFamily: "vazirBold",
+    marginBottom: 8,
   },
   progressBarContainer: {
     width: "100%",
@@ -573,7 +619,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    marginTop: 30,
+    marginTop: 0,
   },
   playButton: {
     width: 80,

@@ -1,9 +1,11 @@
+import { interstitialPlacement } from "@/constants/keys";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { toPersianDigits } from "@/utils/persian";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import { Adivery } from "adivery";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Dimensions, Image, View } from "react-native";
@@ -25,7 +27,7 @@ interface IVStackProps extends React.ComponentProps<typeof VStack> {
 }
 
 const SleepCourseCard: React.FC<IVStackProps> = ({ item, index }) => {
-  const { loadTrack, track } = useAudioPlayer();
+  const { loadTrack, track, isPlaying } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
   const { data: plans } = usePlansQuery(null);
   const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
@@ -47,14 +49,24 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, index }) => {
       if (item.isPro && !proPlan?.isActive) {
         handleOpenNotProModal();
         setLoading(false);
+
         return;
       }
+      if (!proPlan?.isActive) {
+        Adivery.prepareInterstitialAd(interstitialPlacement);
+        Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+          if (isLoaded) {
+            Adivery.showAd(interstitialPlacement);
+          }
+        });
+      }
+
       await loadTrack(item.id);
     }
     setLoading(false);
   };
 
-  const isCurrentlyPlaying = track?.id === item.id;
+  const isCurrentlyPlaying = track?.id === item.id && isPlaying;
 
   return (
     <Pressable
@@ -62,6 +74,14 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, index }) => {
         if (item.isPro && !proPlan?.isActive) {
           handleOpenNotProModal();
           return;
+        }
+        if (!proPlan?.isActive) {
+          Adivery.prepareInterstitialAd(interstitialPlacement);
+          Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+            if (isLoaded) {
+              Adivery.showAd(interstitialPlacement);
+            }
+          });
         }
         router.push({
           pathname: "/player",

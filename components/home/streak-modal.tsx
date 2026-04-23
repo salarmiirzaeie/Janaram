@@ -15,7 +15,11 @@ interface Props {
   streakCount: number;
 }
 
-const StreakModal: React.FC<Props> = ({ showStreakModal, onClose, streakCount }) => {
+const StreakModal: React.FC<Props> = ({
+  showStreakModal,
+  onClose,
+  streakCount,
+}) => {
   const animationRef = React.useRef<LottieView>(null);
 
   // Close modal
@@ -31,7 +35,12 @@ const StreakModal: React.FC<Props> = ({ showStreakModal, onClose, streakCount })
   }, [showStreakModal]);
 
   return (
-    <Modal animationType="fade" transparent={true} visible={showStreakModal} onRequestClose={handleClose}>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={showStreakModal}
+      onRequestClose={handleClose}
+    >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
@@ -45,8 +54,12 @@ const StreakModal: React.FC<Props> = ({ showStreakModal, onClose, streakCount })
             loop={true}
             style={styles.animation}
           />
-          <Text className="mt-6 font-vazirBold">تبریک! یک روز دیگه با آرامش 🔥</Text>
-          <Text className="my-3 font-sm font-vazir">{toPersianDigits(streakCount)} روز با جانارام 🌱</Text>
+          <Text className="mt-6 font-vazirBold">
+            تبریک! یک روز دیگه با آرامش 🔥
+          </Text>
+          <Text className="my-3 font-sm font-vazir">
+            {toPersianDigits(streakCount)} روز با جانارام 🌱
+          </Text>
           <Button
             onPress={() => {
               handleClose();
@@ -54,7 +67,7 @@ const StreakModal: React.FC<Props> = ({ showStreakModal, onClose, streakCount })
             }}
             className="mt-4"
           >
-            <ButtonText>شروع تمرین امروز</ButtonText>
+            <ButtonText>شروع </ButtonText>
           </Button>
         </View>
       </View>

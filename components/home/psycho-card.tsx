@@ -13,6 +13,7 @@ const PsychoCard: React.FC = (props) => {
   const notificationCount = useAppSelector(
     (state) => state.notification.unReadNotifications
   );
+
   return (
     <Pressable
       className=" rounded-full"

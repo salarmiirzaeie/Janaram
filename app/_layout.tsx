@@ -4,8 +4,10 @@ import { AudioPlayerProvider } from "@/context/AudioPlayerContext";
 import "@/global.css";
 import { persistor, store } from "@/redux/store";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { Adivery } from "adivery";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import { useEffect } from "react";
 import { I18nManager, StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
@@ -26,6 +28,10 @@ export default function RootLayout() {
     vazirBold: require("@/assets/fonts/vazir-bold.ttf"),
     iranSans: require("@/assets/fonts/Iranian-sans.ttf"),
   });
+  useEffect(() => {
+    Adivery.configure("596f04bd-f6b5-4d70-9df6-f700e0ac1ab6");
+  }, []);
+
   const netInfo = useNetInfo();
   if (!loaded) {
     // Async font loading only occurs in development.

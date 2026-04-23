@@ -1,17 +1,17 @@
 {
   "name": "جانارام",
   "slug": "Janaram",
-  "version": "1.2.0",
-  "runtimeVersion": "1.2.0",
+  "version": "1.2.1",
+  "runtimeVersion": "1.2.1",
   "orientation": "portrait",
   "icon": "./assets/images/icon.png",
   "scheme": "janaram",
   "userInterfaceStyle": "automatic",
-  "newArchEnabled": true,
+  "newArchEnabled": false,
   "ios": {
     "supportsTablet": false,
     "bundleIdentifier": "com.salarmiirzapour.Janaram",
-    "buildNumber": "1.2.0"
+    "buildNumber": "1.2.1"
   },
   "android": {
     "adaptiveIcon": {

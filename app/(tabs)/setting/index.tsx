@@ -20,7 +20,6 @@ import {
   View,
 } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
-import Animated, { FadeInUp } from "react-native-reanimated";
 import { useDispatch } from "react-redux";
 
 const SettingsScreen = () => {
@@ -52,7 +51,7 @@ const SettingsScreen = () => {
         <ProfileCard />
 
         {/* General Section */}
-        <Animated.View entering={FadeInUp.duration(600).delay(100)}>
+        <View>
           <VStack className="mb-6 px-4">
             <HStack className="items-center justify-end mb-5 mt-3">
               <View className="bg-primary-100 rounded-full px-3 py-1">
@@ -143,10 +142,10 @@ const SettingsScreen = () => {
               />
             </LinearGradient>
           </VStack>
-        </Animated.View>
+        </View>
 
         {/* Notifications Section */}
-        <Animated.View entering={FadeInUp.duration(600).delay(200)}>
+        <View>
           <VStack className="mb-6 px-4">
             <HStack className="items-center justify-end mb-5">
               <View className="bg-primary-100 rounded-full px-3 py-1">
@@ -201,16 +200,16 @@ const SettingsScreen = () => {
               />
             </LinearGradient>
           </VStack>
-        </Animated.View>
+        </View>
 
         {/* App Version */}
-        <Animated.View entering={FadeInUp.duration(600).delay(300)}>
+        <View>
           <View className="items-center mb-40 py-6">
             <Text className="text-tertiary-400 font-vazir text-xs">
-              نسخه ۱.۲.۰
+              نسخه ۱.۲.۱
             </Text>
           </View>
-        </Animated.View>
+        </View>
       </ScrollView>
 
       <AboutModal

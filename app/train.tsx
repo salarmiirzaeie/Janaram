@@ -2,6 +2,7 @@ import { Badge, BadgeText } from "@/components/ui/badge";
 import { HStack } from "@/components/ui/hstack";
 import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { VStack } from "@/components/ui/vstack";
+import { interstitialPlacement } from "@/constants/keys";
 import {
   useCompleteExerciseMutation,
   useGetExerciseQuery,
@@ -17,6 +18,7 @@ import {
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { Adivery } from "adivery";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
 import React, { useEffect, useMemo } from "react";
@@ -102,6 +104,14 @@ const Train = () => {
             if (isProAndNotActive) {
               handleOpenNotProModal();
               return;
+            }
+            if (!proPlan?.isActive) {
+              Adivery.prepareInterstitialAd(interstitialPlacement);
+              Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+                if (isLoaded) {
+                  Adivery.showAd(interstitialPlacement);
+                }
+              });
             }
             if (!item.done) completeExercise({ exerciseId: item._id });
             if (item.type === "meditation") {

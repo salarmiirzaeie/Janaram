@@ -4,14 +4,17 @@ import { HStack } from "@/components/ui/hstack";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { interstitialPlacement } from "@/constants/keys";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { useGetExploreQuery } from "@/services/meditations/meditation-adapter";
+import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import {
   AntDesign,
   Feather,
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { Adivery } from "adivery";
 import { router } from "expo-router";
 import React, { useCallback, useMemo } from "react";
 import {
@@ -23,6 +26,7 @@ import {
   View,
 } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
+import { useDispatch } from "react-redux";
 
 // ========== استایل‌های استاتیک با StyleSheet ==========
 const createStyles = (CARD_WIDTH: number, SMALL_CARD_WIDTH: number) =>
@@ -65,75 +69,98 @@ const createStyles = (CARD_WIDTH: number, SMALL_CARD_WIDTH: number) =>
   });
 
 // ========== کامپوننت مجزا برای کارت قصه ==========
-const StoryCard = React.memo(({ item }: { item: any; index: number }) => {
-  const { width: SCREEN_WIDTH } = useWindowDimensions();
-  const CARD_WIDTH = SCREEN_WIDTH - 60;
-  const styles = useMemo(() => createStyles(CARD_WIDTH, 0), [CARD_WIDTH]);
+const StoryCard = React.memo(
+  ({
+    item,
+    handleOpenNotProModal,
+    isActive,
+  }: {
+    item: any;
+    index: number;
+    handleOpenNotProModal: () => void;
+    isActive: boolean;
+  }) => {
+    const { width: SCREEN_WIDTH } = useWindowDimensions();
+    const CARD_WIDTH = SCREEN_WIDTH - 60;
+    const styles = useMemo(() => createStyles(CARD_WIDTH, 0), [CARD_WIDTH]);
 
-  const handlePress = useCallback(() => {
-    router.push({
-      pathname: "/player",
-      params: { id: item.id },
-    });
-  }, [item.id]);
+    const handlePress = useCallback(() => {
+      if (item.isPro && !isActive) {
+        handleOpenNotProModal();
+        return;
+      }
+      if (!isActive) {
+        Adivery.prepareInterstitialAd(interstitialPlacement);
+        Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+          if (isLoaded) {
+            Adivery.showAd(interstitialPlacement);
+          }
+        });
+      }
+      router.push({
+        pathname: "/player",
+        params: { id: item.id },
+      });
+    }, [item.id]);
 
-  return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.9}>
-      <LinearGradient
-        colors={["#1a1a2e", "#16213e"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.storyCardGradient}
-      >
-        <Image
-          source={{ uri: BASE_URL_IMAGES + item.image }}
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            opacity: 0.3,
-          }}
-          resizeMode="cover"
-        />
-
-        <View className="absolute top-4 right-4">
-          <MaterialIcons
-            name="auto-stories"
-            size={32}
-            color="rgba(255,255,255,0.2)"
+    return (
+      <TouchableOpacity onPress={handlePress} activeOpacity={0.9}>
+        <LinearGradient
+          colors={["#1a1a2e", "#16213e"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.storyCardGradient}
+        >
+          <Image
+            source={{ uri: BASE_URL_IMAGES + item.image }}
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              opacity: 0.3,
+            }}
+            resizeMode="cover"
           />
-        </View>
 
-        <View className="flex-1 justify-between p-6">
-          <View>
-            <Text className="text-white font-vazirBold  text-xl text-right mb-2">
-              {item.title}
-            </Text>
-            <Text className="text-white/70 font-vazir text-sm text-right line-clamp-2">
-              {item.description}
-            </Text>
+          <View className="absolute top-4 right-4">
+            <MaterialIcons
+              name="auto-stories"
+              size={32}
+              color="rgba(255,255,255,0.2)"
+            />
           </View>
 
-          <HStack className="items-center justify-between mt-4">
-            <View className="flex-row items-center gap-1 bg-white/10 px-3 py-1.5 rounded-full">
-              <Feather
-                name="headphones"
-                size={12}
-                color="rgba(255,255,255,0.6)"
-              />
-              <Text className="text-white/60 font-vazir text-xs">
-                {item.duration} دقیقه
+          <View className="flex-1 justify-between p-6">
+            <View>
+              <Text className="text-white font-vazirBold  text-xl text-right mb-2">
+                {item.title}
+              </Text>
+              <Text className="text-white/70 font-vazir text-sm text-right line-clamp-2">
+                {item.description}
               </Text>
             </View>
-            <View className="bg-primary-500/20 rounded-full p-2">
-              <Feather name="play" size={16} color="#79AED6" />
-            </View>
-          </HStack>
-        </View>
-      </LinearGradient>
-    </TouchableOpacity>
-  );
-});
+
+            <HStack className="items-center justify-between mt-4">
+              <View className="flex-row items-center gap-1 bg-white/10 px-3 py-1.5 rounded-full">
+                <Feather
+                  name="headphones"
+                  size={12}
+                  color="rgba(255,255,255,0.6)"
+                />
+                <Text className="text-white/60 font-vazir text-xs">
+                  {item.duration} دقیقه
+                </Text>
+              </View>
+              <View className="bg-primary-500/20 rounded-full p-2">
+                <Feather name="play" size={16} color="#79AED6" />
+              </View>
+            </HStack>
+          </View>
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  }
+);
 
 // ========== کامپوننت مجزا برای هدر هر سکشن ==========
 const SectionHeader = React.memo(
@@ -208,8 +235,12 @@ const StoriesSection = React.memo(
   }) => {
     const { width: SCREEN_WIDTH } = useWindowDimensions();
     const CARD_WIDTH = SCREEN_WIDTH - 60;
+    const { data: plans } = usePlansQuery(null);
+    const proPlan = plans?.data.plans?.find(
+      (plan) => plan.name === "unlimited"
+    );
     const styles = useMemo(() => createStyles(CARD_WIDTH, 0), [CARD_WIDTH]);
-
+    const dispatch = useDispatch();
     const skeletonData = useMemo(() => [1, 2], []);
     const renderSkeleton = useCallback(
       () => (
@@ -221,7 +252,15 @@ const StoriesSection = React.memo(
       ),
       [styles.skeletonStory]
     );
-
+    const handleOpenNotProModal = () => {
+      dispatch({
+        type: "pro/setShowNotProModal",
+        payload: {
+          message: "🌙 این مدیتیشن مخصوص کاربران Pro است",
+          showNotProModal: true,
+        },
+      });
+    };
     if (data.length === 0 && !isLoading) return null;
 
     return (
@@ -235,7 +274,12 @@ const StoriesSection = React.memo(
           data={data}
           keyExtractor={(item) => item.id?.toString() || `story-${item.title}`}
           renderItem={({ item, index }) => (
-            <StoryCard item={item} index={index} />
+            <StoryCard
+              isActive={proPlan?.isActive || false}
+              handleOpenNotProModal={handleOpenNotProModal}
+              item={item}
+              index={index}
+            />
           )}
           horizontal
           showsHorizontalScrollIndicator={false}

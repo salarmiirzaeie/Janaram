@@ -1,3 +1,4 @@
+import BannerAd from "@/components/home/BannerAd";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Ionicons } from "@expo/vector-icons";
@@ -292,6 +293,7 @@ export default function PlayerScreen() {
           </Animated.View> */}
         </View>
       )}
+      <BannerAd bannerSize="BANNER" />
     </View>
   );
 }

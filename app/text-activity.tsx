@@ -1,3 +1,4 @@
+import BannerAd from "@/components/home/BannerAd";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
@@ -296,7 +297,7 @@ export default function TextActivityScreen() {
                   backgroundColor: "#FFFFFF",
                 }}
               >
-                <Textarea className="border-0 bg-transparent h-80 p-4">
+                <Textarea className="border-0 bg-transparent h-56 p-4">
                   <TextareaInput
                     className="text-right font-vazir text-base"
                     value={text}
@@ -378,6 +379,7 @@ export default function TextActivityScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <BannerAd bannerSize="BANNER" />
     </LinearGradient>
   );
 }

@@ -1,9 +1,11 @@
+import { interstitialPlacement } from "@/constants/keys";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { toPersianDigits, typeTopPersian } from "@/utils/persian";
 import { Entypo, Ionicons } from "@expo/vector-icons";
+import { Adivery } from "adivery";
 import { router } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
 import {
@@ -215,7 +217,7 @@ interface CourseCardProps {
 }
 
 const CourseCard: React.FC<CourseCardProps> = React.memo(({ index, item }) => {
-  const { loadTrack, track } = useAudioPlayer();
+  const { loadTrack, track, isPlaying } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   const { data: plans } = usePlansQuery(null);
@@ -258,7 +260,7 @@ const CourseCard: React.FC<CourseCardProps> = React.memo(({ index, item }) => {
     return BASE_COLORS[index % BASE_COLORS.length];
   }, [item.type, index]);
 
-  const isCurrentlyPlaying = track?.id === item.id;
+  const isCurrentlyPlaying = track?.id === item.id && isPlaying;
 
   const handleOpenNotProModal = useCallback(() => {
     dispatch({
@@ -279,6 +281,14 @@ const CourseCard: React.FC<CourseCardProps> = React.memo(({ index, item }) => {
           handleOpenNotProModal();
           return;
         }
+        if (!proPlan?.isActive) {
+          Adivery.prepareInterstitialAd(interstitialPlacement);
+          Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+            if (isLoaded) {
+              Adivery.showAd(interstitialPlacement);
+            }
+          });
+        }
         await loadTrack(item.id);
       }
     } finally {
@@ -297,6 +307,14 @@ const CourseCard: React.FC<CourseCardProps> = React.memo(({ index, item }) => {
     if (item.isPro && !proPlan?.isActive) {
       handleOpenNotProModal();
       return;
+    }
+    if (!proPlan?.isActive) {
+      Adivery.prepareInterstitialAd(interstitialPlacement);
+      Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+        if (isLoaded) {
+          Adivery.showAd(interstitialPlacement);
+        }
+      });
     }
     router.push({
       pathname: "/player",

@@ -1,8 +1,10 @@
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
+import { interstitialPlacement } from "@/constants/keys";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { Adivery } from "adivery";
 import { router } from "expo-router";
 import React, { useCallback, useMemo } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -30,6 +32,14 @@ const TestCard = ({ item, index }: { item: any; index: number }) => {
     if (item.access === "unlimited" && !proPlan?.isActive) {
       handleOpenNotProModal();
       return;
+    }
+    if (!proPlan?.isActive) {
+      Adivery.prepareInterstitialAd(interstitialPlacement);
+      Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+        if (isLoaded) {
+          Adivery.showAd(interstitialPlacement);
+        }
+      });
     }
     router.push({
       pathname: "/single-test",

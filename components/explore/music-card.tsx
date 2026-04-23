@@ -1,8 +1,10 @@
+import { interstitialPlacement } from "@/constants/keys";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
+import { Adivery } from "adivery";
 import { router } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
 import { Image, Text } from "react-native";
@@ -24,10 +26,11 @@ const MusicCard = React.memo(
     // ✅ Defensive check: if item is undefined/null, render nothing
     if (!item) return null;
 
-    const { track, loadTrack } = useAudioPlayer();
+    const { track, loadTrack, isPlaying } = useAudioPlayer();
     const [isLoading, setLoading] = useState(false);
     const { data: plans } = usePlansQuery(null);
     const dispatch = useDispatch();
+    const isCurrentlyPlaying = track?.id === item.id && isPlaying;
 
     const proPlan = useMemo(
       () => plans?.data.plans?.find((plan) => plan.name === "unlimited"),
@@ -51,9 +54,17 @@ const MusicCard = React.memo(
       setLoading(true);
       try {
         if (item.id) {
-          if (isProAndNotActive) {
+          if (item.isPro && !proPlan?.isActive) {
             handleOpenNotProModal();
             return;
+          }
+          if (!proPlan?.isActive) {
+            Adivery.prepareInterstitialAd(interstitialPlacement);
+            Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+              if (isLoaded) {
+                Adivery.showAd(interstitialPlacement);
+              }
+            });
           }
           await loadTrack(item.id);
         }
@@ -69,9 +80,17 @@ const MusicCard = React.memo(
     ]);
 
     const handleCardPress = useCallback(() => {
-      if (isProAndNotActive) {
+      if (item.isPro && !proPlan?.isActive) {
         handleOpenNotProModal();
         return;
+      }
+      if (!proPlan?.isActive) {
+        Adivery.prepareInterstitialAd(interstitialPlacement);
+        Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+          if (isLoaded) {
+            Adivery.showAd(interstitialPlacement);
+          }
+        });
       }
       router.push({
         pathname: isBreathing ? "/breathingPlayer" : "/player",
@@ -112,7 +131,16 @@ const MusicCard = React.memo(
                 <Spinner />
               ) : (
                 <Pressable onPress={handlePlay}>
-                  <Entypo name="controller-play" size={24} color="black" />
+                  {isCurrentlyPlaying ? (
+                    <Entypo name="controller-paus" size={22} color={"#000"} />
+                  ) : (
+                    <Entypo
+                      name="controller-play"
+                      size={24}
+                      color={"#000"}
+                      style={{ marginLeft: 2 }}
+                    />
+                  )}
                 </Pressable>
               ))}
           </HStack>

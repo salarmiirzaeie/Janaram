@@ -1,8 +1,10 @@
+import { interstitialPlacement } from "@/constants/keys";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
+import { Adivery } from "adivery";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Image, Text } from "react-native";
@@ -14,11 +16,13 @@ import { Spinner } from "../ui/spinner";
 import { VStack } from "../ui/vstack";
 
 const MusicCard = ({ item }: { item: Meditation }) => {
-  const { track: currentTrack, loadTrack } = useAudioPlayer();
+  const { track: currentTrack, loadTrack, isPlaying } = useAudioPlayer();
   const [isLoading, setLoading] = useState(false);
   const { data: plans } = usePlansQuery(null);
   const proPlan = plans?.data.plans?.find((plan) => plan.name === "unlimited");
   const dispatch = useDispatch();
+  const isCurrentlyPlaying = currentTrack?.id === item.id && isPlaying;
+
   const handleOpenNotProModal = () => {
     dispatch({
       type: "pro/setShowNotProModal",
@@ -33,9 +37,15 @@ const MusicCard = ({ item }: { item: Meditation }) => {
     if (item.id) {
       if (item.isPro && !proPlan?.isActive) {
         handleOpenNotProModal();
-        setLoading(false);
-
         return;
+      }
+      if (!proPlan?.isActive) {
+        Adivery.prepareInterstitialAd(interstitialPlacement);
+        Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+          if (isLoaded) {
+            Adivery.showAd(interstitialPlacement);
+          }
+        });
       }
       await loadTrack(item.id);
     }
@@ -49,6 +59,14 @@ const MusicCard = ({ item }: { item: Meditation }) => {
         if (item.isPro && !proPlan?.isActive) {
           handleOpenNotProModal();
           return;
+        }
+        if (!proPlan?.isActive) {
+          Adivery.prepareInterstitialAd(interstitialPlacement);
+          Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+            if (isLoaded) {
+              Adivery.showAd(interstitialPlacement);
+            }
+          });
         }
         router.push({
           pathname: "/player",
@@ -90,7 +108,16 @@ const MusicCard = ({ item }: { item: Meditation }) => {
                 handlePlay();
               }}
             >
-              <Entypo name="controller-play" size={24} color="white" />
+              {isCurrentlyPlaying ? (
+                <Entypo name="controller-paus" size={22} color={"#FFFF"} />
+              ) : (
+                <Entypo
+                  name="controller-play"
+                  size={24}
+                  color={"#FFFF"}
+                  style={{ marginLeft: 2 }}
+                />
+              )}
             </Pressable>
           )}
         </HStack>
