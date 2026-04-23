@@ -5,9 +5,14 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useCustomToast } from "@/hooks/useToast";
 import { useZarinpalPayment } from "@/hooks/useZarinpalPayment";
-import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
+import {
+  usePlansQuery,
+  useUpgradePlanMutation,
+} from "@/services/upgrade/upgrade-adapter";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { useMyket } from "iab-myket-reactnative/src/index";
 import React, { useEffect, useRef } from "react";
+
 import {
   Dimensions,
   Modal,
@@ -53,9 +58,12 @@ export default function ProPlanFullScreenModal({
   const proPlan = plans?.data?.plans?.find((plan) => plan.name === "unlimited");
   const features = proPlan?.features;
   const toast = useCustomToast();
+  const myketInstance = useMyket(process.env.EXPO_PUBLIC_MYKET_BILING_KEY);
 
   const isActive = proPlan?.isActive;
+  const isZarinPalEnabled = proPlan?.isZarinPalEnabled;
   const isLoading = isLoadingPlans || isPaymentLoading;
+  const [upgradePlan, { isLoading: isUpgrading }] = useUpgradePlanMutation();
 
   const scaleValue = useSharedValue(1);
 
@@ -86,13 +94,32 @@ export default function ProPlanFullScreenModal({
 
     // پلن پولی با زرین‌پال
     if (proPlan) {
-      const amountInRials = proPlan.price * 1000;
+      if (isZarinPalEnabled) {
+        const amountInRials = proPlan.price * 1000;
+        await startPayment(
+          proPlan.id,
+          amountInRials,
+          `فعال‌سازی اشتراک Pro جانارام `
+        );
+      } else {
+        try {
+          await myketInstance.connect(process.env.EXPO_PUBLIC_MYKET_BILING_KEY);
 
-      await startPayment(
-        proPlan.id,
-        amountInRials,
-        `فعال‌سازی اشتراک Pro جانارام `
-      );
+          const inventory = await myketInstance.queryPurchaseProduct(true, [
+            id,
+          ]);
+          console.log("Inventory: ", JSON.stringify(inventory));
+
+          const purchase = await myketInstance.purchaseProduct(id, null);
+          const res = await upgradePlan({ id }).unwrap();
+          if (res.success) {
+            toast.show({ msg: res.message, type: "success" });
+            onClose();
+          }
+        } catch (error: any) {
+          toast.show({ msg: error.data.message, type: "error" });
+        }
+      }
     }
   };
 

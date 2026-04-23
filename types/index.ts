@@ -22,6 +22,7 @@ export interface Plan {
   buttonColor: string;
   id: string;
   oldPrice: number;
+  isZarinPalEnabled?: boolean;
 }
 interface StartConversationResponse {
   success: boolean;
