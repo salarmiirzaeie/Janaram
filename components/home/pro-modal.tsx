@@ -9,8 +9,8 @@ import {
   usePlansQuery,
   useUpgradePlanMutation,
 } from "@/services/upgrade/upgrade-adapter";
+import { useBazaar } from "@cafebazaar/react-native-poolakey";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { useMyket } from "iab-myket-reactnative/src/index";
 import React, { useEffect, useRef } from "react";
 
 import {
@@ -58,7 +58,7 @@ export default function ProPlanFullScreenModal({
   const proPlan = plans?.data?.plans?.find((plan) => plan.name === "unlimited");
   const features = proPlan?.features;
   const toast = useCustomToast();
-  const myketInstance = useMyket(process.env.EXPO_PUBLIC_MYKET_BILING_KEY);
+  const bazaar = useBazaar(process.env.EXPO_PUBLIC_MYKET_BILING_KEY);
 
   const isActive = proPlan?.isActive;
   const isZarinPalEnabled = proPlan?.isZarinPalEnabled;
@@ -103,19 +103,21 @@ export default function ProPlanFullScreenModal({
         );
       } else {
         try {
-          await myketInstance.connect(process.env.EXPO_PUBLIC_MYKET_BILING_KEY);
-
-          const inventory = await myketInstance.queryPurchaseProduct(true, [
-            id,
-          ]);
-          console.log("Inventory: ", JSON.stringify(inventory));
-
-          const purchase = await myketInstance.purchaseProduct(id, null);
-          const res = await upgradePlan({ id }).unwrap();
-          if (res.success) {
-            toast.show({ msg: res.message, type: "success" });
-            onClose();
-          }
+          await bazaar
+            .subscribeProduct(id)
+            .then(() => {
+              upgradePlan({ id })
+                .unwrap()
+                .then((res) => {
+                  if (res.success) {
+                    toast.show({ msg: res.message, type: "success" });
+                    onClose();
+                  }
+                });
+            })
+            .catch((e: any) => {
+              console.log(e);
+            });
         } catch (error: any) {
           toast.show({ msg: error.data.message, type: "error" });
         }

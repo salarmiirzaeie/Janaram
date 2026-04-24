@@ -11,6 +11,7 @@
     "lint": "expo lint"
   },
   "dependencies": {
+    "@cafebazaar/react-native-poolakey": "^3.1.2",
     "@expo/html-elements": "^0.4.2",
     "@expo/vector-icons": "^15.0.3",
     "@gluestack-ui/actionsheet": "^0.2.53",
@@ -53,7 +54,6 @@
     "expo-status-bar": "~2.2.3",
     "expo-updates": "~0.28.13",
     "expo-web-browser": "~14.1.6",
-    "iab-myket-reactnative": "^1.0.14",
     "lottie-react-native": "7.2.2",
     "moment-jalaali": "^0.10.4",
     "moment-timezone": "^0.6.0",
