@@ -8,6 +8,8 @@ import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useAppSelector } from "@/hooks/useAppSelector";
+import Constants from "expo-constants";
+
 import useAuth from "@/hooks/useAuth";
 import { AntDesign, Feather, Ionicons, Octicons } from "@expo/vector-icons";
 import React from "react";
@@ -206,7 +208,7 @@ const SettingsScreen = () => {
         <View>
           <View className="items-center mb-40 py-6">
             <Text className="text-tertiary-400 font-vazir text-xs">
-              نسخه ۱.۲.۱
+              نسخه {Constants.expoConfig?.version}
             </Text>
           </View>
         </View>
