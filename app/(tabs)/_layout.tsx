@@ -1,3 +1,4 @@
+import Constants from "expo-constants";
 import { Redirect, router, Tabs } from "expo-router";
 import React, { useEffect } from "react";
 
@@ -43,7 +44,9 @@ export default function TabLayout() {
     (state) => state.settings.moodNotification
   );
   const [showUpdateModal, setShowUpdateModal] = React.useState(false);
-  const { data } = useCheckVersionQuery({ version: "1.2.1" });
+  const { data } = useCheckVersionQuery({
+    version: Constants.expoConfig?.version || "1.2.2",
+  });
   const [initialNotification] = useInitializeNotificationsMutation();
   const { authorized } = useAuth();
   const [sendOldMoods] = useSendPrevMoodsMutation();
