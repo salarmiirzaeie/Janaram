@@ -43,7 +43,7 @@ export default function TabLayout() {
     (state) => state.settings.moodNotification
   );
   const [showUpdateModal, setShowUpdateModal] = React.useState(false);
-  const { data } = useCheckVersionQuery({ version: "1.1.0" });
+  const { data } = useCheckVersionQuery({ version: "1.2.1" });
   const [initialNotification] = useInitializeNotificationsMutation();
   const { authorized } = useAuth();
   const [sendOldMoods] = useSendPrevMoodsMutation();
