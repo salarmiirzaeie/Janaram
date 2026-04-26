@@ -19,15 +19,25 @@ const Start = () => {
     // router.push("/auth/login");
   };
   return (
-    <VStack style={{ paddingBottom: insets.bottom + 24 }} className="flex-1 bg-white items-center p-8  justify-between">
+    <VStack
+      style={{ paddingBottom: insets.bottom + 24 }}
+      className="flex-1 bg-white items-center p-8  justify-between"
+    >
       <VStack space="md" className="flex-1 items-center justify-center">
         {/* <Logo className="h-40 w-56" /> */}
-        <Image source={require("@/assets/illustrations/Welcome.png")} className="h-40 mb-16 w-56" />
+        <Image
+          source={require("@/assets/illustrations/Welcome.png")}
+          className="h-40 mb-16 w-56"
+        />
         <Text className="text-2xl font-vazirBold">
           به جانارام <Logo className="h-10 w-14" /> خوش اومدی
         </Text>
-        <Text className="text-typography-400 text-center text-md">با جانارام آرامشت رو پیدا کن</Text>
-        <Text className="text-lg  text-center ">آماده ای شروع کنی؟</Text>
+        <Text className="text-typography-400 font-vazirBold text-center text-md">
+          با جانارام آرامشت رو پیدا کن
+        </Text>
+        <Text className="text-lg font-vazir  text-center ">
+          آماده ای شروع کنی؟
+        </Text>
       </VStack>
       <Button onPress={handleInitialize} className="w-full" size="xl">
         <ButtonText>شروع </ButtonText>

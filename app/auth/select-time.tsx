@@ -6,20 +6,41 @@ import { useCustomToast } from "@/hooks/useToast";
 import { setMeditationTimer } from "@/redux/intialize/initialize-slice";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { FlatList, Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useDispatch } from "react-redux";
 
 const TimeSelection = () => {
   const dispatch = useDispatch();
   const [selectedHour, setSelectedHour] = useState<number | null>(null);
   const toast = useCustomToast();
-  const hours: { id: number; label: string }[] = Array.from({ length: 17 }, (_, i) => {
-    const hour = i + 7; // Start from 7 AM
-    return {
-      id: hour,
-      label: `${hour}:00 ${hour < 12 ? "صبح" : hour === 12 ? "ظهر" : "بعد از ظهر"}`,
-    };
-  });
+  const hours: { id: number; label: string }[] = Array.from(
+    { length: 17 },
+    (_, i) => {
+      const hour = i + 7; // Start from 7 AM
+
+      let period;
+      if (hour < 12) {
+        period = "صبح";
+      } else if (hour === 12) {
+        period = "ظهر";
+      } else if (hour >= 13 && hour <= 17) {
+        period = "بعد از ظهر";
+      } else {
+        period = "شب";
+      }
+
+      return {
+        id: hour,
+        label: `${hour}:00 ${period}`,
+      };
+    }
+  );
   const handleHourSelect = (hourId: number) => {
     setSelectedHour(hourId);
   };
@@ -35,12 +56,23 @@ const TimeSelection = () => {
     router.push("/auth/personalizing");
   };
 
-  const renderHourItem = ({ item }: { item: { id: number; label: string } }) => (
+  const renderHourItem = ({
+    item,
+  }: {
+    item: { id: number; label: string };
+  }) => (
     <TouchableOpacity
       onPress={() => handleHourSelect(item.id)}
-      style={[styles.hourItem, selectedHour === item.id ? styles.selectedHour : null]}
+      style={[
+        styles.hourItem,
+        selectedHour === item.id ? styles.selectedHour : null,
+      ]}
     >
-      <Text className={`text-md font-vazir ${selectedHour === item.id ? "text-white" : "text-[#4A4E69]"}`}>
+      <Text
+        className={`text-md font-vazir ${
+          selectedHour === item.id ? "text-white" : "text-[#4A4E69]"
+        }`}
+      >
         {item.label}
       </Text>
     </TouchableOpacity>
@@ -48,13 +80,20 @@ const TimeSelection = () => {
 
   return (
     <VStack className="flex-1 bg-white items-center p-4 justify-between">
-      <ProgressOnboarding className="" onBack={() => router.back()} currentStep={7} totalSteps={8} />
+      <ProgressOnboarding
+        className=""
+        onBack={() => router.back()}
+        currentStep={7}
+        totalSteps={8}
+      />
       <VStack space="md" className="flex-1 items-center justify-center">
         <Image
           source={require("@/assets/illustrations/meditation.png")} // Assume a cute clock illustration
           className="h-48 w-48 mb-8"
         />
-        <Text className="text-2xl font-vazirBold  tracking-wide">چه ساعتی دوست داری مدیتیشن کنی؟</Text>
+        <Text className="text-2xl font-vazirBold  tracking-wide">
+          چه ساعتی دوست داری مدیتیشن کنی؟
+        </Text>
         <Text className=" text-typography-400  font-vazir text-center text-md px-4">
           یه ساعت انتخاب کن تا با هم شروع کنیم!
         </Text>

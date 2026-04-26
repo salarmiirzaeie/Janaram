@@ -68,7 +68,7 @@ const EnterName = () => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 py-10 px-4"
+      className="flex-1  p-4"
     >
       <ProgressOnboarding
         onBack={() => router.back()}

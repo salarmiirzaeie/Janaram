@@ -38,7 +38,9 @@ const Personalizing = () => {
       {/* <ProgressOnboarding onBack={() => router.back()} currentStep={7} totalSteps={7} /> */}
 
       <VStack space="md" className="flex-1 items-center justify-center">
-        <Text className="text-2xl font-vazirBold mb-8  tracking-wide">در حال شخصی‌سازی باهوش مصنوعی</Text>
+        <Text className="text-2xl font-vazirBold mb-8  tracking-wide">
+          در حال شخصی‌سازی باهوش مصنوعی
+        </Text>
         <LottieView
           style={{ width: 260, height: 260 }}
           ref={animationRef}
@@ -47,7 +49,10 @@ const Personalizing = () => {
           loop // Enables looping
         />
 
-        <Text className="text-typography-400 text-center text-md px-4"> با جانارام آرامشت رو پیدا کن </Text>
+        <Text className="text-typography-400 font-vazirBold text-center text-md px-4">
+          {" "}
+          با جانارام آرامشت رو پیدا کن{" "}
+        </Text>
       </VStack>
       {/* <VStack className="w-full p-4">
         <Button onPress={handleStartChat} className="w-full  rounded-xl" size="xl">
