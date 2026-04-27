@@ -131,12 +131,35 @@ export default function PlayerScreen() {
 
       {initialLoading ? (
         <View style={styles.skeletonContainer}>
-          <View style={styles.skeletonCover} />
-          <View style={styles.skeletonTitle} />
-          <View style={styles.skeletonDesc} />
-          <View style={styles.skeletonSlider} />
-          <View style={styles.skeletonTimeRow} />
-          <View style={styles.skeletonControls} />
+          {/* Header Skeleton */}
+
+          <View style={styles.skeletonContent}>
+            {/* Album Art Skeleton */}
+            <View>
+              <View style={styles.skeletonArtworkContainer}>
+                <View style={styles.skeletonCover} />
+              </View>
+
+              {/* Track Info Skeleton */}
+              <View style={styles.skeletonInfoContainer}>
+                <View style={styles.skeletonTitle} />
+                <View style={styles.skeletonDesc} />
+              </View>
+
+              {/* Progress Section Skeleton */}
+              <View style={styles.skeletonProgressSection}>
+                <View style={styles.skeletonSlider} />
+                <View style={styles.skeletonTimeRow} />
+              </View>
+            </View>
+
+            {/* Controls Skeleton */}
+            <View style={styles.skeletonControls}>
+              <View style={styles.skeletonSkipButton} />
+              <View style={styles.skeletonPlayButton} />
+              <View style={styles.skeletonSkipButton} />
+            </View>
+          </View>
         </View>
       ) : (
         <View style={styles.content}>
@@ -525,50 +548,80 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: "vazir",
   },
-  // Skeleton styles
   skeletonContainer: {
     flex: 1,
+  },
+  skeletonContent: {
+    flex: 1,
+    justifyContent: "space-between",
+    marginBottom: 150,
+  },
+  skeletonBackButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255,255,255,0.1)",
+  },
+  skeletonArtworkContainer: {
     alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 40,
+    marginTop: 20,
   },
   skeletonCover: {
     width: width * 0.7,
     height: width * 0.7,
     borderRadius: 24,
-    marginBottom: 25,
     backgroundColor: "rgba(255,255,255,0.1)",
+  },
+  skeletonInfoContainer: {
+    alignItems: "center",
+    paddingHorizontal: 30,
+    marginTop: 25,
   },
   skeletonTitle: {
-    width: "60%",
-    height: 26,
+    width: 200,
+    height: 28,
     borderRadius: 6,
     backgroundColor: "rgba(255,255,255,0.1)",
-    marginBottom: 10,
+    marginBottom: 12,
   },
   skeletonDesc: {
-    width: "80%",
-    height: 40,
+    width: 250,
+    height: 44,
     borderRadius: 6,
     backgroundColor: "rgba(255,255,255,0.1)",
-    marginBottom: 20,
+  },
+  skeletonProgressSection: {
+    paddingHorizontal: 30,
+    marginTop: 20,
   },
   skeletonSlider: {
-    width: "90%",
+    width: "100%",
     height: 6,
     borderRadius: 3,
     backgroundColor: "rgba(255,255,255,0.1)",
-    marginBottom: 16,
+    marginBottom: 10,
   },
   skeletonTimeRow: {
-    width: "90%",
+    width: "100%",
     height: 12,
     borderRadius: 6,
     backgroundColor: "rgba(255,255,255,0.1)",
-    marginBottom: 30,
   },
   skeletonControls: {
-    width: "80%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 45,
+    marginTop: 20,
+  },
+  skeletonSkipButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255,255,255,0.1)",
+  },
+  skeletonPlayButton: {
+    width: 70,
     height: 70,
     borderRadius: 35,
     backgroundColor: "rgba(255,255,255,0.1)",

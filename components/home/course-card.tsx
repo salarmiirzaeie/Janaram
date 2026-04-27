@@ -99,6 +99,7 @@ const STATIC_STYLES = StyleSheet.create({
     fontFamily: "vazir",
   },
   title: {
+    fontFamily: "vazir",
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
@@ -107,7 +108,6 @@ const STATIC_STYLES = StyleSheet.create({
     textShadowColor: "rgba(0,0,0,0.15)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
-    fontFamily: "vazir",
   },
   categoryContainer: {
     flexDirection: "row",
@@ -377,7 +377,10 @@ const CourseCard: React.FC<CourseCardProps> = React.memo(({ index, item }) => {
             </View>
 
             <View style={STATIC_STYLES.bottomSection}>
-              <Text numberOfLines={2} style={STATIC_STYLES.title}>
+              <Text
+                numberOfLines={2}
+                className="font-vazirBold text-right text-white text-lg"
+              >
                 {item?.title}
               </Text>
 

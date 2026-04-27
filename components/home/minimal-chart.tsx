@@ -22,12 +22,17 @@ const MinimalChart: React.FC<Props> = ({ moods }) => {
           focusOnPress
           innerRadius={50}
           innerCircleColor={"#fff"}
-          centerLabelComponent={() => <Text className="text-sm font-vazirBold text-black"> ماه گذشته</Text>}
+          centerLabelComponent={() => (
+            <Text className="text-sm font-vazirBold text-black">
+              {" "}
+              ماه گذشته
+            </Text>
+          )}
         />
         {/* PieChart Legend */}
         <VStack>
           {pieData.map((item, index) => (
-            <Text key={index} className="text-right text-sm">
+            <Text key={index} className="text-right font-vazir text-sm">
               <Text style={{ color: item.color }}>● </Text>
               {item.text}
             </Text>

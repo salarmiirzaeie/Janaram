@@ -1,8 +1,9 @@
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
+  LayoutChangeEvent,
   Platform,
   StyleSheet,
   TouchableOpacity,
@@ -11,7 +12,7 @@ import {
 import LinearGradient from "react-native-linear-gradient";
 
 const { width } = Dimensions.get("window");
-const CONTAINER_WIDTH = width - 20; // Subtract left and right margins (10 + 10)
+const CONTAINER_WIDTH = width - 20;
 const TAB_WIDTH = CONTAINER_WIDTH / 5;
 
 interface TabBarProps {
@@ -31,14 +32,17 @@ const AnimatedTabBar: React.FC<TabBarProps> = ({
   const scaleAnims = useRef(
     state.routes.map(() => new Animated.Value(1))
   ).current;
+  const [tabPositions, setTabPositions] = useState<number[]>([]);
 
   useEffect(() => {
-    Animated.spring(slideAnim, {
-      toValue: state.index * TAB_WIDTH,
-      useNativeDriver: true,
-      friction: 8,
-      tension: 40,
-    }).start();
+    if (tabPositions.length === state.routes.length) {
+      Animated.spring(slideAnim, {
+        toValue: tabPositions[state.index],
+        useNativeDriver: true,
+        friction: 8,
+        tension: 40,
+      }).start();
+    }
 
     // Bounce animation for the active tab icon
     Animated.sequence([
@@ -63,7 +67,19 @@ const AnimatedTabBar: React.FC<TabBarProps> = ({
         }).start();
       }
     });
-  }, [state.index]);
+  }, [state.index, tabPositions]);
+
+  const onTabLayout = (event: LayoutChangeEvent, index: number) => {
+    const { x, width: tabWidth } = event.nativeEvent.layout;
+    const tabCenter = x + tabWidth / 2;
+    const sliderWidth = TAB_WIDTH; // Use original TAB_WIDTH to maintain size
+
+    setTabPositions((prev) => {
+      const newPositions = [...prev];
+      newPositions[index] = tabCenter - sliderWidth / 2;
+      return newPositions;
+    });
+  };
 
   const getIcon = (routeName: string, color: string, size: number) => {
     const icons: Record<string, React.ReactNode> = {
@@ -120,6 +136,7 @@ const AnimatedTabBar: React.FC<TabBarProps> = ({
           style={[
             styles.slider,
             {
+              width: TAB_WIDTH, // Use original TAB_WIDTH to maintain size
               transform: [{ translateX: slideAnim }],
             },
           ]}
@@ -167,6 +184,7 @@ const AnimatedTabBar: React.FC<TabBarProps> = ({
                 onLongPress={onLongPress}
                 style={styles.tab}
                 activeOpacity={0.7}
+                onLayout={(event) => onTabLayout(event, index)}
               >
                 <Animated.View
                   style={[
@@ -199,8 +217,6 @@ const AnimatedTabBar: React.FC<TabBarProps> = ({
                 >
                   {getLabel(route.name)}
                 </Animated.Text>
-
-                {/* Active indicator dot */}
               </TouchableOpacity>
             );
           })}
@@ -275,25 +291,12 @@ const styles = StyleSheet.create({
   slider: {
     position: "absolute",
     top: 0,
-    width: TAB_WIDTH,
     height: 3,
   },
   sliderGradient: {
     flex: 1,
     borderTopLeftRadius: 3,
     borderTopRightRadius: 3,
-  },
-  activeDot: {
-    position: "absolute",
-    bottom: 8,
-    alignSelf: "center",
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    overflow: "hidden",
-  },
-  activeDotGradient: {
-    flex: 1,
   },
   shadow: {
     ...StyleSheet.absoluteFillObject,
