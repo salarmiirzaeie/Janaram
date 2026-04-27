@@ -30,25 +30,27 @@ import Animated, { FadeInUp } from "react-native-reanimated";
 // ========== کامپوننت مجزا برای آیتم دسترسی سریع ==========
 const QuickAccessItem = React.memo(
   ({ item, index }: { item: any; index: number }) => {
+    function onPress() {
+      if (item.route === "/psychologist") {
+        Linking.openURL("https://janaram.ir/psychologist");
+        return;
+      }
+      if (item.route?.pathname) {
+        router.push({
+          pathname: item.route?.pathname,
+          params: item.route?.params,
+        });
+        return;
+      }
+
+      router.push(item.route as any);
+    }
+
     return (
       <VStack>
         <TouchableOpacity
           className="aspect-square  h-16"
-          onPress={() => {
-            if (item.route === "/psychologist") {
-              Linking.openURL("https://janaram.ir/psychologist");
-              return;
-            }
-            if (item.route?.pathname) {
-              router.push({
-                pathname: item.route?.pathname,
-                params: item.route?.params,
-              });
-              return;
-            }
-
-            router.push(item.route as any);
-          }}
+          onPress={onPress}
           activeOpacity={0.8}
           style={{ flex: 1 }}
         >
@@ -324,6 +326,7 @@ const Home = () => {
         windowSize={5}
         removeClippedSubviews={true}
       />
+
       {showRateModal && (
         <RateAppSheet isOpen={showRateModal} onClose={handleCloseRateModal} />
       )}

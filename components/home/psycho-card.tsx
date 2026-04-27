@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { router } from "expo-router";
-import React from "react";
+import React, { memo } from "react";
 import { Image } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { Button, ButtonText } from "../ui/button";
@@ -72,4 +72,4 @@ const PsychoCard: React.FC = (props) => {
   );
 };
 
-export default PsychoCard;
+export default memo(PsychoCard);

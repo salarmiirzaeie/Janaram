@@ -1,7 +1,7 @@
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { useCustomToast } from "@/hooks/useToast";
 import { router } from "expo-router";
-import React from "react";
+import React, { memo } from "react";
 import { Image } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { Button, ButtonText } from "../ui/button";
@@ -73,4 +73,4 @@ const TestCard: React.FC = (props) => {
   );
 };
 
-export default TestCard;
+export default memo(TestCard);

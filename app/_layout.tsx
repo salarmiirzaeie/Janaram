@@ -15,11 +15,6 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
-// Force app direction to always LTR
-if (I18nManager.isRTL) {
-  I18nManager.allowRTL(false);
-  I18nManager.forceRTL(false);
-}
 // Trigger a layout animation
 
 export default function RootLayout() {
@@ -29,6 +24,8 @@ export default function RootLayout() {
     iranSans: require("@/assets/fonts/Iranian-sans.ttf"),
   });
   useEffect(() => {
+    I18nManager.allowRTL(false);
+    I18nManager.forceRTL(false);
     Adivery.configure("596f04bd-f6b5-4d70-9df6-f700e0ac1ab6");
   }, []);
 
