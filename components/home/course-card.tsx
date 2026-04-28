@@ -18,6 +18,7 @@ import LinearGradient from "react-native-linear-gradient";
 import { useDispatch } from "react-redux";
 import { Spinner } from "../ui/spinner";
 import { Text } from "../ui/text";
+import { showAd } from "./BannerAd";
 
 // ---------- STATIC PRE-COMPUTATIONS ----------
 const STATIC_STYLES = StyleSheet.create({
@@ -304,11 +305,7 @@ const CourseCard: React.FC<CourseCardProps> = memo(
 
     const showInterstitial = useCallback(() => {
       if (isProActive) return;
-      // Adivery.prepareInterstitialAd(interstitialPlacement);
-      // Adivery.isLoaded(interstitialPlacement).then(
-      //   (loaded) =>
-      //     loaded && mounted.current && Adivery.showAd(interstitialPlacement)
-      // );
+      showAd();
     }, [isProActive]);
 
     const handlePlay = useCallback(async () => {

@@ -10,6 +10,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { useDispatch } from "react-redux";
+import { showAd } from "../home/BannerAd";
 const TestCard = ({ item, index }: { item: any; index: number }) => {
   const dispatch = useDispatch();
   const { data: plans } = usePlansQuery(null);
@@ -33,12 +34,7 @@ const TestCard = ({ item, index }: { item: any; index: number }) => {
       return;
     }
     if (!proPlan?.isActive) {
-      // Adivery.prepareInterstitialAd(interstitialPlacement);
-      // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-      //   if (isLoaded) {
-      //     Adivery.showAd(interstitialPlacement);
-      //   }
-      // });
+      showAd();
     }
     router.push({
       pathname: "/single-test",

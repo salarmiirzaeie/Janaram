@@ -8,6 +8,7 @@ import { router } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
 import { Image, Text } from "react-native";
 import { useDispatch } from "react-redux";
+import { showAd } from "../home/BannerAd";
 import { Badge, BadgeText } from "../ui/badge";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
@@ -58,12 +59,7 @@ const MusicCard = React.memo(
             return;
           }
           if (!proPlan?.isActive) {
-            // Adivery.prepareInterstitialAd(interstitialPlacement);
-            // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-            //   if (isLoaded) {
-            //     Adivery.showAd(interstitialPlacement);
-            //   }
-            // });
+            showAd();
           }
           await loadTrack(item.id);
         }
@@ -84,12 +80,7 @@ const MusicCard = React.memo(
         return;
       }
       if (!proPlan?.isActive) {
-        // Adivery.prepareInterstitialAd(interstitialPlacement);
-        // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-        //   if (isLoaded) {
-        //     Adivery.showAd(interstitialPlacement);
-        //   }
-        // });
+        showAd();
       }
       router.push({
         pathname: isBreathing ? "/breathingPlayer" : "/player",

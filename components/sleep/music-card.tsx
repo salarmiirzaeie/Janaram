@@ -8,6 +8,7 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { Image, Text } from "react-native";
 import { useDispatch } from "react-redux";
+import { showAd } from "../home/BannerAd";
 import { Badge, BadgeText } from "../ui/badge";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
@@ -39,12 +40,7 @@ const MusicCard = ({ item }: { item: Meditation }) => {
         return;
       }
       if (!proPlan?.isActive) {
-        // Adivery.prepareInterstitialAd(interstitialPlacement);
-        // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-        //   if (isLoaded) {
-        //     Adivery.showAd(interstitialPlacement);
-        //   }
-        // });
+        showAd();
       }
       await loadTrack(item.id);
     }
@@ -60,12 +56,7 @@ const MusicCard = ({ item }: { item: Meditation }) => {
           return;
         }
         if (!proPlan?.isActive) {
-          // Adivery.prepareInterstitialAd(interstitialPlacement);
-          // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-          //   if (isLoaded) {
-          //     Adivery.showAd(interstitialPlacement);
-          //   }
-          // });
+          showAd();
         }
         router.push({
           pathname: "/player",

@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { Dimensions, Image, View } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
 import { useDispatch } from "react-redux";
+import { showAd } from "../home/BannerAd";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
 import { Spinner } from "../ui/spinner";
@@ -52,12 +53,7 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, index }) => {
         return;
       }
       if (!proPlan?.isActive) {
-        // Adivery.prepareInterstitialAd(interstitialPlacement);
-        // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-        //   if (isLoaded) {
-        //     Adivery.showAd(interstitialPlacement);
-        //   }
-        // });
+        showAd();
       }
 
       await loadTrack(item.id);
@@ -75,12 +71,7 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, index }) => {
           return;
         }
         if (!proPlan?.isActive) {
-          // Adivery.prepareInterstitialAd(interstitialPlacement);
-          // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-          //   if (isLoaded) {
-          //     Adivery.showAd(interstitialPlacement);
-          //   }
-          // });
+          showAd();
         }
         router.push({
           pathname: "/player",

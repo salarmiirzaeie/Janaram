@@ -1,4 +1,5 @@
 // app/(app)/tests/result.tsx
+import BannerAd from "@/components/home/BannerAd";
 import { router, useLocalSearchParams } from "expo-router";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
@@ -50,7 +51,7 @@ export default function TestResult() {
           </Text>
         </TouchableOpacity>
       </ScrollView>
-      {/* <BannerAd bannerSize="BANNER" /> */}
+      <BannerAd bannerSize="BANNER" />
     </View>
   );
 }

@@ -1,3 +1,4 @@
+import { showAd } from "@/components/home/BannerAd";
 import SleepCourseCard from "@/components/sleep/course-card-sleep";
 import { MainHeader } from "@/components/sleep/main-header";
 import { HStack } from "@/components/ui/hstack";
@@ -89,12 +90,7 @@ const StoryCard = React.memo(
         return;
       }
       if (!isActive) {
-        // Adivery.prepareInterstitialAd(interstitialPlacement);
-        // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-        //   if (isLoaded) {
-        //     Adivery.showAd(interstitialPlacement);
-        //   }
-        // });
+        showAd();
       }
       router.push({
         pathname: "/player",

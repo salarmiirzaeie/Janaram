@@ -1,4 +1,5 @@
 // app/(app)/tests/[id].tsx
+import BannerAd from "@/components/home/BannerAd";
 import {
   useGetSingleTestQuery,
   useSubmitTestMutation,
@@ -192,7 +193,7 @@ const SingleTest = () => {
             </View>
           </Animated.View>
         </View>
-        {/* <BannerAd bannerSize="BANNER" /> */}
+        <BannerAd bannerSize="BANNER" />
 
         {/* Navigation buttons */}
         <View className="flex-row justify-between px-5 py-4 border-t border-gray-100">

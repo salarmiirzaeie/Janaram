@@ -1,3 +1,4 @@
+import { showAd } from "@/components/home/BannerAd";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { HStack } from "@/components/ui/hstack";
 import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
@@ -105,12 +106,7 @@ const Train = () => {
               return;
             }
             if (!proPlan?.isActive) {
-              // Adivery.prepareInterstitialAd(interstitialPlacement);
-              // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-              //   if (isLoaded) {
-              //     Adivery.showAd(interstitialPlacement);
-              //   }
-              // });
+              showAd();
             }
             if (!item.done) completeExercise({ exerciseId: item._id });
             if (item.type === "meditation") {

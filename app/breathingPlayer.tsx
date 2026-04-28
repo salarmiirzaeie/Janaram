@@ -1,3 +1,4 @@
+import BannerAd from "@/components/home/BannerAd";
 import {
   Actionsheet,
   ActionsheetBackdrop,
@@ -516,7 +517,7 @@ export default function BreathingPlayerScreen() {
           </Actionsheet>
         </View>
       </SafeAreaView>
-      {/* <BannerAd bannerSize="BANNER" /> */}
+      <BannerAd bannerSize="BANNER" />
     </LinearGradient>
   );
 }

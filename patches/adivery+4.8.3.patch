@@ -1,3 +1,42 @@
+diff --git a/node_modules/adivery/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/AndroidManifest.xml b/node_modules/adivery/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..e231abe
+--- /dev/null
++++ b/node_modules/adivery/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.adivery" >
++
++    <uses-sdk android:minSdkVersion="17" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/adivery/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/output-metadata.json b/node_modules/adivery/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/output-metadata.json
+new file mode 100644
+index 0000000..93be5d6
+--- /dev/null
++++ b/node_modules/adivery/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/output-metadata.json
+@@ -0,0 +1,18 @@
++{
++  "version": 3,
++  "artifactType": {
++    "type": "AAPT_FRIENDLY_MERGED_MANIFESTS",
++    "kind": "Directory"
++  },
++  "applicationId": "com.adivery",
++  "variantName": "debug",
++  "elements": [
++    {
++      "type": "SINGLE",
++      "filters": [],
++      "attributes": [],
++      "outputFile": "AndroidManifest.xml"
++    }
++  ],
++  "elementType": "File"
++}
+\ No newline at end of file
 diff --git a/node_modules/adivery/android/build/intermediates/aar_metadata/debug/writeDebugAarMetadata/aar-metadata.properties b/node_modules/adivery/android/build/intermediates/aar_metadata/debug/writeDebugAarMetadata/aar-metadata.properties
 new file mode 100644
 index 0000000..1211b1e
@@ -41,6 +80,36 @@ index 0000000..9bc79ca
 +<?xml version="1.0" encoding="utf-8"?>
 +<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/build/generated/res/resValues/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/build/generated/res/resValues/debug"/></dataSet><mergedItems/></merger>
 \ No newline at end of file
+diff --git a/node_modules/adivery/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml b/node_modules/adivery/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml
+index 4079cda..5ecbf19 100644
+--- a/node_modules/adivery/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml
++++ b/node_modules/adivery/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml
+@@ -1,2 +1,2 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/jniLibs"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/debug/jniLibs"/></dataSet></merger>
+\ No newline at end of file
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/jniLibs"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/debug/jniLibs"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/adivery/android/build/intermediates/incremental/mergeDebugShaders/merger.xml b/node_modules/adivery/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
+index 4535aa1..0ade914 100644
+--- a/node_modules/adivery/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
++++ b/node_modules/adivery/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
+@@ -1,2 +1,2 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/shaders"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/debug/shaders"/></dataSet></merger>
+\ No newline at end of file
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/shaders"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/debug/shaders"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/adivery/android/build/intermediates/incremental/packageDebugAssets/merger.xml b/node_modules/adivery/android/build/intermediates/incremental/packageDebugAssets/merger.xml
+index 3f072d4..553b7c3 100644
+--- a/node_modules/adivery/android/build/intermediates/incremental/packageDebugAssets/merger.xml
++++ b/node_modules/adivery/android/build/intermediates/incremental/packageDebugAssets/merger.xml
+@@ -1,2 +1,2 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/assets"/><source path="/home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/build/intermediates/shader_assets/debug/out"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/debug/assets"/></dataSet></merger>
+\ No newline at end of file
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/assets"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/debug/assets"/></dataSet><dataSet config="generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/build/intermediates/shader_assets/debug/compileDebugShaders/out"/></dataSet></merger>
+\ No newline at end of file
 diff --git a/node_modules/adivery/android/build/intermediates/local_only_symbol_list/debug/parseDebugLocalResources/R-def.txt b/node_modules/adivery/android/build/intermediates/local_only_symbol_list/debug/parseDebugLocalResources/R-def.txt
 new file mode 100644
 index 0000000..78ac5b8
@@ -49,6 +118,41 @@ index 0000000..78ac5b8
 @@ -0,0 +1,2 @@
 +R_DEF: Internal format may change without notice
 +local
+diff --git a/node_modules/adivery/android/build/intermediates/manifest_merge_blame_file/debug/processDebugManifest/manifest-merger-blame-debug-report.txt b/node_modules/adivery/android/build/intermediates/manifest_merge_blame_file/debug/processDebugManifest/manifest-merger-blame-debug-report.txt
+new file mode 100644
+index 0000000..4416f1c
+--- /dev/null
++++ b/node_modules/adivery/android/build/intermediates/manifest_merge_blame_file/debug/processDebugManifest/manifest-merger-blame-debug-report.txt
+@@ -0,0 +1,7 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    package="com.adivery" >
++4
++5    <uses-sdk android:minSdkVersion="17" />
++6
++7</manifest>
+diff --git a/node_modules/adivery/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml b/node_modules/adivery/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml
+new file mode 100644
+index 0000000..e231abe
+--- /dev/null
++++ b/node_modules/adivery/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.adivery" >
++
++    <uses-sdk android:minSdkVersion="17" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/adivery/android/build/intermediates/navigation_json/debug/extractDeepLinksDebug/navigation.json b/node_modules/adivery/android/build/intermediates/navigation_json/debug/extractDeepLinksDebug/navigation.json
+new file mode 100644
+index 0000000..0637a08
+--- /dev/null
++++ b/node_modules/adivery/android/build/intermediates/navigation_json/debug/extractDeepLinksDebug/navigation.json
+@@ -0,0 +1 @@
++[]
+\ No newline at end of file
 diff --git a/node_modules/adivery/android/build/intermediates/nested_resources_validation_report/debug/generateDebugResources/nestedResourcesValidationReport.txt b/node_modules/adivery/android/build/intermediates/nested_resources_validation_report/debug/generateDebugResources/nestedResourcesValidationReport.txt
 new file mode 100644
 index 0000000..08f4ebe
@@ -453,8 +557,48 @@ index 7be282e..0000000
 Binary files a/node_modules/adivery/android/build/kotlin/compileDebugKotlin/cacheable/last-build.bin and /dev/null differ
 diff --git a/node_modules/adivery/android/build/kotlin/compileDebugKotlin/local-state/build-history.bin b/node_modules/adivery/android/build/kotlin/compileDebugKotlin/local-state/build-history.bin
 new file mode 100644
-index 0000000..dacb28c
+index 0000000..c8fe148
 Binary files /dev/null and b/node_modules/adivery/android/build/kotlin/compileDebugKotlin/local-state/build-history.bin differ
+diff --git a/node_modules/adivery/android/build/outputs/logs/manifest-merger-debug-report.txt b/node_modules/adivery/android/build/outputs/logs/manifest-merger-debug-report.txt
+index 8e703d0..1f675d2 100644
+--- a/node_modules/adivery/android/build/outputs/logs/manifest-merger-debug-report.txt
++++ b/node_modules/adivery/android/build/outputs/logs/manifest-merger-debug-report.txt
+@@ -1,25 +1,17 @@
+ -- Merging decision tree log ---
+ manifest
+-ADDED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml:1:1-4:12
+-INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml:1:1-4:12
+-INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml:1:1-4:12
++ADDED from /Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/AndroidManifest.xml:1:1-4:12
++INJECTED from /Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/AndroidManifest.xml:1:1-4:12
+ 	package
+-		ADDED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml:2:11-32
+-		INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml
+-		INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml
++		ADDED from /Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/AndroidManifest.xml:2:11-32
++		INJECTED from /Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/AndroidManifest.xml
+ 	xmlns:android
+-		ADDED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml:1:11-69
++		ADDED from /Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/AndroidManifest.xml:1:11-69
+ uses-sdk
+-INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
+-INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml
+-INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml
+-INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml
+-INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml
++INJECTED from /Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
++INJECTED from /Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/AndroidManifest.xml
++INJECTED from /Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/AndroidManifest.xml
+ 	android:targetSdkVersion
+-		INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml
+-		ADDED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml
+-		INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/AndroidManifest.xml
+ 	android:minSdkVersion
+-		INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml
+-		ADDED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml
+-		INJECTED from /home/yektanet/AllProjects/adivery/adivery-react-native-plugin/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/salar/Documents/Projects/Janaram/node_modules/adivery/android/src/main/AndroidManifest.xml
 diff --git a/node_modules/adivery/android/build/tmp/kotlin-classes/debug/META-INF/android_debug.kotlin_module b/node_modules/adivery/android/build/tmp/kotlin-classes/debug/META-INF/android_debug.kotlin_module
 deleted file mode 100644
 index f3c0748..0000000
@@ -512,3 +656,283 @@ index 8188490..9063795 100644
      throw RuntimeException("AdiveryBanner cannot have subviews");
    }
  
+diff --git a/node_modules/adivery/android/src/main/java/com/adivery/AdiveryModule.kt b/node_modules/adivery/android/src/main/java/com/adivery/AdiveryModule.kt
+index 28be295..636ffec 100644
+--- a/node_modules/adivery/android/src/main/java/com/adivery/AdiveryModule.kt
++++ b/node_modules/adivery/android/src/main/java/com/adivery/AdiveryModule.kt
+@@ -75,18 +75,21 @@ class AdiveryModule(private val reactContext: ReactApplicationContext) :
+       override fun onRewardedAdLoaded(placementId: String) {
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
++        params.putString("eventType", "onRewardedAdLoaded")
+         sendEvent(reactContext, REWARD_LOADED_EVENT_NAME, params)
+       }
+ 
+       override fun onRewardedAdShown(placementId: String) {
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
++        params.putString("eventType", "onRewardedAdShown")
+         sendEvent(reactContext, REWARD_SHOWN_EVENT_NAME, params)
+       }
+ 
+       override fun onRewardedAdClicked(placementId: String) {
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
++        params.putString("eventType", "onRewardedAdClicked")
+         sendEvent(reactContext, REWARD_CLICKED_EVENT_NAME, params)
+       }
+ 
+@@ -94,54 +97,63 @@ class AdiveryModule(private val reactContext: ReactApplicationContext) :
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
+         params.putBoolean("isRewarded", isRewarded)
++        params.putString("eventType", "onRewardedAdClosed")
+         sendEvent(reactContext, REWARD_CLOSED_EVENT_NAME, params)
+       }
+ 
+       override fun onInterstitialAdLoaded(placementId: String) {
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
++        params.putString("eventType", "onInterstitialAdLoaded")
+         sendEvent(reactContext, INTERSTITIAL_LOADED_EVENT_NAME, params)
+       }
+ 
+       override fun onInterstitialAdShown(placementId: String) {
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
++        params.putString("eventType", "onInterstitialAdShown")
+         sendEvent(reactContext, INTERSTITIAL_SHOWN_EVENT_NAME, params)
+       }
+ 
+       override fun onInterstitialAdClicked(placementId: String) {
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
++        params.putString("eventType", "onInterstitialAdClicked")
+         sendEvent(reactContext, INTERSTITIAL_CLICKED_EVENT_NAME, params)
+       }
+ 
+       override fun onInterstitialAdClosed(placementId: String) {
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
++        params.putString("eventType", "onInterstitialAdClosed")
+         sendEvent(reactContext, INTERSTITIAL_CLOSED_EVENT_NAME, params)
+       }
+ 
+       override fun onAppOpenAdLoaded(placementId: String) {
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
++        params.putString("eventType", "onAppOpenAdLoaded")
+         sendEvent(reactContext, APP_OPEN_LOADED_EVENT_NAME, params)
+       }
+ 
+       override fun onAppOpenAdShown(placementId: String) {
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
++        params.putString("eventType", "onAppOpenAdShown")
+         sendEvent(reactContext, APP_OPEN_SHOWN_EVENT_NAME, params)
+       }
+ 
+       override fun onAppOpenAdClicked(placementId: String) {
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
++        params.putString("eventType", "onAppOpenAdClicked")
+         sendEvent(reactContext, APP_OPEN_CLICKED_EVENT_NAME, params)
+       }
+ 
+       override fun onAppOpenAdClosed(placementId: String) {
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
++        params.putString("eventType", "onAppOpenAdClosed")
+         sendEvent(reactContext, APP_OPEN_CLOSED_EVENT_NAME, params)
+       }
+ 
+@@ -149,6 +161,7 @@ class AdiveryModule(private val reactContext: ReactApplicationContext) :
+         val params = Arguments.createMap()
+         params.putString("placementId", placementId)
+         params.putString("message", message)
++        params.putString("eventType", "onError")
+         sendEvent(reactContext, ON_ERROR_EVENT_NAME, params)
+       }
+     }
+@@ -189,9 +202,9 @@ class AdiveryModule(private val reactContext: ReactApplicationContext) :
+   }
+ 
+   @ReactMethod
+-  fun isLoaded(placementId: String, isLoaded: Promise) {
++  fun isLoaded(placementId: String, promise: Promise) {
+     Log.d("Adivery", "isLoaded")
+-    isLoaded.resolve(Adivery.isLoaded(placementId))
++    promise.resolve(Adivery.isLoaded(placementId))
+   }
+ 
+   @ReactMethod
+@@ -224,11 +237,11 @@ class AdiveryModule(private val reactContext: ReactApplicationContext) :
+       }
+ 
+       override fun onAdLoadFailed(reason: String) {
+-        promise.reject(reason)
++        promise.reject("AD_LOAD_FAILED", reason)
+       }
+ 
+       override fun onAdShowFailed(reason: String) {
+-        promise.reject(reason)
++        promise.reject("AD_SHOW_FAILED", reason)
+       }
+     })
+   }
+@@ -285,86 +298,115 @@ class AdiveryModule(private val reactContext: ReactApplicationContext) :
+     }
+   }
+ 
++  // Fixed addGlobalListener - New Architecture compatible
+   @ReactMethod
+-  fun addGlobalListener(
+-    onRewardedAdLoaded: Promise?,
+-    onRewardedAdShown: Promise?,
+-    onRewardedAdClosed: Promise?,
+-    onRewardedAdClicked: Promise?,
+-    onInterstitialAdLoaded: Promise?,
+-    onInterstitialAdShown: Promise?,
+-    onInterstitialAdClicked: Promise?,
+-    onInterstitialAdClosed: Promise?,
+-    onAppOpenAdLoaded: Promise?,
+-    onAppOpenAdShown: Promise?,
+-    onAppOpenAdClicked: Promise?,
+-    onAppOpenAdClosed: Promise?,
+-    onError: Promise?
+-  ) {
+-    if (this::listener.isInitialized) {
+-      Adivery.removeGlobalListener(listener)
++  fun addGlobalListener(promise: Promise) {
++    try {
++      if (this::listener.isInitialized) {
++        Adivery.removeGlobalListener(listener)
++      }
++      setupGlobalListener()
++      promise.resolve(true)
++    } catch (e: Exception) {
++      promise.reject("ERROR", e.message)
+     }
++  }
+ 
++  private fun setupGlobalListener() {
+     listener = object : AdiveryListener() {
+       override fun onRewardedAdLoaded(placementId: String) {
+-        onRewardedAdLoaded?.resolve(placementId)
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putString("eventType", "onRewardedAdLoaded")
++        sendEvent(reactContext, REWARD_LOADED_EVENT_NAME, params)
+       }
+ 
+       override fun onRewardedAdShown(placementId: String) {
+-        onRewardedAdShown?.resolve(placementId)
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putString("eventType", "onRewardedAdShown")
++        sendEvent(reactContext, REWARD_SHOWN_EVENT_NAME, params)
+       }
+ 
+       override fun onRewardedAdClicked(placementId: String) {
+-        onRewardedAdClicked?.resolve(placementId)
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putString("eventType", "onRewardedAdClicked")
++        sendEvent(reactContext, REWARD_CLICKED_EVENT_NAME, params)
+       }
+ 
+       override fun onRewardedAdClosed(placementId: String, isRewarded: Boolean) {
+-        val map = Arguments.createMap()
+-        map.putString("placementId", placementId)
+-        map.putBoolean("isRewarded", isRewarded)
+-        onRewardedAdClosed?.resolve(map)
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putBoolean("isRewarded", isRewarded)
++        params.putString("eventType", "onRewardedAdClosed")
++        sendEvent(reactContext, REWARD_CLOSED_EVENT_NAME, params)
+       }
+ 
+       override fun onInterstitialAdLoaded(placementId: String) {
+-        onInterstitialAdLoaded?.resolve(placementId)
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putString("eventType", "onInterstitialAdLoaded")
++        sendEvent(reactContext, INTERSTITIAL_LOADED_EVENT_NAME, params)
+       }
+ 
+       override fun onInterstitialAdShown(placementId: String) {
+-        onInterstitialAdShown?.resolve(placementId)
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putString("eventType", "onInterstitialAdShown")
++        sendEvent(reactContext, INTERSTITIAL_SHOWN_EVENT_NAME, params)
+       }
+ 
+       override fun onInterstitialAdClicked(placementId: String) {
+-        onInterstitialAdClicked?.resolve(placementId)
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putString("eventType", "onInterstitialAdClicked")
++        sendEvent(reactContext, INTERSTITIAL_CLICKED_EVENT_NAME, params)
+       }
+ 
+-      override fun onInterstitialAdClosed(placement: String) {
+-        onInterstitialAdClosed?.resolve(placement)
++      override fun onInterstitialAdClosed(placementId: String) {
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putString("eventType", "onInterstitialAdClosed")
++        sendEvent(reactContext, INTERSTITIAL_CLOSED_EVENT_NAME, params)
+       }
+ 
+       override fun onAppOpenAdLoaded(placementId: String) {
+-        onAppOpenAdLoaded?.resolve(placementId)
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putString("eventType", "onAppOpenAdLoaded")
++        sendEvent(reactContext, APP_OPEN_LOADED_EVENT_NAME, params)
+       }
+ 
+       override fun onAppOpenAdShown(placementId: String) {
+-        onAppOpenAdShown?.resolve(placementId)
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putString("eventType", "onAppOpenAdShown")
++        sendEvent(reactContext, APP_OPEN_SHOWN_EVENT_NAME, params)
+       }
+ 
+       override fun onAppOpenAdClicked(placementId: String) {
+-        onAppOpenAdClicked?.resolve(placementId)
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putString("eventType", "onAppOpenAdClicked")
++        sendEvent(reactContext, APP_OPEN_CLICKED_EVENT_NAME, params)
+       }
+ 
+       override fun onAppOpenAdClosed(placementId: String) {
+-        onAppOpenAdClosed?.resolve(placementId)
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putString("eventType", "onAppOpenAdClosed")
++        sendEvent(reactContext, APP_OPEN_CLOSED_EVENT_NAME, params)
+       }
+ 
+       override fun log(placementId: String, message: String) {
+-        val map = Arguments.createMap()
+-        map.putString("placementId", placementId)
+-        map.putString("message", message)
+-        onError?.resolve(map)
++        val params = Arguments.createMap()
++        params.putString("placementId", placementId)
++        params.putString("message", message)
++        params.putString("eventType", "onError")
++        sendEvent(reactContext, ON_ERROR_EVENT_NAME, params)
+       }
+     }
+-
++    Adivery.addGlobalListener(listener)
+   }
+-
+ }
+\ No newline at end of file

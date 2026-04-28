@@ -1,9 +1,19 @@
 // components/BannerAd.tsx
+import { interstitialPlacement } from "@/constants/keys";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
+import { Adivery } from "adivery";
 import React, { useEffect, useMemo, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+export const showAd = () => {
+  Adivery.prepareInterstitialAd(interstitialPlacement);
+  Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+    if (isLoaded) {
+      Adivery.showAd(interstitialPlacement);
+    }
+  });
+};
 // تلاش برای import ادیوری
 let AdiveryBanner: any = null;
 let Banner: any = null;

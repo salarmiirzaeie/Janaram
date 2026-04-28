@@ -1,3 +1,4 @@
+import { showAd } from "@/components/home/BannerAd";
 import { Input, InputField, InputSlot } from "@/components/ui/input";
 import { Pressable } from "@/components/ui/pressable";
 import { VStack } from "@/components/ui/vstack";
@@ -152,16 +153,7 @@ const SearchPage = () => {
                               return;
                             }
                             if (!proPlan?.isActive) {
-                              // Adivery.prepareInterstitialAd(
-                              //   interstitialPlacement
-                              // );
-                              // Adivery.isLoaded(interstitialPlacement).then(
-                              //   (isLoaded) => {
-                              //     if (isLoaded) {
-                              //       Adivery.showAd(interstitialPlacement);
-                              //     }
-                              //   }
-                              // );
+                              showAd();
                             }
                             router.push({
                               pathname: "/player",

@@ -4,6 +4,7 @@ import { AudioPlayerProvider } from "@/context/AudioPlayerContext";
 import "@/global.css";
 import { persistor, store } from "@/redux/store";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { Adivery } from "adivery";
 // import { Adivery } from "adivery";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -26,7 +27,7 @@ export default function RootLayout() {
   useEffect(() => {
     I18nManager.allowRTL(false);
     I18nManager.forceRTL(false);
-    // Adivery.configure("596f04bd-f6b5-4d70-9df6-f700e0ac1ab6");
+    Adivery.configure("596f04bd-f6b5-4d70-9df6-f700e0ac1ab6");
   }, []);
 
   const netInfo = useNetInfo();
