@@ -1,4 +1,3 @@
-import BannerAd from "@/components/home/BannerAd";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
@@ -379,7 +378,7 @@ export default function TextActivityScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      <BannerAd bannerSize="BANNER" />
+      {/* <BannerAd bannerSize="BANNER" /> */}
     </LinearGradient>
   );
 }

@@ -4,7 +4,6 @@ import { HStack } from "@/components/ui/hstack";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { interstitialPlacement } from "@/constants/keys";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { useGetExploreQuery } from "@/services/meditations/meditation-adapter";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
@@ -14,7 +13,7 @@ import {
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { Adivery } from "adivery";
+// import { Adivery } from "adivery";
 import { router } from "expo-router";
 import React, { useCallback, useMemo } from "react";
 import {
@@ -90,12 +89,12 @@ const StoryCard = React.memo(
         return;
       }
       if (!isActive) {
-        Adivery.prepareInterstitialAd(interstitialPlacement);
-        Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-          if (isLoaded) {
-            Adivery.showAd(interstitialPlacement);
-          }
-        });
+        // Adivery.prepareInterstitialAd(interstitialPlacement);
+        // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+        //   if (isLoaded) {
+        //     Adivery.showAd(interstitialPlacement);
+        //   }
+        // });
       }
       router.push({
         pathname: "/player",

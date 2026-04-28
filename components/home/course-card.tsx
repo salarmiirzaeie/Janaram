@@ -1,11 +1,10 @@
-import { interstitialPlacement } from "@/constants/keys";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { toPersianDigits, typeTopPersian } from "@/utils/persian";
 import { Entypo, Ionicons } from "@expo/vector-icons";
-import { Adivery } from "adivery";
+// import { Adivery } from "adivery";
 import { router } from "expo-router";
 import React, { memo, useCallback, useRef, useState } from "react";
 import {
@@ -305,11 +304,11 @@ const CourseCard: React.FC<CourseCardProps> = memo(
 
     const showInterstitial = useCallback(() => {
       if (isProActive) return;
-      Adivery.prepareInterstitialAd(interstitialPlacement);
-      Adivery.isLoaded(interstitialPlacement).then(
-        (loaded) =>
-          loaded && mounted.current && Adivery.showAd(interstitialPlacement)
-      );
+      // Adivery.prepareInterstitialAd(interstitialPlacement);
+      // Adivery.isLoaded(interstitialPlacement).then(
+      //   (loaded) =>
+      //     loaded && mounted.current && Adivery.showAd(interstitialPlacement)
+      // );
     }, [isProActive]);
 
     const handlePlay = useCallback(async () => {

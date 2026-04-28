@@ -1,10 +1,9 @@
-import { interstitialPlacement } from "@/constants/keys";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
-import { Adivery } from "adivery";
+// import { Adivery } from "adivery";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Image, Text } from "react-native";
@@ -40,12 +39,12 @@ const MusicCard = ({ item }: { item: Meditation }) => {
         return;
       }
       if (!proPlan?.isActive) {
-        Adivery.prepareInterstitialAd(interstitialPlacement);
-        Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-          if (isLoaded) {
-            Adivery.showAd(interstitialPlacement);
-          }
-        });
+        // Adivery.prepareInterstitialAd(interstitialPlacement);
+        // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+        //   if (isLoaded) {
+        //     Adivery.showAd(interstitialPlacement);
+        //   }
+        // });
       }
       await loadTrack(item.id);
     }
@@ -61,12 +60,12 @@ const MusicCard = ({ item }: { item: Meditation }) => {
           return;
         }
         if (!proPlan?.isActive) {
-          Adivery.prepareInterstitialAd(interstitialPlacement);
-          Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-            if (isLoaded) {
-              Adivery.showAd(interstitialPlacement);
-            }
-          });
+          // Adivery.prepareInterstitialAd(interstitialPlacement);
+          // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+          //   if (isLoaded) {
+          //     Adivery.showAd(interstitialPlacement);
+          //   }
+          // });
         }
         router.push({
           pathname: "/player",

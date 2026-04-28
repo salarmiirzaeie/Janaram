@@ -1,11 +1,10 @@
-import { interstitialPlacement } from "@/constants/keys";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { toPersianDigits } from "@/utils/persian";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
-import { Adivery } from "adivery";
+// import { Adivery } from "adivery";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Dimensions, Image, View } from "react-native";
@@ -53,12 +52,12 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, index }) => {
         return;
       }
       if (!proPlan?.isActive) {
-        Adivery.prepareInterstitialAd(interstitialPlacement);
-        Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-          if (isLoaded) {
-            Adivery.showAd(interstitialPlacement);
-          }
-        });
+        // Adivery.prepareInterstitialAd(interstitialPlacement);
+        // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+        //   if (isLoaded) {
+        //     Adivery.showAd(interstitialPlacement);
+        //   }
+        // });
       }
 
       await loadTrack(item.id);
@@ -76,12 +75,12 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, index }) => {
           return;
         }
         if (!proPlan?.isActive) {
-          Adivery.prepareInterstitialAd(interstitialPlacement);
-          Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
-            if (isLoaded) {
-              Adivery.showAd(interstitialPlacement);
-            }
-          });
+          // Adivery.prepareInterstitialAd(interstitialPlacement);
+          // Adivery.isLoaded(interstitialPlacement).then((isLoaded) => {
+          //   if (isLoaded) {
+          //     Adivery.showAd(interstitialPlacement);
+          //   }
+          // });
         }
         router.push({
           pathname: "/player",
