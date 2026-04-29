@@ -61,15 +61,18 @@ const index = () => {
   return (
     <View className="flex-1 pt-4 bg-white">
       <ExploreHeader />
-      <Categories />
       {isLoading ? (
-        <View className="flex-1 justify-center items-center">
-          <Spinner />
+        <View className="flex-1 ">
+          <Categories />
+          <View className="justify-center items-center flex-1">
+            <Spinner />
+          </View>
         </View>
       ) : (
         sectionsData && (
           <LegendList
             className="flex-1" // ← this works when parent has flex-1
+            ListHeaderComponent={<Categories />}
             estimatedItemSize={250}
             data={sectionsData}
             renderItem={({ item }) => <HorizonList item={item} />}
