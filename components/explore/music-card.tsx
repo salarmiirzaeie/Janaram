@@ -3,10 +3,10 @@ import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
 // import { Adivery } from "adivery";
+import { usePro } from "@/hooks/usePro";
 import { router } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
 import { Image, Text } from "react-native";
-import { useDispatch } from "react-redux";
 import { showAd } from "../home/BannerAd";
 import { Badge, BadgeText } from "../ui/badge";
 import { HStack } from "../ui/hstack";
@@ -28,8 +28,8 @@ const MusicCard = React.memo(
     const { track, loadTrack, isPlaying } = useAudioPlayer();
     const [isLoading, setLoading] = useState(false);
     const { data: plans } = usePlansQuery(null);
-    const dispatch = useDispatch();
     const isCurrentlyPlaying = track?.id === item.id && isPlaying;
+    const { handleOpenNotProModal, isProActive, showInterstitial } = usePro();
 
     const proPlan = useMemo(
       () => plans?.data.plans?.find((plan) => plan.name === "unlimited"),
@@ -37,16 +37,6 @@ const MusicCard = React.memo(
     );
 
     const isProAndNotActive = isPro && !proPlan?.isActive;
-
-    const handleOpenNotProModal = useCallback(() => {
-      dispatch({
-        type: "pro/setShowNotProModal",
-        payload: {
-          message: "🌙 این مدیتیشن مخصوص کاربران Pro است",
-          showNotProModal: true,
-        },
-      });
-    }, [dispatch]);
 
     const handlePlay = useCallback(async () => {
       if (isLoading) return;
@@ -72,9 +62,8 @@ const MusicCard = React.memo(
       handleOpenNotProModal,
       isLoading,
     ]);
-
     const handleCardPress = useCallback(() => {
-      if (item.isPro && !proPlan?.isActive) {
+      if (isPro && !proPlan?.isActive) {
         handleOpenNotProModal();
         return;
       }

@@ -26,10 +26,10 @@ const AllMusics = () => {
     );
   }
   return (
-    <VStack className="flex-1 bg-background-50 pb-40 p-4">
+    <VStack className="flex-1 bg-background-50  px-4">
       <FlatList
         data={meditations || []}
-        contentContainerClassName="pb-40"
+        contentContainerClassName="pb-40 py-4"
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => renderMusicCard(item)}
         showsVerticalScrollIndicator={false}

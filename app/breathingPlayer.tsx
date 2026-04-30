@@ -447,56 +447,63 @@ export default function BreathingPlayerScreen() {
                 </ActionsheetDragIndicatorWrapper>
 
                 <View className="w-full">
-                  <VStack space="md" className="p-4 items-center">
-                    <LinearGradient
-                      colors={["#79AED6", "#9966CC"]}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                      style={{
-                        borderRadius: 60,
-                        padding: 16,
-                        marginBottom: 16,
-                      }}
-                    >
-                      <Feather name="wind" size={40} color="white" />
-                    </LinearGradient>
-                    <Text className="text-2xl font-vazirBold text-primary-800 text-center">
-                      {track?.title}
-                    </Text>
-                    <Text className="text-base text-gray-600 text-right font-vazir leading-6">
-                      {track?.description}
-                    </Text>
+                  {isLoading ? (
+                    <View className="h-36 justify-center items-center">
+                      <Spinner />
+                    </View>
+                  ) : (
+                    <VStack space="md" className="p-4 items-center">
+                      <LinearGradient
+                        colors={["#79AED6", "#9966CC"]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={{
+                          borderRadius: 60,
+                          padding: 16,
+                          marginBottom: 16,
+                        }}
+                      >
+                        <Feather name="wind" size={40} color="white" />
+                      </LinearGradient>
+                      <Text className="text-2xl font-vazirBold text-primary-800 text-center">
+                        {track?.title}
+                      </Text>
+                      <Text className="text-base text-gray-600 text-right font-vazir leading-6">
+                        {track?.description}
+                      </Text>
 
-                    <View className="flex-row justify-around w-full mt-4 pt-4 border-t border-gray-100">
-                      <View className="items-center">
-                        <Text className="text-primary-500 font-vazirBold text-lg">
-                          {(INHALE_DURATION / 1000).toFixed(0)}
-                        </Text>
-                        <Text className="text-gray-400 font-vazir text-xs">
-                          دم (ثانیه)
-                        </Text>
-                      </View>
-                      {HOLD_DURATION > 0 && (
+                      <View className="flex-row justify-around w-full mt-4 pt-4 border-t border-gray-100">
                         <View className="items-center">
                           <Text className="text-primary-500 font-vazirBold text-lg">
-                            {(HOLD_DURATION / 1000).toFixed(0)}
+                            {(INHALE_DURATION / 1000).toFixed(0)}
                           </Text>
                           <Text className="text-gray-400 font-vazir text-xs">
-                            حبس (ثانیه)
+                            دم (ثانیه)
                           </Text>
                         </View>
-                      )}
-                      <View className="items-center">
-                        <Text className="text-primary-500 font-vazirBold text-lg">
-                          {(EXHALE_DURATION / 1000).toFixed(0)}
-                        </Text>
-                        <Text className="text-gray-400 font-vazir text-xs">
-                          بازدم (ثانیه)
-                        </Text>
+                        {HOLD_DURATION > 0 && (
+                          <View className="items-center">
+                            <Text className="text-primary-500 font-vazirBold text-lg">
+                              {(HOLD_DURATION / 1000).toFixed(0)}
+                            </Text>
+                            <Text className="text-gray-400 font-vazir text-xs">
+                              حبس (ثانیه)
+                            </Text>
+                          </View>
+                        )}
+                        <View className="items-center">
+                          <Text className="text-primary-500 font-vazirBold text-lg">
+                            {(EXHALE_DURATION / 1000).toFixed(0)}
+                          </Text>
+                          <Text className="text-gray-400 font-vazir text-xs">
+                            بازدم (ثانیه)
+                          </Text>
+                        </View>
                       </View>
-                    </View>
-                  </VStack>
+                    </VStack>
+                  )}
                   <Button
+                    disabled={isLoading}
                     className="w-full mb-4 bg-primary-500 rounded-2xl"
                     onPress={() => {
                       setIsSheetOpen(false);
