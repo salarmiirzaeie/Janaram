@@ -1,5 +1,4 @@
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
-import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { toPersianDigits, typeTopPersian } from "@/utils/persian";
@@ -364,7 +363,7 @@ const CourseCard: React.FC<CourseCardProps> = memo(
             style={[STATIC_STYLES.gradient, { height: cardHeight }]}
           >
             <FastImage
-              source={{ uri: BASE_URL_IMAGES + item.image }}
+              source={{ uri: item.image2 }}
               style={STATIC_STYLES.backgroundImage}
               resizeMode={FastImage.resizeMode.cover}
             />

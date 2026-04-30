@@ -1,5 +1,4 @@
 import { usePro } from "@/hooks/usePro";
-import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useCallback } from "react";
@@ -38,7 +37,7 @@ const StoryCard = ({ item }: { item: any; index: number }) => {
         }}
       >
         <FastImage
-          source={{ uri: BASE_URL_IMAGES + item.image }}
+          source={{ uri: item.image2 }}
           style={{
             position: "absolute",
             width: "100%",

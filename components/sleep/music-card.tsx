@@ -1,5 +1,4 @@
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
-import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
@@ -73,7 +72,7 @@ const MusicCard = ({ item }: { item: Meditation }) => {
         {/* Optional thumbnail if available */}
         {item.image && (
           <Image
-            source={{ uri: BASE_URL_IMAGES + item.image }}
+            source={{ uri: item.image2 }}
             style={{ width: 48, height: 48, borderRadius: 8 }}
             resizeMode="cover"
           />

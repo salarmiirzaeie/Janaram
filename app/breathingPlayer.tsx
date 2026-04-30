@@ -10,7 +10,6 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { VStack } from "@/components/ui/vstack";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
-import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -349,10 +348,7 @@ export default function BreathingPlayerScreen() {
                   colors={["#79AED6", "#9966CC"]}
                   style={styles.circleGradient}
                 >
-                  <Image
-                    source={{ uri: BASE_URL_IMAGES + track?.image }}
-                    style={styles.cover}
-                  />
+                  <Image source={{ uri: track?.image2 }} style={styles.cover} />
                 </LinearGradient>
               </Animated.View>
             </Animated.View>

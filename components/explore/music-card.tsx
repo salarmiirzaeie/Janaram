@@ -1,5 +1,4 @@
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
-import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { Meditation } from "@/types";
 import { Entypo } from "@expo/vector-icons";
@@ -102,7 +101,7 @@ const MusicCard = React.memo(
         <HStack space="md" className="items-center justify-between flex-1">
           {item.image && (
             <Image
-              source={{ uri: BASE_URL_IMAGES + item.image }}
+              source={{ uri: item.image2 }}
               style={{ width: 48, height: 48, borderRadius: 8 }}
               resizeMode="cover"
             />

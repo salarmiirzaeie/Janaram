@@ -1,6 +1,5 @@
 // AudioPlayerContext.tsx
 import NowPlayingBar from "@/components/ui/play-bar";
-import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { useLazyGetBreathingQuery } from "@/services/breathing/breathing-adapter";
 import { useLazyGetMeditationQuery } from "@/services/meditations/meditation-adapter";
 import { Meditation } from "@/types";
@@ -123,7 +122,7 @@ export const AudioPlayerProvider = ({
 
         if (!isMountedRef.current) return;
 
-        const source = { uri: BASE_URL_IMAGES + response.meditation.file };
+        const source = { uri: response.meditation.file2 };
         const shouldPlay = type !== "breathing"; // meditation plays automatically
 
         const { sound } = await Audio.Sound.createAsync(source, {

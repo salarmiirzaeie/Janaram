@@ -1,6 +1,5 @@
 // NowPlayingBar.tsx
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
-import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useRouter, useSegments } from "expo-router";
 import React, { useCallback, useMemo } from "react";
@@ -135,7 +134,7 @@ function NowPlayingBar() {
           <Pressable onPress={handleTrackPress}>
             <View style={{ position: "relative" }}>
               <Image
-                source={{ uri: BASE_URL_IMAGES + track?.image }}
+                source={{ uri: track?.image2 }}
                 style={{
                   width: 48,
                   height: 48,

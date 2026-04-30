@@ -1,5 +1,4 @@
 import { usePro } from "@/hooks/usePro";
-import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { toPersianDigits, typeTopPersian } from "@/utils/persian";
 import { router } from "expo-router";
 import React, { FC, useCallback } from "react";
@@ -53,7 +52,7 @@ const MusicMainCard: FC<IProps> = ({ item, index }) => {
           ]}
         >
           <FastImage
-            source={{ uri: BASE_URL_IMAGES + item.image }}
+            source={{ uri: item.image2 }}
             style={{
               position: "absolute",
               width: "100%",

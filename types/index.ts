@@ -102,6 +102,8 @@ export interface Meditation {
     | "self";
   file: string;
   image: string; // اضافه کردن فیلد URL تصویر
+  file2: string;
+  image2: string; // اضافه کردن فیلد URL تصویر
   duration: number;
   description: string;
   exhaleDuration?: number;

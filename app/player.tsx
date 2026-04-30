@@ -1,6 +1,5 @@
 import BannerAd from "@/components/home/BannerAd";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
-import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -110,7 +109,7 @@ export default function PlayerScreen() {
     <View style={styles.container}>
       {/* Background Image with Blur */}
       <Image
-        source={{ uri: BASE_URL_IMAGES + track?.image }}
+        source={{ uri: track?.image2 }}
         style={styles.backgroundImage}
         blurRadius={30}
       />
@@ -169,10 +168,7 @@ export default function PlayerScreen() {
             style={styles.artworkContainer}
           >
             <View style={styles.artworkWrapper}>
-              <Image
-                source={{ uri: BASE_URL_IMAGES + track?.image }}
-                style={styles.artwork}
-              />
+              <Image source={{ uri: track?.image2 }} style={styles.artwork} />
               {isPlaying && (
                 <View style={styles.playingOverlay}>
                   <LinearGradient
