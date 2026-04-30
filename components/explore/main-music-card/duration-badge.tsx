@@ -10,7 +10,7 @@ const DurationBadge: FC<props> = ({ duration }) => {
       style={{
         backgroundColor: "rgba(255,255,255,0.2)",
         borderRadius: 20,
-        paddingHorizontal: 10,
+        paddingHorizontal: 5,
         paddingVertical: 5,
         flexDirection: "row",
         alignItems: "center",

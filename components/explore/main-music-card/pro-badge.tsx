@@ -11,7 +11,7 @@ const ProBadge = () => {
         right: 12,
         backgroundColor: "rgba(0,0,0,0.3)",
         borderRadius: 12,
-        paddingHorizontal: 10,
+        paddingHorizontal: 6,
         paddingVertical: 5,
         flexDirection: "row",
         alignItems: "center",
