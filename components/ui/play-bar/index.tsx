@@ -1,8 +1,9 @@
+// NowPlayingBar.tsx
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useRouter, useSegments } from "expo-router";
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
 import Animated, {
@@ -14,16 +15,14 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HStack } from "../hstack";
 
-export default function NowPlayingBar() {
-  // ✅ ALL HOOKS CALLED FIRST, UNCONDITIONALLY
+export default React.memo(NowPlayingBar);
+
+function NowPlayingBar() {
   const audioPlayer = useAudioPlayer();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const segments = useSegments();
-  const scalePlay = useSharedValue(1);
-  const scaleClose = useSharedValue(1);
 
-  // ✅ Destructure AFTER all hooks are called
   const {
     track,
     isPlaying,
@@ -35,28 +34,45 @@ export default function NowPlayingBar() {
     showPlayingBar,
   } = audioPlayer;
 
-  // ✅ Determine visibility AFTER all hooks
-  const isPlayerScreen =
-    segments[0] === "player" || segments[0] === "breathingPlayer";
-  const shouldHide = !track || isPlayerScreen || !showPlayingBar;
+  // Animations shared values
+  const scalePlay = useSharedValue(1);
+  const scaleClose = useSharedValue(1);
 
-  // ✅ Animation handlers (not hooks, so they can be conditional)
-  const handlePressInPlay = () => {
+  // Memoized visibility check
+  const isPlayerScreen = useMemo(
+    () => segments[0] === "player" || segments[0] === "breathingPlayer",
+    [segments]
+  );
+  const shouldHide = useMemo(
+    () => !track || isPlayerScreen || !showPlayingBar,
+    [track, isPlayerScreen, showPlayingBar]
+  );
+
+  // Handlers with useCallback
+  const handlePressInPlay = useCallback(() => {
     scalePlay.value = withTiming(0.9, { duration: 100 });
-  };
+  }, [scalePlay]);
 
-  const handlePressOutPlay = () => {
+  const handlePressOutPlay = useCallback(() => {
     scalePlay.value = withTiming(1, { duration: 100 });
-  };
+  }, [scalePlay]);
 
-  const handlePressInClose = () => {
+  const handlePressInClose = useCallback(() => {
     scaleClose.value = withTiming(0.9, { duration: 100 });
-  };
+  }, [scaleClose]);
 
-  const handlePressOutClose = () => {
+  const handlePressOutClose = useCallback(() => {
     scaleClose.value = withTiming(1, { duration: 100 });
-  };
+  }, [scaleClose]);
 
+  const handleTrackPress = useCallback(() => {
+    router.push({
+      pathname: trackType === "meditation" ? "/player" : "/breathingPlayer",
+      params: { id: track?.id },
+    });
+  }, [trackType, track?.id, router]);
+
+  // Animated styles
   const playAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scalePlay.value }],
   }));
@@ -65,10 +81,7 @@ export default function NowPlayingBar() {
     transform: [{ scale: scaleClose.value }],
   }));
 
-  // ✅ Conditional return AFTER all hooks
-  if (shouldHide) {
-    return null;
-  }
+  if (shouldHide) return null;
 
   const progressPercent = duration ? (position / duration) * 100 : 0;
 
@@ -119,18 +132,10 @@ export default function NowPlayingBar() {
           }}
         >
           {/* Artwork */}
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname:
-                  trackType === "meditation" ? "/player" : "/breathingPlayer",
-                params: { id: track.id },
-              })
-            }
-          >
+          <Pressable onPress={handleTrackPress}>
             <View style={{ position: "relative" }}>
               <Image
-                source={{ uri: BASE_URL_IMAGES + track.image }}
+                source={{ uri: BASE_URL_IMAGES + track?.image }}
                 style={{
                   width: 48,
                   height: 48,
@@ -158,13 +163,7 @@ export default function NowPlayingBar() {
 
           {/* Track Info */}
           <Pressable
-            onPress={() =>
-              router.push({
-                pathname:
-                  trackType === "meditation" ? "/player" : "/breathingPlayer",
-                params: { id: track.id },
-              })
-            }
+            onPress={handleTrackPress}
             style={{ flex: 1, marginLeft: 12 }}
           >
             <Text
@@ -176,7 +175,7 @@ export default function NowPlayingBar() {
                 textAlign: "right",
               }}
             >
-              {track.title}
+              {track?.title}
             </Text>
             <Text
               numberOfLines={1}

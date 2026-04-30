@@ -1,3 +1,4 @@
+// AudioPlayerContext.tsx
 import NowPlayingBar from "@/components/ui/play-bar";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { useLazyGetBreathingQuery } from "@/services/breathing/breathing-adapter";
@@ -9,15 +10,15 @@ import {
   InterruptionModeAndroid,
   InterruptionModeIOS,
 } from "expo-av";
-import { useSegments } from "expo-router";
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
-} from "react"; // ✅ Add useMemo
+} from "react";
 
 type AudioPlayerContextType = {
   track: Meditation | null;
@@ -47,10 +48,13 @@ export const AudioPlayerProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [getMeditation, { data, isLoading: isApiLoading }] =
+  // Hooks
+  const [getMeditation, { isLoading: isApiLoading }] =
     useLazyGetMeditationQuery();
-  const [getBreathing, { data: breathing, isLoading: isBreathingLoading }] =
+  const [getBreathing, { isLoading: isBreathingLoading }] =
     useLazyGetBreathingQuery();
+
+  // State
   const [trackType, setTrackType] = useState<"meditation" | "breathing">(
     "meditation"
   );
@@ -60,15 +64,21 @@ export const AudioPlayerProvider = ({
   const [duration, setDuration] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [showPlayingBar, setShowPlayingBar] = useState(true);
+
+  // Refs
   const soundRef = useRef<Audio.Sound | null>(null);
-  const segments = useSegments();
+  const isMountedRef = useRef(true);
 
-  // ✅ Move isPlayerScreen to a useMemo to prevent unnecessary recalculations
-  const isPlayerScreen = useMemo(
-    () => segments[0] === "player" || segments[0] === "breathingPlayer",
-    [segments]
-  );
+  // Cleanup sound helper
+  const cleanupSound = useCallback(async () => {
+    if (soundRef.current) {
+      soundRef.current.setOnPlaybackStatusUpdate(null);
+      await soundRef.current.unloadAsync();
+      soundRef.current = null;
+    }
+  }, []);
 
+  // Configure audio mode on mount
   useEffect(() => {
     const configureAudioMode = async () => {
       try {
@@ -88,119 +98,72 @@ export const AudioPlayerProvider = ({
     configureAudioMode();
 
     return () => {
-      if (soundRef.current) {
-        soundRef.current.unloadAsync();
-        soundRef.current = null;
-      }
+      isMountedRef.current = false;
+      cleanupSound();
     };
-  }, []);
+  }, [cleanupSound]);
 
-  const loadTrack = async (id: string, type?: "meditation" | "breathing") => {
-    if (!id) return;
-    setIsLoading(true);
+  // Load track
+  const loadTrack = useCallback(
+    async (id: string, type?: "meditation" | "breathing") => {
+      if (!id || !isMountedRef.current) return;
 
-    if (type === "breathing") {
-      setTrackType("breathing");
-      await getBreathing({ id })
-        .unwrap()
-        .then(async (res) => {
-          try {
-            if (soundRef.current) {
-              await soundRef.current.unloadAsync();
-              soundRef.current.setOnPlaybackStatusUpdate(null);
-              soundRef.current = null;
-            }
+      setIsLoading(true);
 
-            const source = {
-              uri: BASE_URL_IMAGES + res.meditation.file,
-            };
+      // Clean up previous sound
+      await cleanupSound();
 
-            const { sound } = await Audio.Sound.createAsync(source, {
-              shouldPlay: false,
-            });
+      try {
+        let response;
+        if (type === "breathing") {
+          response = await getBreathing({ id }).unwrap();
+        } else {
+          response = await getMeditation({ id }).unwrap();
+        }
 
-            soundRef.current = sound;
-            setTrack(res.meditation);
+        if (!isMountedRef.current) return;
+
+        const source = { uri: BASE_URL_IMAGES + response.meditation.file };
+        const shouldPlay = type !== "breathing"; // meditation plays automatically
+
+        const { sound } = await Audio.Sound.createAsync(source, {
+          shouldPlay,
+        });
+
+        sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
+          if (!isMountedRef.current) return;
+          if (!status.isLoaded) return;
+
+          if ("positionMillis" in status) {
+            setPosition(status.positionMillis);
+            setDuration(status.durationMillis || 1);
+            setIsPlaying(status.isPlaying);
+          }
+          if ("didJustFinish" in status && status.didJustFinish) {
             setIsPlaying(false);
-            setShowPlayingBar(true);
-
-            sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
-              if (!status.isLoaded) return;
-
-              if ("positionMillis" in status) {
-                setPosition(status.positionMillis);
-                setDuration(status.durationMillis || 1);
-                setIsPlaying(status.isPlaying);
-              }
-
-              if ("didJustFinish" in status && status.didJustFinish) {
-                setIsPlaying(false);
-                setShowPlayingBar(false);
-              }
-
-              if ("isBuffering" in status) {
-                setIsLoading(status.isBuffering);
-              }
-            });
-          } catch (error) {
-            console.error("Error loading breathing track:", error);
-          } finally {
-            setIsLoading(false);
+            setShowPlayingBar(false);
+          }
+          if ("isBuffering" in status) {
+            setIsLoading(status.isBuffering);
           }
         });
-    } else {
-      setTrackType("meditation");
-      await getMeditation({ id })
-        .unwrap()
-        .then(async (res) => {
-          try {
-            if (soundRef.current) {
-              await soundRef.current.unloadAsync();
-              soundRef.current.setOnPlaybackStatusUpdate(null);
-              soundRef.current = null;
-            }
 
-            const source = {
-              uri: BASE_URL_IMAGES + res.meditation.file,
-            };
+        soundRef.current = sound;
+        setTrack(response.meditation);
+        setTrackType(type || "meditation");
+        setIsPlaying(shouldPlay);
+        setShowPlayingBar(true);
+      } catch (error) {
+        console.error("Error loading track:", error);
+      } finally {
+        if (isMountedRef.current) setIsLoading(false);
+      }
+    },
+    [getMeditation, getBreathing, cleanupSound]
+  );
 
-            const { sound } = await Audio.Sound.createAsync(source, {
-              shouldPlay: true,
-            });
-
-            soundRef.current = sound;
-            setTrack(res.meditation);
-            setIsPlaying(true);
-            setShowPlayingBar(true);
-
-            sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
-              if (!status.isLoaded) return;
-
-              if ("positionMillis" in status) {
-                setPosition(status.positionMillis);
-                setDuration(status.durationMillis || 1);
-                setIsPlaying(status.isPlaying);
-              }
-
-              if ("didJustFinish" in status && status.didJustFinish) {
-                setIsPlaying(false);
-                setShowPlayingBar(false);
-              }
-
-              if ("isBuffering" in status) {
-                setIsLoading(status.isBuffering);
-              }
-            });
-          } catch (error) {
-            console.error("Error loading track:", error);
-          } finally {
-            setIsLoading(false);
-          }
-        });
-    }
-  };
-
-  const togglePlay = async () => {
+  // Toggle play/pause
+  const togglePlay = useCallback(async () => {
     if (!soundRef.current) return;
     const status = await soundRef.current.getStatusAsync();
     if (!status.isLoaded) return;
@@ -213,23 +176,25 @@ export const AudioPlayerProvider = ({
       setIsPlaying(true);
       setShowPlayingBar(true);
     }
-  };
+  }, []);
 
-  const seek = async (ms: number) => {
+  // Seek to position
+  const seek = useCallback(async (ms: number) => {
     if (soundRef.current) {
       await soundRef.current.setPositionAsync(ms);
     }
-  };
+  }, []);
 
-  const stop = async () => {
+  // Stop playback
+  const stop = useCallback(async () => {
     if (soundRef.current) {
       await soundRef.current.stopAsync();
       setIsPlaying(false);
       setShowPlayingBar(false);
     }
-  };
+  }, []);
 
-  // ✅ Memoize the context value to prevent unnecessary re-renders
+  // Memoized context value
   const contextValue = useMemo(
     () => ({
       track,
@@ -264,7 +229,6 @@ export const AudioPlayerProvider = ({
   return (
     <AudioPlayerContext.Provider value={contextValue}>
       {children}
-      {/* Always render NowPlayingBar - it will handle its own visibility */}
       <NowPlayingBar />
     </AudioPlayerContext.Provider>
   );

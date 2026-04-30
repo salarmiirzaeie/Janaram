@@ -64,7 +64,7 @@ const TestCard: React.FC = (props) => {
                 router.navigate("/tests");
               }}
             >
-              <ButtonText>شروع گفتگو</ButtonText>
+              <ButtonText>شروع </ButtonText>
             </Button>
           </VStack>
         </HStack>
