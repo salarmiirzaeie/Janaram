@@ -34,7 +34,6 @@ const StoriesSection = ({
     ),
     []
   );
-  console.log(data, "s");
   if (data.length === 0 && !isLoading) return null;
 
   return (

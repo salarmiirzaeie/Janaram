@@ -34,7 +34,7 @@ const MusicMainCard: FC<IProps> = ({ item, index }) => {
 
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={handleCardPress}>
-      <View className="w-48 mx-3">
+      <View className="w-48 mx-2">
         <LinearGradient
           colors={colorSet.gradient} // Now it's mutable string[]
           start={{ x: 0, y: 0 }}

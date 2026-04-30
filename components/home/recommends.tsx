@@ -1,8 +1,8 @@
 import { useSuggestedMeditationsQuery } from "@/services/meditations/meditation-adapter";
 import React, { memo, useCallback, useMemo, useRef } from "react";
 import { FlatList, StyleSheet } from "react-native";
+import MusicMainCard from "../explore/main-music-card";
 import { Skeleton } from "../ui/skeleton";
-import CourseCard from "./course-card";
 
 const SKELETON_COUNT = 4;
 const MAX_TO_RENDER = 4;
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 
 const SkeletonItem = memo(() => <Skeleton style={styles.skeleton} />);
 const CourseCardItem = memo(({ item, index }: { item: any; index: number }) => (
-  <CourseCard item={item} index={index} />
+  <MusicMainCard item={item} index={index} />
 ));
 
 const Recommends = () => {
