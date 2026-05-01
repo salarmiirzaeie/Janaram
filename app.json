@@ -1,8 +1,8 @@
 {
   "name": "جانارام",
   "slug": "Janaram",
-  "version": "1.2.2",
-  "runtimeVersion": "1.2.2",
+  "version": "1.2.3",
+  "runtimeVersion": "1.2.3",
   "orientation": "portrait",
   "icon": "./assets/images/icon.png",
   "scheme": "janaram",
@@ -11,7 +11,7 @@
   "ios": {
     "supportsTablet": false,
     "bundleIdentifier": "com.salarmiirzapour.Janaram",
-    "buildNumber": "1.2.2"
+    "buildNumber": "1.2.3"
   },
   "android": {
     "adaptiveIcon": {
@@ -47,7 +47,6 @@
   },
   "plugins": [
     "expo-router",
-    "./plugins/withPoolakey.js",
 
     "expo-notifications",
     [
