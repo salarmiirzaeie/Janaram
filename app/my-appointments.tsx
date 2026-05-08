@@ -8,8 +8,10 @@ import { useZarinpalPayment } from "@/hooks/useZarinpalPayment";
 import {
   useCancelAppointmentMutation,
   useGetUserAppointmentsQuery,
+  useStartSessionMutation,
 } from "@/services/psychologist/psychologist-adapter";
 import { Ionicons } from "@expo/vector-icons";
+import * as Linking from "expo-linking";
 import { router } from "expo-router";
 import moment from "moment-jalaali";
 import React, { useMemo, useState } from "react";
@@ -83,9 +85,13 @@ const getStatusBadge = (status: string) => {
 
 export default function AppointmentsScreen() {
   const [activeTab, setActiveTab] = useState<TabType>("upcoming");
+  const [sessionStart] = useStartSessionMutation();
   const [loadingAppointmentId, setLoadingAppointmentId] = useState<
     string | null
   >(null);
+  const [isStartingSession, setIsStartingSession] = useState<string | null>(
+    null
+  );
 
   const {
     data: response,
@@ -170,9 +176,50 @@ export default function AppointmentsScreen() {
     }
   };
 
+  const startSession = async (appointmentId: string) => {
+    setIsStartingSession(appointmentId);
+
+    try {
+      const { data } = await sessionStart({ id: appointmentId });
+
+      if (data.success && data.chatId) {
+        // باز کردن لینک گروه در بله
+        Linking.openURL(`https://ble.ir/join/${data.chatId}`);
+        // به‌روزرسانی لیست نوبت‌ها
+        refetch();
+      } else if (data.needBaleId) {
+        alert("لطفاً ابتدا آیدی بله خود را در پروفایل وارد کنید");
+        router.push("/profile");
+      } else {
+        alert(data.message || "خطا در ایجاد جلسه");
+      }
+    } catch (error) {
+      console.error("Error starting session:", error);
+      alert("خطا در ایجاد جلسه");
+    } finally {
+      setIsStartingSession(null);
+    }
+  };
+
+  const isSessionTime = (appointment: any) => {
+    const now = moment();
+    const appointmentDate = moment(appointment.date);
+    const [hours, minutes] = appointment.time.split(":").map(Number);
+    appointmentDate.set({ hour: hours, minute: minutes });
+
+    // 30 دقیقه قبل تا 30 دقیقه بعد از زمان نوبت
+    const startTime = moment(appointmentDate).subtract(30, "minutes");
+    const endTime = moment(appointmentDate).add(30, "minutes");
+
+    return now.isBetween(startTime, endTime);
+  };
+
   const renderAppointmentCard = (app: any) => {
     const statusInfo = getStatusBadge(app.status);
     const isThisPaymentLoading = loadingAppointmentId === app.id;
+    const isStarting = isStartingSession === app.id;
+    const canStartSession =
+      app.status === "confirmed" && isSessionTime(app) && !app.baleGroupId;
 
     return (
       <View
@@ -239,14 +286,43 @@ export default function AppointmentsScreen() {
           </View>
         </HStack>
 
-        {app.status === "confirmed" && activeTab === "upcoming" && (
+        {app.status === "confirmed" &&
+          activeTab === "upcoming" &&
+          !canStartSession && (
+            <Button
+              onPress={() => handleCancel(app.id)}
+              disabled={isCancelling}
+              variant="outline"
+              className="mt-3 rounded-full h-9 border-red-300"
+            >
+              <ButtonText className="text-red-500 text-xs">لغو نوبت</ButtonText>
+            </Button>
+          )}
+
+        {canStartSession && (
           <Button
-            onPress={() => handleCancel(app.id)}
-            disabled={isCancelling}
-            variant="outline"
-            className="mt-3 rounded-full h-9 border-red-300"
+            onPress={() => startSession(app.id)}
+            disabled={isStarting}
+            className="mt-3 rounded-full h-9"
+            style={{ backgroundColor: colors.secondary[500] }}
           >
-            <ButtonText className="text-red-500 text-xs">لغو نوبت</ButtonText>
+            <ButtonText className="text-xs text-white">
+              {isStarting ? "در حال ایجاد جلسه..." : "🎥 شروع جلسه مشاوره"}
+            </ButtonText>
+          </Button>
+        )}
+
+        {app.baleGroupId && (
+          <Button
+            onPress={() =>
+              Linking.openURL(`https://ble.ir/join/${app.baleGroupId}`)
+            }
+            className="mt-3 rounded-full h-9"
+            style={{ backgroundColor: colors.primary[500] }}
+          >
+            <ButtonText className="text-xs text-white">
+              ورود به گفتگو
+            </ButtonText>
           </Button>
         )}
 

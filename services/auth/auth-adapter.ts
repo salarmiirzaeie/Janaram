@@ -34,7 +34,10 @@ const authAdapter = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    editProfile: builder.mutation<any, { name: string; phoneNumber: string }>({
+    editProfile: builder.mutation<
+      any,
+      { name: string; phoneNumber: string; baleId?: string }
+    >({
       query: (data) => ({
         url: "auth/edit-profile",
         method: "PUT",
@@ -43,7 +46,14 @@ const authAdapter = apiSlice.injectEndpoints({
       invalidatesTags: ["Profile"],
     }),
     profile: builder.query<
-      { data: { name: string; phoneNumber: string; profilePhoto?: string } },
+      {
+        data: {
+          name: string;
+          phoneNumber: string;
+          profilePhoto?: string;
+          baleId?: string;
+        };
+      },
       any
     >({
       query: () => ({

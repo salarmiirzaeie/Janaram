@@ -31,6 +31,7 @@ export interface Appointment {
   time: string;
   status: "confirmed" | "cancelled" | "completed" | "pending_payment";
   createdAt?: string;
+  baleGroupId?: string; // آیدی گروه در بله
 }
 
 export interface SessionInfo {
@@ -110,6 +111,14 @@ const psychologistAdapter = apiSlice.injectEndpoints({
       transformResponse: (response: { success: boolean; data: any }) =>
         response.data,
     }),
+    startSession: builder.mutation<any, { id: string }>({
+      query: ({ id }) => ({
+        url: `v2/psychologists/${id}/start-session`,
+        method: "POST",
+      }),
+      transformResponse: (response: { success: boolean; data: any }) =>
+        response.data,
+    }),
 
     // GET /api/appointments/my (user's appointments with session info)
     getUserAppointments: builder.query<AppointmentsResponse, void>({
@@ -151,4 +160,5 @@ export const {
   useCreateAppointmentMutation,
   useGetUserAppointmentsQuery,
   useCancelAppointmentMutation,
+  useStartSessionMutation,
 } = psychologistAdapter;
