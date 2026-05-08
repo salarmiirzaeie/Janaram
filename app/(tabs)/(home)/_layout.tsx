@@ -19,7 +19,7 @@ const _layout = () => {
       const refId = params.get("ref_id");
       if (status === "success") {
         // پرداخت موفق - رفتن به صفحه موفقیت
-        dispatch(apiSlice.util.invalidateTags(["Plans"]));
+        dispatch(apiSlice.util.invalidateTags(["UserAppointments"]));
 
         dispatch({
           type: "initialize/setIsFirstModalShow",

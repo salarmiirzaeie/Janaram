@@ -29,7 +29,7 @@ export interface Appointment {
   doctorName: string;
   date: string;
   time: string;
-  status: "confirmed" | "cancelled" | "completed";
+  status: "confirmed" | "cancelled" | "completed" | "pending_payment";
   createdAt?: string;
 }
 
@@ -109,7 +109,6 @@ const psychologistAdapter = apiSlice.injectEndpoints({
       }),
       transformResponse: (response: { success: boolean; data: any }) =>
         response.data,
-      invalidatesTags: ["UserAppointments"],
     }),
 
     // GET /api/appointments/my (user's appointments with session info)

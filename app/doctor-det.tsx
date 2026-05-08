@@ -3,6 +3,7 @@ import { colors } from "@/app/(tabs)/psychologist";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { useCustomToast } from "@/hooks/useToast";
+import { useZarinpalPayment } from "@/hooks/useZarinpalPayment";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { useProfileQuery } from "@/services/auth/auth-adapter";
 import {
@@ -35,9 +36,10 @@ const getNextDays = (count: number) => {
   const today = moment();
   for (let i = 0; i < count; i++) {
     const date = moment(today).add(i, "days");
+    const weekday = date.day();
     days.push({
       date: date.format("YYYY-MM-DD"),
-      dayOfWeek: getDayName(date.day()),
+      dayOfWeek: getDayName(weekday),
       dayNumber: date.format("jD"),
       monthName: getMonthName(parseInt(date.format("jM"))),
     });
@@ -94,6 +96,7 @@ export default function PsychologistDetailScreen() {
   const { data: profile, isLoading: isLoadingProfile } = useProfileQuery(null);
   const [createAppointment, { isLoading: isBooking }] =
     useCreateAppointmentMutation();
+  const { startPayment, isLoading: isPaymentLoading } = useZarinpalPayment();
 
   const availableSlots = slotsData?.slots || [];
   const nextDays = getNextDays(14);
@@ -109,19 +112,15 @@ export default function PsychologistDetailScreen() {
         date: selectedDate,
         time: selectedTime,
       }).unwrap();
-
-      // 2. هدایت به صفحه پرداخت
-      // می‌توانید کاربر را به صفحه پرداخت هدایت کنید
-      // router.push({
-      //   pathname: "/payment/session",
-      //   params: {
-      //     appointmentId: result.appointmentId,
-      //     amount: result.sessionPrice,
-      //     doctorName: doctor.name,
-      //     date: selectedDate,
-      //     time: selectedTime,
-      //   },
-      // });
+      if (doctor) {
+        console.log(result, "res");
+        // 2. شروع فرآیند پرداخت
+        await startPayment(
+          result.appointmentId, // ارسال appointmentId به جای planId
+          doctor.sessionPrice,
+          `پرداخت هزینه جلسه مشاوره با دکتر ${doctor.name} در تاریخ ${selectedDate} ساعت ${selectedTime}`
+        );
+      }
     } catch (err: any) {
       const msg = err?.data?.message || "خطا در رزرو نوبت";
       toast.show({ msg, type: "error" });
@@ -151,7 +150,6 @@ export default function PsychologistDetailScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
-      {/* Header با دکمه بازگشت */}
       <View
         style={{
           paddingHorizontal: 16,
@@ -206,7 +204,6 @@ export default function PsychologistDetailScreen() {
             borderBottomColor: colors.gray[100],
           }}
         >
-          {/* عکس */}
           <View
             style={{
               width: 80,
@@ -235,7 +232,6 @@ export default function PsychologistDetailScreen() {
             )}
           </View>
 
-          {/* اطلاعات */}
           <View style={{ flex: 1 }}>
             <Text
               style={{
@@ -418,7 +414,7 @@ export default function PsychologistDetailScreen() {
                     paddingVertical: 12,
                     borderRadius: 24,
                     backgroundColor: isSelected ? colors.primary[500] : "#fff",
-                    borderWidth: 1,
+                    borderWidth: isSelected ? 0 : 1,
                     borderColor: isSelected
                       ? colors.primary[500]
                       : colors.gray[200],
@@ -569,7 +565,11 @@ export default function PsychologistDetailScreen() {
       >
         <Button
           isDisabled={
-            !selectedTime || isLoadingSlots || isProcessing || isBooking
+            !selectedTime ||
+            isLoadingSlots ||
+            isProcessing ||
+            isBooking ||
+            isPaymentLoading
           }
           onPress={handleBooking}
           style={{
@@ -578,7 +578,7 @@ export default function PsychologistDetailScreen() {
             backgroundColor: colors.primary[500],
           }}
         >
-          {isProcessing || isBooking ? (
+          {isProcessing || isBooking || isPaymentLoading ? (
             <ButtonSpinner color="#fff" />
           ) : (
             <ButtonText className="text-white text-base font-vazirBold">

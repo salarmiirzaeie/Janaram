@@ -3,14 +3,12 @@ import { useRequestPaymentMutation } from "@/services/payment/payment-adapter";
 import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useCustomToast } from "./useToast";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export const useZarinpalPayment = () => {
   const toast = useCustomToast();
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [requestPayment, { isLoading }] = useRequestPaymentMutation();
   const startPayment = async (
@@ -23,6 +21,7 @@ export const useZarinpalPayment = () => {
         planId: planId,
         amount: amount,
         description: description,
+        appointmentId: planId,
       })
         .unwrap()
         .then(async (data) => {

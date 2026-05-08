@@ -42,7 +42,7 @@ const ActionButtons = React.memo(
     onTests: () => void;
   }) => {
     const handlePress = () => {
-      onAnalyzePersonality();
+      router.push("/my-appointments");
     };
 
     return (
@@ -74,9 +74,9 @@ const ActionButtons = React.memo(
               gap: 8,
             }}
           >
-            <AntDesign name="thunderbolt" size={20} color="white" />
+            <Ionicons name="chatbox-outline" size={20} color="white" />
             <Text className="text-white font-vazirBold text-base">
-              تحلیل شخصیت من با AI
+              جلسات روانشناسی من
             </Text>
           </LinearGradient>
         </TouchableOpacity>

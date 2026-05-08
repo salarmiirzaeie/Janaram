@@ -193,6 +193,22 @@ export default function RootLayout() {
                     }}
                   />
                   <Stack.Screen
+                    name="doctor-det"
+                    options={({ route }: any) => {
+                      return {
+                        headerShown: false,
+                      };
+                    }}
+                  />
+                  <Stack.Screen
+                    name="my-appointments"
+                    options={({ route }: any) => {
+                      return {
+                        headerShown: false,
+                      };
+                    }}
+                  />
+                  <Stack.Screen
                     name="all-files"
                     options={({ route }: any) => {
                       const titleFromParams = route.params?.title || "";

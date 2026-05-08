@@ -4,6 +4,7 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { useZarinpalPayment } from "@/hooks/useZarinpalPayment";
 import {
   useCancelAppointmentMutation,
   useGetUserAppointmentsQuery,
@@ -82,6 +83,10 @@ const getStatusBadge = (status: string) => {
 
 export default function AppointmentsScreen() {
   const [activeTab, setActiveTab] = useState<TabType>("upcoming");
+  const [loadingAppointmentId, setLoadingAppointmentId] = useState<
+    string | null
+  >(null);
+
   const {
     data: response,
     isLoading,
@@ -90,9 +95,9 @@ export default function AppointmentsScreen() {
   } = useGetUserAppointmentsQuery();
 
   const appointments = response?.data || [];
-
   const [cancelAppointment, { isLoading: isCancelling }] =
     useCancelAppointmentMutation();
+  const { startPayment, isLoading: isPaymentLoading } = useZarinpalPayment();
 
   const todayJalaali = getTodayJalaali();
   const currentTimeNumber = getCurrentTimeNumber();
@@ -150,8 +155,25 @@ export default function AppointmentsScreen() {
     }
   };
 
+  const handlePayment = async (appointment: any) => {
+    setLoadingAppointmentId(appointment.id);
+    try {
+      await startPayment(
+        appointment.id,
+        appointment.sessionPrice,
+        `پرداخت هزینه جلسه مشاوره با دکتر ${appointment.doctorName}`
+      );
+    } catch (error) {
+      console.error("Payment error:", error);
+    } finally {
+      setLoadingAppointmentId(null);
+    }
+  };
+
   const renderAppointmentCard = (app: any) => {
     const statusInfo = getStatusBadge(app.status);
+    const isThisPaymentLoading = loadingAppointmentId === app.id;
+
     return (
       <View
         key={app.id}
@@ -216,6 +238,7 @@ export default function AppointmentsScreen() {
             </Text>
           </View>
         </HStack>
+
         {app.status === "confirmed" && activeTab === "upcoming" && (
           <Button
             onPress={() => handleCancel(app.id)}
@@ -226,24 +249,18 @@ export default function AppointmentsScreen() {
             <ButtonText className="text-red-500 text-xs">لغو نوبت</ButtonText>
           </Button>
         )}
+
         {app.status === "pending_payment" && (
           <Button
-            onPress={() => {
-              router.push({
-                pathname: "/payment/session",
-                params: {
-                  appointmentId: app.id,
-                  doctorName: app.doctorName,
-                  date: app.date,
-                  time: app.time,
-                },
-              });
-            }}
+            onPress={() => handlePayment(app)}
+            disabled={isThisPaymentLoading}
             className="mt-3 rounded-full h-9"
             style={{ backgroundColor: colors.primary[500] }}
           >
             <ButtonText className="text-xs text-white">
-              پرداخت و تکمیل رزرو
+              {isThisPaymentLoading
+                ? "در حال اتصال به درگاه..."
+                : `پرداخت ${app.sessionPrice?.toLocaleString()} تومان و تکمیل رزرو`}
             </ButtonText>
           </Button>
         )}
