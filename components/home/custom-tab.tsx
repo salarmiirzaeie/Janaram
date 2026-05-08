@@ -88,6 +88,9 @@ const AnimatedTabBar: React.FC<TabBarProps> = ({
       sleep: <Feather name="moon" size={size} color={color} />,
       reports: <AntDesign name="bar-chart" size={size} color={color} />,
       setting: <Feather name="user" size={size} color={color} />,
+      psychologist: (
+        <Ionicons name="chatbox-outline" size={size} color={color} />
+      ),
     };
     return (
       icons[routeName] || <AntDesign name="home" size={size} color={color} />
@@ -101,6 +104,7 @@ const AnimatedTabBar: React.FC<TabBarProps> = ({
       sleep: "خواب آرام",
       reports: "حال من",
       setting: "پروفایل",
+      psychologist: "روانشناس من",
     };
     return labels[routeName] || "خانه";
   };

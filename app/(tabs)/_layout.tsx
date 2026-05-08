@@ -156,6 +156,16 @@ export default function TabLayout() {
             ),
           }}
         />
+
+        <Tabs.Screen
+          name="psychologist"
+          options={{
+            title: "روانشناس من",
+            tabBarIcon: ({ color }) => (
+              <Ionicons size={24} name="leaf-outline" color={color} />
+            ),
+          }}
+        />
         <Tabs.Screen
           name="explore"
           options={{
@@ -165,7 +175,7 @@ export default function TabLayout() {
             ),
           }}
         />
-        <Tabs.Screen
+        {/* <Tabs.Screen
           name="sleep"
           options={{
             title: "خواب خوب",
@@ -181,7 +191,7 @@ export default function TabLayout() {
               sleepModeHandler(false);
             },
           }}
-        />
+        /> */}
         <Tabs.Screen
           name="reports"
           options={{
