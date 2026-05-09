@@ -1,115 +1,134 @@
 import { colors } from "@/app/(tabs)/psychologist";
 import RatingStars from "@/components/psychologist/rating-start";
+import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Psychologist } from "@/services/psychologist/psychologist-adapter";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { Dimensions, TouchableOpacity, View } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
-import { Button, ButtonText } from "../ui/button";
-import { HStack } from "../ui/hstack";
+import { Dimensions, Image, TouchableOpacity, View } from "react-native";
 import { Text } from "../ui/text";
-import { VStack } from "../ui/vstack";
+
 const { width } = Dimensions.get("window");
 
 const PsychologistCard = ({ psychologist }: { psychologist: Psychologist }) => {
+  const handlePress = () => {
+    router.push({
+      pathname: "/doctor-det",
+      params: { id: psychologist.id },
+    });
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.9}
-      onPress={() => {
-        router.push({
-          pathname: "/doctor-det",
-          params: {
-            id: psychologist.id,
-          },
-        });
-      }}
+      onPress={handlePress}
       style={{
-        backgroundColor: "white",
+        backgroundColor: "#fff",
         borderRadius: 20,
-        marginRight: 16,
-        width: width * 0.7,
+        marginRight: 12,
+        width: width * 0.68,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
+        shadowOpacity: 0.06,
         shadowRadius: 8,
-        elevation: 2,
+        elevation: 3,
         borderWidth: 1,
-        borderColor: colors.gray[200],
+        borderColor: "#eee",
+        overflow: "hidden",
       }}
     >
-      <LinearGradient
-        colors={[colors.primary[50], "white"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{ borderRadius: 20, padding: 16 }}
+      {/* عکس */}
+      <View
+        style={{
+          width: "100%",
+          height: 110,
+          backgroundColor: colors.secondary[100],
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        <HStack space="md" className="items-start ">
-          <View
+        {psychologist.avatar ? (
+          <Image
+            source={{ uri: BASE_URL_IMAGES + psychologist.avatar }}
+            style={{ width: "100%", height: 110 }}
+            resizeMode="cover"
+          />
+        ) : (
+          <Ionicons name="person" size={44} color={colors.secondary[400]} />
+        )}
+      </View>
+
+      {/* محتوا */}
+      <View style={{ padding: 12 }}>
+        {/* نام */}
+        <Text
+          style={{
+            fontSize: 15,
+            fontFamily: "vazirBold",
+            color: "#1F2937",
+            marginBottom: 2,
+            textAlign: "right",
+          }}
+          numberOfLines={1}
+        >
+          {psychologist.name}
+        </Text>
+
+        {/* تخصص */}
+        <Text
+          style={{
+            fontSize: 11,
+            color: "#9CA3AF",
+            marginBottom: 6,
+            textAlign: "right",
+          }}
+          numberOfLines={1}
+        >
+          {psychologist.specialty || "روانشناس"}
+        </Text>
+
+        {/* امتیاز و تجربه */}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 10,
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+            <RatingStars rating={psychologist.rating} />
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+            <MaterialIcons name="work-outline" size={11} color="#9CA3AF" />
+            <Text style={{ fontSize: 10, color: "#9CA3AF" }}>
+              {psychologist.experience} سال
+            </Text>
+          </View>
+        </View>
+
+        {/* دکمه */}
+        <TouchableOpacity
+          onPress={handlePress}
+          style={{
+            backgroundColor: colors.primary[500],
+            paddingVertical: 8,
+            borderRadius: 25,
+            alignItems: "center",
+          }}
+        >
+          <Text
             style={{
-              width: 60,
-              height: 60,
-              borderRadius: 30,
-              backgroundColor: colors.primary[100],
-              justifyContent: "center",
-              alignItems: "center",
+              fontSize: 11,
+              color: "#fff",
+              fontFamily: "vazirBold",
             }}
           >
-            <Ionicons name="person" size={32} color={colors.primary[500]} />
-          </View>
-          <VStack className="flex-1">
-            <Text className="text-base text-right font-vazirBold text-gray-800">
-              {psychologist.name}
-            </Text>
-            <Text className="text-xs text-right font-vazir text-gray-500 mt-0.5">
-              {psychologist.specialty}
-            </Text>
-            <HStack space="sm" className="mt-1 flex-row-reverse items-center">
-              <RatingStars rating={psychologist.rating} />
-              <View className="w-1 h-1 bg-gray-300 rounded-full" />
-              <Text className="text-xs font-vazir  text-gray-500">
-                {psychologist.experience} سال
-              </Text>
-            </HStack>
-            <HStack className="justify-end  items-center mt-2">
-              {/* <HStack space="xs" className="items-center">
-                  <Text
-                    className="text-sm font-vazirBold"
-                    style={{ color: colors.accent[600] }}
-                  >
-                    {psychologist.sessionPrice.toLocaleString()}
-                  </Text>
-                  <Text className="text-xs text-gray-500">تومان</Text>
-                </HStack> */}
-              {/* {psychologist.availableToday ? (
-                <View className="bg-green-100 px-2 py-0.5 rounded-full">
-                  <Text className="text-green-600 text-xs">
-                    امروز نوبت دارد
-                  </Text>
-                </View>
-              ) : (
-                <View className="bg-gray-100 px-2 py-0.5 rounded-full">
-                  <Text className="text-gray-500 text-xs">پر شده</Text>
-                </View>
-              )} */}
-            </HStack>
-          </VStack>
-        </HStack>
-        <Button
-          onPress={() => {
-            router.push({
-              pathname: "/doctor-det",
-              params: {
-                id: psychologist.id,
-              },
-            });
-          }}
-          className="mt-3 rounded-full h-10"
-          style={{ backgroundColor: colors.primary[500] }}
-        >
-          <ButtonText className="text-sm">دریافت نوبت</ButtonText>
-        </Button>
-      </LinearGradient>
+            دریافت نوبت
+          </Text>
+        </TouchableOpacity>
+      </View>
     </TouchableOpacity>
   );
 };
+
 export default PsychologistCard;

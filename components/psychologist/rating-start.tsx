@@ -1,3 +1,4 @@
+import { colors } from "@/app/(tabs)/psychologist";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,7 +13,12 @@ const RatingStars = ({ rating }: { rating: number }) => {
         if (i < fullStars) iconName = "star";
         else if (i === fullStars && hasHalfStar) iconName = "star-half";
         return (
-          <Ionicons key={i} name={iconName as any} size={12} color="#FBBF24" />
+          <Ionicons
+            key={i}
+            name={iconName as any}
+            size={12}
+            color={colors.accent[500]}
+          />
         );
       })}
       <Text className="text-xs text-gray-600 mr-1">{rating?.toFixed(1)}</Text>

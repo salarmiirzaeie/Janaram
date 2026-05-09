@@ -1,4 +1,5 @@
 // app/(tabs)/psychologist.tsx
+import HorizonListHeader from "@/components/explore/horizon-list-header";
 import CategoryChip from "@/components/psychologist/category-chip";
 import PsychoCard from "@/components/psychologist/psycho-card";
 import PsychologistCard from "@/components/psychologist/PsychologistCard-recommend";
@@ -7,7 +8,7 @@ import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useGetPsychologistsQuery } from "@/services/psychologist/psychologist-adapter";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -253,10 +254,20 @@ export default function PsychologistScreen() {
                 !searchQuery &&
                 topPsychologists.length > 0 && (
                   <View className="mt-4">
-                    <HStack className="justify-between px-5 flex-row-reverse items-center">
-                      <Text className="text-base font-vazirBold text-gray-800">
-                        ⭐ پیشنهاد ویژه
-                      </Text>
+                    <HStack className="justify-between  flex-row-reverse items-center">
+                      <HorizonListHeader
+                        hideAll
+                        title={"پیشنهاد ویژه"}
+                        icon={
+                          <Ionicons
+                            name="star-sharp"
+                            size={24}
+                            color={colors.accent[500]}
+                          />
+                        }
+                        id={"1"}
+                      />
+
                       {/* در صورت نیاز می‌توان دکمه مشاهده همه را فعال کرد */}
                     </HStack>
                     <ScrollView
@@ -272,17 +283,29 @@ export default function PsychologistScreen() {
                 )}
 
               {/* لیست عمودی همه روانشناسان */}
-              <View className="px-5 mt-2 mb-8">
-                <Text className="text-base text-right font-vazirBold text-gray-800 mb-3">
-                  {selectedCategory
-                    ? `متخصصان ${
-                        categories.find((c) => c.id === selectedCategory)
-                          ?.title || ""
-                      }`
-                    : "همه روانشناسان"}
-                </Text>
+              <View className=" mt-2 mb-8">
+                <HorizonListHeader
+                  hideAll
+                  title={
+                    selectedCategory
+                      ? `متخصصان ${
+                          categories.find((c) => c.id === selectedCategory)
+                            ?.title || ""
+                        }`
+                      : "همه روانشناسان"
+                  }
+                  icon={
+                    <MaterialIcons
+                      name="all-inclusive"
+                      size={24}
+                      color={colors.primary[500]}
+                    />
+                  }
+                  id={"1"}
+                />
+                {}
                 {filteredPsychologists.length === 0 ? (
-                  <View className="py-10 items-center">
+                  <View className="py-10 px-5 items-center">
                     <Ionicons
                       name="sad-outline"
                       size={48}
@@ -293,7 +316,7 @@ export default function PsychologistScreen() {
                     </Text>
                   </View>
                 ) : (
-                  <VStack space="md">
+                  <VStack className="px-5" space="md">
                     {filteredPsychologists.map((doc) => (
                       <PsychoCard key={doc.id} doc={doc} />
                     ))}

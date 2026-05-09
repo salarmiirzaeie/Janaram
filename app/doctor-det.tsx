@@ -1,5 +1,6 @@
 // app/psychologist/[id].tsx
 import { colors } from "@/app/(tabs)/psychologist";
+import HorizonListHeader from "@/components/explore/horizon-list-header";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { useCustomToast } from "@/hooks/useToast";
@@ -11,6 +12,7 @@ import {
   useGetAvailableSlotsQuery,
   useGetPsychologistByIdQuery,
 } from "@/services/psychologist/psychologist-adapter";
+import { toPersianDigits } from "@/utils/persian";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import moment from "moment-jalaali";
@@ -25,26 +27,33 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
 
 const { width } = Dimensions.get("window");
 
 moment.loadPersian({ dialect: "persian-modern", usePersianDigits: false });
 
-const getNextDays = (count: number) => {
-  const days = [];
-  const today = moment();
-  for (let i = 0; i < count; i++) {
-    const date = moment(today).add(i, "days");
-    const weekday = date.day();
-    days.push({
-      date: date.format("YYYY-MM-DD"),
-      dayOfWeek: getDayName(weekday),
-      dayNumber: date.format("jD"),
-      monthName: getMonthName(parseInt(date.format("jM"))),
-    });
-  }
-  return days;
+// تابع دریافت نام روز هفته بر اساس تاریخ میلادی
+const getPersianDayName = (gregorianDate: Date): string => {
+  const formatter = new Intl.DateTimeFormat("fa-IR", {
+    timeZone: "Asia/Tehran",
+    weekday: "long",
+  });
+  return formatter.format(gregorianDate);
+};
+
+// تابع دریافت عدد روز هفته (0=شنبه تا 6=جمعه)
+const getPersianWeekdayNumber = (gregorianDate: Date): number => {
+  const dayName = getPersianDayName(gregorianDate);
+  const weekdayMap: Record<string, number> = {
+    شنبه: 0,
+    یکشنبه: 1,
+    دوشنبه: 2,
+    سه‌شنبه: 3,
+    چهارشنبه: 4,
+    پنجشنبه: 5,
+    جمعه: 6,
+  };
+  return weekdayMap[dayName] ?? 0;
 };
 
 const getDayName = (dayIndex: number) => {
@@ -78,9 +87,38 @@ const getMonthName = (month: number) => {
   return months[month - 1];
 };
 
+// دریافت تاریخ‌های بعدی بدون استفاده از day() moment
+const getNextDays = (count: number) => {
+  const days = [];
+  const today = new Date();
+
+  for (let i = 0; i < count; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+
+    // تبدیل تاریخ به شمسی با moment-jalaali فقط برای روز و ماه
+    const jalaaliDate = moment(date);
+    const jYear = jalaaliDate.format("jYYYY");
+    const jMonth = parseInt(jalaaliDate.format("jM"));
+    const jDay = jalaaliDate.format("jD");
+
+    // محاسبه روز هفته با Intl
+    const weekdayNumber = getPersianWeekdayNumber(date);
+    const weekdayName = getDayName(weekdayNumber);
+
+    days.push({
+      date: date.toISOString().split("T")[0],
+      dayOfWeek: weekdayName,
+      dayNumber: jDay,
+      monthName: getMonthName(jMonth),
+    });
+  }
+  return days;
+};
+
 export default function PsychologistDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const dispatch = useDispatch();
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const toast = useCustomToast();
   const [selectedDate, setSelectedDate] = useState(getNextDays(7)[0].date);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -106,17 +144,14 @@ export default function PsychologistDetailScreen() {
     setIsProcessing(true);
 
     try {
-      // 1. ثبت نوبت با وضعیت pending_payment
       const result = await createAppointment({
         doctorId: id,
         date: selectedDate,
         time: selectedTime,
       }).unwrap();
       if (doctor) {
-        console.log(result, "res");
-        // 2. شروع فرآیند پرداخت
         await startPayment(
-          result.appointmentId, // ارسال appointmentId به جای planId
+          result.appointmentId,
           doctor.sessionPrice,
           `پرداخت هزینه جلسه مشاوره با دکتر ${doctor.name} در تاریخ ${selectedDate} ساعت ${selectedTime}`
         );
@@ -183,7 +218,7 @@ export default function PsychologistDetailScreen() {
             color: colors.gray[800],
           }}
         >
-          پروفایل روانشناس
+        {doctor?.name}
         </Text>
         <View style={{ width: 40 }} />
       </View>
@@ -209,7 +244,7 @@ export default function PsychologistDetailScreen() {
               width: 80,
               height: 80,
               borderRadius: 40,
-              backgroundColor: colors.primary[100],
+              backgroundColor: colors.secondary[100],
               justifyContent: "center",
               alignItems: "center",
               overflow: "hidden",
@@ -228,22 +263,12 @@ export default function PsychologistDetailScreen() {
                 style={{ width: 80, height: 80 }}
               />
             ) : (
-              <Ionicons name="person" size={40} color={colors.primary[500]} />
+              <Ionicons name="person" size={40} color={colors.secondary[500]} />
             )}
           </View>
 
           <View style={{ flex: 1 }}>
-            <Text
-              style={{
-                fontSize: 18,
-                fontFamily: "vazirBold",
-                color: colors.gray[800],
-                marginBottom: 4,
-                textAlign: "right",
-              }}
-            >
-              {doctor.name}
-            </Text>
+          
 
             <View
               style={{
@@ -265,7 +290,7 @@ export default function PsychologistDetailScreen() {
                       borderRadius: 12,
                     }}
                   >
-                    <Text style={{ fontSize: 10, color: colors.primary[700] }}>
+                    <Text style={{ fontSize: 10,   fontFamily: "vazir",color: colors.primary[700] }}>
                       {spec}
                     </Text>
                   </View>
@@ -299,7 +324,7 @@ export default function PsychologistDetailScreen() {
                 style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
               >
                 <Ionicons name="star" size={12} color="#FBBF24" />
-                <Text style={{ fontSize: 12, color: colors.gray[600] }}>
+                <Text style={{ fontSize: 12, color: colors.gray[600],fontFamily: "vazir" }}>
                   {doctor.rating}
                 </Text>
               </View>
@@ -319,7 +344,7 @@ export default function PsychologistDetailScreen() {
                   size={12}
                   color={colors.gray[500]}
                 />
-                <Text style={{ fontSize: 12, color: colors.gray[600] }}>
+                <Text style={{ fontSize: 12, color: colors.gray[600], fontFamily: "vazir", }}>
                   {doctor.experience} سال
                 </Text>
               </View>
@@ -332,10 +357,10 @@ export default function PsychologistDetailScreen() {
                 }}
               />
               <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
+                style={{ flexDirection: "row", alignItems: "center", gap: 4, }}
               >
                 <FontAwesome5 name="users" size={11} color={colors.gray[500]} />
-                <Text style={{ fontSize: 12, color: colors.gray[600] }}>
+                <Text style={{ fontSize: 12, color: colors.gray[600],fontFamily: "vazir" }}>
                   {doctor.successfulConsultations || 0}
                 </Text>
               </View>
@@ -343,42 +368,50 @@ export default function PsychologistDetailScreen() {
 
             {doctor.medicalLicenseNumber && (
               <Text
-                style={{ fontSize: 10, color: colors.gray[400], marginTop: 6 }}
+                style={{ fontSize: 10, color: colors.gray[400], marginTop: 6,fontFamily: "vazir" }}
               >
-                نظام پزشکی: {doctor.medicalLicenseNumber}
+               کد نظام پزشکی: {doctor.medicalLicenseNumber}
               </Text>
             )}
           </View>
         </View>
 
         {/* درباره پزشک */}
-        <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-          <Text
-            style={{
-              fontSize: 15,
-              fontFamily: "vazirBold",
-              color: colors.gray[800],
-              marginBottom: 8,
-              textAlign: "right",
-            }}
-          >
-            درباره {doctor.name.split(" ")[1] || doctor.name}
-          </Text>
-          <Text
-            style={{
-              fontSize: 13,
-              color: colors.gray[600],
-              lineHeight: 22,
-              textAlign: "right",
-            }}
-          >
-            {doctor.bio || "توضیحاتی درج نشده است"}
-          </Text>
+        <View style={{ marginTop: 20,borderBottomWidth:1,paddingBottom:10,borderBottomColor:colors.gray[100] }}>
+        <HorizonListHeader hideAll title={`درباره دکتر ${doctor.name.split(" ")[1] || doctor.name}`} icon={<Ionicons name="information-circle-sharp" size={24} color={colors.accent[500]}/>} id={"1"} />
+
+        
+             <TouchableOpacity
+                        onPress={() => setDescriptionExpanded(!descriptionExpanded)}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            color: colors.gray[500],
+                            lineHeight: 22,
+                            textAlign: "right",
+                            fontFamily: "vazir",
+                            paddingHorizontal: 20, 
+                          }}
+                        >
+                          {descriptionExpanded? doctor.bio:doctor.bio?.slice(0,100)+"..." || "بدون توضیحات"}
+                        </Text>
+                        {doctor.bio && doctor.bio?.length > 80 && (
+                          <Text style={{  color: "#79AED6",
+                            fontSize: 12,
+                            textAlign: "center",
+                            fontFamily: "vazir",
+                            marginTop: 4,}}>
+                            {descriptionExpanded ? "بستن" : "بیشتر"}
+                          </Text>
+                        )}
+                      </TouchableOpacity>
+       
         </View>
 
         {/* انتخاب تاریخ */}
         <View style={{ marginTop: 24 }}>
-          <Text
+          {/* <Text
             style={{
               fontSize: 15,
               fontFamily: "vazirBold",
@@ -388,8 +421,10 @@ export default function PsychologistDetailScreen() {
               textAlign: "right",
             }}
           >
-            🗓 انتخاب تاریخ نوبت
-          </Text>
+             انتخاب تاریخ نوبت
+          </Text> */}
+                          <HorizonListHeader hideAll title={"انتخاب تاریخ نوبت"} icon={<Ionicons name="calendar" size={24} color="#79AED6"/>} id={"1"} />
+
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -435,6 +470,8 @@ export default function PsychologistDetailScreen() {
                   </Text>
                   <Text
                     style={{
+                      fontFamily: "vazir",
+
                       fontSize: 12,
                       color: isSelected
                         ? colors.primary[100]
@@ -442,10 +479,12 @@ export default function PsychologistDetailScreen() {
                       marginTop: 4,
                     }}
                   >
-                    {item.dayNumber}
+                    {toPersianDigits(item.dayNumber) }
                   </Text>
                   <Text
                     style={{
+                      fontFamily: "vazir",
+
                       fontSize: 10,
                       color: isSelected
                         ? colors.primary[100]
@@ -461,8 +500,8 @@ export default function PsychologistDetailScreen() {
         </View>
 
         {/* انتخاب ساعت */}
-        <View style={{ marginTop: 24, paddingHorizontal: 20 }}>
-          <Text
+        <View style={{ marginTop: 10}}>
+          {/* <Text
             style={{
               fontSize: 15,
               fontFamily: "vazirBold",
@@ -472,7 +511,9 @@ export default function PsychologistDetailScreen() {
             }}
           >
             ⏱ انتخاب ساعت
-          </Text>
+          </Text> */}
+                <HorizonListHeader hideAll title={"انتخاب ساعت"} icon={<Ionicons name="time" size={24} color="#9966CC"/>} id={"1"} />
+          
           {isLoadingSlots ? (
             <ActivityIndicator size="small" color={colors.primary[500]} />
           ) : availableSlots.length === 0 ? (
@@ -482,6 +523,8 @@ export default function PsychologistDetailScreen() {
                 padding: 20,
                 borderRadius: 20,
                 alignItems: "center",
+                 paddingHorizontal: 20 
+              
               }}
             >
               <MaterialIcons
@@ -489,12 +532,12 @@ export default function PsychologistDetailScreen() {
                 size={32}
                 color={colors.gray[400]}
               />
-              <Text style={{ color: colors.gray[500], marginTop: 8 }}>
+              <Text style={{ color: colors.gray[500], marginTop: 8,  fontFamily: "vazir" }}>
                 هیچ زمانی موجود نیست
               </Text>
             </View>
           ) : (
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12, paddingHorizontal: 20 }}>
               {availableSlots.map((time) => (
                 <TouchableOpacity
                   key={time}
@@ -510,14 +553,16 @@ export default function PsychologistDetailScreen() {
                       selectedTime === time
                         ? colors.accent[500]
                         : colors.gray[200],
+                       
                   }}
                 >
                   <Text
                     style={{
                       color: selectedTime === time ? "#fff" : colors.gray[700],
+                      fontFamily:"vazirBold"
                     }}
                   >
-                    {time}
+                    { toPersianDigits(time)}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -525,32 +570,7 @@ export default function PsychologistDetailScreen() {
           )}
         </View>
 
-        {/* نمایش قیمت جلسه */}
-        <View
-          style={{
-            marginHorizontal: 20,
-            marginTop: 24,
-            backgroundColor: colors.gray[50],
-            borderRadius: 16,
-            padding: 14,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ fontSize: 14, color: colors.gray[600] }}>
-            هزینه جلسه مشاوره
-          </Text>
-          <Text
-            style={{
-              fontSize: 18,
-              fontFamily: "vazirBold",
-              color: colors.accent[600],
-            }}
-          >
-            {doctor.sessionPrice?.toLocaleString()} تومان
-          </Text>
-        </View>
+     
       </ScrollView>
 
       {/* دکمه ثابت پایین */}

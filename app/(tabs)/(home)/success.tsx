@@ -1,7 +1,8 @@
 // app/payment/success.tsx
+import { Text } from "@/components/ui/text";
 import { AntDesign } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 function PaymentSuccess() {
   const router = useRouter();
@@ -36,19 +37,13 @@ function PaymentSuccess() {
       >
         شماره پیگیری: {refId}
       </Text>
-      <Text
-        style={{
-          fontSize: 14,
-          color: "#999",
-          marginTop: 10,
-          textAlign: "center",
-        }}
-      >
-        اشتراک شما با موفقیت فعال شد
+      <Text className="text-center mt-4 text-gray-400">
+        نوبت شما با موفقیت تایید شد. روانشناس محترم در زمان تعیین شده با شما
+        تماس خواهد گرفت
       </Text>
 
       <TouchableOpacity
-        onPress={() => router.push("/")}
+        onPress={() => router.dismissTo("/my-appointments")}
         style={{
           backgroundColor: "#4CAF50",
           padding: 15,
@@ -60,7 +55,7 @@ function PaymentSuccess() {
         <Text
           style={{ color: "white", textAlign: "center", fontWeight: "bold" }}
         >
-          بازگشت به صفحه اصلی
+          لیست نوبت های من
         </Text>
       </TouchableOpacity>
     </View>

@@ -23,14 +23,13 @@ const PsychoCard: FC<{ doc: Psychologist }> = ({ doc }) => {
       style={{
         backgroundColor: "#fff",
         borderRadius: 16,
-        marginBottom: 12,
         borderWidth: 1,
         borderColor: "#f0f0f0",
         shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.03,
-        shadowRadius: 4,
-        elevation: 1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
+        elevation: 3,
       }}
     >
       <View style={{ flexDirection: "row", padding: 12 }}>
@@ -122,7 +121,7 @@ const PsychoCard: FC<{ doc: Psychologist }> = ({ doc }) => {
             width: 70,
             height: 70,
             borderRadius: 35,
-            backgroundColor: colors.primary[50],
+            backgroundColor: colors.secondary[50],
             justifyContent: "center",
             alignItems: "center",
             overflow: "hidden",
@@ -135,7 +134,7 @@ const PsychoCard: FC<{ doc: Psychologist }> = ({ doc }) => {
               resizeMode="cover"
             />
           ) : (
-            <Ionicons name="person" size={32} color={colors.primary[500]} />
+            <Ionicons name="person" size={32} color={colors.secondary[500]} />
           )}
         </View>
       </View>

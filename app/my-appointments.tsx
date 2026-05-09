@@ -8,15 +8,14 @@ import { useZarinpalPayment } from "@/hooks/useZarinpalPayment";
 import {
   useCancelAppointmentMutation,
   useGetUserAppointmentsQuery,
-  useStartSessionMutation,
 } from "@/services/psychologist/psychologist-adapter";
 import { Ionicons } from "@expo/vector-icons";
-import * as Linking from "expo-linking";
 import { router } from "expo-router";
 import moment from "moment-jalaali";
 import React, { useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Modal,
   RefreshControl,
   ScrollView,
   StatusBar,
@@ -85,13 +84,13 @@ const getStatusBadge = (status: string) => {
 
 export default function AppointmentsScreen() {
   const [activeTab, setActiveTab] = useState<TabType>("upcoming");
-  const [sessionStart] = useStartSessionMutation();
   const [loadingAppointmentId, setLoadingAppointmentId] = useState<
     string | null
   >(null);
-  const [isStartingSession, setIsStartingSession] = useState<string | null>(
-    null
-  );
+  const [cancelModalVisible, setCancelModalVisible] = useState(false);
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState<
+    string | null
+  >(null);
 
   const {
     data: response,
@@ -152,10 +151,18 @@ export default function AppointmentsScreen() {
       });
   }, [appointments, todayJalaali, currentTimeNumber]);
 
-  const handleCancel = async (appointmentId: string) => {
+  const openCancelModal = (appointmentId: string) => {
+    setSelectedAppointmentId(appointmentId);
+    setCancelModalVisible(true);
+  };
+
+  const handleConfirmCancel = async () => {
+    if (!selectedAppointmentId) return;
     try {
-      await cancelAppointment(appointmentId).unwrap();
+      await cancelAppointment(selectedAppointmentId).unwrap();
       refetch();
+      setCancelModalVisible(false);
+      setSelectedAppointmentId(null);
     } catch (error) {
       console.error("Cancel failed", error);
     }
@@ -176,50 +183,9 @@ export default function AppointmentsScreen() {
     }
   };
 
-  const startSession = async (appointmentId: string) => {
-    setIsStartingSession(appointmentId);
-
-    try {
-      const { data } = await sessionStart({ id: appointmentId });
-
-      if (data.success && data.chatId) {
-        // باز کردن لینک گروه در بله
-        Linking.openURL(`https://ble.ir/join/${data.chatId}`);
-        // به‌روزرسانی لیست نوبت‌ها
-        refetch();
-      } else if (data.needBaleId) {
-        alert("لطفاً ابتدا آیدی بله خود را در پروفایل وارد کنید");
-        router.push("/profile");
-      } else {
-        alert(data.message || "خطا در ایجاد جلسه");
-      }
-    } catch (error) {
-      console.error("Error starting session:", error);
-      alert("خطا در ایجاد جلسه");
-    } finally {
-      setIsStartingSession(null);
-    }
-  };
-
-  const isSessionTime = (appointment: any) => {
-    const now = moment();
-    const appointmentDate = moment(appointment.date);
-    const [hours, minutes] = appointment.time.split(":").map(Number);
-    appointmentDate.set({ hour: hours, minute: minutes });
-
-    // 30 دقیقه قبل تا 30 دقیقه بعد از زمان نوبت
-    const startTime = moment(appointmentDate).subtract(30, "minutes");
-    const endTime = moment(appointmentDate).add(30, "minutes");
-
-    return now.isBetween(startTime, endTime);
-  };
-
   const renderAppointmentCard = (app: any) => {
     const statusInfo = getStatusBadge(app.status);
     const isThisPaymentLoading = loadingAppointmentId === app.id;
-    const isStarting = isStartingSession === app.id;
-    const canStartSession =
-      app.status === "confirmed" && isSessionTime(app) && !app.baleGroupId;
 
     return (
       <View
@@ -286,43 +252,14 @@ export default function AppointmentsScreen() {
           </View>
         </HStack>
 
-        {app.status === "confirmed" &&
-          activeTab === "upcoming" &&
-          !canStartSession && (
-            <Button
-              onPress={() => handleCancel(app.id)}
-              disabled={isCancelling}
-              variant="outline"
-              className="mt-3 rounded-full h-9 border-red-300"
-            >
-              <ButtonText className="text-red-500 text-xs">لغو نوبت</ButtonText>
-            </Button>
-          )}
-
-        {canStartSession && (
+        {app.status === "confirmed" && activeTab === "upcoming" && (
           <Button
-            onPress={() => startSession(app.id)}
-            disabled={isStarting}
-            className="mt-3 rounded-full h-9"
-            style={{ backgroundColor: colors.secondary[500] }}
+            onPress={() => openCancelModal(app.id)}
+            disabled={isCancelling}
+            variant="outline"
+            className="mt-3 rounded-full h-9 border-red-300"
           >
-            <ButtonText className="text-xs text-white">
-              {isStarting ? "در حال ایجاد جلسه..." : "🎥 شروع جلسه مشاوره"}
-            </ButtonText>
-          </Button>
-        )}
-
-        {app.baleGroupId && (
-          <Button
-            onPress={() =>
-              Linking.openURL(`https://ble.ir/join/${app.baleGroupId}`)
-            }
-            className="mt-3 rounded-full h-9"
-            style={{ backgroundColor: colors.primary[500] }}
-          >
-            <ButtonText className="text-xs text-white">
-              ورود به گفتگو
-            </ButtonText>
+            <ButtonText className="text-red-500 text-xs">لغو نوبت</ButtonText>
           </Button>
         )}
 
@@ -474,6 +411,109 @@ export default function AppointmentsScreen() {
             ? renderEmptyState()
             : past.map(renderAppointmentCard))}
       </ScrollView>
+
+      {/* Modal تأیید لغو نوبت */}
+      <Modal
+        transparent={true}
+        visible={cancelModalVisible}
+        animationType="fade"
+        onRequestClose={() => setCancelModalVisible(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "white",
+              borderRadius: 24,
+              padding: 24,
+              width: "80%",
+              maxWidth: 320,
+            }}
+          >
+            <View style={{ alignItems: "center", marginBottom: 16 }}>
+              <View
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 28,
+                  backgroundColor: colors.accent[50],
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: 12,
+                }}
+              >
+                <Ionicons
+                  name="alert-circle-outline"
+                  size={32}
+                  color={colors.accent[500]}
+                />
+              </View>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: "vazirBold",
+                  color: colors.gray[800],
+                  textAlign: "center",
+                  marginBottom: 8,
+                }}
+              >
+                لغو نوبت
+              </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: colors.gray[500],
+                  textAlign: "center",
+                  lineHeight: 22,
+                }}
+              >
+                آیا از لغو این نوبت اطمینان دارید؟
+              </Text>
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: colors.gray[400],
+                  textAlign: "center",
+                  marginTop: 8,
+                }}
+              >
+                این عمل غیرقابل بازگشت است.
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 12,
+                marginTop: 16,
+              }}
+            >
+              <Button
+                onPress={() => setCancelModalVisible(false)}
+                className="flex-1 rounded-full h-10"
+                style={{ backgroundColor: colors.gray[100] }}
+              >
+                <ButtonText className="text-gray-600 text-sm">
+                  انصراف
+                </ButtonText>
+              </Button>
+              <Button
+                onPress={handleConfirmCancel}
+                className="flex-1 rounded-full h-10"
+                style={{ backgroundColor: colors.accent[500] }}
+              >
+                <ButtonText className="text-white text-sm">لغو نوبت</ButtonText>
+              </Button>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

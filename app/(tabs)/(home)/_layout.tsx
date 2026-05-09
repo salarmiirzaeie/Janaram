@@ -11,7 +11,6 @@ const _layout = () => {
   const { authorized } = useAppSelector((state) => state.auth);
   const dispatch = useDispatch();
   useEffect(() => {
-    // هندل کردن لینک当她 اپ باز است
     const handleDeepLink = (event: { url: string }) => {
       const url = event.url;
       const params = new URL(url).searchParams;
@@ -21,17 +20,10 @@ const _layout = () => {
         // پرداخت موفق - رفتن به صفحه موفقیت
         dispatch(apiSlice.util.invalidateTags(["UserAppointments"]));
 
-        dispatch({
-          type: "initialize/setIsFirstModalShow",
-          payload: false,
-        });
         router.push(`/success?refId=${refId}`);
       } else if (status === "failed") {
         // پرداخت ناموفق
-        dispatch({
-          type: "initialize/setIsFirstModalShow",
-          payload: false,
-        });
+
         router.push("/failed");
       }
     };

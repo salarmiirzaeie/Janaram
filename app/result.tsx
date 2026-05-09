@@ -32,16 +32,16 @@ export default function TestResult() {
             نمره شما: {data.totalScore}
           </Text>
         </View>
-        {/* {data.meditationSuggestion && (
+        {data.meditationSuggestion && (
           <View className="bg-gray-50 rounded-xl p-4 mb-6">
-            <Text className="text-lg font-semibold text-gray-800 mb-2">
-              پیشنهاد مدیتیشن:
+            <Text className="text-lg text-right font-semibold text-gray-800 mb-2">
+              پیشنهاد :
             </Text>
             <Text className="text-gray-600 text-right">
               {data.meditationSuggestion}
             </Text>
           </View>
-        )} */}
+        )}
         <TouchableOpacity
           onPress={() => router.replace("/")}
           className="bg-indigo-600 py-3 rounded-xl mt-4"
