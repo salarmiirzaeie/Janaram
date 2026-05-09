@@ -24,6 +24,18 @@ const { width } = Dimensions.get("window");
 
 // پالت کامل رنگی (همان قبل)
 export const colors = {
+  success: {
+    50: "#F0F9F0",
+    100: "#E0F5E0",
+    200: "#C2EBC2",
+    300: "#A3E1A3",
+    400: "#85D785",
+    500: "#66CC66", // Green pullet / main success green
+    600: "#4DB34D",
+    700: "#339933",
+    800: "#1A801A",
+    900: "#0D660D",
+  },
   primary: {
     50: "#F0F6FA",
     100: "#E1EDF5",
@@ -272,7 +284,7 @@ export default function PsychologistScreen() {
                     </HStack>
                     <ScrollView
                       horizontal
-                      contentContainerClassName="px-5 py-4"
+                      contentContainerClassName="px-5 pb-4"
                       showsHorizontalScrollIndicator={false}
                     >
                       {topPsychologists.map((doc) => (

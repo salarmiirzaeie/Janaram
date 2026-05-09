@@ -152,10 +152,13 @@ const Home = () => {
       },
       {
         id: 4,
-        title: "روانشناس",
-        icon: <Ionicons name="people" size={28} color="white" />,
+        title: "خواب",
+        icon: <Ionicons name="moon" size={28} color="white" />,
         color: ["#91A5BE", "#7A8BA8"],
-        route: "/psychologist",
+        route: {
+          pathname: "/all-files",
+          params: { type: "sleep", title: "خودسازی" },
+        },
       },
       {
         id: 5,
@@ -225,7 +228,7 @@ const Home = () => {
           <HStack className="items-center justify-end">
             <HStack space="sm" className="items-center">
               <Text className="font-vazirBold text-primary-800 text-xl">
-                روانشناس من
+                روانشناس هوش مصنوعی
               </Text>
               <Ionicons name="people" size={22} color="#9966CC" />
             </HStack>

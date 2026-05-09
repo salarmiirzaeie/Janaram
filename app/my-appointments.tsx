@@ -1,5 +1,6 @@
 // app/(tabs)/appointments.tsx
 import { colors } from "@/app/(tabs)/psychologist";
+import RatingModal from "@/components/reports/rating-modal";
 import { Button, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
@@ -68,8 +69,8 @@ const getStatusBadge = (status: string) => {
     case "completed":
       return {
         text: "انجام شده",
-        color: colors.accent[600],
-        bg: colors.accent[50],
+        color: "#10B981",
+        bg: "#D1FAE5",
       };
     case "pending_payment":
       return {
@@ -78,7 +79,11 @@ const getStatusBadge = (status: string) => {
         bg: "#FEF3C7",
       };
     default:
-      return { text: "در انتظار", color: "#F59E0B", bg: "#FEF3C7" };
+      return {
+        text: "در انتظار",
+        color: colors.gray[500],
+        bg: colors.gray[100],
+      };
   }
 };
 
@@ -91,6 +96,8 @@ export default function AppointmentsScreen() {
   const [selectedAppointmentId, setSelectedAppointmentId] = useState<
     string | null
   >(null);
+  const [ratingModalVisible, setRatingModalVisible] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
 
   const {
     data: response,
@@ -183,6 +190,11 @@ export default function AppointmentsScreen() {
     }
   };
 
+  const handleComment = (appointment: any) => {
+    setSelectedAppointment(appointment);
+    setRatingModalVisible(true);
+  };
+
   const renderAppointmentCard = (app: any) => {
     const statusInfo = getStatusBadge(app.status);
     const isThisPaymentLoading = loadingAppointmentId === app.id;
@@ -200,38 +212,6 @@ export default function AppointmentsScreen() {
         }}
       >
         <HStack className="justify-between items-start">
-          <VStack className="flex-1">
-            <Text className="text-base font-vazirBold text-gray-800">
-              {app.doctorName}
-            </Text>
-            <Text className="text-xs text-gray-500 mt-1">
-              {app.specialty || "روانشناس"}
-            </Text>
-            <HStack space="sm" className="mt-2 items-center">
-              <Ionicons
-                name="calendar-outline"
-                size={14}
-                color={colors.gray[500]}
-              />
-              <Text className="text-xs text-gray-600">
-                {formatDatePersian(app.date)}
-              </Text>
-              <Ionicons
-                name="time-outline"
-                size={14}
-                color={colors.gray[500]}
-              />
-              <Text className="text-xs text-gray-600">{app.time}</Text>
-            </HStack>
-            {app.status === "pending_payment" && (
-              <View className="mt-2">
-                <Text className="text-orange-500 text-xs">
-                  ⚠️ این نوبت در انتظار پرداخت است. برای تکمیل رزرو، پرداخت را
-                  انجام دهید.
-                </Text>
-              </View>
-            )}
-          </VStack>
           <View
             style={{
               backgroundColor: statusInfo.bg,
@@ -250,6 +230,38 @@ export default function AppointmentsScreen() {
               {statusInfo.text}
             </Text>
           </View>
+          <VStack className="flex-1 mr-3">
+            <Text className="font-vazirBold text-right text-gray-800">
+              {app.doctorName}
+            </Text>
+            <Text className="text-xs font-vazir text-right text-gray-500 mt-1">
+              {app.specialty || "روانشناس"}
+            </Text>
+            <HStack space="sm" className="mt-2 justify-end items-center">
+              <Ionicons
+                name="calendar-outline"
+                size={14}
+                color={colors.gray[500]}
+              />
+              <Text className="text-xs text-gray-600">
+                {formatDatePersian(app.date)}
+              </Text>
+              <Ionicons
+                name="time-outline"
+                size={14}
+                color={colors.gray[500]}
+              />
+              <Text className="text-xs text-gray-600">{app.time}</Text>
+            </HStack>
+            {app.status === "pending_payment" && (
+              <View className="mt-2">
+                <Text className="text-orange-500 text-xs text-right">
+                  ⚠️ این نوبت در انتظار پرداخت است. برای تکمیل رزرو، پرداخت را
+                  انجام دهید.
+                </Text>
+              </View>
+            )}
+          </VStack>
         </HStack>
 
         {app.status === "confirmed" && activeTab === "upcoming" && (
@@ -274,6 +286,18 @@ export default function AppointmentsScreen() {
               {isThisPaymentLoading
                 ? "در حال اتصال به درگاه..."
                 : `پرداخت ${app.sessionPrice?.toLocaleString()} تومان و تکمیل رزرو`}
+            </ButtonText>
+          </Button>
+        )}
+
+        {app.status === "completed" && (
+          <Button
+            onPress={() => handleComment(app)}
+            className="mt-3 rounded-full h-9"
+            style={{ backgroundColor: colors.secondary[500] }}
+          >
+            <ButtonText className="text-xs text-white">
+              ثبت نظر و امتیاز
             </ButtonText>
           </Button>
         )}
@@ -339,7 +363,6 @@ export default function AppointmentsScreen() {
         </HStack>
       </LinearGradient>
 
-      {/* Tab Switcher */}
       <HStack className="px-5 mt-4 border-b border-gray-200">
         <TouchableOpacity
           onPress={() => setActiveTab("upcoming")}
@@ -487,13 +510,7 @@ export default function AppointmentsScreen() {
               </Text>
             </View>
 
-            <View
-              style={{
-                flexDirection: "row",
-                gap: 12,
-                marginTop: 16,
-              }}
-            >
+            <View style={{ flexDirection: "row", gap: 12, marginTop: 16 }}>
               <Button
                 onPress={() => setCancelModalVisible(false)}
                 className="flex-1 rounded-full h-10"
@@ -514,6 +531,18 @@ export default function AppointmentsScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Modal ثبت نظر و امتیاز - اصلاح شده */}
+      <RatingModal
+        visible={ratingModalVisible}
+        onClose={() => {
+          setRatingModalVisible(false);
+          setSelectedAppointment(null);
+        }}
+        appointmentId={selectedAppointment?.id || ""}
+        doctorId={selectedAppointment?.doctorId || ""}
+        doctorName={selectedAppointment?.doctorName || ""}
+      />
     </SafeAreaView>
   );
 }

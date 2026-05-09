@@ -2,9 +2,10 @@ import { colors } from "@/app/(tabs)/psychologist";
 import RatingStars from "@/components/psychologist/rating-start";
 import { BASE_URL_IMAGES } from "@/redux/api-slice";
 import { Psychologist } from "@/services/psychologist/psychologist-adapter";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Dimensions, Image, TouchableOpacity, View } from "react-native";
+import PrimaryButton from "../ui/button/primary-button";
 import { Text } from "../ui/text";
 
 const { width } = Dimensions.get("window");
@@ -23,42 +24,52 @@ const PsychologistCard = ({ psychologist }: { psychologist: Psychologist }) => {
       onPress={handlePress}
       style={{
         backgroundColor: "#fff",
-        borderRadius: 20,
+        borderRadius: 16,
         marginRight: 12,
-        width: width * 0.68,
+        width: width * 0.45,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.06,
-        shadowRadius: 8,
-        elevation: 3,
-        borderWidth: 1,
-        borderColor: "#eee",
+        shadowOpacity: 0.04,
+        shadowRadius: 6,
+        elevation: 2,
+        borderWidth: 0.5,
+        borderColor: "#F0F0F0",
         overflow: "hidden",
       }}
     >
-      {/* عکس */}
+      {/* عکس دایره‌ای در بالا */}
       <View
         style={{
-          width: "100%",
-          height: 110,
-          backgroundColor: colors.secondary[100],
-          justifyContent: "center",
+          paddingTop: 16,
           alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        {psychologist.avatar ? (
-          <Image
-            source={{ uri: BASE_URL_IMAGES + psychologist.avatar }}
-            style={{ width: "100%", height: 110 }}
-            resizeMode="cover"
-          />
-        ) : (
-          <Ionicons name="person" size={44} color={colors.secondary[400]} />
-        )}
+        <View
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: 40,
+            backgroundColor: colors.secondary[50],
+            justifyContent: "center",
+            alignItems: "center",
+            overflow: "hidden",
+          }}
+        >
+          {psychologist.avatar ? (
+            <Image
+              source={{ uri: BASE_URL_IMAGES + psychologist.avatar }}
+              style={{ width: 80, height: 80 }}
+              resizeMode="cover"
+            />
+          ) : (
+            <Ionicons name="person" size={40} color={colors.secondary[400]} />
+          )}
+        </View>
       </View>
 
       {/* محتوا */}
-      <View style={{ padding: 12 }}>
+      <View style={{ padding: 14, alignItems: "center" }}>
         {/* نام */}
         <Text
           style={{
@@ -66,7 +77,7 @@ const PsychologistCard = ({ psychologist }: { psychologist: Psychologist }) => {
             fontFamily: "vazirBold",
             color: "#1F2937",
             marginBottom: 2,
-            textAlign: "right",
+            textAlign: "center",
           }}
           numberOfLines={1}
         >
@@ -78,42 +89,29 @@ const PsychologistCard = ({ psychologist }: { psychologist: Psychologist }) => {
           style={{
             fontSize: 11,
             color: "#9CA3AF",
-            marginBottom: 6,
-            textAlign: "right",
+            marginBottom: 8,
+            textAlign: "center",
           }}
           numberOfLines={1}
         >
           {psychologist.specialty || "روانشناس"}
         </Text>
 
-        {/* امتیاز و تجربه */}
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 10,
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-            <RatingStars rating={psychologist.rating} />
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-            <MaterialIcons name="work-outline" size={11} color="#9CA3AF" />
-            <Text style={{ fontSize: 10, color: "#9CA3AF" }}>
-              {psychologist.experience} سال
-            </Text>
-          </View>
+        {/* امتیاز */}
+        <View style={{ marginBottom: 12 }}>
+          <RatingStars rating={psychologist.rating} />
         </View>
 
         {/* دکمه */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={handlePress}
           style={{
             backgroundColor: colors.primary[500],
             paddingVertical: 8,
-            borderRadius: 25,
+            paddingHorizontal: 20,
+            borderRadius: 20,
             alignItems: "center",
+            width: "100%",
           }}
         >
           <Text
@@ -125,7 +123,8 @@ const PsychologistCard = ({ psychologist }: { psychologist: Psychologist }) => {
           >
             دریافت نوبت
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <PrimaryButton title="دریافت نوبت" onPress={handlePress} />
       </View>
     </TouchableOpacity>
   );

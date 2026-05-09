@@ -31,7 +31,7 @@ export interface Appointment {
   time: string;
   status: "confirmed" | "cancelled" | "completed" | "pending_payment";
   createdAt?: string;
-  baleGroupId?: string; // آیدی گروه در بله
+  baleGroupId?: string;
 }
 
 export interface SessionInfo {
@@ -53,6 +53,48 @@ export interface AppointmentsResponse {
   data: Appointment[];
   sessionInfo?: SessionInfo;
 }
+
+// ========== تایپ‌های مربوط به نظرات ==========
+export interface Review {
+  id: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  user: {
+    name: string;
+    picture: string | null;
+  };
+}
+
+export interface ReviewStats {
+  averageRating: number;
+  totalReviews: number;
+  distribution: {
+    1: number;
+    2: number;
+    3: number;
+    4: number;
+    5: number;
+  };
+}
+
+export interface ReviewsResponse {
+  reviews: Review[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export interface CreateReviewRequest {
+  appointmentId: string;
+  doctorId: string;
+  rating: number;
+  comment?: string;
+}
+// ========================================
 
 const psychologistAdapter = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -111,6 +153,7 @@ const psychologistAdapter = apiSlice.injectEndpoints({
       transformResponse: (response: { success: boolean; data: any }) =>
         response.data,
     }),
+
     startSession: builder.mutation<any, { id: string }>({
       query: ({ id }) => ({
         url: `v2/psychologists/${id}/start-session`,
@@ -134,7 +177,7 @@ const psychologistAdapter = apiSlice.injectEndpoints({
       providesTags: ["UserAppointments"],
     }),
 
-    // Optional: Cancel appointment
+    // DELETE /api/appointments/:id (cancel appointment)
     cancelAppointment: builder.mutation<
       { success: boolean; message: string },
       string
@@ -146,6 +189,37 @@ const psychologistAdapter = apiSlice.injectEndpoints({
       transformResponse: (response: { success: boolean; message: string }) =>
         response,
       invalidatesTags: ["UserAppointments"],
+    }),
+
+    // ========== نظرات و امتیازات ==========
+
+    // POST /api/reviews (create review)
+    createReview: builder.mutation<
+      { success: boolean; message: string },
+      CreateReviewRequest
+    >({
+      query: (body) => ({
+        url: "v2/reviews",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Reviews"],
+    }),
+
+    // GET /api/psychologists/:id/reviews (get reviews list)
+    getReviewsByDoctorId: builder.query<
+      ReviewsResponse,
+      { id: string; page?: number; limit?: number }
+    >({
+      query: ({ id, page = 1, limit = 10 }) => ({
+        url: `v2/psychologists/${id}/reviews?page=${page}&limit=${limit}`,
+        method: "GET",
+      }),
+      transformResponse: (response: {
+        success: boolean;
+        data: ReviewsResponse;
+      }) => response.data,
+      providesTags: ["Reviews"],
     }),
   }),
 });
@@ -161,4 +235,6 @@ export const {
   useGetUserAppointmentsQuery,
   useCancelAppointmentMutation,
   useStartSessionMutation,
+  useCreateReviewMutation,
+  useGetReviewsByDoctorIdQuery,
 } = psychologistAdapter;

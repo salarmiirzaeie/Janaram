@@ -2,6 +2,7 @@
 import { colors } from "@/app/(tabs)/psychologist";
 import HorizonListHeader from "@/components/explore/horizon-list-header";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
+import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { useCustomToast } from "@/hooks/useToast";
 import { useZarinpalPayment } from "@/hooks/useZarinpalPayment";
@@ -13,7 +14,7 @@ import {
   useGetPsychologistByIdQuery,
 } from "@/services/psychologist/psychologist-adapter";
 import { toPersianDigits } from "@/utils/persian";
-import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import moment from "moment-jalaali";
 import React, { useState } from "react";
@@ -378,9 +379,25 @@ export default function PsychologistDetailScreen() {
 
         {/* درباره پزشک */}
         <View style={{ marginTop: 20,borderBottomWidth:1,paddingBottom:10,borderBottomColor:colors.gray[100] }}>
-        <HorizonListHeader hideAll title={`درباره دکتر ${doctor.name.split(" ")[1] || doctor.name}`} icon={<Ionicons name="information-circle-sharp" size={24} color={colors.accent[500]}/>} id={"1"} />
+          <HStack className="justify-between items-center pl-5"> 
+            
+            <TouchableOpacity
+  onPress={() => router.push({
+    pathname:`/reviews`,
+    params:{id:doctor.id}
+  })}
+  style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
+>
+<AntDesign name="comment" size={14} color={colors.primary[500]} />
 
-        
+  <Text className="text-sm font-vazir text-primary-500">نظرات</Text>
+</TouchableOpacity>       
+
+
+ <HorizonListHeader hideAll title={`درباره دکتر ${doctor.name.split(" ")[1] || doctor.name}`} icon={<Ionicons name="information-circle-sharp" size={24} color={colors.accent[500]}/>} id={"1"} />
+          </HStack>
+
+       
              <TouchableOpacity
                         onPress={() => setDescriptionExpanded(!descriptionExpanded)}
                       >
@@ -602,7 +619,7 @@ export default function PsychologistDetailScreen() {
             <ButtonSpinner color="#fff" />
           ) : (
             <ButtonText className="text-white text-base font-vazirBold">
-              ادامه و پرداخت {doctor.sessionPrice?.toLocaleString()} تومان
+              ادامه و پرداخت {toPersianDigits(doctor.sessionPrice?.toLocaleString()) } تومان
             </ButtonText>
           )}
         </Button>

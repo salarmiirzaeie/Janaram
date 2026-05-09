@@ -35,14 +35,10 @@ const STATIC_STYLES = StyleSheet.create({
 });
 const CategoriesItem: FC<categoryItemProps> = ({ cat }) => {
   const handleCategoryPress = useCallback(() => {
-    if (cat.id === "sleep") {
-      router.push("/sleep");
-    } else {
-      router.push({
-        pathname: "/all-files",
-        params: { type: cat.id, title: cat.title },
-      });
-    }
+    router.push({
+      pathname: "/all-files",
+      params: { type: cat.id, title: cat.title },
+    });
   }, []);
   return (
     <TouchableOpacity
