@@ -66,6 +66,12 @@ const getStatusBadge = (status: string) => {
         color: colors.gray[500],
         bg: colors.gray[100],
       };
+    case "no-show":
+      return {
+        text: "حضور نیافته",
+        color: colors.gray[500],
+        bg: colors.gray[100],
+      };
     case "completed":
       return {
         text: "انجام شده",
@@ -196,6 +202,7 @@ export default function AppointmentsScreen() {
   };
 
   const renderAppointmentCard = (app: any) => {
+    console.log(app.status);
     const statusInfo = getStatusBadge(app.status);
     const isThisPaymentLoading = loadingAppointmentId === app.id;
 
@@ -264,7 +271,7 @@ export default function AppointmentsScreen() {
           </VStack>
         </HStack>
 
-        {app.status === "confirmed" && activeTab === "upcoming" && (
+        {/* {app.status === "confirmed" && activeTab === "upcoming" && (
           <Button
             onPress={() => openCancelModal(app.id)}
             disabled={isCancelling}
@@ -273,7 +280,7 @@ export default function AppointmentsScreen() {
           >
             <ButtonText className="text-red-500 text-xs">لغو نوبت</ButtonText>
           </Button>
-        )}
+        )} */}
 
         {app.status === "pending_payment" && (
           <Button
