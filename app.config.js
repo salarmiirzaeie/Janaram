@@ -1,0 +1,114 @@
+import "dotenv/config";
+
+const isBazaar = process.env.APP_VARIANT === "bazaar";
+
+export default {
+  expo: {
+    name: "جانارام",
+    slug: "Janaram",
+    version: "1.2.3",
+    runtimeVersion: "1.2.3",
+
+    orientation: "portrait",
+    icon: "./assets/images/icon.png",
+    scheme: "janaram",
+    userInterfaceStyle: "automatic",
+    newArchEnabled: true,
+
+    ios: {
+      supportsTablet: false,
+      bundleIdentifier: "com.salarmiirzapour.Janaram",
+      buildNumber: "1.2.3",
+    },
+
+    android: {
+      adaptiveIcon: {
+        foregroundImage: "./assets/images/adaptive-icon.png",
+        backgroundColor: "#ffffff",
+      },
+
+      googleServicesFile: "./google-services.json",
+
+      edgeToEdgeEnabled: true,
+
+      package: "com.salarmiirzapour.Janaram",
+
+      permissions: [
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "com.google.android.gms.permission.AD_ID",
+      ],
+
+      blockedPermissions: ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"],
+
+      intentFilters: [
+        {
+          action: "VIEW",
+          data: {
+            scheme: "janaram",
+          },
+          category: ["BROWSABLE", "DEFAULT"],
+        },
+      ],
+    },
+
+    web: {
+      bundler: "metro",
+      output: "static",
+      favicon: "./assets/images/favicon.png",
+    },
+
+    plugins: [
+      "expo-router",
+
+      // CONDITIONAL STORE PLUGIN
+      ...(isBazaar ? ["./plugins/withPoolakey"] : ["./plugins/withMyketBilling"]),
+
+      "expo-notifications",
+
+      [
+        "expo-splash-screen",
+        {
+          image: "./assets/images/splash-icon.png",
+          imageWidth: 200,
+          resizeMode: "contain",
+          dark: {
+            image: "./assets/images/splash-icon.png",
+            backgroundColor: "#000000",
+          },
+          backgroundColor: "#ffffff",
+        },
+      ],
+
+      [
+        "expo-av",
+        {
+          microphonePermission: false,
+        },
+      ],
+
+      [
+        "expo-build-properties",
+        {
+          android: {
+            removePermissions: ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"],
+          },
+        },
+      ],
+    ],
+
+    extra: {
+      router: {},
+
+      appVariant: process.env.APP_VARIANT,
+
+      eas: {
+        projectId: "debb88c7-8a40-450b-8578-7a14c9bb202a",
+      },
+    },
+
+    updates: {
+      url: "https://u.expo.dev/debb88c7-8a40-450b-8578-7a14c9bb202a",
+    },
+  },
+};

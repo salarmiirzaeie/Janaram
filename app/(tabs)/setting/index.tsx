@@ -10,6 +10,7 @@ import { VStack } from "@/components/ui/vstack";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import Constants from "expo-constants";
 
+import { isBazaar } from "@/constants/keys";
 import useAuth from "@/hooks/useAuth";
 import { AntDesign, Feather, Ionicons, Octicons } from "@expo/vector-icons";
 import React from "react";
@@ -120,8 +121,12 @@ const SettingsScreen = () => {
                         "- تمرین خواب و آرامش شبانه انجام بدی\n" +
                         "- روحیاتت رو ثبت کنی و پیشرفتت رو ببینی\n\n" +
                         "فقط چند دقیقه در روز، آرامش و تمرکزت حسابی بهتر میشه ✨\n\n" +
-                        "📲 دانلود از مایکت:\n" +
-                        "https://myket.ir/app/com.salarmiirzapour.Janaram",
+                        (isBazaar
+                          ? "📲 دانلود از کافه بازار:\n"
+                          : "📲 دانلود از مایکت:\n") +
+                        (isBazaar
+                          ? "https://cafebazaar.ir/app/com.salarmiirzapour.Janaram"
+                          : "https://myket.ir/app/com.salarmiirzapour.Janaram"),
                     });
                   } catch (error) {
                     console.error("Error sharing:", error);

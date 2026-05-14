@@ -1,20 +1,32 @@
-const {
-  withSettingsGradle,
-  createRunOncePlugin,
-} = require("@expo/config-plugins");
+const { withAppBuildGradle, createRunOncePlugin } = require("@expo/config-plugins");
 
 const withPoolakey = (config) => {
-  // Modify settings.gradle
-  config = withSettingsGradle(config, (config) => {
-    if (
-      !config.modResults.contents.includes("@cafebazaar/react-native-poolakey")
-    ) {
-      config.modResults.contents += `\ninclude ':@cafebazaar_react-native-poolakey'\nproject(':@cafebazaar_react-native-poolakey').projectDir = new File(rootProject.projectDir, '../node_modules/@cafebazaar/react-native-poolakey/android')\n`;
+  return withAppBuildGradle(config, (config) => {
+    if (config.modResults.language !== "groovy") return config;
+
+    let contents = config.modResults.contents;
+
+    // prevent duplicate injection
+    if (contents.includes("Poolakey")) {
+      return config;
     }
+
+    // 🔥 inject Poolakey + remove Myket
+    contents = contents.replace(
+      /dependencies\s*{/,
+      `dependencies {
+            implementation "com.github.cafebazaar.Poolakey:poolakey:2.2.0"
+
+            configurations.all {
+                exclude group: "com.github.myketstore"
+                exclude group: "com.android.vending.billing"
+            }
+      `,
+    );
+
+    config.modResults.contents = contents;
     return config;
   });
-
-  return config;
 };
 
 module.exports = createRunOncePlugin(withPoolakey, "with-poolakey", "1.0.0");

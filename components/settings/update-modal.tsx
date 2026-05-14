@@ -1,3 +1,4 @@
+import { isBazaar } from "@/constants/keys";
 import React from "react";
 import { Linking } from "react-native";
 import {
@@ -42,7 +43,9 @@ const UpdateModal: React.FC<Props> = ({ showActionsheet, handleClose }) => {
             <Button
               onPress={() =>
                 Linking.openURL(
-                  "https://myket.ir/app/com.salarmiirzapour.Janaram"
+                  isBazaar
+                    ? "https://cafebazaar.ir/app/com.salarmiirzapour.Janaram"
+                    : "https://myket.ir/app/com.salarmiirzapour.Janaram"
                 )
               }
               className="px-4 py-2 bg-blue-500 rounded-lg"

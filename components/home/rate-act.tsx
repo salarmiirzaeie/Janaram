@@ -1,3 +1,4 @@
+import { isBazaar } from "@/constants/keys";
 import React from "react";
 import { BackHandler, Linking, Text } from "react-native";
 import { useDispatch } from "react-redux";
@@ -20,20 +21,24 @@ const RateAppSheet: React.FC<Props> = ({ isOpen, onClose }) => {
 
   const openMyket = async () => {
     // تلاش برای باز کردن deep link مایکت؛ fallback به وب در صورت failure
-    const myketDeepLink = `myket://comment?id=${PACKAGE_NAME}`;
-    const myketWeb = `https://myket.ir/app/${PACKAGE_NAME}`;
+    const deepLink = isBazaar
+      ? `bazaar://details?id=${PACKAGE_NAME}` // <-- FIXED HERE
+      : `myket://comment?id=${PACKAGE_NAME}`;
+    const dWeb = isBazaar
+      ? `https://cafebazaar.ir/app/?id=${PACKAGE_NAME}`
+      : `https://myket.ir/app/${PACKAGE_NAME}`;
 
     try {
-      const supported = await Linking.canOpenURL(myketDeepLink);
+      const supported = await Linking.canOpenURL(deepLink);
       if (supported) {
-        await Linking.openURL(myketDeepLink);
+        await Linking.openURL(deepLink);
       } else {
-        await Linking.openURL(myketWeb);
+        await Linking.openURL(dWeb);
       }
     } catch (err) {
       // fallback web
       try {
-        await Linking.openURL(myketWeb);
+        await Linking.openURL(dWeb);
       } catch (e) {
         console.warn("cannot open market link", e);
       }
@@ -70,11 +75,17 @@ const RateAppSheet: React.FC<Props> = ({ isOpen, onClose }) => {
           </Text>
 
           {/* Subtitle */}
-          <Text className="text-center text-primary-600 font-vazir leading-6">
-            خیلی خوشحال می‌شیم اگر چند لحظه وقت بذاری و تو مایکت بهمون امتیاز
-            بدی و نظرتو بنویسی.
-          </Text>
-
+          {!isBazaar ? (
+            <Text className="text-center text-primary-600 font-vazir leading-6">
+              خیلی خوشحال می‌شیم اگر چند لحظه وقت بذاری و تو مایکت بهمون امتیاز
+              بدی و نظرتو بنویسی.
+            </Text>
+          ) : (
+            <Text className="text-center text-primary-600 font-vazir leading-6">
+              خیلی خوشحال می‌شیم اگر چند لحظه وقت بذاری و تو کافه‌بازار بهمون
+              امتیاز بدی و نظرتو بنویسی.
+            </Text>
+          )}
           {/* Buttons */}
           <VStack space="md" className="w-full mt-4">
             <Button
