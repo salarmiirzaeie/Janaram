@@ -7,79 +7,57 @@ import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useAppSelector } from "@/hooks/useAppSelector";
-import {
-  AntDesign,
-  Feather,
-  FontAwesome5,
-  Ionicons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { AntDesign, Feather, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
-import {
-  BackHandler,
-  FlatList,
-  Linking,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { BackHandler, FlatList, Linking, ScrollView, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
 import Animated, { FadeInUp } from "react-native-reanimated";
 
 // ========== کامپوننت مجزا برای آیتم دسترسی سریع ==========
-const QuickAccessItem = React.memo(
-  ({ item, index }: { item: any; index: number }) => {
-    function onPress() {
-      if (item.route === "/psychologist") {
-        Linking.openURL("https://janaram.ir/psychologist");
-        return;
-      }
-      if (item.route?.pathname) {
-        router.push({
-          pathname: item.route?.pathname,
-          params: item.route?.params,
-        });
-        return;
-      }
-
-      router.push(item.route as any);
+const QuickAccessItem = React.memo(({ item, index }: { item: any; index: number }) => {
+  function onPress() {
+    if (item.route === "/psychologist") {
+      Linking.openURL("https://janaram.ir/psychologist");
+      return;
+    }
+    if (item.route?.pathname) {
+      router.push({
+        pathname: item.route?.pathname,
+        params: item.route?.params,
+      });
+      return;
     }
 
-    return (
-      <VStack>
-        <TouchableOpacity
-          className="aspect-square  h-16"
-          onPress={onPress}
-          activeOpacity={0.8}
-          style={{ flex: 1 }}
-        >
-          <LinearGradient
-            colors={item.color}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={{
-              borderRadius: 16,
-              alignItems: "center",
-              justifyContent: "center",
-              shadowColor: item.color[0],
-              shadowOffset: { width: 0, height: 3 },
-              shadowOpacity: 0.2,
-              shadowRadius: 6,
-              elevation: 4,
-              flex: 1,
-            }}
-          >
-            <View>{item.icon}</View>
-          </LinearGradient>
-        </TouchableOpacity>
-        <Text className="font-vazirBold mt-2 text-sm text-center">
-          {item.title}
-        </Text>
-      </VStack>
-    );
+    router.push(item.route as any);
   }
-);
+
+  return (
+    <VStack>
+      <TouchableOpacity className="aspect-square  h-16" onPress={onPress} activeOpacity={0.8} style={{ flex: 1 }}>
+        <LinearGradient
+          colors={item.color}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            borderRadius: 16,
+            alignItems: "center",
+            justifyContent: "center",
+            shadowColor: item.color[0],
+            shadowOffset: { width: 0, height: 3 },
+            shadowOpacity: 0.2,
+            shadowRadius: 6,
+            elevation: 4,
+            flex: 1,
+          }}
+        >
+          <View>{item.icon}</View>
+        </LinearGradient>
+      </TouchableOpacity>
+      <Text className="font-vazirBold mt-2 text-sm text-center">{item.title}</Text>
+    </VStack>
+  );
+});
 
 // ========== کامپوننت مجزا برای بخش دسترسی سریع ==========
 const QuickAccessGrid = React.memo(({ items }: { items: any[] }) => {
@@ -112,10 +90,7 @@ const Home = () => {
         return true;
       };
 
-      const sub = BackHandler.addEventListener(
-        "hardwareBackPress",
-        onBackPress
-      );
+      const sub = BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
       // فقط یک بار انیمیشن اجرا شود
       const timer = setTimeout(() => {
@@ -126,7 +101,7 @@ const Home = () => {
         sub.remove();
         clearTimeout(timer);
       };
-    }, [asked])
+    }, [asked]),
   );
 
   // ========== useMemo برای آیتم‌های دسترسی سریع ==========
@@ -185,7 +160,7 @@ const Home = () => {
         },
       },
     ],
-    []
+    [],
   );
 
   // ========== هندلرها ==========
@@ -224,9 +199,7 @@ const Home = () => {
         <VStack space="md" className="mt-8 px-5">
           <HStack className="items-center justify-end">
             <HStack space="sm" className="items-center">
-              <Text className="font-vazirBold text-primary-800 text-xl">
-                روانشناس من
-              </Text>
+              <Text className="font-vazirBold text-primary-800 text-xl"> روانشناس من</Text>
               <Ionicons name="people" size={22} color="#9966CC" />
             </HStack>
           </HStack>
@@ -243,16 +216,12 @@ const Home = () => {
           <HStack className="items-center justify-between mx-5">
             <TouchableOpacity onPress={handleNavigateToExplore}>
               <HStack space="sm" className="items-center">
-                <Text className="text-primary-600 text-sm font-vazir">
-                  مشاهده همه
-                </Text>
+                <Text className="text-primary-600 text-sm font-vazir">مشاهده همه</Text>
                 <AntDesign name="left" size={14} color="#79AED6" />
               </HStack>
             </TouchableOpacity>
             <HStack space="sm" className="items-center">
-              <Text className="font-vazirBold text-primary-800 text-xl">
-                مدیتیشن های پیشنهادی
-              </Text>
+              <Text className="font-vazirBold text-primary-800 text-xl">مدیتیشن های پیشنهادی</Text>
               <Feather name="wind" size={22} color="#79AED6" />
             </HStack>
           </HStack>
@@ -268,9 +237,7 @@ const Home = () => {
         <VStack space="md" className="mt-4 mb-5 px-5">
           <HStack className="items-center justify-end">
             <HStack space="sm" className="items-center">
-              <Text className="font-vazirBold text-primary-800 text-xl">
-                تست خودشناسی
-              </Text>
+              <Text className="font-vazirBold text-primary-800 text-xl">تست خودشناسی</Text>
               <FontAwesome5 name="clipboard-list" size={20} color="#FF9966" />
             </HStack>
           </HStack>
@@ -288,33 +255,22 @@ const Home = () => {
       const AnimationWrapper = isFirstLoad ? Animated.View : View;
       const animationProps = isFirstLoad
         ? {
-            entering: FadeInUp.duration(600).delay(
-              index === 0 ? 0 : 100 + index * 80
-            ),
+            entering: FadeInUp.duration(600).delay(index === 0 ? 0 : 100 + index * 80),
           }
         : {};
 
       // برای سکشن اول (mood) انیمیشن متفاوت
       if (index === 0 && isFirstLoad) {
-        return (
-          <Animated.View entering={FadeInUp.duration(600).springify()}>
-            {item.render()}
-          </Animated.View>
-        );
+        return <Animated.View entering={FadeInUp.duration(600).springify()}>{item.render()}</Animated.View>;
       }
 
-      return (
-        <AnimationWrapper {...animationProps}>{item.render()}</AnimationWrapper>
-      );
+      return <AnimationWrapper {...animationProps}>{item.render()}</AnimationWrapper>;
     },
-    [isFirstLoad]
+    [isFirstLoad],
   );
 
   return (
-    <LinearGradient
-      colors={["#FFFFFF", "#F0F6FA"]}
-      style={{ flex: 1, paddingBottom: 80 }}
-    >
+    <LinearGradient colors={["#FFFFFF", "#F0F6FA"]} style={{ flex: 1, paddingBottom: 80 }}>
       <FlatList
         data={sections}
         keyExtractor={(item) => item.id}
@@ -327,9 +283,7 @@ const Home = () => {
         removeClippedSubviews={true}
       />
 
-      {showRateModal && (
-        <RateAppSheet isOpen={showRateModal} onClose={handleCloseRateModal} />
-      )}
+      {showRateModal && <RateAppSheet isOpen={showRateModal} onClose={handleCloseRateModal} />}
     </LinearGradient>
   );
 };

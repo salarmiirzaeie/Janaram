@@ -7,10 +7,10 @@
     <key>EXUpdatesEnabled</key>
     <true/>
     <key>EXUpdatesLaunchWaitMs</key>
-    <integer>0</integer>
+    <integer>30000</integer>
     <key>EXUpdatesRuntimeVersion</key>
-    <string>1.2.3</string>
+    <string>myket-1.2.3</string>
     <key>EXUpdatesURL</key>
-    <string>https://u.expo.dev/debb88c7-8a40-450b-8578-7a14c9bb202a</string>
+    <string>http://10.205.111.162:3000/api/updates/manifest</string>
   </dict>
 </plist>

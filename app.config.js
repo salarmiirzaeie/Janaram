@@ -1,20 +1,25 @@
 import "dotenv/config";
 
 const isBazaar = process.env.APP_VARIANT === "bazaar";
+const appVersion = "1.2.3";
+const runtimeVersion = isBazaar ? `bazaar-${appVersion}` : `myket-${appVersion}`;
 
 export default {
   expo: {
     name: "جانارام",
     slug: "Janaram",
-    version: "1.2.3",
-    runtimeVersion: "1.2.3",
+    version: appVersion,
+    runtimeVersion,
 
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     scheme: "janaram",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
+    platforms: ["ios", "android"],
 
+    // ADD THIS - Include all assets
+    assetBundlePatterns: ["**/*"],
     ios: {
       supportsTablet: false,
       bundleIdentifier: "com.salarmiirzapour.Janaram",
@@ -92,6 +97,7 @@ export default {
         {
           android: {
             removePermissions: ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"],
+            usesCleartextTraffic: true,
           },
         },
       ],
@@ -108,7 +114,10 @@ export default {
     },
 
     updates: {
-      url: "https://u.expo.dev/debb88c7-8a40-450b-8578-7a14c9bb202a",
+      url: "https://janaram.ir/api/updates/manifest",
+      enabled: true,
+      fallbackToCacheTimeout: 30000, // Changed from 0 to 30000
+      checkAutomatically: "ON_LOAD",
     },
   },
 };
