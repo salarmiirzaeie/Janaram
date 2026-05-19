@@ -15,7 +15,12 @@
     "android:myket": "dotenv -e .env.myket expo run:android",
     "android:bazaar": "dotenv -e .env.bazaar expo run:android",
     "prebuild:myket": "rm -rf android && dotenv -e .env.myket expo prebuild && node scripts/patch-gradle-wrapper.js",
-    "prebuild:bazaar": "rm -rf android && dotenv -e .env.bazaar expo prebuild && node scripts/patch-gradle-wrapper.js"
+    "prebuild:bazaar": "rm -rf android && dotenv -e .env.bazaar expo prebuild && node scripts/patch-gradle-wrapper.js",
+    "build:myket:apk": "node scripts/setup-signing.js && cd android && ./gradlew assembleRelease",
+    "build:bazaar:apk": "node scripts/setup-signing.js && cd android && ./gradlew assembleRelease",
+    "build:myket:bundle": "node scripts/setup-signing.js && cd android && ./gradlew bundleRelease",
+    "build:bazaar:bundle": "node scripts/setup-signing.js && cd android && ./gradlew bundleRelease",
+    "build:bundles": "node scripts/build-bundles.js"
   },
   "dependencies": {
     "@cafebazaar/react-native-poolakey": "^3.1.2",
