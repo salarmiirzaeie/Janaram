@@ -104,13 +104,26 @@ const PsychoCard: FC<{ doc: Psychologist }> = ({ doc }) => {
                 دریافت نوبت
               </Text>
             </TouchableOpacity>
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
-            >
-              <MaterialIcons name="work-outline" size={14} color="#9ca3af" />
-              <Text style={{ fontSize: 11, color: "#9ca3af" }}>
-                {doc.experience} سال
-              </Text>
+            <View style={{ alignItems: "flex-end", gap: 4 }}>
+              {doc.sessionPrice > 0 && (
+                <Text
+                  style={{
+                    fontSize: 11,
+                    color: colors.primary[600],
+                    fontFamily: "vazirBold",
+                  }}
+                >
+                  {doc.sessionPrice.toLocaleString("fa-IR")} تومان
+                </Text>
+              )}
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+              >
+                <MaterialIcons name="work-outline" size={14} color="#9ca3af" />
+                <Text style={{ fontSize: 11, color: "#9ca3af" }}>
+                  {doc.experience} سال
+                </Text>
+              </View>
             </View>
           </View>
         </View>

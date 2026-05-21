@@ -1,3 +1,4 @@
+import DeepLinkHandler from "@/components/home/deep-link-handler";
 import NetworkAct from "@/components/home/network-act";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { AudioPlayerProvider } from "@/context/AudioPlayerContext";
@@ -48,6 +49,7 @@ export default function RootLayout() {
               }}
             >
               <GestureHandlerRootView>
+                <DeepLinkHandler />
                 <Stack
                   screenOptions={{
                     headerBackTitle: "بازگشت",

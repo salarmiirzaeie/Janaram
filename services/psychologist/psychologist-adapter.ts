@@ -1,5 +1,25 @@
 // services/psychologist/psychologist-adapter.ts
 import { apiSlice } from "@/redux/api-slice";
+import { unwrapApiData, unwrapApiSuccess } from "@/utils/api-response";
+
+export type AppointmentStatus =
+  | "pending_payment"
+  | "confirmed"
+  | "completed"
+  | "cancelled"
+  | "no-show";
+
+export type CancelReason =
+  | "payment_timeout"
+  | "patient_cancelled"
+  | "patient_cancelled_refund"
+  | "patient_cancelled_late"
+  | "patient_cancelled_unpaid"
+  | "doctor_cancelled"
+  | "patient_no_show";
+
+export type RefundStatus = "none" | "pending" | "processed" | "rejected";
+export type PayoutStatus = "none" | "held" | "released" | "forfeited";
 
 export interface Psychologist {
   id: string;
@@ -14,33 +34,41 @@ export interface Psychologist {
   availableToday: boolean;
   education?: string[];
   successfulConsultations: number;
-  specialties: any[];
+  specialties: string[];
   medicalLicenseNumber: string;
+  schedule?: Record<string, string[]>;
+  offDays?: string[];
 }
 
 export interface AvailableSlotsResponse {
   date: string;
   slots: string[];
+  reason?: "off_day";
 }
 
 export interface Appointment {
   id: string;
   doctorId: string;
   doctorName: string;
+  sessionPrice: number;
   date: string;
   time: string;
-  status: "confirmed" | "cancelled" | "completed" | "pending_payment";
+  status: AppointmentStatus;
   createdAt?: string;
-  baleGroupId?: string;
-}
-
-export interface SessionInfo {
-  plan: string;
-  limit: number;
-  used: number;
-  remaining: number;
-  remainingSessions: number;
-  hasProAccess: boolean;
+  paymentExpiresAt?: string;
+  paidAt?: string;
+  cancelReason?: CancelReason;
+  refundStatus?: RefundStatus;
+  /** When admin marked refund processed/rejected */
+  refundResolvedAt?: string;
+  payoutStatus?: PayoutStatus;
+  completedAt?: string;
+  reviewEligibleUntil?: string;
+  hasReview?: boolean;
+  canReview?: boolean;
+  /** true if cancel ≥1h before session → full refund queue */
+  canCancelWithRefund?: boolean;
+  patientRefundMinHours?: number;
 }
 
 export interface CreateAppointmentRequest {
@@ -49,12 +77,17 @@ export interface CreateAppointmentRequest {
   time: string;
 }
 
-export interface AppointmentsResponse {
-  data: Appointment[];
-  sessionInfo?: SessionInfo;
+export interface CreateAppointmentResponse {
+  appointmentId: string;
+  doctorName: string;
+  date: string;
+  time: string;
+  status: AppointmentStatus;
+  sessionPrice: number;
+  paymentExpiresAt: string;
+  paymentExpiresInMinutes: number;
 }
 
-// ========== تایپ‌های مربوط به نظرات ==========
 export interface Review {
   id: string;
   rating: number;
@@ -63,18 +96,6 @@ export interface Review {
   user: {
     name: string;
     picture: string | null;
-  };
-}
-
-export interface ReviewStats {
-  averageRating: number;
-  totalReviews: number;
-  distribution: {
-    1: number;
-    2: number;
-    3: number;
-    4: number;
-    5: number;
   };
 }
 
@@ -94,11 +115,9 @@ export interface CreateReviewRequest {
   rating: number;
   comment?: string;
 }
-// ========================================
 
 const psychologistAdapter = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    // GET /api/psychologists?category=&search=
     getPsychologists: builder.query<
       Psychologist[],
       { category?: string; search?: string }
@@ -114,14 +133,12 @@ const psychologistAdapter = apiSlice.injectEndpoints({
       }) => response.data,
     }),
 
-    // GET /api/psychologists/:id
     getPsychologistById: builder.query<Psychologist, string>({
       query: (id) => `v2/psychologists/${id}`,
       transformResponse: (response: { success: boolean; data: Psychologist }) =>
         response.data,
     }),
 
-    // GET /api/psychologists/:id/available-slots?date=YYYY-MM-DD
     getAvailableSlots: builder.query<
       AvailableSlotsResponse,
       { id: string; date: string }
@@ -134,15 +151,8 @@ const psychologistAdapter = apiSlice.injectEndpoints({
       }) => response.data,
     }),
 
-    // POST /api/appointments (create booking)
     createAppointment: builder.mutation<
-      {
-        appointmentId: string;
-        doctorName: string;
-        date: string;
-        time: string;
-        status: string;
-      },
+      CreateAppointmentResponse,
       CreateAppointmentRequest
     >({
       query: (body) => ({
@@ -150,50 +160,42 @@ const psychologistAdapter = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
-      transformResponse: (response: { success: boolean; data: any }) =>
-        response.data,
+      transformResponse: (response: {
+        success: boolean;
+        message?: string;
+        data: CreateAppointmentResponse;
+      }) => unwrapApiData(response, "خطا در رزرو نوبت"),
+      invalidatesTags: ["UserAppointments"],
     }),
 
-    startSession: builder.mutation<any, { id: string }>({
-      query: ({ id }) => ({
-        url: `v2/psychologists/${id}/start-session`,
-        method: "POST",
-      }),
-      transformResponse: (response: { success: boolean; data: any }) =>
-        response.data,
-    }),
-
-    // GET /api/appointments/my (user's appointments with session info)
-    getUserAppointments: builder.query<AppointmentsResponse, void>({
+    getUserAppointments: builder.query<Appointment[], void>({
       query: () => "v2/appointments/my",
       transformResponse: (response: {
         success: boolean;
         data: Appointment[];
-        sessionInfo?: SessionInfo;
-      }) => ({
-        data: response.data,
-        sessionInfo: response.sessionInfo,
-      }),
+      }) => response.data,
       providesTags: ["UserAppointments"],
     }),
 
-    // DELETE /api/appointments/:id (cancel appointment)
     cancelAppointment: builder.mutation<
-      { success: boolean; message: string },
+      { success: boolean; message: string; refundPending?: boolean },
       string
     >({
       query: (appointmentId) => ({
         url: `v2/appointments/${appointmentId}`,
         method: "DELETE",
       }),
-      transformResponse: (response: { success: boolean; message: string }) =>
-        response,
+      transformResponse: (response: {
+        success: boolean;
+        message?: string;
+        refundPending?: boolean;
+      }) => ({
+        ...unwrapApiSuccess(response, "خطا در لغو نوبت"),
+        refundPending: response.refundPending,
+      }),
       invalidatesTags: ["UserAppointments"],
     }),
 
-    // ========== نظرات و امتیازات ==========
-
-    // POST /api/reviews (create review)
     createReview: builder.mutation<
       { success: boolean; message: string },
       CreateReviewRequest
@@ -203,10 +205,11 @@ const psychologistAdapter = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Reviews"],
+      transformResponse: (response: { success: boolean; message?: string }) =>
+        unwrapApiSuccess(response, "خطا در ثبت نظر"),
+      invalidatesTags: ["Reviews", "UserAppointments"],
     }),
 
-    // GET /api/psychologists/:id/reviews (get reviews list)
     getReviewsByDoctorId: builder.query<
       ReviewsResponse,
       { id: string; page?: number; limit?: number }
@@ -224,7 +227,6 @@ const psychologistAdapter = apiSlice.injectEndpoints({
   }),
 });
 
-// Export hooks
 export const {
   useGetPsychologistsQuery,
   useLazyGetPsychologistsQuery,
@@ -234,7 +236,6 @@ export const {
   useCreateAppointmentMutation,
   useGetUserAppointmentsQuery,
   useCancelAppointmentMutation,
-  useStartSessionMutation,
   useCreateReviewMutation,
   useGetReviewsByDoctorIdQuery,
 } = psychologistAdapter;

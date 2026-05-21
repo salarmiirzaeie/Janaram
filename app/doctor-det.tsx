@@ -13,11 +13,11 @@ import {
   useGetAvailableSlotsQuery,
   useGetPsychologistByIdQuery,
 } from "@/services/psychologist/psychologist-adapter";
+import { getNextBookingDays } from "@/utils/booking-dates";
 import { toPersianDigits } from "@/utils/persian";
 import { AntDesign, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import moment from "moment-jalaali";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -31,97 +31,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 
-moment.loadPersian({ dialect: "persian-modern", usePersianDigits: false });
-
-// تابع دریافت نام روز هفته بر اساس تاریخ میلادی
-const getPersianDayName = (gregorianDate: Date): string => {
-  const formatter = new Intl.DateTimeFormat("fa-IR", {
-    timeZone: "Asia/Tehran",
-    weekday: "long",
-  });
-  return formatter.format(gregorianDate);
-};
-
-// تابع دریافت عدد روز هفته (0=شنبه تا 6=جمعه)
-const getPersianWeekdayNumber = (gregorianDate: Date): number => {
-  const dayName = getPersianDayName(gregorianDate);
-  const weekdayMap: Record<string, number> = {
-    شنبه: 0,
-    یکشنبه: 1,
-    دوشنبه: 2,
-    سه‌شنبه: 3,
-    چهارشنبه: 4,
-    پنجشنبه: 5,
-    جمعه: 6,
-  };
-  return weekdayMap[dayName] ?? 0;
-};
-
-const getDayName = (dayIndex: number) => {
-  const days = [
-    "شنبه",
-    "یکشنبه",
-    "دوشنبه",
-    "سه‌شنبه",
-    "چهارشنبه",
-    "پنجشنبه",
-    "جمعه",
-  ];
-  return days[dayIndex];
-};
-
-const getMonthName = (month: number) => {
-  const months = [
-    "فروردین",
-    "اردیبهشت",
-    "خرداد",
-    "تیر",
-    "مرداد",
-    "شهریور",
-    "مهر",
-    "آبان",
-    "آذر",
-    "دی",
-    "بهمن",
-    "اسفند",
-  ];
-  return months[month - 1];
-};
-
-// دریافت تاریخ‌های بعدی بدون استفاده از day() moment
-const getNextDays = (count: number) => {
-  const days = [];
-  const today = new Date();
-
-  for (let i = 0; i < count; i++) {
-    const date = new Date(today);
-    date.setDate(today.getDate() + i);
-
-    // تبدیل تاریخ به شمسی با moment-jalaali فقط برای روز و ماه
-    const jalaaliDate = moment(date);
-    const jYear = jalaaliDate.format("jYYYY");
-    const jMonth = parseInt(jalaaliDate.format("jM"));
-    const jDay = jalaaliDate.format("jD");
-
-    // محاسبه روز هفته با Intl
-    const weekdayNumber = getPersianWeekdayNumber(date);
-    const weekdayName = getDayName(weekdayNumber);
-
-    days.push({
-      date: date.toISOString().split("T")[0],
-      dayOfWeek: weekdayName,
-      dayNumber: jDay,
-      monthName: getMonthName(jMonth),
-    });
-  }
-  return days;
-};
-
 export default function PsychologistDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const toast = useCustomToast();
-  const [selectedDate, setSelectedDate] = useState(getNextDays(7)[0].date);
+  const nextDays = useMemo(() => getNextBookingDays(14), []);
+  const [selectedDate, setSelectedDate] = useState(nextDays[0]?.date ?? "");
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -135,13 +50,19 @@ export default function PsychologistDetailScreen() {
   const { data: profile, isLoading: isLoadingProfile } = useProfileQuery(null);
   const [createAppointment, { isLoading: isBooking }] =
     useCreateAppointmentMutation();
-  const { startPayment, isLoading: isPaymentLoading } = useZarinpalPayment();
+  const { startAppointmentPayment, isLoading: isPaymentLoading } =
+    useZarinpalPayment();
 
-  const availableSlots = slotsData?.slots || [];
-  const nextDays = getNextDays(14);
+  const availableSlots = slotsData?.slots ?? [];
+  const isOffDay = slotsData?.reason === "off_day";
+  const canBook =
+    !!selectedTime &&
+    availableSlots.includes(selectedTime) &&
+    !isOffDay &&
+    availableSlots.length > 0;
 
   const handleBooking = async () => {
-    if (!selectedTime) return;
+    if (!selectedTime || !canBook) return;
     setIsProcessing(true);
 
     try {
@@ -150,12 +71,18 @@ export default function PsychologistDetailScreen() {
         date: selectedDate,
         time: selectedTime,
       }).unwrap();
-      if (doctor) {
-        await startPayment(
-          result.appointmentId,
-          doctor.sessionPrice,
-          `پرداخت هزینه جلسه مشاوره با دکتر ${doctor.name} در تاریخ ${selectedDate} ساعت ${selectedTime}`
-        );
+
+      const payResult = await startAppointmentPayment({
+        appointmentId: result.appointmentId,
+        description: `پرداخت هزینه جلسه مشاوره با دکتر ${result.doctorName} در تاریخ ${result.date} ساعت ${result.time}`,
+      });
+
+      if (!payResult.success) {
+        toast.show({
+          msg: "نوبت ثبت شد. می‌توانید از «نوبت‌های من» پرداخت را انجام دهید.",
+          type: "success",
+        });
+        router.push("/my-appointments");
       }
     } catch (err: any) {
       const msg = err?.data?.message || "خطا در رزرو نوبت";
@@ -533,15 +460,15 @@ export default function PsychologistDetailScreen() {
           
           {isLoadingSlots ? (
             <ActivityIndicator size="small" color={colors.primary[500]} />
-          ) : availableSlots.length === 0 ? (
+          ) : isOffDay ? (
             <View
               style={{
                 backgroundColor: colors.gray[50],
                 padding: 20,
                 borderRadius: 20,
                 alignItems: "center",
-                 paddingHorizontal: 20 
-              
+                paddingHorizontal: 20,
+                marginHorizontal: 20,
               }}
             >
               <MaterialIcons
@@ -549,7 +476,41 @@ export default function PsychologistDetailScreen() {
                 size={32}
                 color={colors.gray[400]}
               />
-              <Text style={{ color: colors.gray[500], marginTop: 8,  fontFamily: "vazir" }}>
+              <Text
+                style={{
+                  color: colors.gray[500],
+                  marginTop: 8,
+                  fontFamily: "vazir",
+                  textAlign: "center",
+                }}
+              >
+                این روز تعطیل است
+              </Text>
+            </View>
+          ) : availableSlots.length === 0 ? (
+            <View
+              style={{
+                backgroundColor: colors.gray[50],
+                padding: 20,
+                borderRadius: 20,
+                alignItems: "center",
+                paddingHorizontal: 20,
+                marginHorizontal: 20,
+              }}
+            >
+              <MaterialIcons
+                name="event-busy"
+                size={32}
+                color={colors.gray[400]}
+              />
+              <Text
+                style={{
+                  color: colors.gray[500],
+                  marginTop: 8,
+                  fontFamily: "vazir",
+                  textAlign: "center",
+                }}
+              >
                 هیچ زمانی موجود نیست
               </Text>
             </View>
@@ -600,9 +561,22 @@ export default function PsychologistDetailScreen() {
           paddingVertical: 16,
         }}
       >
+        <Text
+          style={{
+            fontSize: 11,
+            color: colors.gray[500],
+            fontFamily: "vazir",
+            textAlign: "center",
+            marginBottom: 8,
+          }}
+        >
+          پرداخت اکنون — مبلغ تا پایان جلسه نزد پلتفرم می‌ماند. لغو بیش از ۱
+          ساعت قبل: بازپرداخت؛ کمتر از ۱ ساعت: مبلغ به روانشناس. روانشناس نمی‌تواند
+          نوبت را لغو کند.
+        </Text>
         <Button
           isDisabled={
-            !selectedTime ||
+            !canBook ||
             isLoadingSlots ||
             isProcessing ||
             isBooking ||
@@ -619,7 +593,11 @@ export default function PsychologistDetailScreen() {
             <ButtonSpinner color="#fff" />
           ) : (
             <ButtonText className="text-white text-base font-vazirBold">
-              ادامه و پرداخت {toPersianDigits(doctor.sessionPrice?.toLocaleString()) } تومان
+              ادامه و پرداخت{" "}
+              {toPersianDigits(
+                (doctor.sessionPrice ?? 0).toLocaleString("fa-IR")
+              )}{" "}
+              تومان
             </ButtonText>
           )}
         </Button>

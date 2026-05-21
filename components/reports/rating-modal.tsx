@@ -43,8 +43,8 @@ export default function RatingModal({
       }).unwrap();
 
       resetForm();
-      onClose();
       onSuccess?.();
+      onClose();
     } catch (error: any) {
       console.error("Error submitting review:", error);
       alert(error?.data?.message || "خطا در ثبت نظر");

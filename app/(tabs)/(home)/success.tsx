@@ -1,4 +1,3 @@
-// app/payment/success.tsx
 import { Text } from "@/components/ui/text";
 import { AntDesign } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -6,7 +5,13 @@ import { TouchableOpacity, View } from "react-native";
 
 function PaymentSuccess() {
   const router = useRouter();
-  const { refId } = useLocalSearchParams();
+  const { refId, type } = useLocalSearchParams<{
+    refId?: string;
+    type?: string;
+  }>();
+
+  const isAppointment = type === "appointment";
+
   return (
     <View
       style={{
@@ -23,27 +28,44 @@ function PaymentSuccess() {
           fontWeight: "bold",
           marginTop: 20,
           textAlign: "center",
+          fontFamily: "vazirBold",
         }}
       >
         پرداخت موفق
       </Text>
+      {refId ? (
+        <Text
+          style={{
+            fontSize: 16,
+            color: "#666",
+            marginTop: 10,
+            textAlign: "center",
+            fontFamily: "vazir",
+          }}
+        >
+          شماره پیگیری: {refId}
+        </Text>
+      ) : null}
       <Text
         style={{
-          fontSize: 16,
-          color: "#666",
-          marginTop: 10,
           textAlign: "center",
+          marginTop: 16,
+          color: "#9CA3AF",
+          fontFamily: "vazir",
+          lineHeight: 22,
         }}
       >
-        شماره پیگیری: {refId}
-      </Text>
-      <Text className="text-center mt-4 text-gray-400">
-        نوبت شما با موفقیت تایید شد. روانشناس محترم در زمان تعیین شده با شما
-        تماس خواهد گرفت
+        {isAppointment
+          ? "نوبت شما با موفقیت تأیید شد. جزئیات را در «نوبت‌های من» ببینید."
+          : "پرداخت با موفقیت انجام شد."}
       </Text>
 
       <TouchableOpacity
-        onPress={() => router.dismissTo("/my-appointments")}
+        onPress={() =>
+          isAppointment
+            ? router.dismissTo("/my-appointments")
+            : router.dismissTo("/")
+        }
         style={{
           backgroundColor: "#4CAF50",
           padding: 15,
@@ -53,12 +75,18 @@ function PaymentSuccess() {
         }}
       >
         <Text
-          style={{ color: "white", textAlign: "center", fontWeight: "bold" }}
+          style={{
+            color: "white",
+            textAlign: "center",
+            fontWeight: "bold",
+            fontFamily: "vazirBold",
+          }}
         >
-          لیست نوبت های من
+          {isAppointment ? "نوبت‌های من" : "بازگشت به خانه"}
         </Text>
       </TouchableOpacity>
     </View>
   );
 }
+
 export default PaymentSuccess;
