@@ -61,10 +61,11 @@ function PaymentSuccess() {
       </Text>
 
       <TouchableOpacity
-        onPress={() =>
-          isAppointment
-            ? router.dismissTo("/my-appointments")
-            : router.dismissTo("/")
+        onPress={
+          () =>
+            // isAppointment
+            router.push("/(tabs)/appointments")
+          // : router.dismissTo("/")
         }
         style={{
           backgroundColor: "#4CAF50",

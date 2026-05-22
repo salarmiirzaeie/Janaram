@@ -57,10 +57,7 @@ export default function RootLayout() {
                     headerTitleStyle: { fontFamily: "vazirBold" },
                   }}
                 >
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false }}
-                  />
+                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                   <Stack.Screen
                     name="player"
                     options={{
@@ -195,7 +192,7 @@ export default function RootLayout() {
                     }}
                   />
                   <Stack.Screen
-                    name="doctor-det"
+                    name="reports"
                     options={({ route }: any) => {
                       return {
                         headerShown: false,
@@ -203,13 +200,21 @@ export default function RootLayout() {
                     }}
                   />
                   <Stack.Screen
-                    name="my-appointments"
+                    name="doctor-det"
                     options={({ route }: any) => {
                       return {
                         headerShown: false,
                       };
                     }}
                   />
+                  {/* <Stack.Screen
+                    name="my-appointments"
+                    options={({ route }: any) => {
+                      return {
+                        headerShown: false,
+                      };
+                    }}
+                  /> */}
                   <Stack.Screen
                     name="reviews"
                     options={({ route }: any) => {

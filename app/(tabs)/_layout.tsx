@@ -36,13 +36,9 @@ export default function TabLayout() {
   const { isFirstModalShow } = useAppSelector((state) => state.initialize);
   const { showNotProModal } = useAppSelector((state) => state.pro);
   const { isSleepMode } = useAppSelector((state) => state.sleepMode);
-  const { isInitialized, meditationTimer } = useAppSelector(
-    (state) => state.initialize
-  );
+  const { isInitialized, meditationTimer } = useAppSelector((state) => state.initialize);
   const moods = useAppSelector((state) => state.mood);
-  const isNotificationEnabled = useAppSelector(
-    (state) => state.settings.moodNotification
-  );
+  const isNotificationEnabled = useAppSelector((state) => state.settings.moodNotification);
   const [showUpdateModal, setShowUpdateModal] = React.useState(false);
   const { data } = useCheckVersionQuery({
     version: Constants.expoConfig?.version || "1.2.2",
@@ -91,25 +87,22 @@ export default function TabLayout() {
       }
     }
     setup();
-    const notificationListener = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        dispatch(addNotificationCount(1));
-      }
-    );
+    const notificationListener = Notifications.addNotificationReceivedListener((notification) => {
+      dispatch(addNotificationCount(1));
+    });
 
-    const responseListener =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        const { action } = response.notification.request.content.data;
-        if (action === "mood") {
-          router.push("/chat-bot"); // هدایت به صفحه چت‌بات
-        }
-        if (action === "pro") {
-          dispatch({
-            type: "initialize/setIsFirstModalShow",
-            payload: true,
-          });
-        }
-      });
+    const responseListener = Notifications.addNotificationResponseReceivedListener((response) => {
+      const { action } = response.notification.request.content.data;
+      if (action === "mood") {
+        router.push("/chat-bot"); // هدایت به صفحه چت‌بات
+      }
+      if (action === "pro") {
+        dispatch({
+          type: "initialize/setIsFirstModalShow",
+          payload: true,
+        });
+      }
+    });
 
     return () => {
       notificationListener.remove();
@@ -126,9 +119,7 @@ export default function TabLayout() {
   return (
     <SafeAreaView className="flex-1">
       <Tabs
-        tabBar={(props) => (
-          <AnimatedTabBar {...props} isSleepMode={isSleepMode} />
-        )}
+        tabBar={(props) => <AnimatedTabBar {...props} isSleepMode={isSleepMode} />}
         // screenOptions={{
         //   tabBarLabelStyle: {
         //     fontFamily: "vazirBold",
@@ -151,9 +142,7 @@ export default function TabLayout() {
           name="(home)"
           options={{
             title: "خانه",
-            tabBarIcon: ({ color }) => (
-              <AntDesign size={24} name="home" color={color} />
-            ),
+            tabBarIcon: ({ color }) => <AntDesign size={24} name="home" color={color} />,
           }}
         />
 
@@ -161,18 +150,14 @@ export default function TabLayout() {
           name="psychologist"
           options={{
             title: "روانشناس من",
-            tabBarIcon: ({ color }) => (
-              <Ionicons size={24} name="leaf-outline" color={color} />
-            ),
+            tabBarIcon: ({ color }) => <Ionicons size={24} name="leaf-outline" color={color} />,
           }}
         />
         <Tabs.Screen
           name="explore"
           options={{
             title: "مدیتیشن",
-            tabBarIcon: ({ color }) => (
-              <Ionicons size={24} name="leaf-outline" color={color} />
-            ),
+            tabBarIcon: ({ color }) => <Ionicons size={24} name="leaf-outline" color={color} />,
           }}
         />
         {/* <Tabs.Screen
@@ -193,43 +178,32 @@ export default function TabLayout() {
           }}
         /> */}
         <Tabs.Screen
-          name="reports"
+          name="appointments"
           options={{
-            title: "حال من",
-            tabBarIcon: ({ color }) => (
-              <AntDesign size={24} name="bar-chart" color={color} />
-            ),
+            title: "نوبت‌های من",
+            tabBarIcon: ({ color }) => <Ionicons size={24} name="calendar-outline" color={color} />,
           }}
         />
+        {/* <Tabs.Screen
+          name="reports"
+          options={{
+            href: null,
+          }}
+        /> */}
 
         <Tabs.Screen
           name="setting"
           options={{
             title: "پروفایل",
-            tabBarIcon: ({ color }) => (
-              <Feather size={24} name="user" color={color} />
-            ),
+            tabBarIcon: ({ color }) => <Feather size={24} name="user" color={color} />,
           }}
         />
       </Tabs>
-      {isFirstModalShow && (
-        <ProPlanFullScreenModal
-          visible={isFirstModalShow}
-          onClose={handleDismissProModal}
-        />
-      )}
+      {isFirstModalShow && <ProPlanFullScreenModal visible={isFirstModalShow} onClose={handleDismissProModal} />}
       {showUpdateModal && (
-        <UpdateModal
-          showActionsheet={showUpdateModal}
-          handleClose={() => setShowUpdateModal(false)}
-        />
+        <UpdateModal showActionsheet={showUpdateModal} handleClose={() => setShowUpdateModal(false)} />
       )}
-      {showNotProModal && (
-        <NotProModal
-          showStreakModal={showNotProModal}
-          onClose={handleDismissNotProModal}
-        />
-      )}
+      {showNotProModal && <NotProModal showStreakModal={showNotProModal} onClose={handleDismissNotProModal} />}
     </SafeAreaView>
   );
 }

@@ -11,14 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import moment from "moment-jalaali";
 import React, { useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StatusBar,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, RefreshControl, StatusBar, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -29,13 +22,7 @@ const formatDate = (dateStr: string) => {
   return m.format("jD jMMMM jYYYY");
 };
 
-const RatingStars = ({
-  rating,
-  size = 14,
-}: {
-  rating: number;
-  size?: number;
-}) => {
+const RatingStars = ({ rating, size = 14 }: { rating: number; size?: number }) => {
   return (
     <HStack space="xs" className="items-center">
       {[1, 2, 3, 4, 5].map((star) => (
@@ -55,8 +42,7 @@ export default function PsychologistReviewsScreen() {
   const [page, setPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
 
-  const { data: doctor, isLoading: isLoadingDoctor } =
-    useGetPsychologistByIdQuery(id);
+  const { data: doctor, isLoading: isLoadingDoctor } = useGetPsychologistByIdQuery(id);
 
   const {
     data: reviewsData,
@@ -106,18 +92,10 @@ export default function PsychologistReviewsScreen() {
         <Ionicons name="person" size={24} color={colors.primary[500]} />
       </View>
       <VStack className="flex-1 ml-3" style={{ marginRight: 12 }}>
-        <Text className="font-vazirBold text-gray-800 text-right">
-          {item.user.name}
-        </Text>
-        <Text className="text-xs text-gray-500 mt-0.5 text-right">
-          {formatDate(item.createdAt)}
-        </Text>
+        <Text className="font-vazirBold text-gray-800 text-right">{item.user.name}</Text>
+        <Text className="text-xs text-gray-500 mt-0.5 text-right">{formatDate(item.createdAt)}</Text>
         <RatingStars rating={item.rating} size={12} />
-        {item.comment && (
-          <Text className="text-sm text-gray-600 mt-2 leading-6 text-right">
-            {item.comment}
-          </Text>
-        )}
+        {item.comment && <Text className="text-sm text-gray-600 mt-2 leading-6 text-right">{item.comment}</Text>}
       </VStack>
     </View>
   );
@@ -151,12 +129,8 @@ export default function PsychologistReviewsScreen() {
             <Ionicons name="person" size={28} color={colors.primary[500]} />
           </View>
           <VStack className="flex-1 ml-3" style={{ marginRight: 12 }}>
-            <Text className="text-base font-vazirBold text-gray-800 text-right">
-              {doctor.name}
-            </Text>
-            <Text className="text-xs text-gray-500 text-right">
-              {doctor.specialty || "روانشناس"}
-            </Text>
+            <Text className="text-base font-vazirBold text-gray-800 text-right">{doctor.name}</Text>
+            <Text className="text-xs text-gray-500 text-right">{doctor.specialty || "روانشناس"}</Text>
           </VStack>
         </View>
       )}
@@ -171,12 +145,10 @@ export default function PsychologistReviewsScreen() {
   const renderEmptyState = () => (
     <View className="py-20 items-center">
       <Ionicons name="chatbubble-outline" size={64} color={colors.gray[300]} />
-      <Text className="text-gray-500 mt-3 text-center">
-        هیچ نظری ثبت نشده است
-      </Text>
-      <Text className="text-gray-400 text-xs mt-1 text-center">
+      <Text className="text-gray-500 mt-3 text-center">هیچ نظری ثبت نشده است</Text>
+      {/* <Text className="text-gray-400 text-xs mt-1 text-center">
         اولین نفری باشید که نظر می‌دهید
-      </Text>
+      </Text> */}
     </View>
   );
 
@@ -232,12 +204,8 @@ export default function PsychologistReviewsScreen() {
             <Ionicons name="chevron-back" size={24} color={colors.gray[600]} />
           </TouchableOpacity>
           <View className="flex-1 mr-4">
-            <Text className="text-xl font-vazirBold text-gray-800 text-right">
-              نظرات کاربران
-            </Text>
-            <Text className="text-gray-600 text-right text-sm mt-1">
-              {doctor?.name}
-            </Text>
+            <Text className="text-xl font-vazirBold text-gray-800 text-right">نظرات کاربران</Text>
+            <Text className="text-gray-600 text-right text-sm mt-1">{doctor?.name}</Text>
           </View>
         </HStack>
       </LinearGradient>
@@ -255,11 +223,7 @@ export default function PsychologistReviewsScreen() {
           paddingBottom: 40,
         }}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            tintColor={colors.primary[500]}
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={colors.primary[500]} />
         }
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.3}

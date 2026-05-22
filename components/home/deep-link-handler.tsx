@@ -5,9 +5,7 @@ import { useEffect } from "react";
 import { Linking } from "react-native";
 import { useDispatch } from "react-redux";
 
-function parseQueryParam(
-  value: string | string[] | undefined
-): string | undefined {
+function parseQueryParam(value: string | string[] | undefined): string | undefined {
   if (Array.isArray(value)) return value[0];
   return value;
 }
@@ -29,12 +27,12 @@ export default function DeepLinkHandler() {
       dispatch(apiSlice.util.invalidateTags(["UserAppointments"]));
 
       if (status === "success") {
-        router.push({
+        router.dismissTo({
           pathname: "/(tabs)/(home)/success",
           params: { refId: refId ?? "", type: "appointment" },
         });
       } else if (status === "failed" || status === "error") {
-        router.push({
+        router.dismissTo({
           pathname: "/(tabs)/(home)/failed",
           params: { type: "appointment" },
         });

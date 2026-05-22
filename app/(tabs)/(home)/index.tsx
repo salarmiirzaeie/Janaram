@@ -157,7 +157,7 @@ const Home = () => {
         color: ["#91A5BE", "#7A8BA8"],
         route: {
           pathname: "/all-files",
-          params: { type: "sleep", title: "خودسازی" },
+          params: { type: "sleep", title: "خواب" },
         },
       },
       {

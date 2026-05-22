@@ -46,7 +46,7 @@ function PaymentFailed() {
 
       {isAppointment ? (
         <TouchableOpacity
-          onPress={() => router.dismissTo("/my-appointments")}
+          onPress={() => router.dismissTo("/(tabs)/appointments")}
           style={{
             backgroundColor: "#4CAF50",
             padding: 15,
