@@ -1,23 +1,24 @@
-// components/rating-modal.tsx
-import { colors } from "@/app/(tabs)/psychologist";
-import { Button, ButtonText } from "@/components/ui/button";
+import {
+  Actionsheet,
+  ActionsheetBackdrop,
+  ActionsheetContent,
+} from "@/components/ui/actionsheet";
+import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { HStack } from "@/components/ui/hstack";
-import { Text } from "@/components/ui/text";
+import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { VStack } from "@/components/ui/vstack";
 import { useCreateReviewMutation } from "@/services/psychologist/psychologist-adapter";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
-  Modal,
   Platform,
   Pressable,
   ScrollView,
-  TextInput,
-  TouchableOpacity,
+  Text,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface RatingModalProps {
   visible: boolean;
@@ -36,10 +37,8 @@ export default function RatingModal({
   doctorId,
   doctorName,
 }: RatingModalProps) {
-  const insets = useSafeAreaInsets();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const [hoveredRating, setHoveredRating] = useState(0);
   const [createReview, { isLoading }] = useCreateReviewMutation();
 
   const handleSubmit = async () => {
@@ -65,7 +64,6 @@ export default function RatingModal({
   const resetForm = () => {
     setRating(0);
     setComment("");
-    setHoveredRating(0);
   };
 
   const handleClose = () => {
@@ -73,213 +71,122 @@ export default function RatingModal({
     onClose();
   };
 
+  const ratingLabels: Record<number, string> = {
+    1: "⭐ خیلی ضعیف",
+    2: "⭐⭐ ضعیف",
+    3: "⭐⭐⭐ متوسط",
+    4: "⭐⭐⭐⭐ خوب",
+    5: "⭐⭐⭐⭐⭐ عالی",
+  };
+
   return (
-    <Modal
-      transparent={true}
-      visible={visible}
-      animationType="slide"
-      onRequestClose={handleClose}
-    >
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={0}
-      >
-        <Pressable
-          style={{
-            flex: 1,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            justifyContent: "flex-end",
-          }}
-          onPress={handleClose}
+    <Actionsheet isOpen={visible} closeOnOverlayClick onClose={handleClose}>
+      <ActionsheetBackdrop />
+      <SafeAreaView className="flex-1">
+        <KeyboardAvoidingView
+          behavior={
+            visible
+              ? Platform.OS === "ios"
+                ? "padding"
+                : "height"
+              : undefined
+          }
+          className="w-full"
+          keyboardVerticalOffset={0}
         >
-          <Pressable onPress={(e) => e.stopPropagation()}>
-            <View
-              style={{
-                backgroundColor: "white",
-                borderTopLeftRadius: 24,
-                borderTopRightRadius: 24,
-                paddingHorizontal: 20,
-                paddingTop: 20,
-                paddingBottom: Math.max(insets.bottom, 16),
-                maxHeight: "85%",
-              }}
+          <ActionsheetContent className="px-5 pb-8 pt-4">
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+              bounces={false}
+              className="w-full"
             >
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                keyboardShouldPersistTaps="handled"
-                bounces={false}
-                contentContainerStyle={{ flexGrow: 1 }}
-              >
-                {/* هدر */}
-                <View style={{ alignItems: "center", marginBottom: 20 }}>
-                  <View
-                    style={{
-                      width: 40,
-                      height: 4,
-                      backgroundColor: colors.gray[300],
-                      borderRadius: 2,
-                      marginBottom: 16,
-                    }}
-                  />
-                  <View
-                    style={{
-                      width: 64,
-                      height: 64,
-                      borderRadius: 32,
-                      backgroundColor: colors.accent[50],
-                      justifyContent: "center",
-                      alignItems: "center",
-                      marginBottom: 12,
-                    }}
-                  >
-                    <Ionicons
-                      name="star-outline"
-                      size={32}
-                      color={colors.accent[500]}
-                    />
-                  </View>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      fontFamily: "vazirBold",
-                      color: colors.gray[800],
-                      textAlign: "center",
-                    }}
-                  >
-                    ثبت نظر و امتیاز
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 13,
-                      color: colors.gray[500],
-                      textAlign: "center",
-                      marginTop: 4,
-                    }}
-                  >
-                    تجربه خود را از جلسه با {doctorName} به اشتراک بگذارید
-                  </Text>
+              <VStack space="lg" className="w-full items-center">
+                <View className="w-16 h-16 rounded-full bg-accent-50 items-center justify-center">
+                  <Ionicons name="star-outline" size={32} color="#F59E0B" />
                 </View>
 
-                {/* امتیاز دهی با ستاره */}
-                <VStack space="sm" style={{ marginBottom: 20 }}>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: "vazirBold",
-                      color: colors.gray[700],
-                      textAlign: "center",
-                    }}
-                  >
+                <Text className="text-2xl font-vazirBold text-primary-800 text-center">
+                  ثبت نظر و امتیاز
+                </Text>
+                <Text className="text-sm font-vazir text-tertiary-500 text-center">
+                  تجربه خود را از جلسه با {doctorName} به اشتراک بگذارید
+                </Text>
+
+                <VStack space="sm" className="w-full items-center">
+                  <Text className="text-base font-vazirBold text-primary-800">
                     امتیاز شما
                   </Text>
-                  <HStack
-                    space="md"
-                    style={{ justifyContent: "center", alignItems: "center" }}
-                  >
+                  <HStack space="md" className="justify-center items-center">
                     {[1, 2, 3, 4, 5].map((star) => (
-                      <TouchableOpacity
-                        key={star}
-                        onPress={() => setRating(star)}
-                      >
+                      <Pressable key={star} onPress={() => setRating(star)}>
                         <Ionicons
-                          name={
-                            star <= (hoveredRating || rating)
-                              ? "star"
-                              : "star-outline"
-                          }
+                          name={star <= rating ? "star" : "star-outline"}
                           size={36}
-                          color={
-                            star <= (hoveredRating || rating)
-                              ? "#FBBF24"
-                              : colors.gray[300]
-                          }
+                          color={star <= rating ? "#FBBF24" : "#CBD5E1"}
                         />
-                      </TouchableOpacity>
+                      </Pressable>
                     ))}
                   </HStack>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      color: colors.gray[400],
-                      textAlign: "center",
-                      marginTop: 4,
-                    }}
-                  >
-                    {rating === 0 && "برای امتیاز دادن کلیک کنید"}
-                    {rating === 1 && "⭐ خیلی ضعیف"}
-                    {rating === 2 && "⭐⭐ ضعیف"}
-                    {rating === 3 && "⭐⭐⭐ متوسط"}
-                    {rating === 4 && "⭐⭐⭐⭐ خوب"}
-                    {rating === 5 && "⭐⭐⭐⭐⭐ عالی"}
+                  <Text className="text-xs font-vazir text-tertiary-500 text-center mt-1">
+                    {rating === 0
+                      ? "برای امتیاز دادن کلیک کنید"
+                      : ratingLabels[rating]}
                   </Text>
                 </VStack>
 
-                {/* متن نظر */}
-                <VStack space="sm" style={{ marginBottom: 24 }}>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: "vazirBold",
-                      color: colors.gray[700],
-                      textAlign: "right",
-                    }}
+                <VStack space="md" className="w-full">
+                  <HStack className="items-center justify-end">
+                    <Text className="text-sm font-vazir text-tertiary-500">
+                      (اختیاری)
+                    </Text>
+                    <Text className="text-lg font-vazirBold text-primary-800 ml-2">
+                      نظر شما
+                    </Text>
+                  </HStack>
+                  <Textarea
+                    size="md"
+                    className="w-full bg-primary-50 rounded-3xl border-0 p-4"
                   >
-                    نظر شما
-                  </Text>
-                  <TextInput
-                    value={comment}
-                    onChangeText={setComment}
-                    placeholder="تجربه خود را بنویسید..."
-                    placeholderTextColor={colors.gray[400]}
-                    multiline
-                    numberOfLines={4}
-                    textAlignVertical="top"
-                    style={{
-                      backgroundColor: colors.gray[50],
-                      borderRadius: 16,
-                      padding: 14,
-                      fontSize: 14,
-                      color: colors.gray[800],
-                      fontFamily: "vazir",
-                      textAlign: "right",
-                      minHeight: 100,
-                      borderWidth: 1,
-                      borderColor: colors.gray[200],
-                    }}
-                  />
+                    <TextareaInput
+                      value={comment}
+                      className="text-right font-vazir text-primary-700 min-h-[100px]"
+                      onChangeText={setComment}
+                      placeholder="تجربه خود را بنویسید..."
+                      placeholderTextColor="#91A5BE"
+                      multiline
+                      textAlignVertical="top"
+                    />
+                  </Textarea>
                 </VStack>
 
-                {/* دکمه‌ها */}
-                <HStack space="md" style={{ gap: 12, marginTop: 4 }}>
+                <HStack space="md" className="w-full gap-3">
                   <Button
                     onPress={handleClose}
-                    className="flex-1 rounded-full h-11"
-                    style={{ backgroundColor: colors.gray[100] }}
+                    className="flex-1 rounded-xl bg-primary-100"
                   >
-                    <ButtonText className="text-gray-600 text-sm">
+                    <ButtonText className="text-primary-600 font-vazirBold">
                       انصراف
                     </ButtonText>
                   </Button>
                   <Button
                     onPress={handleSubmit}
                     disabled={rating === 0 || isLoading}
-                    className="flex-1 rounded-full h-11"
-                    style={{
-                      backgroundColor:
-                        rating === 0 ? colors.gray[300] : colors.accent[500],
-                    }}
+                    className={`flex-1 rounded-xl ${
+                      rating === 0 ? "bg-tertiary-400" : "bg-accent-500"
+                    }`}
                   >
-                    <ButtonText className="text-white text-sm">
+                    {isLoading && <ButtonSpinner color="white" />}
+                    <ButtonText className="text-white font-vazirBold">
                       {isLoading ? "در حال ثبت..." : "ثبت نظر"}
                     </ButtonText>
                   </Button>
                 </HStack>
-              </ScrollView>
-            </View>
-          </Pressable>
-        </Pressable>
-      </KeyboardAvoidingView>
-    </Modal>
+              </VStack>
+            </ScrollView>
+          </ActionsheetContent>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </Actionsheet>
   );
 }
