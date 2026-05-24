@@ -20,7 +20,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import moment from "moment-jalaali";
 import React, { useCallback, useMemo, useState } from "react";
-import { ActivityIndicator, Modal, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Modal,
+  RefreshControl,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
 
 type TabType = "upcoming" | "past";
@@ -109,7 +116,12 @@ function PendingPaymentActions({
           مهلت پرداخت این نوبت به پایان رسید. می‌توانید نوبت جدید بگیرید.
         </Text>
         <Button
-          onPress={() => router.push({ pathname: "/doctor-det", params: { id: app.doctorId } })}
+          onPress={() =>
+            router.push({
+              pathname: "/doctor-det",
+              params: { id: app.doctorId },
+            })
+          }
           className="mt-2 rounded-full h-9"
           style={{ backgroundColor: colors.primary[500] }}
         >
@@ -131,16 +143,25 @@ function PendingPaymentActions({
         }}
       >
         <ButtonText className="text-xs text-white">
-          {isPayLoading ? "در حال اتصال به درگاه..." : `پرداخت ${app.sessionPrice?.toLocaleString("fa-IR")} تومان`}
+          {isPayLoading
+            ? "در حال اتصال به درگاه..."
+            : `پرداخت ${app.sessionPrice?.toLocaleString("fa-IR")} تومان`}
         </ButtonText>
       </Button>
       {expired && (
         <Button
-          onPress={() => router.push({ pathname: "/doctor-det", params: { id: app.doctorId } })}
+          onPress={() =>
+            router.push({
+              pathname: "/doctor-det",
+              params: { id: app.doctorId },
+            })
+          }
           variant="outline"
           className="mt-2 rounded-full h-9 border-primary-300"
         >
-          <ButtonText className="text-xs text-primary-500">رزرو مجدد</ButtonText>
+          <ButtonText className="text-xs text-primary-500">
+            رزرو مجدد
+          </ButtonText>
         </Button>
       )}
     </View>
@@ -150,21 +171,30 @@ function PendingPaymentActions({
 export default function AppointmentsScreen() {
   const toast = useCustomToast();
   const [activeTab, setActiveTab] = useState<TabType>("upcoming");
-  const [loadingAppointmentId, setLoadingAppointmentId] = useState<string | null>(null);
+  const [loadingAppointmentId, setLoadingAppointmentId] = useState<
+    string | null
+  >(null);
   const [cancelModalVisible, setCancelModalVisible] = useState(false);
   const [cancelTarget, setCancelTarget] = useState<Appointment | null>(null);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<Appointment | null>(null);
 
-  const { data: appointments = [], isLoading, refetch, isFetching } = useGetUserAppointmentsQuery();
+  const {
+    data: appointments = [],
+    isLoading,
+    refetch,
+    isFetching,
+  } = useGetUserAppointmentsQuery();
 
-  const [cancelAppointment, { isLoading: isCancelling }] = useCancelAppointmentMutation();
+  const [cancelAppointment, { isLoading: isCancelling }] =
+    useCancelAppointmentMutation();
   const { startAppointmentPayment } = useZarinpalPayment();
 
   useFocusEffect(
     useCallback(() => {
       refetch();
-    }, [refetch]),
+    }, [refetch])
   );
 
   const todayJalaali = getTodayJalaali();
@@ -225,7 +255,10 @@ export default function AppointmentsScreen() {
       });
   }, [appointments, todayJalaali, currentTimeNumber]);
 
-  const completedCount = useMemo(() => appointments.filter((app) => app.status === "completed").length, [appointments]);
+  const completedCount = useMemo(
+    () => appointments.filter((app) => app.status === "completed").length,
+    [appointments]
+  );
 
   const openCancelModal = (app: Appointment) => {
     setCancelTarget(app);
@@ -237,7 +270,9 @@ export default function AppointmentsScreen() {
     try {
       const res = await cancelAppointment(cancelTarget.id).unwrap();
       toast.show({
-        msg: (res as { message?: string; refundPending?: boolean }).message || "نوبت لغو شد",
+        msg:
+          (res as { message?: string; refundPending?: boolean }).message ||
+          "نوبت لغو شد",
         type: "success",
       });
       refetch();
@@ -281,7 +316,9 @@ export default function AppointmentsScreen() {
     const isThisPaymentLoading = loadingAppointmentId === app.id;
     const showPaymentTimeout =
       app.cancelReason === "payment_timeout" ||
-      (app.status === "pending_payment" && activeTab === "past" && isPaymentExpired(app.paymentExpiresAt));
+      (app.status === "pending_payment" &&
+        activeTab === "past" &&
+        isPaymentExpired(app.paymentExpiresAt));
 
     return (
       <View
@@ -315,12 +352,26 @@ export default function AppointmentsScreen() {
             </Text>
           </View>
           <VStack className="flex-1 mr-3">
-            <Text className="font-vazirBold text-right text-gray-800">{app.doctorName}</Text>
+            <Text className="font-vazirBold text-right text-gray-800">
+              {app.doctorName}
+            </Text>
             <HStack space="sm" className="mt-2 justify-end items-center">
-              <Ionicons name="calendar-outline" size={14} color={colors.gray[500]} />
-              <Text className="text-xs text-gray-600 font-vazir">{formatDatePersian(app.date)}</Text>
-              <Ionicons name="time-outline" size={14} color={colors.gray[500]} />
-              <Text className="text-xs text-gray-600 font-vazir">{app.time}</Text>
+              <Ionicons
+                name="calendar-outline"
+                size={14}
+                color={colors.gray[500]}
+              />
+              <Text className="text-xs text-gray-600 font-vazir">
+                {formatDatePersian(app.date)}
+              </Text>
+              <Ionicons
+                name="time-outline"
+                size={14}
+                color={colors.gray[500]}
+              />
+              <Text className="text-xs text-gray-600 font-vazir">
+                {app.time}
+              </Text>
             </HStack>
 
             {showPaymentTimeout && (
@@ -331,19 +382,24 @@ export default function AppointmentsScreen() {
           </VStack>
         </HStack>
 
-        {(app.status === "confirmed" || app.status === "pending_payment") && activeTab === "upcoming" && (
-          <Button
-            onPress={() => openCancelModal(app)}
-            disabled={isCancelling}
-            variant="outline"
-            className="mt-3 rounded-full h-9 border-red-300"
-          >
-            <ButtonText className="text-red-500 text-xs">لغو نوبت</ButtonText>
-          </Button>
-        )}
+        {(app.status === "confirmed" || app.status === "pending_payment") &&
+          activeTab === "upcoming" && (
+            <Button
+              onPress={() => openCancelModal(app)}
+              disabled={isCancelling}
+              variant="outline"
+              className="mt-3 rounded-full h-9 border-red-300"
+            >
+              <ButtonText className="text-red-500 text-xs">لغو نوبت</ButtonText>
+            </Button>
+          )}
 
         {app.status === "pending_payment" && activeTab === "upcoming" && (
-          <PendingPaymentActions app={app} onPay={() => handlePayment(app)} isPayLoading={isThisPaymentLoading} />
+          <PendingPaymentActions
+            app={app}
+            onPay={() => handlePayment(app)}
+            isPayLoading={isThisPaymentLoading}
+          />
         )}
 
         {showPaymentTimeout && activeTab === "past" && (
@@ -363,19 +419,26 @@ export default function AppointmentsScreen() {
 
         {app.status === "confirmed" && activeTab === "upcoming" && (
           <Text className="text-gray-500 text-xs text-right font-vazir mt-2 leading-5">
-            پرداخت ثبت شد. روانشناس در زمان نوبت تماس می‌گیرد. لغو تا ۱ ساعت قبل از جلسه: بازپرداخت کامل؛ بعد از آن مبلغ
-            به روانشناس می‌رود.
+            پرداخت ثبت شد. روانشناس در زمان نوبت تماس می‌گیرد. لغو تا ۱ ساعت قبل
+            از جلسه: بازپرداخت کامل؛ بعد از آن مبلغ به روانشناس تعلق می گیرد.
           </Text>
         )}
 
         {app.status === "no-show" && (
           <View
             className="mt-3 rounded-xl px-3 py-2.5"
-            style={{ backgroundColor: "#FEF3C7", borderWidth: 1, borderColor: "#FDE68A" }}
+            style={{
+              backgroundColor: "#FEF3C7",
+              borderWidth: 1,
+              borderColor: "#FDE68A",
+            }}
           >
-            <Text className="text-amber-900 text-xs text-right font-vazirBold leading-5">حضور نیافته</Text>
+            <Text className="text-amber-900 text-xs text-right font-vazirBold leading-5">
+              حضور نیافته
+            </Text>
             <Text className="text-amber-800 text-xs text-right font-vazir mt-1 leading-5">
-              در زمان جلسه پاسخ داده نشد. مبلغ جلسه قابل بازگشت نیست و به روانشناس تعلق گرفته است.
+              در زمان جلسه پاسخ داده نشد. مبلغ جلسه قابل بازگشت نیست و به
+              روانشناس تعلق گرفته است.
             </Text>
           </View>
         )}
@@ -388,13 +451,15 @@ export default function AppointmentsScreen() {
 
         {app.refundStatus === "processed" && app.status === "cancelled" && (
           <Text className="text-green-700 text-xs text-right font-vazir mt-2 leading-5">
-            بازپرداخت شما ثبت شد. در صورت تأخیر در واریز با پشتیبانی تماس بگیرید.
+            بازپرداخت شما ثبت شد. در صورت تأخیر در واریز با پشتیبانی تماس
+            بگیرید.
           </Text>
         )}
 
         {app.refundStatus === "rejected" && app.status === "cancelled" && (
           <Text className="text-gray-600 text-xs text-right font-vazir mt-2 leading-5">
-            درخواست بازپرداخت برای این نوبت تأیید نشد. در صورت نیاز با پشتیبانی تماس بگیرید.
+            درخواست بازپرداخت برای این نوبت تأیید نشد. در صورت نیاز با پشتیبانی
+            تماس بگیرید.
           </Text>
         )}
 
@@ -404,12 +469,16 @@ export default function AppointmentsScreen() {
             className="mt-3 rounded-full h-9"
             style={{ backgroundColor: colors.secondary[500] }}
           >
-            <ButtonText className="text-xs text-white">ثبت نظر و امتیاز</ButtonText>
+            <ButtonText className="text-xs text-white">
+              ثبت نظر و امتیاز
+            </ButtonText>
           </Button>
         )}
 
         {app.status === "completed" && app.hasReview && (
-          <Text className="text-green-700 text-xs text-right font-vazir mt-2">نظر شما ثبت شده است</Text>
+          <Text className="text-green-700 text-xs text-right font-vazir mt-2">
+            نظر شما ثبت شده است
+          </Text>
         )}
       </View>
     );
@@ -418,7 +487,9 @@ export default function AppointmentsScreen() {
   const renderEmptyState = () => (
     <View className="py-20 items-center">
       <Ionicons name="calendar-outline" size={64} color={colors.gray[300]} />
-      <Text className="text-gray-500 mt-3 text-center font-vazir">هیچ نوبتی یافت نشد</Text>
+      <Text className="text-gray-500 mt-3 text-center font-vazir">
+        هیچ نوبتی یافت نشد
+      </Text>
       <Text className="text-gray-400 text-xs mt-1 text-center font-vazir">
         نوبت‌های خود را از صفحه روانشناسان رزرو کنید
       </Text>
@@ -449,8 +520,12 @@ export default function AppointmentsScreen() {
       >
         <HStack className="items-center justify-between">
           <View className="flex-1 mr-4">
-            <Text className="text-2xl font-vazirBold text-gray-800 text-right">نوبت‌های من</Text>
-            <Text className="text-gray-600 text-right text-sm mt-1 font-vazir">لیست نوبت‌های رزرو شده و گذشته</Text>
+            <Text className="text-2xl font-vazirBold text-gray-800 text-right">
+              نوبت‌های من
+            </Text>
+            <Text className="text-gray-600 text-right text-sm mt-1 font-vazir">
+              لیست نوبت‌های رزرو شده و گذشته
+            </Text>
           </View>
         </HStack>
       </LinearGradient>
@@ -463,12 +538,16 @@ export default function AppointmentsScreen() {
             alignItems: "center",
             paddingVertical: 12,
             borderBottomWidth: 2,
-            borderBottomColor: activeTab === "upcoming" ? colors.primary[500] : "transparent",
+            borderBottomColor:
+              activeTab === "upcoming" ? colors.primary[500] : "transparent",
           }}
         >
           <Text
             style={{
-              color: activeTab === "upcoming" ? colors.primary[500] : colors.gray[500],
+              color:
+                activeTab === "upcoming"
+                  ? colors.primary[500]
+                  : colors.gray[500],
               fontFamily: "vazirBold",
             }}
           >
@@ -482,12 +561,14 @@ export default function AppointmentsScreen() {
             alignItems: "center",
             paddingVertical: 12,
             borderBottomWidth: 2,
-            borderBottomColor: activeTab === "past" ? colors.primary[500] : "transparent",
+            borderBottomColor:
+              activeTab === "past" ? colors.primary[500] : "transparent",
           }}
         >
           <Text
             style={{
-              color: activeTab === "past" ? colors.primary[500] : colors.gray[500],
+              color:
+                activeTab === "past" ? colors.primary[500] : colors.gray[500],
               fontFamily: "vazirBold",
             }}
           >
@@ -503,12 +584,27 @@ export default function AppointmentsScreen() {
           paddingTop: 16,
           paddingBottom: 100,
         }}
-        refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} tintColor={colors.primary[500]} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={isFetching}
+            onRefresh={refetch}
+            tintColor={colors.primary[500]}
+          />
+        }
       >
-        <MoodProgressCard completedSessions={completedCount} upcomingSessions={upcoming.length} />
+        <MoodProgressCard
+          completedSessions={completedCount}
+          upcomingSessions={upcoming.length}
+        />
 
-        {activeTab === "upcoming" && (upcoming.length === 0 ? renderEmptyState() : upcoming.map(renderAppointmentCard))}
-        {activeTab === "past" && (past.length === 0 ? renderEmptyState() : past.map(renderAppointmentCard))}
+        {activeTab === "upcoming" &&
+          (upcoming.length === 0
+            ? renderEmptyState()
+            : upcoming.map(renderAppointmentCard))}
+        {activeTab === "past" &&
+          (past.length === 0
+            ? renderEmptyState()
+            : past.map(renderAppointmentCard))}
       </ScrollView>
 
       <Modal
@@ -535,7 +631,11 @@ export default function AppointmentsScreen() {
             }}
           >
             <View style={{ alignItems: "center", marginBottom: 16 }}>
-              <Ionicons name="alert-circle-outline" size={32} color={colors.accent[500]} />
+              <Ionicons
+                name="alert-circle-outline"
+                size={32}
+                color={colors.accent[500]}
+              />
               <Text
                 style={{
                   fontSize: 18,
@@ -558,8 +658,12 @@ export default function AppointmentsScreen() {
                 }}
               >
                 {cancelTarget?.canCancelWithRefund
-                  ? `بیش از ${cancelTarget.patientRefundMinHours ?? 1} ساعت تا جلسه مانده: پس از لغو، مبلغ در صف بازپرداخت قرار می‌گیرد.`
-                  : `کمتر از ${cancelTarget?.patientRefundMinHours ?? 1} ساعت تا جلسه مانده: مبلغ به روانشناس تعلق می‌گیرد و بازپرداختی انجام نمی‌شود.`}
+                  ? `بیش از ${
+                      cancelTarget.patientRefundMinHours ?? 1
+                    } ساعت تا جلسه مانده: پس از لغو، مبلغ در صف بازپرداخت قرار می‌گیرد.`
+                  : `کمتر از ${
+                      cancelTarget?.patientRefundMinHours ?? 1
+                    } ساعت تا جلسه مانده: مبلغ به روانشناس تعلق می‌گیرد و بازپرداختی انجام نمی‌شود.`}
               </Text>
               <Text
                 style={{
@@ -580,7 +684,9 @@ export default function AppointmentsScreen() {
                 className="flex-1 rounded-full h-10"
                 style={{ backgroundColor: colors.gray[100] }}
               >
-                <ButtonText className="text-gray-600 text-sm">انصراف</ButtonText>
+                <ButtonText className="text-gray-600 text-sm">
+                  انصراف
+                </ButtonText>
               </Button>
               <Button
                 onPress={handleConfirmCancel}

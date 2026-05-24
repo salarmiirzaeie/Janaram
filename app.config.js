@@ -2,7 +2,9 @@ import "dotenv/config";
 
 const isBazaar = process.env.APP_VARIANT === "bazaar";
 const appVersion = "1.2.3";
-const runtimeVersion = isBazaar ? `bazaar-${appVersion}` : `myket-${appVersion}`;
+const runtimeVersion = isBazaar
+  ? `bazaar-${appVersion}`
+  : `myket-${appVersion}`;
 
 export default {
   expo: {
@@ -44,7 +46,10 @@ export default {
         "com.google.android.gms.permission.AD_ID",
       ],
 
-      blockedPermissions: ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"],
+      blockedPermissions: [
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.RECORD_AUDIO",
+      ],
 
       intentFilters: [
         {
@@ -67,7 +72,9 @@ export default {
       "expo-router",
 
       // CONDITIONAL STORE PLUGIN
-      ...(isBazaar ? ["./plugins/withPoolakey"] : ["./plugins/withMyketBilling"]),
+      ...(isBazaar
+        ? ["./plugins/withPoolakey"]
+        : ["./plugins/withMyketBilling"]),
 
       "expo-notifications",
 
@@ -96,7 +103,10 @@ export default {
         "expo-build-properties",
         {
           android: {
-            removePermissions: ["android.permission.SYSTEM_ALERT_WINDOW", "android.permission.RECORD_AUDIO"],
+            removePermissions: [
+              "android.permission.SYSTEM_ALERT_WINDOW",
+              "android.permission.RECORD_AUDIO",
+            ],
             usesCleartextTraffic: true,
           },
         },
@@ -114,7 +124,7 @@ export default {
     },
 
     updates: {
-      url: "https://janaram.ir/api/updates/manifest",
+      url: "http://10.34.190.162:3000/api/updates/manifest",
       enabled: true,
       fallbackToCacheTimeout: 30000, // Changed from 0 to 30000
       checkAutomatically: "ON_LOAD",
