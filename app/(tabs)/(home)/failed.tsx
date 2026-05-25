@@ -1,10 +1,12 @@
-// app/payment/failed.tsx
+import { Text } from "@/components/ui/text";
 import { AntDesign } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { TouchableOpacity, View } from "react-native";
 
 function PaymentFailed() {
   const router = useRouter();
+  const { type } = useLocalSearchParams<{ type?: string }>();
+  const isAppointment = type === "appointment";
 
   return (
     <View
@@ -22,6 +24,7 @@ function PaymentFailed() {
           fontWeight: "bold",
           marginTop: 20,
           textAlign: "center",
+          fontFamily: "vazirBold",
         }}
       >
         پرداخت ناموفق
@@ -32,32 +35,62 @@ function PaymentFailed() {
           color: "#666",
           marginTop: 10,
           textAlign: "center",
+          fontFamily: "vazir",
+          lineHeight: 22,
         }}
       >
-        درخواست پرداخت شما با مشکل مواجه شد
+        {isAppointment
+          ? "پرداخت نوبت انجام نشد. اگر مهلت پرداخت باقی مانده، از «نوبت‌های من» دوباره تلاش کنید."
+          : "درخواست پرداخت شما با مشکل مواجه شد."}
       </Text>
 
-      <TouchableOpacity
-        onPress={() => router.push("/")}
-        style={{
-          backgroundColor: "#4CAF50",
-          padding: 15,
-          borderRadius: 10,
-          marginTop: 30,
-          width: "100%",
-        }}
-      >
-        <Text
-          style={{ color: "white", textAlign: "center", fontWeight: "bold" }}
+      {isAppointment ? (
+        <TouchableOpacity
+          onPress={() => router.dismissTo("/(tabs)/appointments")}
+          style={{
+            backgroundColor: "#4CAF50",
+            padding: 15,
+            borderRadius: 10,
+            marginTop: 30,
+            width: "100%",
+          }}
         >
-          بازگشت به صفحه اصلی
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => router.back()} style={{ marginTop: 10 }}>
-        <Text style={{ color: "#4CAF50", textAlign: "center" }}>تلاش مجدد</Text>
-      </TouchableOpacity>
+          <Text
+            style={{
+              color: "white",
+              textAlign: "center",
+              fontWeight: "bold",
+              fontFamily: "vazirBold",
+            }}
+          >
+            نوبت‌های من
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          onPress={() => router.push("/")}
+          style={{
+            backgroundColor: "#4CAF50",
+            padding: 15,
+            borderRadius: 10,
+            marginTop: 30,
+            width: "100%",
+          }}
+        >
+          <Text
+            style={{
+              color: "white",
+              textAlign: "center",
+              fontWeight: "bold",
+              fontFamily: "vazirBold",
+            }}
+          >
+            بازگشت به صفحه اصلی
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
+
 export default PaymentFailed;

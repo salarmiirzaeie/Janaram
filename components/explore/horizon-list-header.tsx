@@ -7,8 +7,9 @@ interface headerProps {
   icon: ReactNode;
   title: string;
   id: string;
+  hideAll?: boolean;
 }
-const HorizonListHeader: FC<headerProps> = ({ title, icon, id }) => {
+const HorizonListHeader: FC<headerProps> = ({ title, icon, id, hideAll }) => {
   const handleSeeAllPress = useCallback(() => {
     router.push({
       pathname: "/all-files",
@@ -16,19 +17,21 @@ const HorizonListHeader: FC<headerProps> = ({ title, icon, id }) => {
     });
   }, []);
   return (
-    <HStack className="items-center justify-between mx-5 mb-3">
-      <TouchableOpacity onPress={handleSeeAllPress}>
-        <HStack space="sm" className="items-center">
-          <Text className="text-primary-600 text-sm font-vazir">
-            مشاهده همه
-          </Text>
-          <Ionicons name="chevron-back" size={16} color="#79AED6" />
-        </HStack>
-      </TouchableOpacity>
+    <HStack className="items-center flex-row-reverse justify-between mx-5 mb-3">
       <HStack space="sm" className="items-center">
         <Text className="text-xl font-vazirBold text-primary-800">{title}</Text>
         <View className="ml-1">{icon}</View>
       </HStack>
+      {!hideAll && (
+        <TouchableOpacity onPress={handleSeeAllPress}>
+          <HStack space="sm" className="items-center">
+            <Text className="text-primary-600 text-sm font-vazir">
+              مشاهده همه
+            </Text>
+            <Ionicons name="chevron-back" size={16} color="#79AED6" />
+          </HStack>
+        </TouchableOpacity>
+      )}
     </HStack>
   );
 };

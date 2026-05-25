@@ -35,11 +35,19 @@ const profileSchema = Yup.object().shape({
   phoneNumber: Yup.string()
     .required("شماره موبایل الزامی است")
     .matches(/^(\+98|0)?9\d{9}$/, "شماره موبایل معتبر نیست (مثال: ۰۹۱۲۳۴۵۶۷۸۹"),
+  baleId: Yup.string()
+    .nullable()
+    .optional()
+    .matches(
+      /^@?[a-zA-Z0-9_]{3,32}$/,
+      "آیدی بله معتبر نیست (مثال: @username یا username"
+    ),
 });
 
 type FormData = {
   name: string;
   phoneNumber: string;
+  baleId?: string | null;
 };
 
 const EditProfile = () => {
@@ -55,7 +63,8 @@ const EditProfile = () => {
     resolver: yupResolver(profileSchema),
     defaultValues: {
       name: data?.data.name || "",
-      phoneNumber: data?.data.phoneNumber,
+      phoneNumber: data?.data.phoneNumber || "",
+      baleId: data?.data.baleId || "",
     },
   });
 
@@ -168,7 +177,6 @@ const EditProfile = () => {
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
                         style={{
-                          // borderRadius: 16,
                           borderWidth: errors.name ? 1 : 0,
                           borderColor: errors.name ? "#FF6B6B" : "transparent",
                           overflow: "hidden",
@@ -179,7 +187,7 @@ const EditProfile = () => {
                             value={value}
                             onChangeText={onChange}
                             autoCapitalize="words"
-                            className="text-right font-vazir  text-base"
+                            className="text-right font-vazir text-base"
                             placeholder="مثال: سارا محمدی"
                             placeholderTextColor="#CCC"
                           />
@@ -204,7 +212,7 @@ const EditProfile = () => {
                 <VStack space="sm">
                   <HStack className="items-center justify-end">
                     <View className="bg-primary-100 mr-2 rounded-full px-2 py-0.5">
-                      <Text className="text-primary-500  font-vazir text-xs">
+                      <Text className="text-primary-500 font-vazir text-xs">
                         غیر قابل تغییر
                       </Text>
                     </View>
@@ -241,6 +249,60 @@ const EditProfile = () => {
                       </LinearGradient>
                     )}
                   />
+                </VStack>
+
+                {/* Bale ID Field - اضافه شده */}
+                <VStack space="sm">
+                  <HStack className="items-center justify-end">
+                    <Feather name="message-circle" size={16} color="#79AED6" />
+                    <Text className="text-sm font-vazirBold text-primary-700 mr-2">
+                      آیدی بله (Bale ID)
+                    </Text>
+                  </HStack>
+                  <Controller
+                    control={control}
+                    name="baleId"
+                    render={({ field: { onChange, value } }) => (
+                      <LinearGradient
+                        colors={["#FFFFFF", "#F9F9FF"]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={{
+                          borderWidth: errors.baleId ? 1 : 0,
+                          borderColor: errors.baleId
+                            ? "#FF6B6B"
+                            : "transparent",
+                          overflow: "hidden",
+                        }}
+                      >
+                        <Input className="border rounded-xl bg-transparent">
+                          <InputField
+                            value={value || ""}
+                            onChangeText={onChange}
+                            autoCapitalize="none"
+                            className="text-right font-vazir text-base"
+                            placeholder="@username یا username"
+                            placeholderTextColor="#CCC"
+                          />
+                        </Input>
+                      </LinearGradient>
+                    )}
+                  />
+                  {errors.baleId && (
+                    <HStack
+                      space="sm"
+                      className="items-center justify-end mt-1"
+                    >
+                      <Feather name="alert-circle" size={12} color="#FF6B6B" />
+                      <Text className="text-error-500 text-xs font-vazir">
+                        {errors.baleId.message}
+                      </Text>
+                    </HStack>
+                  )}
+                  <Text className="text-right text-gray-400 text-xs mt-1">
+                    برای استفاده از چت و تماس، آیدی خود را در پیام‌رسان بله وارد
+                    کنید
+                  </Text>
                 </VStack>
               </VStack>
             </Animated.View>

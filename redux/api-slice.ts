@@ -10,7 +10,7 @@ import { RootState } from "./store";
 
 const BASE_URL = "https://janaram.ir/api/";
 // const BASE_URL = "http://10.213.178.162:3000/api/";
-export const BASE_URL_IMAGES = "https://janaram.storage.c2.liara.site";
+export const BASE_URL_IMAGES = "https://janaram.ir";
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
   prepareHeaders: (Headers, { getState }) => {
@@ -51,5 +51,12 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({}),
-  tagTypes: ["Plans", "Profile", "Mood", "Exercises"],
+  tagTypes: [
+    "Plans",
+    "Profile",
+    "Mood",
+    "Exercises",
+    "UserAppointments",
+    "Reviews",
+  ],
 });

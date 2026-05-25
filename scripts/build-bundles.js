@@ -7,8 +7,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const variants = [
-  { name: "myket", envFile: ".env.myket", runtimeVersion: "myket-1.2.3" },
-  { name: "bazaar", envFile: ".env.bazaar", runtimeVersion: "bazaar-1.2.3" },
+  { name: "myket", envFile: ".env.myket", runtimeVersion: "myket-1.2.4" },
+  { name: "bazaar", envFile: ".env.bazaar", runtimeVersion: "bazaar-1.2.4" },
 ];
 
 const SERVER_UPDATES_PATH =
@@ -75,7 +75,7 @@ for (const variant of variants) {
     const expoConfig = {
       name: "جانارام",
       slug: "Janaram",
-      version: "1.2.3",
+      version: "1.2.4",
       runtimeVersion: variant.runtimeVersion,
       platforms: ["android"],
       orientation: "portrait",
@@ -106,5 +106,5 @@ for (const variant of variants) {
 
 console.log("🎉 Process complete!");
 console.log("\n📍 Check server locations:");
-console.log(`   ls -la ${SERVER_UPDATES_PATH}/myket-1.2.3/`);
-console.log(`   ls -la ${SERVER_UPDATES_PATH}/bazaar-1.2.3/`);
+console.log(`   ls -la ${SERVER_UPDATES_PATH}/myket-1.2.4/`);
+console.log(`   ls -la ${SERVER_UPDATES_PATH}/bazaar-1.2.4/`);

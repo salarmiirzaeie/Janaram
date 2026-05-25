@@ -1,3 +1,4 @@
+import DeepLinkHandler from "@/components/home/deep-link-handler";
 import NetworkAct from "@/components/home/network-act";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { AudioPlayerProvider } from "@/context/AudioPlayerContext";
@@ -48,6 +49,7 @@ export default function RootLayout() {
               }}
             >
               <GestureHandlerRootView>
+                <DeepLinkHandler />
                 <Stack
                   screenOptions={{
                     headerBackTitle: "بازگشت",
@@ -55,10 +57,7 @@ export default function RootLayout() {
                     headerTitleStyle: { fontFamily: "vazirBold" },
                   }}
                 >
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false }}
-                  />
+                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                   <Stack.Screen
                     name="player"
                     options={{
@@ -186,6 +185,38 @@ export default function RootLayout() {
                   />
                   <Stack.Screen
                     name="search-page"
+                    options={({ route }: any) => {
+                      return {
+                        headerShown: false,
+                      };
+                    }}
+                  />
+                  <Stack.Screen
+                    name="reports"
+                    options={({ route }: any) => {
+                      return {
+                        headerShown: false,
+                      };
+                    }}
+                  />
+                  <Stack.Screen
+                    name="doctor-det"
+                    options={({ route }: any) => {
+                      return {
+                        headerShown: false,
+                      };
+                    }}
+                  />
+                  {/* <Stack.Screen
+                    name="my-appointments"
+                    options={({ route }: any) => {
+                      return {
+                        headerShown: false,
+                      };
+                    }}
+                  /> */}
+                  <Stack.Screen
+                    name="reviews"
                     options={({ route }: any) => {
                       return {
                         headerShown: false,

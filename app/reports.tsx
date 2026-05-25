@@ -8,24 +8,16 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useGetMoodReportQuery } from "@/services/report/report-adapter";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
-import {
-  moods as moodsEmoji,
-  prepareBarData,
-  prepareLineDataForLastMonth,
-} from "@/utils/mood";
+import { moods as moodsEmoji, prepareBarData, prepareLineDataForLastMonth } from "@/utils/mood";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Dimensions, FlatList, Image, StatusBar, TouchableOpacity, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { LinearGradient } from "react-native-linear-gradient";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
+import { colors } from "./(tabs)/psychologist";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CHART_WIDTH = SCREEN_WIDTH - 64;
@@ -41,10 +33,6 @@ const ActionButtons = React.memo(
     onAnalyzePersonality: () => void;
     onTests: () => void;
   }) => {
-    const handlePress = () => {
-      onAnalyzePersonality();
-    };
-
     return (
       <LinearGradient
         colors={["#FFFFFF", "#F9F9FF"]}
@@ -60,32 +48,7 @@ const ActionButtons = React.memo(
           elevation: 3,
         }}
       >
-        <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
-          <LinearGradient
-            colors={["#79AED6", "#9966CC"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={{
-              borderRadius: 16,
-              paddingVertical: 14,
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "row",
-              gap: 8,
-            }}
-          >
-            <AntDesign name="thunderbolt" size={20} color="white" />
-            <Text className="text-white font-vazirBold text-base">
-              تحلیل شخصیت من با AI
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={onTests}
-          activeOpacity={0.8}
-          className="mt-3"
-        >
+        <TouchableOpacity onPress={onTests} activeOpacity={0.8} className="mt-3">
           <LinearGradient
             colors={["#9966CC", "#FF9966"]}
             start={{ x: 0, y: 0 }}
@@ -100,14 +63,12 @@ const ActionButtons = React.memo(
             }}
           >
             <AntDesign name="question-circle" size={20} color="white" />
-            <Text className="text-white font-vazirBold text-base">
-              تست‌های خودشناسی
-            </Text>
+            <Text className="text-white font-vazirBold text-base">تست‌های خودشناسی</Text>
           </LinearGradient>
         </TouchableOpacity>
       </LinearGradient>
     );
-  }
+  },
 );
 
 // ========== کامپوننت مجزا برای چارت روند ==========
@@ -116,9 +77,7 @@ const MoodTrendChart = React.memo(({ lineData }: { lineData: any }) => {
     return (
       <View className="py-12 items-center">
         <Feather name="bar-chart-2" size={48} color="#CCC" />
-        <Text className="text-center text-gray-400 font-vazir mt-2">
-          موردی برای نمایش وجود ندارد
-        </Text>
+        <Text className="text-center text-gray-400 font-vazir mt-2">موردی برای نمایش وجود ندارد</Text>
       </View>
     );
   }
@@ -127,12 +86,7 @@ const MoodTrendChart = React.memo(({ lineData }: { lineData: any }) => {
     <View className="relative">
       <View className="absolute z-50 top-0 left-2 h-full">
         {moodsEmoji.map((label: any) => (
-          <Image
-            key={label.label}
-            source={label.emoji}
-            resizeMode="cover"
-            className="h-5 mb-1 w-5"
-          />
+          <Image key={label.label} source={label.emoji} resizeMode="cover" className="h-5 mb-1 w-5" />
         ))}
       </View>
       <LineChart
@@ -169,39 +123,33 @@ const MoodTrendChart = React.memo(({ lineData }: { lineData: any }) => {
 });
 
 // ========== کامپوننت مجزا برای کارت توزیع احساسات ==========
-const MoodDistributionCard = React.memo(
-  ({ moodsData }: { moodsData: any[] }) => (
-    <LinearGradient
-      colors={["#FFFFFF", "#F9F9FF"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={{
-        borderRadius: 24,
-        padding: 20,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.04,
-        shadowRadius: 8,
-        elevation: 3,
-      }}
-    >
-      <HStack className="items-center justify-between mb-4">
-        <View className="bg-primary-100 rounded-full px-3 py-1">
-          <Text className="text-primary-600 font-vazir text-xs">
-            توزیع احساسات
-          </Text>
-        </View>
-        <HStack space="sm" className="items-center">
-          <Ionicons name="pie-chart" size={18} color="#FF9966" />
-          <Text className="font-vazirBold text-primary-800 text-lg">
-            سهم هر حس از کل
-          </Text>
-        </HStack>
+const MoodDistributionCard = React.memo(({ moodsData }: { moodsData: any[] }) => (
+  <LinearGradient
+    colors={["#FFFFFF", "#F9F9FF"]}
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 1 }}
+    style={{
+      borderRadius: 24,
+      padding: 20,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.04,
+      shadowRadius: 8,
+      elevation: 3,
+    }}
+  >
+    <HStack className="items-center justify-between mb-4">
+      <View className="bg-primary-100 rounded-full px-3 py-1">
+        <Text className="text-primary-600 font-vazir text-xs">توزیع احساسات</Text>
+      </View>
+      <HStack space="sm" className="items-center">
+        <Ionicons name="pie-chart" size={18} color="#FF9966" />
+        <Text className="font-vazirBold text-primary-800 text-lg">سهم هر حس از کل</Text>
       </HStack>
-      <MinimalChart moods={moodsData} />
-    </LinearGradient>
-  )
-);
+    </HStack>
+    <MinimalChart moods={moodsData} />
+  </LinearGradient>
+));
 
 // ========== کامپوننت مجزا برای کارت بیشترین احساسات ==========
 const MoodFrequencyCard = React.memo(({ barData }: { barData: any }) => (
@@ -221,15 +169,11 @@ const MoodFrequencyCard = React.memo(({ barData }: { barData: any }) => (
   >
     <HStack className="items-center justify-between mb-4">
       <View className="bg-primary-100 rounded-full px-3 py-1">
-        <Text className="text-primary-600 font-vazir text-xs">
-          بیشترین احساسات
-        </Text>
+        <Text className="text-primary-600 font-vazir text-xs">بیشترین احساسات</Text>
       </View>
       <HStack space="sm" className="items-center">
         <Feather name="bar-chart" size={18} color="#79AED6" />
-        <Text className="font-vazirBold text-primary-800 text-lg">
-          بیشتر چه حالی داشتم
-        </Text>
+        <Text className="font-vazirBold text-primary-800 text-lg">بیشتر چه حالی داشتم</Text>
       </HStack>
     </HStack>
     <MoodBarChart lineData={barData} />
@@ -246,19 +190,10 @@ const Reports = () => {
   // ========== محاسبات با useMemo ==========
   const moodsData = useMemo(() => data?.data || [], [data?.data]);
   const barData = useMemo(() => prepareBarData(moodsData), [moodsData]);
-  const lineData = useMemo(
-    () => prepareLineDataForLastMonth(moodsData),
-    [moodsData]
-  );
+  const lineData = useMemo(() => prepareLineDataForLastMonth(moodsData), [moodsData]);
 
-  const proPlan = useMemo(
-    () => plans?.data?.plans?.find((plan) => plan.name === "unlimited"),
-    [plans?.data?.plans]
-  );
-  const isProActive = useMemo(
-    () => proPlan?.isActive || false,
-    [proPlan?.isActive]
-  );
+  const proPlan = useMemo(() => plans?.data?.plans?.find((plan) => plan.name === "unlimited"), [plans?.data?.plans]);
+  const isProActive = useMemo(() => proPlan?.isActive || false, [proPlan?.isActive]);
 
   // ========== هندلرها با useCallback ==========
   const handleAnalyzeMyPersonality = useCallback(() => {
@@ -323,15 +258,11 @@ const Reports = () => {
           >
             <HStack className="items-center justify-between mb-4">
               <View className="bg-primary-100 rounded-full px-3 py-1">
-                <Text className="text-primary-600 font-vazir text-xs">
-                  ۳۰ روز اخیر
-                </Text>
+                <Text className="text-primary-600 font-vazir text-xs">۳۰ روز اخیر</Text>
               </View>
               <HStack space="sm" className="items-center">
                 <Feather name="trending-up" size={18} color="#79AED6" />
-                <Text className="font-vazirBold text-primary-800 text-lg">
-                  روند حال من
-                </Text>
+                <Text className="font-vazirBold text-primary-800 text-lg">روند حال من</Text>
               </HStack>
             </HStack>
             <View className="items-center justify-center mt-2">
@@ -353,33 +284,20 @@ const Reports = () => {
         component: <MoodLogger />,
       },
     ];
-  }, [
-    isProActive,
-    handleAnalyzePress,
-    handleTestsPress,
-    lineData,
-    moodsData,
-    barData,
-  ]);
+  }, [isProActive, handleAnalyzePress, handleTestsPress, lineData, moodsData, barData]);
 
   // ========== رندر هر سکشن (بدون انیمیشن) ==========
-  const renderSection = useCallback(
-    ({ item }: { item: (typeof sections)[0] }) => {
-      return (
-        <VStack space="lg" className="mb-4">
-          {item.component}
-        </VStack>
-      );
-    },
-    []
-  );
+  const renderSection = useCallback(({ item }: { item: (typeof sections)[0] }) => {
+    return (
+      <VStack space="lg" className="mb-4">
+        {item.component}
+      </VStack>
+    );
+  }, []);
 
   if (isLoading) {
     return (
-      <LinearGradient
-        colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]}
-        style={{ flex: 1 }}
-      >
+      <LinearGradient colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]} style={{ flex: 1 }}>
         <View className="flex-1 items-center justify-center h-96">
           <Spinner size="large" color="#79AED6" />
         </View>
@@ -388,10 +306,45 @@ const Reports = () => {
   }
 
   return (
-    <LinearGradient
-      colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]}
-      style={{ flex: 1, marginBottom: 80 }}
-    >
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <View
+        style={{
+          paddingHorizontal: 16,
+          paddingTop: 12,
+          paddingBottom: 12,
+          flexDirection: "row",
+          alignItems: "center",
+          borderBottomWidth: 1,
+          borderBottomColor: colors.gray[100],
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            backgroundColor: colors.gray[100],
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Ionicons name="chevron-back" size={22} color={colors.gray[700]} />
+        </TouchableOpacity>
+        <Text
+          style={{
+            flex: 1,
+            textAlign: "center",
+            fontSize: 16,
+            fontFamily: "vazirBold",
+            color: colors.gray[800],
+          }}
+        >
+          حال من
+        </Text>
+        <View style={{ width: 40 }} />
+      </View>
       <FlatList
         data={sections}
         keyExtractor={(item) => item.id}
@@ -408,10 +361,8 @@ const Reports = () => {
         removeClippedSubviews={true}
       />
 
-      {analyze && (
-        <AnalyzeModal visible={analyze} onClose={handleCloseAnalyze} />
-      )}
-    </LinearGradient>
+      {analyze && <AnalyzeModal visible={analyze} onClose={handleCloseAnalyze} />}
+    </SafeAreaView>
   );
 };
 
