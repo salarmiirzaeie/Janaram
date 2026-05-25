@@ -1,19 +1,14 @@
-import dotenv from "dotenv";
-
-dotenv.config();
-// Optional dev-only overrides (gitignored). Remove or unset EXPO_UPDATES_URL for store builds.
-dotenv.config({ path: ".env.local" });
+// dotenv.config();
+// dotenv.config({ path: ".env.local" });
 
 const isBazaar = process.env.APP_VARIANT === "bazaar";
-const appVersion = "1.2.3";
+const appVersion = "1.2.4";
 const runtimeVersion = isBazaar
   ? `bazaar-${appVersion}`
   : `myket-${appVersion}`;
 
 // Baked into native code at prebuild time — changing this alone does not update installed builds.
-const updatesUrl =
-  process.env.EXPO_UPDATES_URL ??
-  "https://janaram.ir/api/updates/manifest";
+const updatesUrl = "https://janaram.ir/api/updates/manifest";
 
 export default {
   expo: {
@@ -34,7 +29,7 @@ export default {
     ios: {
       supportsTablet: false,
       bundleIdentifier: "com.salarmiirzapour.Janaram",
-      buildNumber: "1.2.3",
+      buildNumber: "1.2.4",
     },
 
     android: {

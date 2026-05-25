@@ -9,7 +9,7 @@
     <key>EXUpdatesLaunchWaitMs</key>
     <integer>30000</integer>
     <key>EXUpdatesRuntimeVersion</key>
-    <string>myket-1.2.3</string>
+    <string>bazaar-1.2.4</string>
     <key>EXUpdatesURL</key>
     <string>http://10.34.190.162:3000/api/updates/manifest</string>
   </dict>
