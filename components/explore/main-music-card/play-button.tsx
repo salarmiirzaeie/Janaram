@@ -13,27 +13,19 @@ const PlayButton: FC<props> = ({ color, item }) => {
   const { track, loadTrack, isPlaying } = useAudioPlayer();
   const isCurrentlyPlaying = track?.id === item.id && isPlaying;
 
-  const { handleOpenNotProModal, isProActive, showInterstitial } = usePro();
+  const { handleOpenNotProModal, isProActive } = usePro();
 
   const handlePlay = useCallback(async () => {
     if (isLoading) return;
     setLoading(true);
     try {
       if (item.isPro && !isProActive) return handleOpenNotProModal();
-      showInterstitial();
+      // showInterstitial();
       await loadTrack(item.id);
     } finally {
       setLoading(false);
     }
-  }, [
-    item.id,
-    item.isPro,
-    isProActive,
-    loadTrack,
-    handleOpenNotProModal,
-    showInterstitial,
-    isLoading,
-  ]);
+  }, [item.id, item.isPro, isProActive, loadTrack, handleOpenNotProModal, isLoading]);
   if (isLoading)
     return (
       <View
@@ -70,12 +62,7 @@ const PlayButton: FC<props> = ({ color, item }) => {
       {isCurrentlyPlaying ? (
         <Entypo name="controller-paus" size={22} color={color} />
       ) : (
-        <Entypo
-          name="controller-play"
-          size={24}
-          color={color}
-          style={{ marginLeft: 2 }}
-        />
+        <Entypo name="controller-play" size={24} color={color} style={{ marginLeft: 2 }} />
       )}
     </TouchableOpacity>
   );

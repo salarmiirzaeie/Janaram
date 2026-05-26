@@ -1,4 +1,3 @@
-import BannerAd from "@/components/home/BannerAd";
 import {
   Actionsheet,
   ActionsheetBackdrop,
@@ -13,18 +12,8 @@ import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Vibration,
-  View,
-} from "react-native";
-import {
-  TapGestureHandler,
-  TapGestureHandlerGestureEvent,
-} from "react-native-gesture-handler";
+import { Image, StyleSheet, Text, TouchableOpacity, Vibration, View } from "react-native";
+import { TapGestureHandler, TapGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import { LinearGradient } from "react-native-linear-gradient";
 import Animated, {
   cancelAnimation,
@@ -44,16 +33,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function BreathingPlayerScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const {
-    track,
-    isPlaying,
-    position,
-    duration,
-    loadTrack,
-    togglePlay,
-    seek,
-    isLoading,
-  } = useAudioPlayer();
+  const { track, isPlaying, position, duration, loadTrack, togglePlay, seek, isLoading } = useAudioPlayer();
   const [isSheetOpen, setIsSheetOpen] = useState(true);
   const [progressBarWidth, setProgressBarWidth] = useState(0);
 
@@ -62,16 +42,12 @@ export default function BreathingPlayerScreen() {
   const HOLD_DURATION = track?.holdDuration ?? 0;
 
   const scale = useSharedValue(1);
-  const phaseShared = useSharedValue<
-    "inhale" | "hold_after_inhale" | "exhale" | "hold_after_exhale"
-  >("inhale");
+  const phaseShared = useSharedValue<"inhale" | "hold_after_inhale" | "exhale" | "hold_after_exhale">("inhale");
   const secondsShared = useSharedValue(INHALE_DURATION / 1000);
   const progress = useSharedValue(0);
   const animationRef = useRef<any>(null);
 
-  const [phaseText, setPhaseText] = useState<
-    "inhale" | "hold_after_inhale" | "exhale" | "hold_after_exhale"
-  >("inhale");
+  const [phaseText, setPhaseText] = useState<"inhale" | "hold_after_inhale" | "exhale" | "hold_after_exhale">("inhale");
   const [phaseSeconds, setPhaseSeconds] = useState(INHALE_DURATION / 1000);
   const [initialLoading, setInitialLoading] = useState(true);
 
@@ -85,14 +61,14 @@ export default function BreathingPlayerScreen() {
     () => phaseShared.value,
     (phase) => {
       runOnJS(setPhaseText)(phase);
-    }
+    },
   );
 
   useAnimatedReaction(
     () => secondsShared.value,
     (secs) => {
       runOnJS(setPhaseSeconds)(Math.ceil(secs));
-    }
+    },
   );
 
   useEffect(() => {
@@ -152,8 +128,8 @@ export default function BreathingPlayerScreen() {
               runOnJS(startPhaseCountdown)(EXHALE_DURATION);
             }
           }
-        }
-      )
+        },
+      ),
     );
 
     // Hold after inhale (if exists)
@@ -171,8 +147,8 @@ export default function BreathingPlayerScreen() {
               phaseShared.value = "exhale";
               runOnJS(startPhaseCountdown)(EXHALE_DURATION);
             }
-          }
-        )
+          },
+        ),
       );
     }
 
@@ -196,8 +172,8 @@ export default function BreathingPlayerScreen() {
               runOnJS(startPhaseCountdown)(INHALE_DURATION);
             }
           }
-        }
-      )
+        },
+      ),
     );
 
     // Hold after exhale (if exists)
@@ -215,8 +191,8 @@ export default function BreathingPlayerScreen() {
               phaseShared.value = "inhale";
               runOnJS(startPhaseCountdown)(INHALE_DURATION);
             }
-          }
-        )
+          },
+        ),
       );
     }
 
@@ -263,11 +239,7 @@ export default function BreathingPlayerScreen() {
   }));
 
   const thumbStyle = useAnimatedStyle(() => {
-    const translateX = interpolate(
-      progress.value,
-      [0, 100],
-      [0, progressBarWidth - 20]
-    );
+    const translateX = interpolate(progress.value, [0, 100], [0, progressBarWidth - 20]);
     return { transform: [{ translateX }] };
   });
 
@@ -277,33 +249,23 @@ export default function BreathingPlayerScreen() {
       backgroundColor: interpolateColor(
         scale.value,
         [1, 1.15, 1.3],
-        [
-          "rgba(121, 174, 214, 0.1)",
-          "rgba(137, 138, 224, 0.12)",
-          "rgba(153, 102, 204, 0.15)",
-        ]
+        ["rgba(121, 174, 214, 0.1)", "rgba(137, 138, 224, 0.12)", "rgba(153, 102, 204, 0.15)"],
       ),
     };
   });
 
   const getPhaseLabel = () => {
-    if (phaseText === "inhale")
-      return { text: "دم", icon: "🌬️", color: "#79AED6" };
-    if (phaseText === "exhale")
-      return { text: "بازدم", icon: "💨", color: "#9966CC" };
+    if (phaseText === "inhale") return { text: "دم", icon: "🌬️", color: "#79AED6" };
+    if (phaseText === "exhale") return { text: "بازدم", icon: "💨", color: "#9966CC" };
     return { text: "حبس نفس", icon: "✨", color: "#FF9966" };
   };
 
   const phase = getPhaseLabel();
 
-  if (!id)
-    return <Text style={{ padding: 20 }}>Breathing track not found</Text>;
+  if (!id) return <Text style={{ padding: 20 }}>Breathing track not found</Text>;
 
   return (
-    <LinearGradient
-      colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]}
-      style={{ flex: 1 }}
-    >
+    <LinearGradient colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]} style={{ flex: 1 }}>
       <SafeAreaView className="flex-1">
         <View className="flex-1">
           {/* Header */}
@@ -314,9 +276,7 @@ export default function BreathingPlayerScreen() {
             >
               <Ionicons name="chevron-down" size={24} color="#666" />
             </TouchableOpacity>
-            <Text className="font-vazirBold text-primary-600 text-base">
-              {""}
-            </Text>
+            <Text className="font-vazirBold text-primary-600 text-base">{""}</Text>
             <View className="w-10" />
           </View>
 
@@ -330,24 +290,14 @@ export default function BreathingPlayerScreen() {
           <View className="flex-1 items-center px-6">
             {/* Countdown Timer */}
             <Animated.View entering={FadeIn.duration(400).delay(50)}>
-              <Text className="text-7xl font-vazirBold text-primary-600 mb-0">
-                {phaseSeconds}
-              </Text>
-              <Text className="text-gray-400 font-vazir text-sm text-center">
-                ثانیه
-              </Text>
+              <Text className="text-7xl font-vazirBold text-primary-600 mb-0">{phaseSeconds}</Text>
+              <Text className="text-gray-400 font-vazir text-sm text-center">ثانیه</Text>
             </Animated.View>
 
             {/* Breathing Circle */}
-            <Animated.View
-              entering={FadeIn.duration(600).delay(100)}
-              style={styles.circleContainer}
-            >
+            <Animated.View entering={FadeIn.duration(600).delay(100)} style={styles.circleContainer}>
               <Animated.View style={[styles.circle, circleAnimatedStyle]}>
-                <LinearGradient
-                  colors={["#79AED6", "#9966CC"]}
-                  style={styles.circleGradient}
-                >
+                <LinearGradient colors={["#79AED6", "#9966CC"]} style={styles.circleGradient}>
                   <Image source={{ uri: track?.image2 }} style={styles.cover} />
                 </LinearGradient>
               </Animated.View>
@@ -360,9 +310,7 @@ export default function BreathingPlayerScreen() {
             <TapGestureHandler onHandlerStateChange={onTap}>
               <Animated.View
                 style={styles.progressBarContainer}
-                onLayout={(e) =>
-                  setProgressBarWidth(e.nativeEvent.layout.width)
-                }
+                onLayout={(e) => setProgressBarWidth(e.nativeEvent.layout.width)}
               >
                 <View style={styles.progressBarBackground} />
                 <LinearGradient
@@ -383,16 +331,11 @@ export default function BreathingPlayerScreen() {
 
             {/* Controls */}
             <View style={styles.controls}>
-              <TouchableOpacity
-                onPress={() => seek(position - 10000)}
-                className="items-center gap-1"
-              >
+              <TouchableOpacity onPress={() => seek(position - 10000)} className="items-center gap-1">
                 <View className="bg-primary-100 rounded-full p-3">
                   <Ionicons name="play-skip-back" size={28} color="#79AED6" />
                 </View>
-                <Text className="text-gray-400 font-vazir text-xs">
-                  ۱۰ ثانیه
-                </Text>
+                <Text className="text-gray-400 font-vazir text-xs">۱۰ ثانیه</Text>
               </TouchableOpacity>
 
               <TouchableOpacity onPress={togglePlay}>
@@ -415,30 +358,17 @@ export default function BreathingPlayerScreen() {
                 </LinearGradient>
               </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={() => seek(position + 10000)}
-                className="items-center gap-1"
-              >
+              <TouchableOpacity onPress={() => seek(position + 10000)} className="items-center gap-1">
                 <View className="bg-primary-100 rounded-full p-3">
-                  <Ionicons
-                    name="play-skip-forward"
-                    size={28}
-                    color="#79AED6"
-                  />
+                  <Ionicons name="play-skip-forward" size={28} color="#79AED6" />
                 </View>
-                <Text className="text-gray-400 font-vazir text-xs">
-                  ۱۰ ثانیه
-                </Text>
+                <Text className="text-gray-400 font-vazir text-xs">۱۰ ثانیه</Text>
               </TouchableOpacity>
             </View>
           </View>
 
           {/* Info Sheet */}
-          <Actionsheet
-            isOpen={isSheetOpen}
-            closeOnOverlayClick={false}
-            onClose={() => setIsSheetOpen(false)}
-          >
+          <Actionsheet isOpen={isSheetOpen} closeOnOverlayClick={false} onClose={() => setIsSheetOpen(false)}>
             <ActionsheetBackdrop />
             <SafeAreaView className="flex-1">
               <ActionsheetContent className="bg-white rounded-t-3xl">
@@ -465,9 +395,7 @@ export default function BreathingPlayerScreen() {
                       >
                         <Feather name="wind" size={40} color="white" />
                       </LinearGradient>
-                      <Text className="text-2xl font-vazirBold text-primary-800 text-center">
-                        {track?.title}
-                      </Text>
+                      <Text className="text-2xl font-vazirBold text-primary-800 text-center">{track?.title}</Text>
                       <Text className="text-base text-gray-600 text-right font-vazir leading-6">
                         {track?.description}
                       </Text>
@@ -477,27 +405,21 @@ export default function BreathingPlayerScreen() {
                           <Text className="text-primary-500 font-vazirBold text-lg">
                             {(INHALE_DURATION / 1000).toFixed(0)}
                           </Text>
-                          <Text className="text-gray-400 font-vazir text-xs">
-                            دم (ثانیه)
-                          </Text>
+                          <Text className="text-gray-400 font-vazir text-xs">دم (ثانیه)</Text>
                         </View>
                         {HOLD_DURATION > 0 && (
                           <View className="items-center">
                             <Text className="text-primary-500 font-vazirBold text-lg">
                               {(HOLD_DURATION / 1000).toFixed(0)}
                             </Text>
-                            <Text className="text-gray-400 font-vazir text-xs">
-                              حبس (ثانیه)
-                            </Text>
+                            <Text className="text-gray-400 font-vazir text-xs">حبس (ثانیه)</Text>
                           </View>
                         )}
                         <View className="items-center">
                           <Text className="text-primary-500 font-vazirBold text-lg">
                             {(EXHALE_DURATION / 1000).toFixed(0)}
                           </Text>
-                          <Text className="text-gray-400 font-vazir text-xs">
-                            بازدم (ثانیه)
-                          </Text>
+                          <Text className="text-gray-400 font-vazir text-xs">بازدم (ثانیه)</Text>
                         </View>
                       </View>
                     </VStack>
@@ -510,9 +432,7 @@ export default function BreathingPlayerScreen() {
                       togglePlay();
                     }}
                   >
-                    <ButtonText className="font-vazirBold">
-                      شروع تمرین
-                    </ButtonText>
+                    <ButtonText className="font-vazirBold">شروع تمرین</ButtonText>
                   </Button>
                 </View>
               </ActionsheetContent>
@@ -520,7 +440,7 @@ export default function BreathingPlayerScreen() {
           </Actionsheet>
         </View>
       </SafeAreaView>
-      <BannerAd bannerSize="BANNER" />
+      {/* <BannerAd bannerSize="BANNER" /> */}
     </LinearGradient>
   );
 }

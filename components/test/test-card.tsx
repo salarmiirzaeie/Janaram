@@ -10,15 +10,11 @@ import { Text, TouchableOpacity, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { useDispatch } from "react-redux";
-import { showAd } from "../home/BannerAd";
 const TestCard = ({ item, index }: { item: any; index: number }) => {
   const dispatch = useDispatch();
   const { data: plans } = usePlansQuery(null);
 
-  const proPlan = useMemo(
-    () => plans?.data.plans?.find((plan) => plan.name === "unlimited"),
-    [plans?.data.plans]
-  );
+  const proPlan = useMemo(() => plans?.data.plans?.find((plan) => plan.name === "unlimited"), [plans?.data.plans]);
   const handleOpenNotProModal = useCallback(() => {
     dispatch({
       type: "pro/setShowNotProModal",
@@ -33,9 +29,9 @@ const TestCard = ({ item, index }: { item: any; index: number }) => {
       handleOpenNotProModal();
       return;
     }
-    if (!proPlan?.isActive) {
-      showAd();
-    }
+    // if (!proPlan?.isActive) {
+    //   showAd();
+    // }
     router.push({
       pathname: "/single-test",
       params: { id: `${item?.test_id}` },
@@ -75,18 +71,11 @@ const TestCard = ({ item, index }: { item: any; index: number }) => {
 
             {/* Content */}
             <VStack className="flex-1 mx-3">
-              <Text className="text-right font-vazirBold text-base text-gray-800">
-                {item.test_name}
-              </Text>
+              <Text className="text-right font-vazirBold text-base text-gray-800">{item.test_name}</Text>
 
               {item.description && (
-                <Text
-                  className="text-right font-vazir text-sm text-gray-500 mt-1"
-                  numberOfLines={2}
-                >
-                  {item.description.length > 60
-                    ? item.description.slice(0, 60) + "..."
-                    : item.description}
+                <Text className="text-right font-vazir text-sm text-gray-500 mt-1" numberOfLines={2}>
+                  {item.description.length > 60 ? item.description.slice(0, 60) + "..." : item.description}
                 </Text>
               )}
             </VStack>
@@ -104,9 +93,7 @@ const TestCard = ({ item, index }: { item: any; index: number }) => {
             >
               <HStack space="sm" className="items-center">
                 <FontAwesome name={"play"} size={12} color="white" />
-                <Text className="text-white font-vazirBold text-sm">
-                  {"شروع"}
-                </Text>
+                <Text className="text-white font-vazirBold text-sm">{"شروع"}</Text>
               </HStack>
             </LinearGradient>
           </HStack>

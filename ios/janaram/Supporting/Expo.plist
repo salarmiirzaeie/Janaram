@@ -11,6 +11,6 @@
     <key>EXUpdatesRuntimeVersion</key>
     <string>bazaar-1.2.4</string>
     <key>EXUpdatesURL</key>
-    <string>http://10.34.190.162:3000/api/updates/manifest</string>
+    <string>https://janaram.ir/api/updates/manifest</string>
   </dict>
 </plist>

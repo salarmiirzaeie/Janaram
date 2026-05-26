@@ -24,18 +24,18 @@ interface IVStackProps extends React.ComponentProps<typeof VStack> {
 }
 
 const SleepCourseCard: React.FC<IVStackProps> = ({ item, index }) => {
-  const { handleOpenNotProModal, isProActive, showInterstitial } = usePro();
+  const { handleOpenNotProModal, isProActive } = usePro();
 
   const handleCardPress = useCallback(() => {
     if (item.isPro && !isProActive) return handleOpenNotProModal();
-    showInterstitial();
+    // showInterstitial();
     router.push({ pathname: "/player", params: { id: `${item.id}` } });
   }, [
     item.id,
     item.isPro,
     isProActive,
     handleOpenNotProModal,
-    showInterstitial,
+    // showInterstitial,
   ]);
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={handleCardPress}>
@@ -98,16 +98,11 @@ const SleepCourseCard: React.FC<IVStackProps> = ({ item, index }) => {
               paddingTop: 13,
             }}
           >
-            <View
-              style={{ flexDirection: "row", justifyContent: "flex-start" }}
-            >
+            <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
               <DurationBadge duration={toPersianDigits(item.duration)} />
             </View>
             <View style={{ gap: 12 }}>
-              <Text
-                numberOfLines={2}
-                className="font-vazirBold text-right text-white text-lg"
-              >
+              <Text numberOfLines={2} className="font-vazirBold text-right text-white text-lg">
                 {item.title}
               </Text>
               <View

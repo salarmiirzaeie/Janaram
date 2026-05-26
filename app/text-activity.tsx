@@ -1,4 +1,3 @@
-import BannerAd from "@/components/home/BannerAd";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
@@ -7,14 +6,7 @@ import { useCustomToast } from "@/hooks/useToast";
 import { Feather } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "react-native-linear-gradient";
 import Animated, { FadeInUp } from "react-native-reanimated";
 
@@ -119,9 +111,8 @@ export default function TextActivityScreen() {
                 }}
               >
                 <Text className="text-base font-vazir text-primary-600 text-right leading-6">
-                  نوشتن چیزهایی که بابت آن‌ها شکرگزار هستی باعث افزایش حس مثبت و
-                  آرامش درونی می‌شود. هر مورد را جداگانه بنویس، حتی چیزهای کوچک
-                  مثل یک لبخند یا یک فنجان چای گرم.
+                  نوشتن چیزهایی که بابت آن‌ها شکرگزار هستی باعث افزایش حس مثبت و آرامش درونی می‌شود. هر مورد را جداگانه
+                  بنویس، حتی چیزهای کوچک مثل یک لبخند یا یک فنجان چای گرم.
                 </Text>
               </LinearGradient>
 
@@ -153,10 +144,7 @@ export default function TextActivityScreen() {
                     />
                   </View>
                 </View>
-                <TouchableOpacity
-                  onPress={handleAddGratitude}
-                  activeOpacity={0.8}
-                >
+                <TouchableOpacity onPress={handleAddGratitude} activeOpacity={0.8}>
                   <LinearGradient
                     colors={["#79AED6", "#9966CC"]}
                     start={{ x: 0, y: 0 }}
@@ -176,10 +164,7 @@ export default function TextActivityScreen() {
 
               <VStack space="sm">
                 {gratitudeList.map((item, idx) => (
-                  <Animated.View
-                    key={idx}
-                    entering={FadeInUp.duration(300).delay(idx * 50)}
-                  >
+                  <Animated.View key={idx} entering={FadeInUp.duration(300).delay(idx * 50)}>
                     <View
                       style={{
                         borderRadius: 16,
@@ -200,9 +185,7 @@ export default function TextActivityScreen() {
                         >
                           <Feather name="trash-2" size={16} color="#FF6B6B" />
                         </TouchableOpacity>
-                        <Text className="text-right flex-1 pr-3 font-vazir text-gray-700">
-                          {item}
-                        </Text>
+                        <Text className="text-right flex-1 pr-3 font-vazir text-gray-700">{item}</Text>
                         <Feather name="heart" size={18} color="#79AED6" />
                       </HStack>
                     </View>
@@ -240,18 +223,13 @@ export default function TextActivityScreen() {
                 <View className="bg-accent-100 rounded-full p-3">
                   <Text className="text-2xl">💡</Text>
                 </View>
-                <Text className="text-xl font-vazirBold text-accent-700 flex-1 text-right">
-                  نکته امروز
-                </Text>
+                <Text className="text-xl font-vazirBold text-accent-700 flex-1 text-right">نکته امروز</Text>
               </HStack>
 
-              <Text className="text-lg font-vazirBold text-primary-700 text-right leading-7 mt-2">
-                {randomTip}
-              </Text>
+              <Text className="text-lg font-vazirBold text-primary-700 text-right leading-7 mt-2">{randomTip}</Text>
               <Text className="text-base font-vazir text-tertiary-600 text-right leading-6 mt-4">
-                این جمله‌های انگیزشی می‌تونن بهت انرژی بدن. چند بار در روز بخون
-                و یادت باشه عمل کردن به همین نکات کوچیک می‌تونه تغییر بزرگی
-                بسازه.
+                این جمله‌های انگیزشی می‌تونن بهت انرژی بدن. چند بار در روز بخون و یادت باشه عمل کردن به همین نکات کوچیک
+                می‌تونه تغییر بزرگی بسازه.
               </Text>
 
               <View className="mt-6 pt-4 border-t border-accent-100">
@@ -282,9 +260,8 @@ export default function TextActivityScreen() {
                 }}
               >
                 <Text className="text-base font-vazir text-primary-600 text-right leading-6">
-                  ژورنال نوشتن یعنی تخلیه‌ی ذهنی. می‌تونی احساساتت، نگرانی‌ها یا
-                  حتی ایده‌های خلاقانه‌ات رو روی کاغذ (اینجا) بیاری. این تمرین
-                  باعث می‌شه ذهن سبک‌تر بشه و دید بهتری به روزت پیدا کنی.
+                  ژورنال نوشتن یعنی تخلیه‌ی ذهنی. می‌تونی احساساتت، نگرانی‌ها یا حتی ایده‌های خلاقانه‌ات رو روی کاغذ
+                  (اینجا) بیاری. این تمرین باعث می‌شه ذهن سبک‌تر بشه و دید بهتری به روزت پیدا کنی.
                 </Text>
               </LinearGradient>
 
@@ -322,17 +299,12 @@ export default function TextActivityScreen() {
         );
 
       default:
-        return (
-          <Text className="text-center text-gray-500">فعالیت نامعتبر</Text>
-        );
+        return <Text className="text-center text-gray-500">فعالیت نامعتبر</Text>;
     }
   };
 
   return (
-    <LinearGradient
-      colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]}
-      style={{ flex: 1 }}
-    >
+    <LinearGradient colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]} style={{ flex: 1 }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -350,11 +322,7 @@ export default function TextActivityScreen() {
             {/* Submit Button */}
             {subType !== "daily_tip" && (
               <Animated.View entering={FadeInUp.duration(600).delay(400)}>
-                <TouchableOpacity
-                  onPress={handleSubmit}
-                  activeOpacity={0.8}
-                  className="mt-8"
-                >
+                <TouchableOpacity onPress={handleSubmit} activeOpacity={0.8} className="mt-8">
                   <LinearGradient
                     colors={["#79AED6", "#9966CC"]}
                     start={{ x: 0, y: 0 }}
@@ -369,9 +337,7 @@ export default function TextActivityScreen() {
                     }}
                   >
                     <Feather name="check" size={20} color="white" />
-                    <Text className="text-white font-vazirBold text-lg">
-                      ثبت و ذخیره
-                    </Text>
+                    <Text className="text-white font-vazirBold text-lg">ثبت و ذخیره</Text>
                   </LinearGradient>
                 </TouchableOpacity>
               </Animated.View>
@@ -379,7 +345,7 @@ export default function TextActivityScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      <BannerAd bannerSize="BANNER" />
+      {/* <BannerAd bannerSize="BANNER" /> */}
     </LinearGradient>
   );
 }

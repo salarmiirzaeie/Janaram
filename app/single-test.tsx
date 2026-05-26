@@ -1,18 +1,8 @@
 // app/(app)/tests/[id].tsx
-import BannerAd from "@/components/home/BannerAd";
-import {
-  useGetSingleTestQuery,
-  useSubmitTestMutation,
-} from "@/services/test/test-adapter";
+import { useGetSingleTestQuery, useSubmitTestMutation } from "@/services/test/test-adapter";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Dimensions,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, Dimensions, Text, TouchableOpacity, View } from "react-native";
 import Animated, { SlideInRight, SlideOutLeft } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -123,9 +113,7 @@ const SingleTest = () => {
   if (error || !data?.data) {
     return (
       <View className="flex-1 justify-center items-center bg-white">
-        <Text className="text-red-500 font-vazir text-lg">
-          خطا در دریافت تست
-        </Text>
+        <Text className="text-red-500 font-vazir text-lg">خطا در دریافت تست</Text>
       </View>
     );
   }
@@ -138,14 +126,9 @@ const SingleTest = () => {
         {/* Header with progress */}
 
         <View className="px-5 pt-4 pb-2">
-          <Text className="text-lg font-vazirBold text-gray-800 text-right">
-            {data.data.test_name}
-          </Text>
+          <Text className="text-lg font-vazirBold text-gray-800 text-right">{data.data.test_name}</Text>
           <View className="h-2 bg-gray-200 rounded-full mt-2">
-            <View
-              className="h-2 bg-indigo-500 rounded-full"
-              style={{ width: `${progress}%` }}
-            />
+            <View className="h-2 bg-indigo-500 rounded-full" style={{ width: `${progress}%` }} />
           </View>
           <Text className="text-sm text-gray-500 font-vazir text-right mt-1">
             سوال {currentIndex + 1} از {totalQuestions}
@@ -161,9 +144,7 @@ const SingleTest = () => {
             className="flex-1"
           >
             <View className="bg-gray-50 rounded-2xl p-6 shadow-sm mb-6">
-              <Text className="text-xl font-vazirBold text-gray-800 text-right leading-8">
-                {currentQuestion.text}
-              </Text>
+              <Text className="text-xl font-vazirBold text-gray-800 text-right leading-8">{currentQuestion.text}</Text>
             </View>
 
             {/* Options */}
@@ -175,16 +156,10 @@ const SingleTest = () => {
                     key={idx}
                     onPress={() => handleAnswer(option.score)}
                     className={`p-4 mb-2 rounded-xl border ${
-                      isSelected
-                        ? "bg-indigo-100 border-indigo-500"
-                        : "bg-white border-gray-200"
+                      isSelected ? "bg-indigo-100 border-indigo-500" : "bg-white border-gray-200"
                     }`}
                   >
-                    <Text
-                      className={`text-right font-vazir  ${
-                        isSelected ? "text-indigo-700 " : "text-gray-700"
-                      }`}
-                    >
+                    <Text className={`text-right font-vazir  ${isSelected ? "text-indigo-700 " : "text-gray-700"}`}>
                       {option.text}
                     </Text>
                   </TouchableOpacity>
@@ -193,7 +168,7 @@ const SingleTest = () => {
             </View>
           </Animated.View>
         </View>
-        <BannerAd bannerSize="BANNER" />
+        {/* <BannerAd bannerSize="BANNER" /> */}
 
         {/* Navigation buttons */}
         <View className="flex-row justify-between px-5 py-4 border-t border-gray-100">
@@ -215,9 +190,7 @@ const SingleTest = () => {
               disabled={isSubmitting || isTransitioning}
               className="px-6 py-3  rounded-xl bg-indigo-600"
             >
-              <Text className="text-white  font-vazir">
-                {isSubmitting ? "در حال ارسال..." : "دریافت نتیجه"}
-              </Text>
+              <Text className="text-white  font-vazir">{isSubmitting ? "در حال ارسال..." : "دریافت نتیجه"}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity

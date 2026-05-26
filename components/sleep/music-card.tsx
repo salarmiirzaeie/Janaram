@@ -7,7 +7,6 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { Image, Text } from "react-native";
 import { useDispatch } from "react-redux";
-import { showAd } from "../home/BannerAd";
 import { Badge, BadgeText } from "../ui/badge";
 import { HStack } from "../ui/hstack";
 import { Pressable } from "../ui/pressable";
@@ -38,9 +37,9 @@ const MusicCard = ({ item }: { item: Meditation }) => {
         handleOpenNotProModal();
         return;
       }
-      if (!proPlan?.isActive) {
-        showAd();
-      }
+      // if (!proPlan?.isActive) {
+      //   showAd();
+      // }
       await loadTrack(item.id);
     }
     setLoading(false);
@@ -54,9 +53,9 @@ const MusicCard = ({ item }: { item: Meditation }) => {
           handleOpenNotProModal();
           return;
         }
-        if (!proPlan?.isActive) {
-          showAd();
-        }
+        // if (!proPlan?.isActive) {
+        //   showAd();
+        // }
         router.push({
           pathname: "/player",
           params: { id: item.id },
@@ -71,24 +70,16 @@ const MusicCard = ({ item }: { item: Meditation }) => {
       <HStack space="md" className="items-center justify-between flex-1">
         {/* Optional thumbnail if available */}
         {item.image && (
-          <Image
-            source={{ uri: item.image2 }}
-            style={{ width: 48, height: 48, borderRadius: 8 }}
-            resizeMode="cover"
-          />
+          <Image source={{ uri: item.image2 }} style={{ width: 48, height: 48, borderRadius: 8 }} resizeMode="cover" />
         )}
         <VStack className="flex-1 ml-3">
-          <Text className="font-vazirBold text-white  text-base">
-            {item.title}
-          </Text>
+          <Text className="font-vazirBold text-white  text-base">{item.title}</Text>
           {/* <Text className="text-muted-foreground text-white font-thin text-sm">
             {item.description.slice(0, 60)}
           </Text> */}
         </VStack>
         <HStack space="md" className="items-center space-x-2">
-          <Text className="text-xs text-muted-foreground text-white">
-            {item.duration}
-          </Text>
+          <Text className="text-xs text-muted-foreground text-white">{item.duration}</Text>
           {isLoading ? (
             <Spinner />
           ) : (
@@ -100,12 +91,7 @@ const MusicCard = ({ item }: { item: Meditation }) => {
               {isCurrentlyPlaying ? (
                 <Entypo name="controller-paus" size={22} color={"#FFFF"} />
               ) : (
-                <Entypo
-                  name="controller-play"
-                  size={24}
-                  color={"#FFFF"}
-                  style={{ marginLeft: 2 }}
-                />
+                <Entypo name="controller-play" size={24} color={"#FFFF"} style={{ marginLeft: 2 }} />
               )}
             </Pressable>
           )}

@@ -9,11 +9,11 @@ import { HStack } from "../ui/hstack";
 import { Text } from "../ui/text";
 
 const StoryCard = ({ item }: { item: any; index: number }) => {
-  const { handleOpenNotProModal, isProActive, showInterstitial } = usePro();
+  const { handleOpenNotProModal, isProActive } = usePro();
 
   const handlePress = useCallback(() => {
     if (item.isPro && !isProActive) return handleOpenNotProModal();
-    showInterstitial();
+    // showInterstitial();
     router.push({
       pathname: "/player",
       params: { id: item.id },
@@ -48,33 +48,19 @@ const StoryCard = ({ item }: { item: any; index: number }) => {
         />
 
         <View className="absolute top-4 right-4">
-          <MaterialIcons
-            name="auto-stories"
-            size={32}
-            color="rgba(255,255,255,0.2)"
-          />
+          <MaterialIcons name="auto-stories" size={32} color="rgba(255,255,255,0.2)" />
         </View>
 
         <View className="flex-1 justify-between p-6">
           <View>
-            <Text className="text-white font-vazirBold  text-xl text-right mb-2">
-              {item.title}
-            </Text>
-            <Text className="text-white/70 font-vazir text-sm text-right line-clamp-2">
-              {item.description}
-            </Text>
+            <Text className="text-white font-vazirBold  text-xl text-right mb-2">{item.title}</Text>
+            <Text className="text-white/70 font-vazir text-sm text-right line-clamp-2">{item.description}</Text>
           </View>
 
           <HStack className="items-center justify-between mt-4">
             <View className="flex-row items-center gap-1 bg-white/10 px-3 py-1.5 rounded-full">
-              <Feather
-                name="headphones"
-                size={12}
-                color="rgba(255,255,255,0.6)"
-              />
-              <Text className="text-white/60 font-vazir text-xs">
-                {item.duration} دقیقه
-              </Text>
+              <Feather name="headphones" size={12} color="rgba(255,255,255,0.6)" />
+              <Text className="text-white/60 font-vazir text-xs">{item.duration} دقیقه</Text>
             </View>
             <View className="bg-primary-500/20 rounded-full p-2">
               <Feather name="play" size={16} color="#79AED6" />

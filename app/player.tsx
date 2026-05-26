@@ -1,20 +1,9 @@
-import BannerAd from "@/components/home/BannerAd";
 import { useAudioPlayer } from "@/context/AudioPlayerContext";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import {
-  TapGestureHandler,
-  TapGestureHandlerGestureEvent,
-} from "react-native-gesture-handler";
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { TapGestureHandler, TapGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import { LinearGradient } from "react-native-linear-gradient";
 import Animated, {
   FadeIn,
@@ -31,16 +20,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function PlayerScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const {
-    track,
-    isPlaying,
-    position,
-    duration,
-    loadTrack,
-    togglePlay,
-    seek,
-    isLoading,
-  } = useAudioPlayer();
+  const { track, isPlaying, position, duration, loadTrack, togglePlay, seek, isLoading } = useAudioPlayer();
 
   const [progressBarWidth, setProgressBarWidth] = useState(0);
   const progress = useSharedValue(0);
@@ -76,11 +56,7 @@ export default function PlayerScreen() {
   }));
 
   const thumbStyle = useAnimatedStyle(() => {
-    const translateX = interpolate(
-      progress.value,
-      [0, 100],
-      [0, progressBarWidth - 20]
-    );
+    const translateX = interpolate(progress.value, [0, 100], [0, progressBarWidth - 20]);
     return { transform: [{ translateX }] };
   });
 
@@ -108,22 +84,12 @@ export default function PlayerScreen() {
   return (
     <View style={styles.container}>
       {/* Background Image with Blur */}
-      <Image
-        source={{ uri: track?.image2 }}
-        style={styles.backgroundImage}
-        blurRadius={30}
-      />
-      <LinearGradient
-        colors={["rgba(0,0,0,0.4)", "rgba(0,0,0,0.7)", "rgba(0,0,0,0.9)"]}
-        style={styles.overlay}
-      />
+      <Image source={{ uri: track?.image2 }} style={styles.backgroundImage} blurRadius={30} />
+      <LinearGradient colors={["rgba(0,0,0,0.4)", "rgba(0,0,0,0.7)", "rgba(0,0,0,0.9)"]} style={styles.overlay} />
 
       {/* Header */}
       <Animated.View entering={FadeIn.duration(400)} style={styles.header}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={styles.backButton}
-        >
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="chevron-down" size={28} color="white" />
         </TouchableOpacity>
       </Animated.View>
@@ -163,18 +129,12 @@ export default function PlayerScreen() {
       ) : (
         <View style={styles.content}>
           {/* Album Art - Square */}
-          <Animated.View
-            entering={FadeInUp.duration(600).springify()}
-            style={styles.artworkContainer}
-          >
+          <Animated.View entering={FadeInUp.duration(600).springify()} style={styles.artworkContainer}>
             <View style={styles.artworkWrapper}>
               <Image source={{ uri: track?.image2 }} style={styles.artwork} />
               {isPlaying && (
                 <View style={styles.playingOverlay}>
-                  <LinearGradient
-                    colors={["transparent", "rgba(0,0,0,0.5)"]}
-                    style={styles.playingOverlayGradient}
-                  >
+                  <LinearGradient colors={["transparent", "rgba(0,0,0,0.5)"]} style={styles.playingOverlayGradient}>
                     <View style={styles.playingIndicator}>
                       <View style={styles.waveBar} />
                       <View style={[styles.waveBar, { height: 20 }]} />
@@ -189,26 +149,16 @@ export default function PlayerScreen() {
           </Animated.View>
 
           {/* Track Info */}
-          <Animated.View
-            entering={FadeInUp.duration(600).delay(100)}
-            style={styles.infoContainer}
-          >
+          <Animated.View entering={FadeInUp.duration(600).delay(100)} style={styles.infoContainer}>
             <Text style={styles.title} numberOfLines={1}>
               {track?.title}
             </Text>
-            <TouchableOpacity
-              onPress={() => setDescriptionExpanded(!descriptionExpanded)}
-            >
-              <Text
-                numberOfLines={descriptionExpanded ? 3 : 2}
-                style={styles.description}
-              >
+            <TouchableOpacity onPress={() => setDescriptionExpanded(!descriptionExpanded)}>
+              <Text numberOfLines={descriptionExpanded ? 3 : 2} style={styles.description}>
                 {track?.description || "بدون توضیحات"}
               </Text>
               {track?.description && track.description.length > 80 && (
-                <Text style={styles.readMore}>
-                  {descriptionExpanded ? "بستن" : "بیشتر"}
-                </Text>
+                <Text style={styles.readMore}>{descriptionExpanded ? "بستن" : "بیشتر"}</Text>
               )}
             </TouchableOpacity>
           </Animated.View>
@@ -216,16 +166,11 @@ export default function PlayerScreen() {
           {/* Action Buttons */}
 
           {/* Progress Section */}
-          <Animated.View
-            entering={FadeInUp.duration(600).delay(300)}
-            style={styles.progressSection}
-          >
+          <Animated.View entering={FadeInUp.duration(600).delay(300)} style={styles.progressSection}>
             <TapGestureHandler onHandlerStateChange={onTap}>
               <Animated.View
                 style={styles.progressBarContainer}
-                onLayout={(e) =>
-                  setProgressBarWidth(e.nativeEvent.layout.width)
-                }
+                onLayout={(e) => setProgressBarWidth(e.nativeEvent.layout.width)}
               >
                 <View style={styles.progressBarBackground} />
                 <LinearGradient
@@ -245,23 +190,14 @@ export default function PlayerScreen() {
           </Animated.View>
 
           {/* Main Controls */}
-          <Animated.View
-            entering={FadeInUp.duration(600).delay(400)}
-            style={styles.controls}
-          >
-            <TouchableOpacity
-              onPress={() => seek(position - 10000)}
-              style={styles.skipButton}
-            >
+          <Animated.View entering={FadeInUp.duration(600).delay(400)} style={styles.controls}>
+            <TouchableOpacity onPress={() => seek(position - 10000)} style={styles.skipButton}>
               <Ionicons name="play-skip-back" size={32} color="white" />
               <Text style={styles.skipLabel}>10 s</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={togglePlay} style={styles.playButton}>
-              <LinearGradient
-                colors={["#79AED6", "#9966CC"]}
-                style={styles.playButtonGradient}
-              >
+              <LinearGradient colors={["#79AED6", "#9966CC"]} style={styles.playButtonGradient}>
                 <Ionicons
                   name={isPlaying ? "pause" : "play"}
                   size={44}
@@ -271,10 +207,7 @@ export default function PlayerScreen() {
               </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => seek(position + 10000)}
-              style={styles.skipButton}
-            >
+            <TouchableOpacity onPress={() => seek(position + 10000)} style={styles.skipButton}>
               <Ionicons name="play-skip-forward" size={32} color="white" />
               <Text style={styles.skipLabel}>10 s</Text>
             </TouchableOpacity>
@@ -312,7 +245,7 @@ export default function PlayerScreen() {
           </Animated.View> */}
         </View>
       )}
-      <BannerAd bannerSize="BANNER" />
+      {/* <BannerAd bannerSize="BANNER" /> */}
     </View>
   );
 }

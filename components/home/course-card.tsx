@@ -6,18 +6,12 @@ import { Entypo, Ionicons } from "@expo/vector-icons";
 // import { Adivery } from "adivery";
 import { router } from "expo-router";
 import React, { memo, useCallback, useRef, useState } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import LinearGradient from "react-native-linear-gradient";
 import { useDispatch } from "react-redux";
 import { Spinner } from "../ui/spinner";
 import { Text } from "../ui/text";
-import { showAd } from "./BannerAd";
 
 // ---------- STATIC PRE-COMPUTATIONS ----------
 const STATIC_STYLES = StyleSheet.create({
@@ -199,9 +193,7 @@ const getColorSet = (type: string, index: number) => {
   const key = `${type}:${index % 10}`;
   if (colorCache.has(key)) return colorCache.get(key)!;
   const order = CATEGORY_ORDER[type];
-  const colorIndex = order
-    ? order[index % order.length]
-    : index % BASE_COLORS.length;
+  const colorIndex = order ? order[index % order.length] : index % BASE_COLORS.length;
   const result = BASE_COLORS[colorIndex];
   if (colorCache.size > 100) colorCache.clear();
   colorCache.set(key, result);
@@ -252,20 +244,11 @@ const PlayButton = memo(({ onPress, isLoading, isPlaying, color }: any) => {
       </View>
     );
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={0.8}
-      style={STATIC_STYLES.playButton}
-    >
+    <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={STATIC_STYLES.playButton}>
       {isPlaying ? (
         <Entypo name="controller-paus" size={22} color={color} />
       ) : (
-        <Entypo
-          name="controller-play"
-          size={24}
-          color={color}
-          style={{ marginLeft: 2 }}
-        />
+        <Entypo name="controller-play" size={24} color={color} style={{ marginLeft: 2 }} />
       )}
     </TouchableOpacity>
   );
@@ -285,9 +268,7 @@ const CourseCard: React.FC<CourseCardProps> = memo(
     const { width } = useWindowDimensions();
     const mounted = useRef(true);
 
-    const isProActive =
-      plans?.data?.plans?.some((p) => p.name === "unlimited" && p.isActive) ??
-      false;
+    const isProActive = plans?.data?.plans?.some((p) => p.name === "unlimited" && p.isActive) ?? false;
     const colorSet = getColorSet(item.type, index);
     const isCurrentlyPlaying = track?.id === item.id && isPlaying;
     const { width: cardWidth, height: cardHeight } = getCardSize(width);
@@ -302,42 +283,28 @@ const CourseCard: React.FC<CourseCardProps> = memo(
       });
     }, [dispatch]);
 
-    const showInterstitial = useCallback(() => {
-      if (isProActive) return;
-      showAd();
-    }, [isProActive]);
+    // const showInterstitial = useCallback(() => {
+    //   if (isProActive) return;
+    //   showAd();
+    // }, [isProActive]);
 
     const handlePlay = useCallback(async () => {
       if (isLoading) return;
       setLoading(true);
       try {
         if (item.isPro && !isProActive) return handleOpenNotProModal();
-        showInterstitial();
+        // showInterstitial();
         await loadTrack(item.id);
       } finally {
         if (mounted.current) setLoading(false);
       }
-    }, [
-      item.id,
-      item.isPro,
-      isProActive,
-      loadTrack,
-      handleOpenNotProModal,
-      showInterstitial,
-      isLoading,
-    ]);
+    }, [item.id, item.isPro, isProActive, loadTrack, handleOpenNotProModal, isLoading]);
 
     const handleCardPress = useCallback(() => {
       if (item.isPro && !isProActive) return handleOpenNotProModal();
-      showInterstitial();
+      // showInterstitial();
       router.push({ pathname: "/player", params: { id: `${item.id}` } });
-    }, [
-      item.id,
-      item.isPro,
-      isProActive,
-      handleOpenNotProModal,
-      showInterstitial,
-    ]);
+    }, [item.id, item.isPro, isProActive, handleOpenNotProModal]);
 
     React.useEffect(() => {
       mounted.current = true;
@@ -350,11 +317,7 @@ const CourseCard: React.FC<CourseCardProps> = memo(
     const categoryText = typeTopPersian(item.type) ?? "";
 
     return (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={handleCardPress}
-        style={{ transform: [{ scale: 1 }] }}
-      >
+      <TouchableOpacity activeOpacity={0.9} onPress={handleCardPress} style={{ transform: [{ scale: 1 }] }}>
         <View style={{ width: cardWidth, marginHorizontal: 6 }}>
           <LinearGradient
             colors={colorSet.gradient} // Now it's mutable string[]
@@ -371,16 +334,11 @@ const CourseCard: React.FC<CourseCardProps> = memo(
             <View style={STATIC_STYLES.decorativeBottom} />
             {item.isPro && <ProBadge />}
             <View style={STATIC_STYLES.contentContainer}>
-              <View
-                style={{ flexDirection: "row", justifyContent: "flex-start" }}
-              >
+              <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
                 <DurationBadge duration={toPersianDigits(item.duration)} />
               </View>
               <View style={STATIC_STYLES.bottomSection}>
-                <Text
-                  numberOfLines={2}
-                  className="font-vazirBold text-right text-white text-lg"
-                >
+                <Text numberOfLines={2} className="font-vazirBold text-right text-white text-lg">
                   {item.title}
                 </Text>
                 <View style={STATIC_STYLES.rowBetween}>
@@ -404,7 +362,7 @@ const CourseCard: React.FC<CourseCardProps> = memo(
     prev.index === next.index &&
     prev.item.title === next.item.title &&
     prev.item.duration === next.item.duration &&
-    prev.item.isPro === next.item.isPro
+    prev.item.isPro === next.item.isPro,
 );
 
 export default CourseCard;

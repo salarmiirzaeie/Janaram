@@ -1,23 +1,12 @@
-import { showAd } from "@/components/home/BannerAd";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { HStack } from "@/components/ui/hstack";
 import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { VStack } from "@/components/ui/vstack";
-import {
-  useCompleteExerciseMutation,
-  useGetExerciseQuery,
-  UserExercise,
-} from "@/services/exercise/exercise-adapter";
+import { useCompleteExerciseMutation, useGetExerciseQuery, UserExercise } from "@/services/exercise/exercise-adapter";
 import { useGetMoodQuery } from "@/services/mood/mood-adapter";
 import { usePlansQuery } from "@/services/upgrade/upgrade-adapter";
 import { toPersianDigits } from "@/utils/persian";
-import {
-  Feather,
-  FontAwesome,
-  FontAwesome6,
-  Ionicons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Feather, FontAwesome, FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
 // import { Adivery } from "adivery";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
@@ -32,14 +21,10 @@ const Train = () => {
   const { data, isLoading } = useGetExerciseQuery(null);
   const { data: mood, isLoading: moodLoading } = useGetMoodQuery(null);
   const [fakeLoading, setFakeLoading] = React.useState(true);
-  const [completeExercise, { isLoading: completeLoading }] =
-    useCompleteExerciseMutation();
+  const [completeExercise, { isLoading: completeLoading }] = useCompleteExerciseMutation();
   const { data: plans } = usePlansQuery(null);
   const dispatch = useDispatch();
-  const proPlan = useMemo(
-    () => plans?.data.plans?.find((plan) => plan.name === "unlimited"),
-    [plans?.data.plans]
-  );
+  const proPlan = useMemo(() => plans?.data.plans?.find((plan) => plan.name === "unlimited"), [plans?.data.plans]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -78,13 +63,7 @@ const Train = () => {
     }
   };
 
-  const renderItem = ({
-    item,
-    index,
-  }: {
-    item: UserExercise;
-    index: number;
-  }) => {
+  const renderItem = ({ item, index }: { item: UserExercise; index: number }) => {
     const typeBadge = getTypeBadge(item.type);
     const isDone = item.done;
     const isProAndNotActive = item.isPro && !proPlan?.isActive;
@@ -105,9 +84,9 @@ const Train = () => {
               handleOpenNotProModal();
               return;
             }
-            if (!proPlan?.isActive) {
-              showAd();
-            }
+            // if (!proPlan?.isActive) {
+            //   showAd();
+            // }
             if (!item.done) completeExercise({ exerciseId: item._id });
             if (item.type === "meditation") {
               router.push({
@@ -160,38 +139,23 @@ const Train = () => {
           >
             <HStack className="items-center justify-between">
               {/* Icon */}
-              <View
-                className={`rounded-full p-3 ${
-                  isDone ? "bg-secondary-300" : "bg-primary-100"
-                }`}
-              >
+              <View className={`rounded-full p-3 ${isDone ? "bg-secondary-300" : "bg-primary-100"}`}>
                 {getTypeIcon(item.type, isDone)}
               </View>
 
               {/* Content */}
               <VStack className="flex-1 mx-3">
                 <HStack className="items-center gap-2 mb-1">
-                  <View
-                    className={`px-2 py-0.5 rounded-full ${typeBadge.color}`}
-                  >
-                    <Text className="font-vazir text-xs text-primary-600">
-                      {typeBadge.text}
-                    </Text>
+                  <View className={`px-2 py-0.5 rounded-full ${typeBadge.color}`}>
+                    <Text className="font-vazir text-xs text-primary-600">{typeBadge.text}</Text>
                   </View>
                 </HStack>
 
-                <Text className="text-right font-vazirBold text-base text-gray-800">
-                  {item.title}
-                </Text>
+                <Text className="text-right font-vazirBold text-base text-gray-800">{item.title}</Text>
 
                 {item.description && (
-                  <Text
-                    className="text-right font-vazir text-sm text-gray-500 mt-1"
-                    numberOfLines={2}
-                  >
-                    {item.description.length > 60
-                      ? item.description.slice(0, 60) + "..."
-                      : item.description}
+                  <Text className="text-right font-vazir text-sm text-gray-500 mt-1" numberOfLines={2}>
+                    {item.description.length > 60 ? item.description.slice(0, 60) + "..." : item.description}
                   </Text>
                 )}
 
@@ -207,9 +171,7 @@ const Train = () => {
 
               {/* Start Button */}
               <LinearGradient
-                colors={
-                  isDone ? ["#330D66", "#804DB3"] : ["#79AED6", "#9966CC"]
-                }
+                colors={isDone ? ["#330D66", "#804DB3"] : ["#79AED6", "#9966CC"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{
@@ -219,14 +181,8 @@ const Train = () => {
                 }}
               >
                 <HStack space="sm" className="items-center">
-                  <FontAwesome
-                    name={isDone ? "check" : "play"}
-                    size={12}
-                    color="white"
-                  />
-                  <Text className="text-white font-vazirBold text-sm">
-                    {isDone ? "انجام شد" : "شروع"}
-                  </Text>
+                  <FontAwesome name={isDone ? "check" : "play"} size={12} color="white" />
+                  <Text className="text-white font-vazirBold text-sm">{isDone ? "انجام شد" : "شروع"}</Text>
                 </HStack>
               </LinearGradient>
             </HStack>
@@ -258,18 +214,12 @@ const Train = () => {
           >
             <HStack className="justify-between items-center mb-3">
               <HStack space="md" className="items-center">
-                <Text className="text-3xl font-vazirBold text-primary-600">
-                  {mood?.data.completedExercises || 0}
-                </Text>
+                <Text className="text-3xl font-vazirBold text-primary-600">{mood?.data.completedExercises || 0}</Text>
                 <Text className="text-xl font-vazir text-primary-400">/</Text>
-                <Text className="text-xl font-vazir text-primary-400">
-                  {mood?.data.totalExercises || 0}
-                </Text>
+                <Text className="text-xl font-vazir text-primary-400">{mood?.data.totalExercises || 0}</Text>
               </HStack>
               <HStack space="sm" className="items-center">
-                <Text className="font-vazirBold text-primary-800 text-base">
-                  پیشرفت امروز
-                </Text>
+                <Text className="font-vazirBold text-primary-800 text-base">پیشرفت امروز</Text>
                 <Feather name="trending-up" size={20} color="#79AED6" />
               </HStack>
             </HStack>
@@ -305,9 +255,7 @@ const Train = () => {
               </Text>
             </View>
             <HStack space="sm" className="items-center">
-              <Text className="font-vazirBold text-primary-800 text-xl">
-                تمرینات امروز
-              </Text>
+              <Text className="font-vazirBold text-primary-800 text-xl">تمرینات امروز</Text>
               <Feather name="calendar" size={20} color="#79AED6" />
             </HStack>
           </HStack>
@@ -315,10 +263,7 @@ const Train = () => {
 
         {/* Exercises List */}
         {isLoading || fakeLoading ? (
-          <Animated.View
-            entering={FadeIn.duration(400)}
-            className="flex-1 justify-center items-center"
-          >
+          <Animated.View entering={FadeIn.duration(400)} className="flex-1 justify-center items-center">
             <LottieView
               style={{ width: 260, height: 260 }}
               ref={animationRef}
@@ -330,8 +275,8 @@ const Train = () => {
               در حال آماده سازی با هوش مصنوعی...
             </Text>
             <Text className="text-gray-500 font-vazir text-center text-sm mt-2 px-8">
-              اینجا تمرین‌های متناسب با حالت رو می‌بینی. برای دریافت تمرینات
-              پیشرفته‌تر و تخصصی‌تر، می‌تونی به نسخه Pro ارتقا بدی.
+              اینجا تمرین‌های متناسب با حالت رو می‌بینی. برای دریافت تمرینات پیشرفته‌تر و تخصصی‌تر، می‌تونی به نسخه Pro
+              ارتقا بدی.
             </Text>
           </Animated.View>
         ) : (

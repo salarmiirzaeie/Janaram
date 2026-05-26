@@ -1,4 +1,3 @@
-import { showAd } from "@/components/home/BannerAd";
 import { Input, InputField, InputSlot } from "@/components/ui/input";
 import { Pressable } from "@/components/ui/pressable";
 import { VStack } from "@/components/ui/vstack";
@@ -33,32 +32,21 @@ const SearchPage = () => {
     });
   };
 
-  const filteredData = data?.meditations.filter((item) =>
-    item.title.includes(query.trim())
-  );
+  const filteredData = data?.meditations.filter((item) => item.title.includes(query.trim()));
 
   const recentSearches = ["آرامش", "خواب", "تمرکز", "یوگا"];
 
   return (
-    <LinearGradient
-      colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]}
-      style={{ flex: 1 }}
-    >
+    <LinearGradient colors={["#F0F6FA", "#FFFFFF", "#F5F0FA"]} style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
         <View className="flex-1 mb-16 bg-transparent">
           <VStack className="flex-1 px-4 pt-8 pb-16">
             {/* Search Header */}
             <Animated.View entering={FadeIn.duration(500)}>
               <View className="mb-6">
-                <Input
-                  size="xl"
-                  className="bg-white rounded-2xl border-gray-200 shadow-sm"
-                >
+                <Input size="xl" className="bg-white rounded-2xl border-gray-200 shadow-sm">
                   <InputSlot className="px-4 h-full">
-                    <Pressable
-                      onPress={() => router.back()}
-                      className="flex-1 justify-center items-center"
-                    >
+                    <Pressable onPress={() => router.back()} className="flex-1 justify-center items-center">
                       <AntDesign name="left" size={22} color="#666" />
                     </Pressable>
                   </InputSlot>
@@ -83,12 +71,8 @@ const SearchPage = () => {
                 <Animated.View entering={FadeInUp.duration(600).delay(100)}>
                   <VStack space="lg">
                     <View className="flex-row justify-between items-center">
-                      <Text className="text-primary-600 text-sm font-vazir">
-                        پاک کردن همه
-                      </Text>
-                      <Text className="text-primary-800 font-vazirBold text-base">
-                        جستجوهای اخیر
-                      </Text>
+                      <Text className="text-primary-600 text-sm font-vazir">پاک کردن همه</Text>
+                      <Text className="text-primary-800 font-vazirBold text-base">جستجوهای اخیر</Text>
                     </View>
 
                     <View className="flex-row flex-wrap gap-2">
@@ -98,9 +82,7 @@ const SearchPage = () => {
                           onPress={() => setQuery(search)}
                           className="bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100"
                         >
-                          <Text className="text-gray-700 font-vazir text-sm">
-                            {search}
-                          </Text>
+                          <Text className="text-gray-700 font-vazir text-sm">{search}</Text>
                         </TouchableOpacity>
                       ))}
                     </View>
@@ -108,33 +90,21 @@ const SearchPage = () => {
                 </Animated.View>
               ) : query.length > 0 && filteredData?.length === 0 ? (
                 // No Results
-                <Animated.View
-                  entering={FadeInUp.duration(400)}
-                  className="flex-1 justify-center items-center"
-                >
+                <Animated.View entering={FadeInUp.duration(400)} className="flex-1 justify-center items-center">
                   <View className="bg-white rounded-full p-6 mb-4 shadow-md">
                     <Feather name="search" size={48} color="#79AED6" />
                   </View>
-                  <Text className="text-gray-500 font-vazir text-lg text-center">
-                    موردی یافت نشد
-                  </Text>
-                  <Text className="text-gray-400 font-vazir text-sm text-center mt-1">
-                    عبارت دیگری را جستجو کنید
-                  </Text>
+                  <Text className="text-gray-500 font-vazir text-lg text-center">موردی یافت نشد</Text>
+                  <Text className="text-gray-400 font-vazir text-sm text-center mt-1">عبارت دیگری را جستجو کنید</Text>
                 </Animated.View>
               ) : (
                 // Search Results
-                <Animated.View
-                  entering={FadeInUp.duration(400)}
-                  className="flex-1"
-                >
+                <Animated.View entering={FadeInUp.duration(400)} className="flex-1">
                   <View className="flex-row justify-between items-center mb-3">
                     <Text className="text-primary-600 text-xs font-vazir">
                       {toPersianDigits(filteredData?.length || 0)} نتیجه
                     </Text>
-                    <Text className="text-primary-800 font-vazirBold text-base">
-                      نتایج جستجو
-                    </Text>
+                    <Text className="text-primary-800 font-vazirBold text-base">نتایج جستجو</Text>
                   </View>
 
                   <FlatList
@@ -143,18 +113,16 @@ const SearchPage = () => {
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 20 }}
                     renderItem={({ item, index }) => (
-                      <Animated.View
-                        entering={FadeInUp.duration(400).delay(index * 50)}
-                      >
+                      <Animated.View entering={FadeInUp.duration(400).delay(index * 50)}>
                         <TouchableOpacity
                           onPress={() => {
                             if (item.isPro && !proPlan?.isActive) {
                               handleOpenNotProModal();
                               return;
                             }
-                            if (!proPlan?.isActive) {
-                              showAd();
-                            }
+                            // if (!proPlan?.isActive) {
+                            //   showAd();
+                            // }
                             router.push({
                               pathname: "/player",
                               params: { id: item.id },
@@ -183,9 +151,7 @@ const SearchPage = () => {
                               <View className="flex-row items-center gap-2">
                                 {item.isPro && (
                                   <View className="bg-accent-500/20 px-2 py-1 rounded-full">
-                                    <Text className="text-accent-600 font-vazirBold text-xs">
-                                      Pro
-                                    </Text>
+                                    <Text className="text-accent-600 font-vazirBold text-xs">Pro</Text>
                                   </View>
                                 )}
                                 <Text className="text-gray-400 text-xs font-vazir">
@@ -193,17 +159,10 @@ const SearchPage = () => {
                                 </Text>
                               </View>
                               <View className="flex-1 mr-3">
-                                <Text className="text-right text-base font-vazirBold text-gray-800">
-                                  {item.title}
-                                </Text>
+                                <Text className="text-right text-base font-vazirBold text-gray-800">{item.title}</Text>
                               </View>
                               <View className="bg-primary-100 rounded-full p-2">
-                                <Ionicons
-                                  name="play"
-                                  size={16}
-                                  color="#79AED6"
-                                  style={{ marginLeft: 2 }}
-                                />
+                                <Ionicons name="play" size={16} color="#79AED6" style={{ marginLeft: 2 }} />
                               </View>
                             </View>
                           </LinearGradient>
