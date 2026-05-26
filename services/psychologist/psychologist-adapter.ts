@@ -75,6 +75,10 @@ export interface CreateAppointmentRequest {
   doctorId: string;
   date: string;
   time: string;
+  /** One round-trip: book + get Zarinpal URL */
+  initiatePayment?: boolean;
+  mobile?: string;
+  email?: string;
 }
 
 export interface CreateAppointmentResponse {
@@ -86,6 +90,11 @@ export interface CreateAppointmentResponse {
   sessionPrice: number;
   paymentExpiresAt: string;
   paymentExpiresInMinutes: number;
+  paymentUrl?: string;
+  authority?: string;
+  paymentId?: string;
+  paymentError?: string;
+  devMock?: boolean;
 }
 
 export interface Review {

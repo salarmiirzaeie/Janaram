@@ -70,19 +70,45 @@ export default function PsychologistDetailScreen() {
         doctorId: id,
         date: selectedDate,
         time: selectedTime,
+        initiatePayment: true,
+        mobile: profile?.data?.phoneNumber,
       }).unwrap();
 
-      const payResult = await startAppointmentPayment({
-        appointmentId: result.appointmentId,
-        description: `پرداخت هزینه جلسه مشاوره با دکتر ${result.doctorName} در تاریخ ${result.date} ساعت ${result.time}`,
-      });
+      if (result.paymentUrl) {
+        const payResult = await startAppointmentPayment({
+          appointmentId: result.appointmentId,
+          paymentUrl: result.paymentUrl,
+          description: `پرداخت هزینه جلسه مشاوره با دکتر ${result.doctorName}`,
+        });
 
-      if (!payResult.success) {
+        if (payResult.paid) {
+          router.push("/(tabs)/appointments");
+          return;
+        }
+      }
+
+      if (result.paymentError) {
         toast.show({
-          msg: "نوبت ثبت شد. می‌توانید از «نوبت‌های من» پرداخت را انجام دهید.",
+          msg: `نوبت ثبت شد. ${result.paymentError} — از «نوبت‌های من» دوباره پرداخت کنید.`,
           type: "success",
         });
         router.push("/(tabs)/appointments");
+        return;
+      }
+
+      if (!result.paymentUrl) {
+        const payResult = await startAppointmentPayment({
+          appointmentId: result.appointmentId,
+          description: `پرداخت هزینه جلسه مشاوره با دکتر ${result.doctorName}`,
+        });
+
+        if (!payResult.success) {
+          toast.show({
+            msg: "نوبت ثبت شد. می‌توانید از «نوبت‌های من» پرداخت را انجام دهید.",
+            type: "success",
+          });
+          router.push("/(tabs)/appointments");
+        }
       }
     } catch (err: any) {
       const msg = err?.data?.message || "خطا در رزرو نوبت";

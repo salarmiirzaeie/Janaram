@@ -22,9 +22,21 @@ export interface AppointmentPaymentResponse {
   authority: string;
   paymentUrl: string;
   paymentId: string;
-  amountToman: number;
-  amountInRial: number;
+  amountToman?: number;
+  amountInRial?: number;
   message?: string;
+  reused?: boolean;
+  devMock?: boolean;
+}
+
+export interface PaymentStatusResponse {
+  success: boolean;
+  data: {
+    appointmentStatus: string;
+    paid: boolean;
+    paymentStatus: string | null;
+    refId: string | null;
+  };
 }
 
 const paymentAdapter = apiSlice.injectEndpoints({
@@ -51,10 +63,19 @@ const paymentAdapter = apiSlice.injectEndpoints({
         body,
       }),
     }),
+
+    getPaymentStatus: builder.query<
+      PaymentStatusResponse,
+      { appointmentId: string }
+    >({
+      query: ({ appointmentId }) =>
+        `payment/status?appointmentId=${encodeURIComponent(appointmentId)}`,
+    }),
   }),
 });
 
 export const {
   useRequestAppointmentPaymentMutation,
   useRequestLegacyPlanPaymentMutation,
+  useLazyGetPaymentStatusQuery,
 } = paymentAdapter;

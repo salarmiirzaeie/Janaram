@@ -1,15 +1,9 @@
-import {
-  BaseQueryFn,
-  createApi,
-  FetchArgs,
-  fetchBaseQuery,
-  FetchBaseQueryError,
-} from "@reduxjs/toolkit/query/react";
+import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 import { logout } from "./auth/auth-slice";
 import { RootState } from "./store";
 
-const BASE_URL = "https://janaram.ir/api/";
-// const BASE_URL = "http://10.213.178.162:3000/api/";
+// const BASE_URL = "https://janaram.ir/api/";
+const BASE_URL = "http://10.34.190.162:3000/api/";
 export const BASE_URL_IMAGES = "https://janaram.ir";
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
@@ -22,11 +16,11 @@ const baseQuery = fetchBaseQuery({
     }
   },
 });
-const baseQueryWithReauth: BaseQueryFn<
-  string | FetchArgs,
-  unknown,
-  FetchBaseQueryError
-> = async (args, api, extraOptions) => {
+const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+  args,
+  api,
+  extraOptions,
+) => {
   let result = await baseQuery(args, api, extraOptions);
   if (result.error && !result.error.data) {
     if ("error" in result.error) {
@@ -51,12 +45,5 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({}),
-  tagTypes: [
-    "Plans",
-    "Profile",
-    "Mood",
-    "Exercises",
-    "UserAppointments",
-    "Reviews",
-  ],
+  tagTypes: ["Plans", "Profile", "Mood", "Exercises", "UserAppointments", "Reviews"],
 });

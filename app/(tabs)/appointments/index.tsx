@@ -297,10 +297,13 @@ export default function AppointmentsScreen() {
 
     setLoadingAppointmentId(appointment.id);
     try {
-      await startAppointmentPayment({
+      const payResult = await startAppointmentPayment({
         appointmentId: appointment.id,
         description: `پرداخت هزینه جلسه مشاوره با دکتر ${appointment.doctorName}`,
       });
+      if (payResult.paid) {
+        refetch();
+      }
     } finally {
       setLoadingAppointmentId(null);
     }
