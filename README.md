@@ -1,50 +1,71 @@
-# Welcome to your Expo app 👋
+# Janaram (جانارام)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A Persian-language mental-wellness app for Android and iOS: daily mood tracking with charts, guided meditations and breathing exercises, sleep sounds, an AI chat companion, psychological tests, and paid sessions with psychologists.
 
-## Get started
+Built with **React Native 0.79, Expo 53, TypeScript** and a Next.js backend, [janaram-next](https://github.com/salarmiirzaeie/janaram-next).
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- **Phone-number login with OTP**, including automatic SMS code reading on Android (`react-native-otp-verify`).
+- **Mood tracking**: nine moods with an optional note per day, a 30-day history kept on the device, and weekly and monthly charts (bar, line, pie).
+- **Meditation and breathing library**: explore, search, and a full-screen audio player that keeps playing in the background (`expo-av`).
+- **Sleep mode**: a dark, low-stimulation theme together with a dedicated sleep-sounds tab.
+- **AI chat companion** with conversation history (the AI provider is called from the backend, not from the app).
+- **Subscriptions** through Cafe Bazaar in-app billing (`@cafebazaar/react-native-poolakey`).
+- **Push notifications** (`expo-notifications`) with per-category settings.
+- **Persian UX**: right-to-left layout, Jalali calendar (`date-fns-jalali`, `moment-jalaali`), Persian digits.
+- **Over-the-air updates** via `expo-updates`, served by the backend.
 
-2. Start the app
+## Architecture
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+app/                     Expo Router screens (file-based routing)
+  (tabs)/                home, explore, sleep, reports, setting
+  login.tsx, verifyOTP.tsx, chat-bot.tsx, player.tsx, subscription.tsx, ...
+components/              feature components and the Gluestack UI primitives (components/ui)
+redux/                   Redux Toolkit store, slices (auth, mood, settings, sleep, initialize)
+                         and the RTK Query base API with automatic logout on 401
+services/                RTK Query endpoints (auth, AI chat, plans and upgrades)
+hooks/, context/         auth hook, toast hook, audio player context
+utils/                   mood chart data builders, Persian digit helpers
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+State management in short:
 
-## Learn more
+- **Redux Toolkit** holds auth, mood history, settings and onboarding state. Everything except the API cache is persisted with `redux-persist` and AsyncStorage.
+- **RTK Query** talks to the backend. The base query attaches the Bearer token and, when the server answers `401`, logs the user out and resets the API cache.
+- **NativeWind (Tailwind)** and **Gluestack UI** provide styling and components. **Reanimated** drives animations.
 
-To learn more about developing your project with Expo, look at the following resources:
+## Getting started
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm install
+cp .env.example .env     # see the file for what is needed
+npx expo start           # then press a (Android) or i (iOS), or scan the QR code
+```
 
-## Join the community
+The app needs a development build rather than Expo Go because it uses native modules (Poolakey, OTP auto-read):
 
-Join our community of developers creating universal apps.
+```bash
+npx expo run:android     # or: eas build --profile development --platform android
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+The API base URL is set in [`redux/api-slice.ts`](redux/api-slice.ts). To run against a local backend, start [janaram-next](https://github.com/salarmiirzaeie/janaram-next) and point `BASE_URL` at it.
+
+## Scripts
+
+| Command | What it does |
+|---|---|
+| `npm start` | start the Expo dev server |
+| `npm run android` / `npm run ios` | run on a device or emulator |
+| `npm test` | unit tests (Jest and jest-expo) |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run lint` | `expo lint` |
+
+## Tests
+
+`npm test` covers the Redux slices (auth, mood history rules, settings), the mood chart builders and Persian utilities, and the API client (Bearer header, automatic logout on `401`, session kept on `500`). CI runs them on every push and pull request.
+
+## Build and release
+
+Builds use [EAS](https://docs.expo.dev/build/introduction/) (`eas.json` defines `development`, `preview` and `production` profiles with matching update channels). Set `EXPO_PUBLIC_BAZAR_RSA_KEY` as an EAS environment variable for production builds.
