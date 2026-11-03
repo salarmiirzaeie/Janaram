@@ -1,6 +1,6 @@
 # Janaram (جانارام)
 
-A Persian-language mental-wellness app for Android and iOS: daily mood tracking with charts, guided meditations and breathing exercises, sleep sounds with a timer, an AI chat companion, psychological tests, and paid sessions with psychologists.
+A Persian-language mental-wellness app for Android and iOS: daily mood tracking with charts, guided meditations and breathing exercises, sleep sounds, an AI chat companion, psychological tests, and paid sessions with psychologists.
 
 Built with **React Native 0.79, Expo 53, TypeScript** and a Next.js backend, [janaram-next](https://github.com/salarmiirzaeie/janaram-next).
 
